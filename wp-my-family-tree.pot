@@ -1,0 +1,748 @@
+# WP My Family Tree translation catalog.
+# Copyright (C) 2026 Raivis Kalnins / DigitalPulse
+# Licensed under GPL-3.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP My Family Tree 1.0.0\n"
+"Report-Msgid-Bugs-To: https://digitalpulse.click/\n"
+"POT-Creation-Date: 2026-10-22 12:00+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: includes/class-wpmft-api.php:39 includes/class-wpmft-security.php:49
+msgid "A POST request is required."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:119
+msgid "A batch of family photographs has been protected. Continue until no photographs remain."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:449
+msgid "A date was not saved. Use YYYY, YYYY-MM or a valid YYYY-MM-DD. The previous value has been retained."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:457
+msgid "A parent relationship was not saved because it would make a person their own ancestor."
+msgstr ""
+
+#: includes/class-wpmft-media.php:163
+msgid "A photograph could not be encrypted."
+msgstr ""
+
+#: includes/class-wpmft-media.php:200
+msgid "A photograph could not be protected because you do not have permission to edit it. Ask an administrator to protect it or upload your own copy."
+msgstr ""
+
+#: includes/class-wpmft-media.php:159
+msgid "A photograph could not be read."
+msgstr ""
+
+#: includes/class-wpmft-media.php:155
+msgid "A source photograph is missing. Restore the matching uploads backup."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:169
+msgid "Accent colour"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:296 includes/class-wpmft-admin.php:356
+msgid "Access denied."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:132
+msgid "Add a person"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:485
+msgid "Add people as WordPress posts."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:126
+msgid "Add the Family Tree block or this shortcode to a page:"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:114
+msgid "All remembered family sessions have been revoked."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:171
+msgid "Allow signed-in family visitors to save a tree image and print"
+msgstr ""
+
+#: includes/class-wpmft-media.php:140
+msgid "An attachment has no source file."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:482
+msgid "An existing WP Family Tree category is detected during setup. Keep it selected to reuse your people and relationships."
+msgstr ""
+
+#: block.json:9
+msgid "An interactive oak family tree with person dialogs and optional private access."
+msgstr ""
+
+#: includes/class-wpmft-media.php:178
+msgid "An original photograph could not be removed. Check file permissions before sharing the site."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:137 includes/class-wpmft-admin.php:164
+msgid "Appearance"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:157
+msgid "At least 12 characters. Leave blank to keep the current password. The password is stored as a one-way hash."
+msgstr ""
+
+#: includes/class-wpmft-media.php:215
+#, php-format
+msgid "Attachment %1$d: %2$s"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:160
+msgid "Automatically encrypt family photograph files when people are saved"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:169
+msgid "Background colour"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:333
+msgid "Birth / maiden name"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:333
+msgid "Birthplace"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:486
+msgid "Check privacy while signed out."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:348
+msgid "Choose / reorder photographs"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:147
+msgid "Choose a page"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:53
+msgid "Choose family photographs"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:482
+msgid "Choose your family category."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:137 includes/class-wpmft-admin.php:174
+msgid "Contact & hCaptcha"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:179
+msgid "Contact messages use WordPress mail delivery. The form does not save message contents to the family tree database. Your mail provider may retain delivered messages."
+msgstr ""
+
+#: includes/class-wpmft-security.php:155 includes/class-wpmft-security.php:159 includes/class-wpmft-security.php:163
+msgid "Content not found."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:191
+msgid "Create a tree page"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:483
+msgid "Create or edit the tree page."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:333
+msgid "Date of birth"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:333
+msgid "Date of death (leave blank if living)"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:337
+msgid "Dates accept YYYY, YYYY-MM or YYYY-MM-DD. Older date text is retained unless you change it."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:101
+msgid "Deactivate the original WP Family Tree plugin. Its older public routes can bypass the privacy settings of this replacement. Your posts and photographs are retained."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:151
+msgid "Default interface language"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:495
+msgid "Developer"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:178
+msgid "Display the contact email in the footer and exported tree image"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:130
+msgid "Edit tree page"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:180
+msgid "Enable hCaptcha (external anti-spam service)"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:175
+msgid "Enable the Contact Us form"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:145
+msgid "Enable the family tree"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:161
+msgid "Encrypted photographs are served through the family access check. This switch controls protection of new files; disabling it does not make already encrypted photographs public. Use “Protect existing family photos” below to process older files."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:492
+msgid "English and Latvian interface text is included. Names and biographies are never automatically translated. With Polylang, add English and Latvian under Languages and create linked page/post translations as needed."
+msgstr ""
+
+#: includes/class-wpmft-api.php:71
+msgid "Enter your name, a valid email address, and a message of 10–10,000 characters."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:146
+msgid "Existing WP Family Tree posts remain ordinary WordPress posts in this category."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:28 block.json:6
+msgid "Family Tree"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:177
+msgid "Family administrator email"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:176
+msgid "Family administrator name"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:146
+msgid "Family member category"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:60
+msgid "Family photograph protection is complete."
+msgstr ""
+
+#: assets/editor.js:11
+msgid "Family tree"
+msgstr ""
+
+#: includes/class-wpmft-api.php:73
+msgid "Family tree contact"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:136
+msgid "Family tree settings"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:308
+msgid "Family tree — person details"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:339
+msgid "Father / parent 1"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:331
+msgid "Female"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:330
+msgid "Gender"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:137 includes/class-wpmft-admin.php:144
+msgid "General"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:137 includes/class-wpmft-admin.php:187
+msgid "Getting started"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:159
+msgid "Hide the birth dates of living people in the tree and person dialogs"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:327
+msgid "Include this post as a person in the family tree"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:483
+msgid "Insert the Family Tree block, or a Shortcode block containing [wp_my_family_tree]. Choose a starting person in General."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:167
+msgid "Introduction (English)"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:168
+msgid "Introduction (Latvian)"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:162
+msgid "Keep a full backup before protecting files. Protection replaces public family image files with an encrypted vault. The database encryption key and encrypted uploads must be backed up together. Older cached or externally copied photographs cannot be recalled."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:123
+msgid "Keep the stories. Connect the generations."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:491
+msgid "Languages"
+msgstr ""
+
+#: assets/editor.js:14
+msgid "Leave 0 to use the starting person from Family Tree settings."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:182
+msgid "Leave blank to keep the stored secret. It is never included in the public page."
+msgstr ""
+
+#: wp-my-family-tree.php:78
+msgid "Loading the family tree…"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:333
+msgid "Location"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:331
+msgid "Male"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:133
+msgid "Manage family posts"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:158
+msgid "Maximum remembered access (days)"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:339
+msgid "Mother / parent 2"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:56
+msgid "No family members found."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:331
+msgid "Not specified"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:333
+msgid "Occupation"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:486
+msgid "Open a private window. Test the tree, a person’s old URL, a feed and an old direct photograph URL. Clear previous caches. The original plugin should be inactive."
+msgstr ""
+
+#: includes/class-wpmft-media.php:133
+msgid "OpenSSL is required to protect photographs."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:331
+msgid "Other"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:340
+msgid "Other spouses / partners"
+msgstr ""
+
+#: assets/editor.js:28
+msgid "Our family tree"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:342
+msgid "Photo gallery"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:61
+msgid "Photographs remaining:"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:333
+msgid "Place of death"
+msgstr ""
+
+#: includes/class-wpmft-security.php:101
+msgid "Please complete the security challenge."
+msgstr ""
+
+#: wp-my-family-tree.php:78
+msgid "Please enable JavaScript to explore this interactive family tree."
+msgstr ""
+
+#: includes/class-wpmft-security.php:58
+msgid "Please refresh the page and try again."
+msgstr ""
+
+#: includes/class-wpmft-api.php:69
+msgid "Please wait a few seconds and submit the form again."
+msgstr ""
+
+#: includes/class-wpmft-api.php:54
+msgid "Please wait a moment before trying again."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:153
+msgid "Polylang is optional. When installed, it can manage translated pages and biographies; the plugin interface works in English and Latvian without it."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:339
+msgid "Primary spouse / partner"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:137 includes/class-wpmft-admin.php:155
+msgid "Privacy & access"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:185
+msgid "Privacy policy"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:484
+msgid "Private access starts locked until you set a password. Set the family administrator email and optionally enable hCaptcha."
+msgstr ""
+
+#: includes/class-wpmft-security.php:183
+msgid "Private family record"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:162
+msgid "Private pages and family API responses use no-store headers. Exclude the tree page, admin-ajax.php and protected media from host/CDN page caching. Purge older public caches after migration."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:193
+msgid "Protect existing family photos"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:59
+msgid "Protecting family photographs…"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:55
+msgid "Remove"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:346
+msgid "Remove photograph from gallery"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:316
+msgid "Remove selected person"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:349
+msgid "Removing a photograph here only removes it from this gallery. It does not delete the original media file."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:156
+msgid "Require a family password"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:494
+msgid "Restore a matching UpdraftPlus set on staging first. Preserve every filename exactly, including its date, site name, 12-character identifier and -db.gz / -plugins.zip / -themes.zip / -uploads.zip suffix. A standalone plugin ZIP is installed using Plugins → Add New → Upload Plugin, not the Updraft restore screen."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:493
+msgid "Restore backups safely"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:192
+msgid "Revoke all remembered access"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:188
+msgid "Save settings"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:318
+msgid "Search by name…"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:57
+msgid "Search could not load. Please try again."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:58
+msgid "Searching…"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:146
+msgid "Select a category"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:157
+msgid "Set a new family password"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:484
+msgid "Set access and contact details."
+msgstr ""
+
+#: assets/editor.js:30
+msgid "Set the family category, password, languages, colours and contact details in Family Tree → Settings & help."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:29 includes/class-wpmft-admin.php:33
+msgid "Settings"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:29
+msgid "Settings & help"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:188
+msgid "Settings belong to the plugin and work independently of your theme."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:112
+msgid "Settings saved."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:116
+msgid "Settings were not saved. Add both hCaptcha keys before enabling it."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:118
+msgid "Settings were not saved. Enter a valid family administrator email address."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:115
+msgid "Settings were not saved. Use a family password with at least 12 characters."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:488
+msgid "Shortcodes"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:172
+msgid "Show an optional “Built by DigitalPulse” footer link"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:152
+msgid "Show the English / Latvian language switch"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:62
+msgid "Some photographs could not be protected. Keep the original backup and review the error before publishing."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:148
+msgid "Starting person"
+msgstr ""
+
+#: assets/editor.js:13
+msgid "Starting person — post ID"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:185
+msgid "Terms"
+msgstr ""
+
+#: includes/class-wpmft-api.php:77
+msgid "Thank you. Your message has been sent to the family administrator."
+msgstr ""
+
+#: includes/class-wpmft-api.php:66
+msgid "The contact form is not available."
+msgstr ""
+
+#: includes/class-wpmft-media.php:167
+msgid "The encrypted photograph could not be verified."
+msgstr ""
+
+#: includes/class-wpmft-api.php:32
+msgid "The family tree is currently unavailable."
+msgstr ""
+
+#: includes/class-wpmft-api.php:76
+msgid "The message could not be sent. Please try again later or use the administrator contact details."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:117
+msgid "The page could not be created. Please try again."
+msgstr ""
+
+#: includes/class-wpmft-security.php:83
+msgid "The password is incorrect or family access has not been configured."
+msgstr ""
+
+#: includes/class-wpmft-api.php:46
+msgid "The password is too long."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:150
+msgid "The plugin provides its own title, header and contact footer. This applies to pages containing the tree shortcode or block."
+msgstr ""
+
+#: includes/class-wpmft-media.php:177
+msgid "The private file index could not be saved. Originals were retained."
+msgstr ""
+
+#: includes/class-wpmft-media.php:147
+msgid "The private media folder could not be created."
+msgstr ""
+
+#: includes/class-wpmft-media.php:137
+msgid "The private media key could not be created."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:298
+msgid "The protected media service is not available."
+msgstr ""
+
+#: includes/class-wpmft-security.php:56
+msgid "The request origin could not be verified."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:490
+msgid "The root is a WordPress post ID. Legacy [family-tree] and [family-members] shortcodes are supported for migration."
+msgstr ""
+
+#: includes/class-wpmft-security.php:103
+msgid "The security challenge could not be verified. Please try again."
+msgstr ""
+
+#: includes/class-wpmft-security.php:105
+msgid "The security challenge expired or failed. Please try again."
+msgstr ""
+
+#: includes/class-wpmft-security.php:99
+msgid "The security challenge is not configured. Please contact the site administrator."
+msgstr ""
+
+#: includes/class-wpmft-media.php:175
+msgid "There are no photograph files to protect."
+msgstr ""
+
+#: includes/class-wpmft-api.php:62
+msgid "This action is not available."
+msgstr ""
+
+#: includes/class-wpmft-data.php:180
+msgid "This person could not be found."
+msgstr ""
+
+#: includes/class-wpmft-media.php:242
+msgid "This photograph is encrypted. Download it from the family gallery, edit it on your device, and upload the revised photograph."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:485
+msgid "Tick “Include this post as a person”, add a portrait and biography, then choose parents, partners and photographs in the person details box. Children and siblings are derived from parent links."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:165
+msgid "Title (English)"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:166
+msgid "Title (Latvian)"
+msgstr ""
+
+#: includes/class-wpmft-api.php:45 includes/class-wpmft-security.php:81
+msgid "Too many attempts. Please try again in 15 minutes."
+msgstr ""
+
+#: includes/class-wpmft-api.php:67
+msgid "Too many messages. Please try again later."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:170
+msgid "Tree canvas height on large screens (px)"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:147
+msgid "Tree page"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:184
+msgid "Use hCaptcha on the contact form"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:183
+msgid "Use hCaptcha on the family password form"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:54
+msgid "Use selected photographs"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:149
+msgid "Use the full-window layout without the theme header and footer"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:328
+msgid "Use the post title for the person’s name, the block editor for their biography, and Featured image for their portrait. Parent, partner and date fields reuse your existing WP Family Tree data."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:129
+msgid "View tree"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:28 includes/class-wpmft-admin.php:123
+msgid "WP My Family Tree"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:185
+msgid "When enabled, hCaptcha receives technical browser information and verifies form tokens. Review its service terms and add it to your privacy notice."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:69
+msgid "You do not have permission to change family tree settings."
+msgstr ""
+
+#: includes/class-wpmft-api.php:53
+msgid "Your family session has ended. Please unlock the tree again."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:98
+msgid "Your family tree is locked for visitors. Set a family password in Privacy to allow access, or explicitly turn password protection off for a public tree."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:113
+msgid "Your family tree page is ready."
+msgstr ""
+
+#: assets/editor.js:29
+msgid "Your interactive oak tree appears here on the page. People open in dialogs and relatives load as visitors explore."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:126
+msgid "Your tree, in any theme"
+msgstr ""
+
+#: block.json:10
+msgid "family"
+msgstr ""
+
+#: block.json:10
+msgid "genealogy"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:182
+msgid "hCaptcha secret key"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:181
+msgid "hCaptcha site key"
+msgstr ""
+
+#: block.json:10
+msgid "oak"
+msgstr ""

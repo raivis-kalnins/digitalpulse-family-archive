@@ -1,0 +1,148 @@
+# WP My Family Tree — setup and migration
+
+**Developer:** Raivis Kalnins · [DigitalPulse](https://digitalpulse.click/)
+
+WP My Family Tree displays people stored as normal WordPress posts in an interactive oak tree. A person opens in a dialog; relatives and photographs load as visitors explore. A family password grants viewing access. Editing remains in the WordPress dashboard.
+
+## 1. Install or migrate
+
+### Install the standalone plugin
+
+1. Open **Plugins → Add New → Upload Plugin**.
+2. Choose `wp-my-family-tree.zip`, install it and activate it.
+3. Open **Family Tree → Settings & help**.
+4. Select the category containing family posts. The old WP Family Tree category is detected when available.
+5. Review the password, contact and appearance settings before sharing the page.
+
+The standalone plugin contains no family records, photographs, family password or hCaptcha secret. Those belong to your website database and uploads.
+
+### Migrate an existing WP Family Tree site
+
+Make a full backup first. Deactivate the original **WP Family Tree** plugin before using the replacement. Retain its family posts, attachment records and uploads. WP My Family Tree reads the existing `father`, `mother`, `spouse`, `born`, `died` and `gender` metadata, so post IDs and relationships do not need to be recreated.
+
+The old `[family-tree]` and `[family-members]` shortcodes are accepted for migration. Replace them with `[wp_my_family_tree]` when convenient. Selecting a starting person in the new settings removes any dependency on a name-based legacy shortcode.
+
+### Restore a supplied UpdraftPlus set
+
+Restore on a staging site first. In UpdraftPlus, upload **each matching backup file** and use **Rescan local folder for new backup sets** if needed. Restore the database, plugins, themes and uploads from the same set. Preserve the filenames exactly. The date, site name and 12-character identifier must match; the component suffix must remain `-db.gz`, `-plugins.zip`, `-themes.zip` or `-uploads.zip`.
+
+Do not rename these files with additions such as `(1)`, `final` or `fixed`. Do not use the standalone plugin ZIP as an UpdraftPlus component. The restore does not include WordPress core or `wp-config.php` unless the delivery instructions explicitly say so.
+
+If the database or uploads contain encrypted photographs, **restore both together**. The decryption key is in the database, while the encrypted photograph bytes are in uploads. Restoring the wrong database can make photographs unreadable.
+
+## 2. Create the tree page
+
+Use **Create a tree page** in the plugin settings, or edit an existing page and insert the **Family Tree** block. A Shortcode block also works:
+
+```text
+[wp_my_family_tree]
+```
+
+To open on a particular person, use that person's WordPress post ID:
+
+```text
+[wp_my_family_tree root="123"]
+```
+
+The block's sidebar has an equivalent **Starting person — post ID** setting. A value of `0` uses the starting person chosen in the plugin settings.
+
+Enable **Use the full-window layout** to display the plugin's header, title, oak tree and contact footer without the theme header and footer. Disable it to place the tree inside the normal theme layout.
+
+## 3. Add and edit people
+
+Open **Posts → Add New**, or use **Add a person** in the family tree settings.
+
+- **Post title:** the person's display name.
+- **Block editor:** the biography, stories and other text. Ordinary WordPress paragraph, heading, list and image blocks can be used.
+- **Featured image:** the portrait.
+- **Family tree — person details:** tick **Include this post as a person**. This adds the person to the configured family category.
+- **Dates:** enter a year, year and month, or complete date: `1942`, `1942-08` or `1942-08-17`. Leave the death date blank for a living person. Existing older date text is retained unless changed.
+- **Parents:** search for existing people and select them. Children and siblings are calculated from these links.
+- **Partners:** choose a primary spouse/partner and any additional partners.
+- **Locations and occupation:** optional text fields.
+- **Photo gallery:** choose photographs in the WordPress media picker. Reordering affects the dialog gallery. Removing a gallery item does not delete the media file.
+
+Publish a person when the record is ready to appear to family visitors. The relationship fields store post IDs; names can therefore change without breaking the links. The editor prevents a parent relationship that would make a person their own ancestor.
+
+## 4. Set privacy and remembered access
+
+Open **Privacy & access**. A new private installation stays locked until you set a family password. Use at least 12 characters. Leaving the password field blank preserves the existing password; it never reveals the stored hash.
+
+Visitors can choose remembered access for up to the configured maximum of **30 days**. The browser keeps a session cookie, not the family password. Changing the family password or selecting **Revoke all remembered access** invalidates previous sessions. A family visitor cannot edit posts or settings.
+
+Turn **Require a family password** off only when you intend to publish the tree publicly. **Hide birth dates of living people** controls their dates in the tree and person dialogs.
+
+### Protect photograph files
+
+The encrypted-media system makes public image files unreadable outside the authorized delivery route. Keep a full original backup before using **Protect existing family photos**. The action processes photographs in small batches and reports progress. Automatic protection can also process photographs when family people are saved.
+
+The existing-media batch includes other attachments belonging to family posts. Protected non-image files use the same access check and download as files, rather than rendering as active documents in the browser. The person dialog gallery remains image-only, and automatic protection when a person is saved covers their photographs. An editor must be allowed to edit a photograph before automatic protection can encrypt it; ask an administrator to protect a shared file or upload your own copy when necessary.
+
+Encrypted photographs remain available in the WordPress media picker and family galleries. To crop or retouch an encrypted original, download it from the gallery, edit it on your device and upload the revised image; the standard WordPress crop editor cannot edit the encrypted file directly.
+
+Disabling automatic protection only stops protection of new files. It does not make previously encrypted photographs public. Keep the plugin active while relying on encrypted delivery. Preserve the database key and encrypted uploads together in every backup.
+
+The plugin preserves the original WordPress post publication status. Its privacy checks require the plugin to remain active. Before deactivating or uninstalling it on a public site, place the whole site behind separate access protection or take it offline; otherwise previously published person text may become accessible through WordPress again. Never delete the encryption key while keeping encrypted uploads.
+
+After migration, purge old page and image caches. Exclude the tree page, `admin-ajax.php` and protected media routes from host/CDN caching. The plugin supplies no-store response headers, but a cache that ignores those headers must also be configured at the host.
+
+Check the site while signed out in a private browser window: the tree, an old person URL, a feed and a previous direct photograph URL. Cached or externally copied versions of older public photographs cannot be recalled by the plugin.
+
+## 5. Contact form and hCaptcha
+
+Under **Contact & hCaptcha**, set the family administrator name and email. The footer's **Contact Us** button opens the plugin form. The email is used as the recipient; enable **Display the contact email** to include it in the visible footer and exported tree image as well.
+
+Messages use WordPress `wp_mail`. The plugin does not save message bodies as family records. Delivery depends on your host or SMTP configuration. An SMTP or mail logging plugin may retain its own logs.
+
+hCaptcha is optional. To use it, obtain your own site and secret keys, enter both, enable hCaptcha, and choose whether it appears on the password form, contact form or both. The secret stays on the server. Leaving the secret field blank preserves it.
+
+When enabled, hCaptcha loads an external script and processes technical browser information. Include this in your privacy notice. Read [hCaptcha privacy](https://www.hcaptcha.com/privacy) and [terms](https://www.hcaptcha.com/terms). When it is disabled, the tree does not require an hCaptcha account.
+
+## 6. English, Latvian and Polylang
+
+English is the default interface language. Latvian interface text is included. Enable the language switch under **General** and set the English and Latvian titles and introductions under **Appearance**.
+
+Names and biographies are preserved as entered; switching the interface does not machine-translate them. To manage translated pages and biographies, install Polylang separately, add English and Latvian under **Languages**, and connect the translated pages and posts. The plugin's `wpml-config.xml` describes the relationship and custom-field translation behaviour. Existing relationship IDs continue to identify the same family members.
+
+## 7. Appearance, image export and printing
+
+Set the title, introduction, accent colour, background and desktop canvas height under **Appearance**. The tree remains fluid on smaller screens. Portraits and names are interactive; the tree button in a person dialog changes the starting person without opening a separate biography page.
+
+When exports are enabled, visitors can save the visible tree as an image or print it. The export includes the title and contact footer. An exported file is a local copy of the family information: sharing that file is separate from the website password gate.
+
+The optional DigitalPulse footer credit is disabled on a fresh installation and can be enabled by the site administrator.
+
+## 8. Troubleshooting
+
+**The tree is locked:** set a family password, then reload in a private window. WordPress administrator access is separate from visitor access.
+
+**No people appear:** check the configured category, post publication status and the person checkbox. Select an existing starting person.
+
+**Old links or layout still appear:** deactivate the original WP Family Tree plugin and clear the site's cache. Check that the page contains the new block or a supported shortcode.
+
+**A photograph is missing:** confirm that its attachment exists, that the correct encrypted uploads and database were restored together, and that the protection action did not report an error. Preserve the original backup while investigating.
+
+**Contact messages are not received:** check the configured recipient and the WordPress mail transport. Verify the sending domain or configure SMTP if required by your host.
+
+**hCaptcha fails:** verify both keys and the domain configured in your hCaptcha account. Check browser privacy tools and the network request to hCaptcha. Do not expose the secret in page source or JavaScript.
+
+**A theme adds unwanted chrome:** enable full-window mode and ensure the shortcode or block is on the selected tree page.
+
+## Quick reference in Latvian
+
+1. Atveriet **Family Tree → Settings & help** un izvēlieties dzimtas ierakstu kategoriju.
+2. Lapā ievietojiet **Family Tree** bloku vai īskodu `[wp_my_family_tree]`.
+3. Sadaļā **Privacy & access** iestatiet vismaz 12 rakstzīmju paroli. Piekļuvi var atcerēties līdz 30 dienām.
+4. Katru personu veidojiet kā WordPress ierakstu: virsrakstā norādiet vārdu, saturā — dzīvesstāstu, bet Featured image — portretu.
+5. Personas laukos izvēlieties vecākus, partnerus, datumus un galerijas attēlus. Bērni un brāļi/māsas tiek noteikti no vecāku saitēm.
+6. Ieslēdziet angļu/latviešu valodas pārslēgu un norādiet latvisko virsrakstu. Polylang ir izvēles iespēja satura tulkojumiem.
+7. Norādiet dzimtas administratora e-pastu kontaktformai. hCaptcha var ieslēgt ar savām atslēgām.
+8. Pirms attēlu aizsardzības saglabājiet pilnu rezerves kopiju. Šifrētos uploads failus un datubāzi vienmēr atjaunojiet no vienas kopas.
+
+## Development and licensing
+
+The plugin source is included as readable PHP, JavaScript and CSS. It uses WordPress's bundled React and block packages; no JavaScript build step is required. The editor dependency list is in `assets/editor.asset.php`.
+
+Licensed under **GPL-3.0-or-later**. See `LICENSE`. WordPress.org submission, review and approval are separate from preparing this package. Do not include real family backups, media, secrets or private screenshots in a public repository or plugin directory submission.
+
+Before submitting to WordPress.org, add your verified WordPress.org account name to the `Contributors` header in `readme.txt` and set `Tested up to` to the newest WordPress release actually validated. Neither field should be guessed from a GitHub username or a backup header.

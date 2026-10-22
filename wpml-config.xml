@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<wpml-config>
+  <custom-fields>
+    <custom-field action="copy">_wpmft_person</custom-field>
+    <custom-field action="copy">gender</custom-field>
+    <custom-field action="copy">born</custom-field>
+    <custom-field action="copy">died</custom-field>
+    <custom-field action="copy">father</custom-field>
+    <custom-field action="copy">mother</custom-field>
+    <custom-field action="copy">spouse</custom-field>
+    <custom-field action="copy">_wpmft_spouses</custom-field>
+    <custom-field action="copy">_wpmft_gallery</custom-field>
+    <custom-field action="translate">_wpmft_maiden_name</custom-field>
+    <custom-field action="translate">_wpmft_birth_place</custom-field>
+    <custom-field action="translate">_wpmft_death_place</custom-field>
+    <custom-field action="translate">_wpmft_location</custom-field>
+    <custom-field action="translate">_wpmft_occupation</custom-field>
+  </custom-fields>
+  <gutenberg-blocks>
+    <gutenberg-block type="wp-my-family-tree/tree" translate="0" />
+  </gutenberg-blocks>
+</wpml-config>

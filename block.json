@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-my-family-tree/tree",
+  "version": "1.0.0",
+  "title": "Family Tree",
+  "category": "widgets",
+  "icon": "networking",
+  "description": "An interactive oak family tree with person dialogs and optional private access.",
+  "keywords": ["family", "genealogy", "oak"],
+  "textdomain": "wp-my-family-tree",
+  "attributes": {
+    "rootId": {"type": "number", "default": 0}
+  },
+  "supports": {"html": false, "multiple": false, "align": ["wide", "full"]},
+  "editorScript": "file:./assets/editor.js",
+  "editorStyle": "file:./assets/admin.css"
+}
