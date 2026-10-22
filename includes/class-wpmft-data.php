@@ -7,6 +7,13 @@ final class WPMFT_Data {
 	private static $canonical = array();
 	private static $partners = array();
 
+	/** Drop only request-local relationship data after edits or a multisite context switch. */
+	public static function reset_cache() {
+		self::$index = null;
+		self::$canonical = array();
+		self::$partners = array();
+	}
+
 	/** Read explicit declarations only; shared children never imply a current romantic relationship. */
 	public static function partner_declarations( $id ) {
 		$stored = get_post_meta( $id, '_wpmft_partner_status', true ); $result = array();
@@ -71,7 +78,8 @@ final class WPMFT_Data {
 		// This category-or-marker query intentionally bypasses public filters and persistent family-data caches.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Prepared immediately above.
 		$ids = array_map( 'intval', $wpdb->get_col( $sql ) );
-		if ( $ids ) { _prime_post_caches( $ids, false, true ); }
+		// Access filters need IDs only. Avoid loading every biography and metadata row for privacy exclusions.
+		if ( $ids && $published ) { _prime_post_caches( $ids, false, true ); }
 		return $ids;
 	}
 
@@ -85,10 +93,18 @@ final class WPMFT_Data {
 	}
 	public static function index() {
 		if ( null !== self::$index ) { return self::$index; }
+		$cached = class_exists( 'WPMFT_Cache' ) ? WPMFT_Cache::read_graph() : false;
+		if ( false !== $cached ) {
+			self::$index = $cached['index']; self::$canonical = $cached['canonical']; self::$partners = $cached['partners'];
+			// Keep the existing bulk post/meta priming; a graph hit must not introduce per-person SQL queries.
+			if ( self::$canonical ) { _prime_post_caches( array_keys( self::$canonical ), false, true ); }
+			return self::$index;
+		}
 		$ids = self::ids();
 		self::$index = array();
+		self::$canonical = array();
 		self::$partners = array();
-		if ( ! $ids ) { return self::$index; }
+		if ( ! $ids ) { self::cache_index(); return self::$index; }
 		update_meta_cache( 'post', $ids );
 		$all = array_fill_keys( $ids, true );
 		foreach ( $ids as $id ) {
@@ -133,7 +149,12 @@ final class WPMFT_Data {
 			self::$index[$id]['siblings'] = array_values( array_diff( array_unique( $siblings ), array( $id ) ) );
 			self::$index[$id]['spouses'] = array_keys( array_filter( self::$partners[$id] ?? array(), function ( $status ) { return ! self::former_status( $status ); } ) );
 		}
+		self::cache_index();
 		return self::$index;
+	}
+
+	private static function cache_index() {
+		if ( class_exists( 'WPMFT_Cache' ) ) { WPMFT_Cache::write_graph( array( 'index' => self::$index, 'canonical' => self::$canonical, 'partners' => self::$partners ) ); }
 	}
 
 	public static function canonical( $id ) { self::index(); return self::$canonical[$id] ?? $id; }

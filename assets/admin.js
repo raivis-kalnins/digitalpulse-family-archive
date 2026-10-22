@@ -143,6 +143,8 @@
             function showPanel(hash) {
                 var active = sections.find(function (panel) { return '#' + panel.id === hash; }) || sections[0];
                 sections.forEach(function (panel) { panel.hidden = panel !== active; });
+				var sectionField = document.querySelector('[name="wpmft_section"]');
+				if (sectionField) sectionField.value = active.id.replace('wpmft-', '');
                 links.forEach(function (link) {
                     var selected = link.hash === '#' + active.id;
                     link.classList.toggle('is-active', selected);

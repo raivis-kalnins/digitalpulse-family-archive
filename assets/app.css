@@ -1,4 +1,5 @@
 /* WP My Family Tree — readable source stylesheet. GPL-3.0-or-later. */
+.wpmft-standalone { margin: 0; padding: 0; background: #f5f4ed; }
 .wpmft-app, .wpmft-overlay {
     --wpmft-accent: #355b3e;
     --wpmft-bg: #f7f5ec;
@@ -89,7 +90,7 @@
 .wpmft-tree-context .wpmft-kicker { font-size: 9px; letter-spacing: 1.6px; }
 .wpmft-tree-context h2 { font: 400 24px/1.3 var(--wpmft-serif); margin-top: 3px; letter-spacing: -.3px; }
 .wpmft-view-count { color: #637255; font-size: 11px; background: #f0f2e6; border-radius: 20px; padding: 6px 11px; }
-.wpmft-tree-viewport { position: relative; width: 100%; height: var(--tree-height, 710px); overflow: hidden; cursor: grab; touch-action: none; outline-offset: -5px; isolation: isolate; background-image: radial-gradient(#c4cfb342 .7px, transparent .7px), radial-gradient(ellipse at 50% 46%, #ecf0db70, transparent 67%); background-size: 20px 20px, 100% 100%; }
+.wpmft-tree-viewport { position: relative; width: 100%; height: var(--tree-height, 710px); overflow: hidden; cursor: grab; touch-action: none; overscroll-behavior: contain; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; outline-offset: -5px; isolation: isolate; background-image: radial-gradient(#c4cfb342 .7px, transparent .7px), radial-gradient(ellipse at 50% 46%, #ecf0db70, transparent 67%); background-size: 20px 20px, 100% 100%; }
 .wpmft-tree-viewport.is-dragging, .wpmft-tree-viewport.is-dragging * { cursor: grabbing; }
 .wpmft-tree-scene { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; user-select: none; }
 .wpmft-oak-art, .wpmft-relationship-lines { position: absolute; inset: 0; pointer-events: none; }
@@ -102,6 +103,7 @@
 .wpmft-tree-node { position: absolute; transform: translate(-50%, -50%); width: 180px; height: 162px; }
 .wpmft-node-person { display: flex; flex-direction: column; align-items: center; width: 180px; height: 162px; padding: 9px 9px 10px; background: #fffef8f5; border: 1px solid #d6dec8; border-radius: 26px 13px 26px 13px; box-shadow: 0 5px 15px #3547280c; color: #2d4934; transition: border-color .2s, background .2s, transform .2s, box-shadow .2s; position: relative; }
 .wpmft-node-person:hover { border-color: #8ea373; background: #fffef9; transform: translateY(-3px); box-shadow: 0 9px 20px #344b2520; }
+.wpmft-tree-viewport.is-dragging .wpmft-node-person { transform: none; }
 .wpmft-node-person > strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: 14px; font-weight: 600; line-height: 1.3; max-width: 158px; height: 37px; margin-top: 4px; align-content: center; text-align: center; }
 .wpmft-node-dates { font-size: 11px; color: #637255; line-height: 1.3; display: block; margin-top: 3px; max-width: 154px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wpmft-tree-node.is-selected .wpmft-node-person { border: 2px solid #7f9a5c; background: #edf2de; box-shadow: 0 0 0 5px #a3b7891a, 0 7px 20px #34532610; padding-top: 8px; }
@@ -338,6 +340,9 @@
 .wpmft-lightbox-dots button.is-active { background: #e4ebd6; }
 .wpmft-print-frame { position: fixed; width: 1px; height: 1px; border: 0; bottom: 0; right: 0; opacity: 0; pointer-events: none; }
 
+@media (hover: none) {
+    .wpmft-node-person:hover { transform: none; }
+}
 @media (min-width: 1900px) {
     .wpmft-header-inner, .wpmft-main, .wpmft-footer-inner { width: calc(100% - 110px); max-width: 2000px; }
 }

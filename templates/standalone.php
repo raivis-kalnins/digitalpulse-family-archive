@@ -3,6 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 WPMFT_Security::no_cache();
 $wpmft_s = wpmft_settings();
+WPMFT_Output::begin_document();
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -22,3 +23,4 @@ wp_footer();
 ?>
 </body>
 </html>
+<?php WPMFT_Output::end_document(); ?>

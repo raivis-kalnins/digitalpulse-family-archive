@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "wp-my-family-tree/tree",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "title": "Family Tree",
   "category": "widgets",
   "icon": "networking",

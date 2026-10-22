@@ -2,7 +2,7 @@
 
 An oak-inspired WordPress family tree for the stories, photographs and people that connect generations. Explore relatives in a responsive React interface, open a person in a detailed modal, and manage the archive through familiar WordPress posts.
 
-**Version 1.1.0** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
+**Version 1.1.2** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
 Developed by **Raivis Kalnins**, web developer at [DigitalPulse](https://digitalpulse.click/).  
 Project: [github.com/raivis-kalnins/wp-my-family-tree](https://github.com/raivis-kalnins/wp-my-family-tree)
 
@@ -10,7 +10,20 @@ Project: [github.com/raivis-kalnins/wp-my-family-tree](https://github.com/raivis
 
 *The screenshot contains fictional demonstration records and illustrated portraits. No private family records or photographs are included in this plugin.*
 
-## What is new in 1.1.0
+## What is new in 1.1.2
+
+- **Performance and cache controls.** A server-side relationship index avoids rebuilding the same graph on every request. Relevant edits invalidate it automatically; the administrator can clear it and refresh plugin asset URLs from a dedicated panel.
+- **WordPress cleanup.** Optional switches disable comments and pingbacks on ordinary posts, pages and media, remove WordPress emoji assets, and omit unnecessary discovery tags. Existing comments remain stored and custom post type reviews and order notes keep working.
+- **Smaller page resources.** Prebuilt minified plugin JavaScript and CSS, conservative full-window HTML compaction, and a single viewport tag. Readable sources remain included.
+- **Optional lean styling.** Full-window pages can omit the theme's styles, global presets and fonts. This is off by default because existing biographies may use theme-styled blocks.
+- **English and Latvian controls.** The new settings, cache status and clear tool are translated in both plugin interface languages.
+
+### Included from 1.1.1
+
+- **Aligned gallery controls.** The photo-gallery remove buttons have a centred cross, consistent dimensions and a visible keyboard focus indicator in the person editor.
+- **Easier mobile navigation.** Start a swipe on a person card or the tree background. A short tap still opens the person or branch; dragging does not accidentally open a modal. Two-finger gestures zoom the tree.
+
+### Included from 1.1.0
 
 - **Person details first.** Family people open with their portrait, dates, relationships, contact details and gallery form directly below the post title. Gutenberg is disabled for people by default and can be enabled in settings. Other posts and pages keep their normal editor.
 - **Richer person profiles.** Add email, telephone, mobile phone, postal address, website, Facebook, Instagram, LinkedIn, X / Twitter, YouTube and TikTok links.
@@ -38,17 +51,20 @@ The earlier top-aligned photograph frames, Polylang page-language synchronizatio
 | Contact | Independent recipient settings, optional hCaptcha, private single-photo attachment and WordPress mail delivery |
 | Installation | Oak favicon, Apple touch icon, web-app manifest and Android / Apple footer help |
 | Sharing | Optional tree PNG export and printing with the page title and contact footer |
+| Performance | Server-side relationship index, scoped cache clearing, minified assets, full-window HTML compaction and configurable WordPress cleanup |
 
 ## Update an existing installation
 
 1. In WordPress, open **Plugins → Add New Plugin → Upload Plugin**.
-2. Select the complete `wp-my-family-tree-1.1.0.zip` archive and click **Install Now**.
+2. Select a complete `wp-my-family-tree-1.1.2.zip` archive and click **Install Now**.
 3. When WordPress finds the existing plugin, choose **Replace current with uploaded**.
-4. Open **Family Tree → Settings & help** to review the new editor, app-installation and contact-upload settings.
+4. Open **Family Tree → Settings & help → Performance & cache**, review the new defaults, and reload the family page.
 
 This release is a **plugin-only update**. No database import, theme replacement or UpdraftPlus restore is needed. The archive keeps the existing `wp-my-family-tree` plugin folder. Your person posts, relationships, uploaded photographs, stored password, settings and media-encryption key remain in the site's existing data. New settings receive their defaults automatically.
 
 Use the complete installable ZIP for WordPress's replacement uploader. A patch or a ZIP containing only changed files is not a complete plugin package. Keep your usual site backup before any plugin update, particularly when the site uses encrypted photographs.
+
+If you received `wp-my-family-tree-1.1.2-changed-files.zip`, it is a patch for **1.1.0 or 1.1.1**, including the earlier mobile gesture and gallery fixes. Extract it and merge its `wp-my-family-tree/` contents into the existing folder at `wp-content/plugins/wp-my-family-tree/`, replacing matching files and retaining the others. Do not use the WordPress plugin uploader for this partial archive.
 
 ## First-time setup
 
@@ -76,6 +92,12 @@ Insert the **Family Tree** block on a WordPress page. Its starting-person option
 Legacy `[family-tree]` and `[family-members]` shortcodes are supported for migration. A configured starting person removes the need for a name-based legacy shortcode.
 
 Full-window mode supplies the tree page's complete layout, including its H1, header and footer, independently of the theme. Turn that setting off to place the tree inside the active theme's normal page. The page block remains available even when Gutenberg is disabled for person records.
+
+### Move around the tree
+
+On a phone or tablet, swipe anywhere inside the tree, including a portrait, name or branch button, to move it. Tap a person without dragging to open their details, or tap the branch button to explore their relatives. Pinch with two fingers to zoom; lifting one finger lets the remaining finger continue moving the tree. Scroll outside the tree area to move down the page.
+
+On a computer, drag the tree or use the on-screen zoom and fit controls. With the tree area focused, arrow keys move it, `+` / `−` zoom and `Home` fits the tree. The person and branch buttons remain keyboard accessible.
 
 ## Add and edit people
 
@@ -189,6 +211,34 @@ No service worker or offline family-data cache is registered. An internet connec
 
 References: [MDN installability guide](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable) and [Apple's Home Screen guide](https://support.apple.com/en-gb/guide/iphone/iphea86e5236/ios).
 
+## Performance, page source and cache tools
+
+Open **Family Tree → Settings & help → Performance & cache**. The relationship cache, comments cleanup, emoji removal, head cleanup, minified assets and full-window HTML compaction are enabled by default. Each can be switched off independently. **Lean styles are off by default.**
+
+### Relationship index and clearing
+
+The cache stores numeric person IDs, relationship lists, translation mappings and partner-status values on the server using WordPress transients. Its default lifetime is **15 minutes**, adjustable from **1 to 60 minutes**. It avoids rebuilding the graph on every tree request. It does not store profile responses, names, biographies, photographs, contact details, viewing tokens or permission decisions. WordPress may discard a transient early; the plugin rebuilds a missing index when needed.
+
+Saving people, relationship metadata, categories, Polylang mappings or relevant settings invalidates the index automatically. Imports that bypass WordPress hooks with direct SQL need a manual clear or must wait for expiry. The panel displays whether the cache is ready, which storage WordPress is using, and the last manual clear time. A separate cache service is not required.
+
+Use **Clear Family Tree cache** to remove this site's relationship index and change the version used in plugin script and stylesheet URLs. The next tree request rebuilds the index. Only administrators can use this POST-and-nonce-protected action. Save changed settings before using the tool.
+
+Clearing preserves passwords, remembered family access, anti-spam limits, media-encryption keys and uploaded photographs. It does not flush other plugins' caches or host/CDN caches. **Private pages and API responses still use `no-store`; this feature does not enable public page caching.**
+
+### Comments, emoji and head cleanup
+
+Comment cleanup closes comments and pingbacks on ordinary posts, pages and attachments, hides their public comment output and removes their editor controls. It leaves the original comment records and stored discussion settings intact, with existing comments available for moderation. Custom post types, including product reviews and order notes, are unaffected. Turning the option off restores the site's normal discussion behaviour.
+
+Emoji cleanup removes WordPress fallback detection scripts, styles, TinyMCE support and related resource hints. Native device emoji still display. Head cleanup removes generator, RSD, Windows Live Writer, adjacent-post and shortlink tags. Full-window family pages also omit feed, oEmbed and REST discovery links; the underlying REST endpoints remain available. Canonical URLs, Polylang language links, privacy directives, app icons, the manifest and third-party scripts are retained.
+
+### Minification and optional lean styles
+
+The plugin ships prebuilt `.min.js` and `.min.css` files for the tree, dashboard controls and installation helper. WordPress loads them by default. Turning off **Use minified plugin JavaScript and CSS**, or enabling `SCRIPT_DEBUG`, selects the readable source files. The small block-editor script remains readable.
+
+Full-window HTML compaction reduces whitespace between HTML tags while preserving word spacing, complete attribute values, comments, inline scripts, styles and preformatted elements such as `pre`, `code` and `textarea`. It leaves admin pages, embedded theme pages, API responses and documents larger than 2 MB alone. Documents with nested protected elements are left unchanged. It does not combine or rewrite third-party inline scripts. The duplicate block-theme viewport tag is removed from the standalone document regardless of the compaction setting.
+
+Enable **Use lean styles on full-window tree pages** to omit theme styles, global presets and theme fonts from that layout. Core block styles remain available. Review existing biographies and any extra page blocks after enabling it; theme colour, spacing or typography presets may have been used in that content. Embedded tree pages retain their normal theme styles.
+
 ## Privacy, access and backups
 
 A family password grants viewing access. Editing still requires a WordPress account with appropriate permissions. Set a password of at least 12 characters under **Privacy & access**. Remembered access can last up to 30 days and uses a server-validated cookie; the family password is not stored in browser local storage. Changing the password or using **Revoke all remembered access** invalidates existing viewing sessions.
@@ -227,7 +277,7 @@ Old public photograph URLs, third-party copies and external caches are outside t
 
 ## Īsā pamācība latviski
 
-1. Atjauniniet spraudni sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni**, izvēloties `wp-my-family-tree-1.1.0.zip`. Aizstājiet esošo spraudni. Datubāzes imports un motīva nomaiņa šim atjauninājumam nav vajadzīga.
+1. Pilno `wp-my-family-tree-1.1.2.zip` pakotni instalējiet sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni**, aizstājot esošo spraudni. Ja saņemta `changed-files` pakotne, tās failus apvienojiet ar esošo spraudņa mapi, saglabājot pārējos failus; tā nav paredzēta WordPress augšupielādētājam. Datubāzes imports un motīva nomaiņa nav vajadzīga.
 2. Spraudņa iestatījumos izvēlieties dzimtas ierakstu kategoriju, sākuma personu un koka lapu. Lapā ievietojiet bloku **Family Tree** vai īskodu `[wp_my_family_tree]`.
 3. Personas rediģēšanā detalizētā forma atrodas uzreiz zem virsraksta. Virsrakstā norādiet personas pilnu vārdu, izvēlieties portretu, vecākus, partnerus, datumus un galeriju. Dzīvesstāsta redaktors atrodas zem formas. Bloku redaktoru personām pēc vajadzības var ieslēgt spraudņa iestatījumos.
 4. Pievienojiet e-pastu, tālruni, mobilo tālruni, adresi, mājaslapu un sociālo tīklu saites tikai tad, ja persona piekrīt tās kopīgot ar koka apmeklētājiem.
@@ -237,10 +287,20 @@ Old public photograph URLs, third-party copies and external caches are outside t
 8. Kājene piedāvā Android un Apple instalēšanas iespējas. iPhone / iPad ierīcē izmantojiet Safari kopīgošanas izvēlni un **Add to Home Screen**. Dzimtas datiem nepieciešams interneta savienojums.
 9. Privātam kokam iestatiet vismaz 12 rakstzīmju paroli. Piekļuvi var atcerēties līdz 30 dienām. WordPress lietotājs ar rediģēšanas tiesībām personas logā redz nelielu rediģēšanas pogu.
 10. Šifrētos attēlus un datubāzi vienmēr dublējiet kopā, lai saglabātu attēlu atšifrēšanas atslēgu.
+11. Sadaļā **Veiktspēja un kešatmiņa** pārvaldiet radniecības indeksa kešatmiņu, komentārus, emocijzīmes un lapas apjoma samazināšanu. Poga **Iztīrīt dzimtas koka kešatmiņu** saglabā paroles, atcerēto piekļuvi un aizsargātos attēlus. Samazinātā motīva stilu kopa ir papildu iespēja, kas pēc noklusējuma ir izslēgta.
 
 ## Source, repository and licensing
 
-All runtime PHP, JavaScript and CSS source is included and readable. The frontend uses WordPress's bundled `wp-element` React APIs. No JavaScript build step is required.
+All runtime PHP, JavaScript and CSS source is included and readable. The frontend uses WordPress's bundled `wp-element` React APIs. WordPress loads the included prebuilt files, so installation does not require Node, npm or a build step.
+
+When changing `assets/app.js`, `assets/admin.js`, `assets/install.js` or the app/admin CSS, regenerate the minified counterparts before release:
+
+```bash
+npm ci
+npm run build
+```
+
+The build uses the exact esbuild version in `package-lock.json` and requires Node 18 or newer. Keep `node_modules/` out of release archives and the repository. Use the readable source files for development; do not edit generated `.min.*` files directly.
 
 | Path | Purpose |
 | --- | --- |
@@ -249,11 +309,13 @@ All runtime PHP, JavaScript and CSS source is included and readable. The fronten
 | `assets/app.js`, `assets/app.css` | React tree, dialogs, contact form and responsive styles |
 | `assets/admin.js`, `assets/admin.css` | Person editing, live labels and settings |
 | `assets/install.js` | Captures the browser install prompt without offline storage |
+| `assets/*.min.js`, `assets/*.min.css` | Generated production assets, included in the release |
 | `assets/icons/`, `touch.png` | Original oak artwork, favicon and installation icons |
 | `assets/editor.js`, `assets/editor.asset.php`, `block.json` | WordPress page block and dependencies |
 | `templates/standalone.php` | Optional full-window template |
 | `languages/` | Translation sources, Latvian MO and block translation catalogs |
 | `wpml-config.xml` | Person-field translation and synchronization rules |
+| `scripts/build-assets.mjs`, `package.json`, `package-lock.json` | Reproducible minified-asset build; development only |
 | `docs/screenshot.png` | Fictional demonstration screenshot rendered above on GitHub |
 | `readme.md`, `LICENSE` | This guide and the complete license |
 
@@ -264,6 +326,14 @@ Keep databases, real family media, Updraft backup sets, passwords, keys, test cr
 Copyright © 2026 **Raivis Kalnins / DigitalPulse**. Licensed under the [GNU General Public License, version 3 or later](LICENSE). Icon artwork is included under the same license. Legacy-data compatibility refers to WP Family Tree by Arvind Shah; this is a separate plugin using compatible existing data.
 
 ## Changelog
+
+### 1.1.2
+
+Server-side relationship cache with automatic invalidation and an administrator clear tool; configurable comments, emoji and head cleanup; minified frontend and admin assets; conservative standalone HTML compaction and duplicate viewport removal; optional removal of theme styles and fonts; English and Latvian performance controls. Private response caching and access checks remain unchanged.
+
+### 1.1.1
+
+Centred photo-gallery remove buttons in the person editor; mobile tree dragging from portraits, names and branch buttons with tap protection; stable two-finger zoom and one-finger panning.
 
 ### 1.1.0
 

@@ -14,12 +14,29 @@ function wpmft_settings() {
 		'password_protection' => 1, 'password_hash' => '', 'session_version' => '', 'remember_days' => 30,
 		'hide_living_dates' => 0, 'private_media' => 1, 'language' => 'en', 'language_switch' => 1,
 		'person_block_editor' => 0, 'app_install' => 1, 'app_icons' => 1,
+		'performance_cache' => 1, 'cache_ttl' => 15, 'disable_comments' => 1, 'disable_emojis' => 1, 'clean_head' => 1,
+		'minify_html' => 1, 'minify_assets' => 1, 'lean_standalone' => 0,
 		'accent' => '#315a42', 'background' => '#f5f4ed', 'tree_height' => 760,
 		'allow_export' => 1, 'show_credit' => 0, 'hcaptcha_enabled' => 0,
 		'hcaptcha_site_key' => '', 'hcaptcha_secret' => '', 'hcaptcha_login' => 0, 'hcaptcha_contact' => 1,
 	);
 	$s = get_option( 'wpmft_settings', array() );
 	return wp_parse_args( is_array( $s ) ? $s : array(), $defaults );
+}
+
+/** Public static files may be cached; this revision never applies to private API/media responses. */
+function wpmft_asset_version() {
+	$revision = (string) get_option( 'wpmft_asset_revision', '' );
+	return WPMFT_VERSION . ( $revision ? '-' . sanitize_key( $revision ) : '' );
+}
+
+/** Keep readable sources available; compiled files are optional when SCRIPT_DEBUG is enabled. */
+function wpmft_asset_url( $filename ) {
+	if ( ! ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) && ! empty( wpmft_settings()['minify_assets'] ) ) {
+		$minified = preg_replace( '/\.(js|css)$/', '.min.$1', $filename );
+		if ( $minified !== $filename && is_file( WPMFT_DIR . 'assets/' . $minified ) ) { $filename = $minified; }
+	}
+	return WPMFT_URL . 'assets/' . $filename;
 }
 
 /** The interface supports English and Latvian; an unconfigured Polylang keeps the local switch. */

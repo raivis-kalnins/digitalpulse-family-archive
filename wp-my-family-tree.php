@@ -3,7 +3,7 @@
  * Plugin Name: WP My Family Tree
  * Plugin URI: https://github.com/raivis-kalnins/wp-my-family-tree
  * Description: A private, interactive oak family tree with person galleries, a block and shortcode, and English/Latvian support. Reuses WP Family Tree posts.
- * Version: 1.1.0
+ * Version: 1.1.2
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Author: Raivis Kalnins — DigitalPulse
@@ -16,7 +16,7 @@
  * @package WPMyFamilyTree
  */
 defined( 'ABSPATH' ) || exit;
-define( 'WPMFT_VERSION', '1.1.0' );
+define( 'WPMFT_VERSION', '1.1.2' );
 define( 'WPMFT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WPMFT_URL', plugin_dir_url( __FILE__ ) );
 
@@ -28,6 +28,9 @@ require_once WPMFT_DIR . 'includes/class-wpmft-contact-upload.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-api.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-admin.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-app.php';
+require_once WPMFT_DIR . 'includes/class-wpmft-cache.php';
+require_once WPMFT_DIR . 'includes/class-wpmft-performance.php';
+require_once WPMFT_DIR . 'includes/class-wpmft-output.php';
 
 function wpmft_activate() {
 	$s = wpmft_settings();
@@ -47,8 +50,8 @@ register_activation_hook( __FILE__, 'wpmft_activate' );
 
 add_action( 'init', function () {
 	load_plugin_textdomain( 'wp-my-family-tree', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-	wp_register_script( 'wpmft-app', WPMFT_URL . 'assets/app.js', array( 'wp-element' ), WPMFT_VERSION, true );
-	wp_register_style( 'wpmft-app', WPMFT_URL . 'assets/app.css', array(), WPMFT_VERSION );
+	wp_register_script( 'wpmft-app', wpmft_asset_url( 'app.js' ), array( 'wp-element' ), wpmft_asset_version(), true );
+	wp_register_style( 'wpmft-app', wpmft_asset_url( 'app.css' ), array(), wpmft_asset_version() );
 	register_block_type( WPMFT_DIR, array( 'render_callback' => 'wpmft_block' ) );
 	wp_set_script_translations( 'wp-my-family-tree-tree-editor-script', 'wp-my-family-tree', WPMFT_DIR . 'languages' );
 	foreach ( array( 'wp_my_family_tree', 'family-tree', 'family-members' ) as $tag ) { add_shortcode( $tag, 'wpmft_shortcode' ); }
@@ -96,3 +99,6 @@ WPMFT_Media::init();
 WPMFT_API::init();
 WPMFT_Admin::init();
 WPMFT_App::init();
+WPMFT_Cache::init();
+WPMFT_Performance::init();
+WPMFT_Output::init();

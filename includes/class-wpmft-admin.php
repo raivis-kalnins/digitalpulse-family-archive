@@ -25,6 +25,7 @@ final class WPMFT_Admin {
 		add_action( 'admin_post_wpmft_create_page', array( __CLASS__, 'create_page' ) );
 		add_action( 'admin_post_wpmft_revoke_sessions', array( __CLASS__, 'revoke_sessions' ) );
 		add_action( 'admin_post_wpmft_protect_media', array( __CLASS__, 'protect_media' ) );
+		add_action( 'admin_post_wpmft_clear_cache', array( __CLASS__, 'clear_cache' ) );
 		add_action( 'wp_ajax_wpmft_admin_people', array( __CLASS__, 'people_search' ) );
 		add_action( 'wp_ajax_wpmft_admin_protect_media', array( __CLASS__, 'protect_media_ajax' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
@@ -131,8 +132,8 @@ final class WPMFT_Admin {
 		if ( 'toplevel_page_wpmft' !== $hook && ! $is_post ) {
 			return;
 		}
-		wp_enqueue_style( 'wpmft-admin', WPMFT_URL . 'assets/admin.css', array(), WPMFT_VERSION );
-		wp_enqueue_script( 'wpmft-admin', WPMFT_URL . 'assets/admin.js', array( 'jquery' ), WPMFT_VERSION, true );
+		wp_enqueue_style( 'wpmft-admin', wpmft_asset_url( 'admin.css' ), array(), wpmft_asset_version() );
+		wp_enqueue_script( 'wpmft-admin', wpmft_asset_url( 'admin.js' ), array( 'jquery' ), wpmft_asset_version(), true );
 		if ( $is_post ) {
 			wp_enqueue_media();
 		}
@@ -171,8 +172,9 @@ final class WPMFT_Admin {
 		check_admin_referer( $nonce_action );
 	}
 
-	private static function redirect( $message = 'saved' ) {
-		wp_safe_redirect( add_query_arg( array( 'wpmft_notice' => $message, 'wpmft_admin_lang' => self::language() ), admin_url( 'admin.php?page=wpmft' ) ) );
+	private static function redirect( $message = 'saved', $section = '' ) {
+		$anchor = in_array( $section, array( 'general', 'privacy', 'appearance', 'contact', 'performance', 'help' ), true ) ? '#wpmft-' . $section : '';
+		wp_safe_redirect( add_query_arg( array( 'wpmft_notice' => $message, 'wpmft_admin_lang' => self::language() ), admin_url( 'admin.php?page=wpmft' ) ) . $anchor );
 		exit;
 	}
 
@@ -217,6 +219,7 @@ final class WPMFT_Admin {
 			'error' => __( 'The page could not be created. Please try again.', 'wp-my-family-tree' ),
 			'email' => __( 'Settings were not saved. Enter a valid family administrator email address.', 'wp-my-family-tree' ),
 			'media' => __( 'A batch of family photographs has been protected. Continue until no photographs remain.', 'wp-my-family-tree' ),
+			'cache' => __( 'Family Tree cache cleared. Static asset URLs have been refreshed.', 'wp-my-family-tree' ),
 		);
 		?>
 		<div class="wrap wpmft-settings">
@@ -234,13 +237,15 @@ final class WPMFT_Admin {
 				</div>
 			</div>
 			<nav class="wpmft-admin-tabs" aria-label="<?php esc_attr_e( 'Family tree settings', 'wp-my-family-tree' ); ?>">
-				<?php foreach ( array( 'general' => __( 'General', 'wp-my-family-tree' ), 'privacy' => __( 'Privacy & access', 'wp-my-family-tree' ), 'appearance' => __( 'Appearance', 'wp-my-family-tree' ), 'contact' => __( 'Contact & hCaptcha', 'wp-my-family-tree' ), 'help' => __( 'Getting started', 'wp-my-family-tree' ) ) as $key => $label ) : ?>
+				<?php foreach ( array( 'general' => __( 'General', 'wp-my-family-tree' ), 'privacy' => __( 'Privacy & access', 'wp-my-family-tree' ), 'appearance' => __( 'Appearance', 'wp-my-family-tree' ), 'contact' => __( 'Contact & hCaptcha', 'wp-my-family-tree' ), 'performance' => __( 'Performance & cache', 'wp-my-family-tree' ), 'help' => __( 'Getting started', 'wp-my-family-tree' ) ) as $key => $label ) : ?>
 				<a href="#wpmft-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></a>
 				<?php endforeach; ?>
 			</nav>
 			<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post" class="wpmft-settings-form">
 				<input type="hidden" name="action" value="wpmft_save_settings">
 				<input type="hidden" name="wpmft[v110_present]" value="1">
+				<input type="hidden" name="wpmft[v112_present]" value="1">
+				<input type="hidden" name="wpmft_section" value="general">
 				<?php wp_nonce_field( 'wpmft_save_settings' ); ?>
 				<?php self::language_control(); ?>
 				<section id="wpmft-general" class="wpmft-settings-section"><h2><?php esc_html_e( 'General', 'wp-my-family-tree' ); ?></h2>
@@ -298,9 +303,11 @@ final class WPMFT_Admin {
 					<?php self::checkbox( 'hcaptcha_contact', __( 'Use hCaptcha on the contact form', 'wp-my-family-tree' ), $s ); ?>
 					<p class="description"><?php esc_html_e( 'When enabled, hCaptcha receives technical browser information and verifies form tokens. Review its service terms and add it to your privacy notice.', 'wp-my-family-tree' ); ?> <a href="https://www.hcaptcha.com/privacy" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Privacy policy', 'wp-my-family-tree' ); ?></a> · <a href="https://www.hcaptcha.com/terms" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Terms', 'wp-my-family-tree' ); ?></a></p>
 				</section>
+				<section id="wpmft-performance" class="wpmft-settings-section"><h2><?php esc_html_e( 'Performance & cache', 'wp-my-family-tree' ); ?></h2><?php self::performance_panel( $s ); ?></section>
 				<section id="wpmft-help" class="wpmft-settings-section"><h2><?php esc_html_e( 'Getting started', 'wp-my-family-tree' ); ?></h2><?php self::help(); ?></section>
 				<div class="wpmft-save-bar"><?php submit_button( __( 'Save settings', 'wp-my-family-tree' ), 'primary', 'submit', false ); ?><span><?php esc_html_e( 'Settings belong to the plugin and work independently of your theme.', 'wp-my-family-tree' ); ?></span></div>
 			</form>
+			<form id="wpmft-cache-tool" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"><input type="hidden" name="action" value="wpmft_clear_cache"><?php wp_nonce_field( 'wpmft_clear_cache' ); ?></form>
 			<div class="wpmft-secondary-actions">
 				<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"><input type="hidden" name="action" value="wpmft_create_page"><?php wp_nonce_field( 'wpmft_create_page' ); ?><button class="button" type="submit"><?php esc_html_e( 'Create a tree page', 'wp-my-family-tree' ); ?></button></form>
 				<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"><input type="hidden" name="action" value="wpmft_revoke_sessions"><?php wp_nonce_field( 'wpmft_revoke_sessions' ); ?><button class="button" type="submit"><?php esc_html_e( 'Revoke all remembered access', 'wp-my-family-tree' ); ?></button></form>
@@ -313,6 +320,50 @@ final class WPMFT_Admin {
 
 	private static function checkbox( $key, $label, $settings ) {
 		echo '<label class="wpmft-check"><input type="checkbox" name="wpmft[' . esc_attr( $key ) . ']" value="1" ' . checked( ! empty( $settings[ $key ] ), true, false ) . '><span>' . esc_html( $label ) . '</span></label>';
+	}
+
+	private static function performance_panel( $s ) {
+		$status = WPMFT_Cache::status();
+		$cleared = (int) get_option( 'wpmft_cache_cleared_at', 0 );
+		self::checkbox( 'performance_cache', __( 'Cache the internal relationship index', 'wp-my-family-tree' ), $s );
+		self::field( 'cache_ttl', __( 'Cache lifetime (minutes)', 'wp-my-family-tree' ), $s, 'number', array( 'min' => 1, 'max' => 60, 'step' => 1 ) );
+		?>
+		<p class="description"><?php esc_html_e( 'The default is 15 minutes. Person and relationship edits refresh the index automatically. Only numeric relationships are stored on the server; personal profiles, photographs and access tokens are not cached by this feature.', 'wp-my-family-tree' ); ?></p>
+		<h3><?php esc_html_e( 'WordPress cleanup', 'wp-my-family-tree' ); ?></h3>
+		<?php self::checkbox( 'disable_comments', __( 'Disable comments and pingbacks on posts, pages and media', 'wp-my-family-tree' ), $s ); ?>
+		<p class="description"><?php esc_html_e( 'Existing comments are retained for administrators. Custom post type reviews and order notes are unaffected.', 'wp-my-family-tree' ); ?></p>
+		<?php self::checkbox( 'disable_emojis', __( 'Remove WordPress emoji scripts and styles', 'wp-my-family-tree' ), $s ); ?>
+		<p class="description"><?php esc_html_e( 'Native device emoji still work. WordPress fallback detection, styles and external emoji hints are removed.', 'wp-my-family-tree' ); ?></p>
+		<?php self::checkbox( 'clean_head', __( 'Remove unnecessary WordPress head tags', 'wp-my-family-tree' ), $s ); ?>
+		<p class="description"><?php esc_html_e( 'Removes generator, RSD, Windows Live Writer and shortlink tags. Full-window family pages also omit feed and embed discovery links. Canonical URLs, language links and privacy directives are kept.', 'wp-my-family-tree' ); ?></p>
+		<h3><?php esc_html_e( 'Page source and assets', 'wp-my-family-tree' ); ?></h3>
+		<?php self::checkbox( 'minify_assets', __( 'Use minified plugin JavaScript and CSS', 'wp-my-family-tree' ), $s ); ?>
+		<p class="description"><?php esc_html_e( 'Readable source files remain included. SCRIPT_DEBUG uses the readable files automatically.', 'wp-my-family-tree' ); ?></p>
+		<?php self::checkbox( 'minify_html', __( 'Compact the full-window page HTML', 'wp-my-family-tree' ), $s ); ?>
+		<p class="description"><?php esc_html_e( 'Reduces whitespace between tags while preserving inline spacing, scripts, styles and preformatted content. Admin pages and API responses are excluded.', 'wp-my-family-tree' ); ?></p>
+		<?php self::checkbox( 'lean_standalone', __( 'Use lean styles on full-window tree pages', 'wp-my-family-tree' ), $s ); ?>
+		<p class="description"><?php esc_html_e( 'Optional: omit theme styles, global presets and theme fonts. Keep this off when biographies or other page content use theme-styled blocks. Core block styles remain available; embedded pages retain their theme styling.', 'wp-my-family-tree' ); ?></p>
+		<div class="wpmft-cache-panel">
+			<h3><?php esc_html_e( 'Cache tools', 'wp-my-family-tree' ); ?></h3>
+			<dl class="wpmft-cache-status">
+				<dt><?php esc_html_e( 'Index cache', 'wp-my-family-tree' ); ?></dt><dd><?php echo esc_html( ! $status['enabled'] ? __( 'Disabled', 'wp-my-family-tree' ) : ( $status['warm'] ? __( 'Ready', 'wp-my-family-tree' ) : __( 'Builds on the next tree request', 'wp-my-family-tree' ) ) ); ?></dd>
+				<dt><?php esc_html_e( 'Storage', 'wp-my-family-tree' ); ?></dt><dd><?php echo esc_html( $status['persistent_object_cache'] ? __( 'Persistent WordPress object cache', 'wp-my-family-tree' ) : __( 'WordPress database transients', 'wp-my-family-tree' ) ); ?></dd>
+				<dt><?php esc_html_e( 'Last manual clear', 'wp-my-family-tree' ); ?></dt><dd><?php echo esc_html( $cleared ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $cleared ) : __( 'Not cleared yet', 'wp-my-family-tree' ) ); ?></dd>
+			</dl>
+			<button class="button button-secondary" type="submit" form="wpmft-cache-tool"><?php esc_html_e( 'Clear Family Tree cache', 'wp-my-family-tree' ); ?></button>
+			<p><?php esc_html_e( 'Clears this plugin’s index and refreshes its static asset URLs. Passwords, remembered access, anti-spam limits and protected media are retained. Host, CDN and other plugins’ caches are managed separately.', 'wp-my-family-tree' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Save changed settings before using the cache tool. Private family pages and API responses continue to use no-store headers.', 'wp-my-family-tree' ); ?></p>
+		</div>
+		<?php
+	}
+
+	public static function clear_cache() {
+		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_die( esc_html__( 'A POST request is required.', 'wp-my-family-tree' ), '', array( 'response' => 405 ) ); }
+		self::require_admin( 'wpmft_clear_cache' );
+		WPMFT_Cache::clear();
+		update_option( 'wpmft_asset_revision', str_replace( '-', '', wp_generate_uuid4() ), false );
+		update_option( 'wpmft_cache_cleared_at', time(), false );
+		self::redirect( 'cache', 'performance' );
 	}
 
 	private static function field( $key, $label, $settings, $type = 'text', $attrs = array() ) {
@@ -332,6 +383,11 @@ final class WPMFT_Admin {
 			$s[ $key ] = empty( $input[ $key ] ) ? 0 : 1;
 		}
 		// Older forms left open during an upgrade must not reset settings they never displayed.
+		if ( isset( $input['v112_present'] ) && '1' === $input['v112_present'] ) {
+			foreach ( array( 'performance_cache', 'disable_comments', 'disable_emojis', 'clean_head', 'minify_assets', 'minify_html', 'lean_standalone' ) as $key ) { $s[$key] = isset( $input[$key] ) && '1' === $input[$key] ? 1 : 0; }
+			$ttl = isset( $input['cache_ttl'] ) && is_scalar( $input['cache_ttl'] ) ? (int) $input['cache_ttl'] : 15;
+			$s['cache_ttl'] = max( 1, min( 60, $ttl ) );
+		}
 		if ( isset( $input['v110_present'] ) && '1' === $input['v110_present'] ) {
 			foreach ( array( 'person_block_editor', 'app_install', 'app_icons', 'contact_upload_enabled' ) as $key ) { $s[$key] = empty( $input[$key] ) ? 0 : 1; }
 			$max_mb = isset( $input['contact_upload_max_mb'] ) && is_scalar( $input['contact_upload_max_mb'] ) ? absint( $input['contact_upload_max_mb'] ) : 10;
@@ -380,7 +436,7 @@ final class WPMFT_Admin {
 		}
 		update_option( 'wpmft_settings', $s, false );
 		do_action( 'wpmft_settings_saved', $s, $old );
-		self::redirect();
+		self::redirect( 'saved', isset( $_POST['wpmft_section'] ) && is_string( $_POST['wpmft_section'] ) ? sanitize_key( wp_unslash( $_POST['wpmft_section'] ) ) : '' );
 	}
 
 	public static function create_page() {

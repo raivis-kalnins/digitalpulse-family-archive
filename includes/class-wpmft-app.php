@@ -22,7 +22,7 @@ final class WPMFT_App {
 	public static function assets() {
 		if ( self::active() && ! empty( wpmft_settings()['app_install'] ) ) {
 			// Capture beforeinstallprompt before the React footer mounts. No service worker or offline data cache.
-			wp_enqueue_script( 'wpmft-install', WPMFT_URL . 'assets/install.js', array(), WPMFT_VERSION, false );
+			wp_enqueue_script( 'wpmft-install', wpmft_asset_url( 'install.js' ), array(), wpmft_asset_version(), false );
 		}
 	}
 

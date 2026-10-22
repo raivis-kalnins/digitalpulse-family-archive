@@ -20,7 +20,7 @@
             unlock: 'Explore our family', unlocking: 'Opening…', lock: 'Lock family archive', protected: 'Private family archive',
             preparing: 'Your family archive is being prepared.', preparingHelp: 'The family administrator needs to set a password before visitors can enter.',
             helpAccess: 'Need access? Contact the family administrator.', zoomIn: 'Zoom in', zoomOut: 'Zoom out', fit: 'Fit tree to view', reset: 'Return to starting person',
-            panHint: 'Drag the open space to move · Use + / − to zoom', panHintMobile: 'Drag to explore · Pinch or use + / − to zoom',
+            panHint: 'Drag the tree to move · Use + / − to zoom', panHintMobile: 'Swipe anywhere to explore · Pinch to zoom · Tap a person',
             ancestors: 'Ancestors', selected: 'Selected person', descendants: 'Descendants', partner: 'Partner', currentPartner: 'Current partner', currentPartners: 'Current partners', currentPair: 'Current partners: {first} and {second}', coParent: 'Co-parent', coParents: 'Co-parents', partners: 'Partners', sibling: 'Sibling',
             parents: 'Parents', children: 'Children', spouses: 'Partners', siblings: 'Siblings', grandparent: 'Grandparent', grandchild: 'Grandchild', self: 'Selected person', relative: 'Family member',
             explore: 'Explore this family', moreBranch: 'Explore {name}’s family', openPerson: 'Read about {name}', familyOf: 'Family of',
@@ -62,7 +62,7 @@
             unlock: 'Iepazīt mūsu dzimtu', unlocking: 'Atver…', lock: 'Aizslēgt dzimtas arhīvu', protected: 'Privāts dzimtas arhīvs',
             preparing: 'Tavs dzimtas arhīvs tiek sagatavots.', preparingHelp: 'Dzimtas administratoram jāiestata parole, pirms viesi var piekļūt arhīvam.',
             helpAccess: 'Nepieciešama piekļuve? Sazinies ar dzimtas administratoru.', zoomIn: 'Pietuvināt', zoomOut: 'Attālināt', fit: 'Ietilpināt koku skatā', reset: 'Atgriezties pie sākuma cilvēka',
-            panHint: 'Velc brīvo laukumu, lai pārvietotos · Pietuvini ar + / −', panHintMobile: 'Velc, lai izpētītu · Pietuvini ar pirkstiem vai + / −',
+            panHint: 'Velc koku, lai pārvietotos · Pietuvini ar + / −', panHintMobile: 'Velc jebkurā vietā, lai pārvietotos · Pietuvini ar pirkstiem · Pieskaries cilvēkam',
             ancestors: 'Senči', selected: 'Izvēlētais cilvēks', descendants: 'Pēcnācēji', partner: 'Partneris', currentPartner: 'Pašreizējais partneris', currentPartners: 'Pašreizējie partneri', currentPair: 'Pašreizējie partneri: {first} un {second}', coParent: 'Bērna otrs vecāks', coParents: 'Bērnu otrie vecāki', partners: 'Partneri', sibling: 'Brālis / māsa',
             parents: 'Vecāki', children: 'Bērni', spouses: 'Partneri', siblings: 'Brāļi un māsas', grandparent: 'Vecvecāks', grandchild: 'Mazbērns', self: 'Izvēlētais cilvēks', relative: 'Dzimtas loceklis',
             explore: 'Izpētīt šo ģimeni', moreBranch: 'Izpētīt {name} ģimeni', openPerson: 'Lasīt par {name}', familyOf: 'Ģimenes skats',
@@ -589,10 +589,28 @@
     }
 
     function Tree({ data, lang, busy, onPerson, onRoot, onHome, settings, exportRef }) {
-        const layout = useMemo(() => layoutTree(data), [data]), viewport = useRef(null), lastLayout = useRef(null), pointers = useRef(new Map()), gesture = useRef(null), dimensions = useRef({ width: 1200, height: 650 });
+        const layout = useMemo(() => layoutTree(data), [data]), viewport = useRef(null), pointers = useRef(new Map()), gesture = useRef(null), dimensions = useRef({ width: 1200, height: 650 }), frame = useRef(null), suppressClick = useRef(false);
         const [view, setView] = useState({ x: 0, y: 0, scale: .75 }), [dragging, setDragging] = useState(false), viewRef = useRef(view);
-        viewRef.current = view;
         exportRef.current = layout;
+        const updateView = useCallback((next, defer = false) => {
+            viewRef.current = typeof next === 'function' ? next(viewRef.current) : next;
+            if (defer) {
+                // Keep the latest finger position immediately, but render at most once per frame.
+                if (frame.current === null) frame.current = requestAnimationFrame(() => { frame.current = null; setView(viewRef.current); });
+            } else {
+                if (frame.current !== null) { cancelAnimationFrame(frame.current); frame.current = null; }
+                setView(viewRef.current);
+            }
+        }, []);
+        function releasePointer(id, point) {
+            try { if (point?.target?.hasPointerCapture(id)) point.target.releasePointerCapture(id); } catch (_) {}
+        }
+        function cancelGesture() {
+            if (pointers.current.size) suppressClick.current = true;
+            const previous = [...pointers.current.entries()];
+            pointers.current.clear(); gesture.current = null; setDragging(false);
+            previous.forEach(([id, point]) => releasePointer(id, point));
+        }
         const fit = useCallback((initialView = false) => {
             const el = viewport.current; if (!el) return;
             const w = el.clientWidth, ht = el.clientHeight, center = layout.points.get(String(data?.root));
@@ -602,53 +620,86 @@
             // Keep names readable on large families; the Fit button remains an overview.
             const scale = initialView ? Math.max(w < 650 ? .85 : .74, fitted) : fitted;
             const focused = initialView && scale > fitted && center;
-            setView({ scale, x: w / 2 - (focused ? center.x : (minX + maxX) / 2) * scale, y: ht / 2 - (focused ? center.y : (minY + maxY) / 2) * scale });
+            updateView({ scale, x: w / 2 - (focused ? center.x : (minX + maxX) / 2) * scale, y: ht / 2 - (focused ? center.y : (minY + maxY) / 2) * scale });
             dimensions.current = { width: w, height: ht };
-        }, [layout, data?.root]);
+        }, [layout, data?.root, updateView]);
         useEffect(() => {
-            const timer = setTimeout(() => fit(true), 0); lastLayout.current = layout;
+            cancelGesture();
+            const timer = setTimeout(() => fit(true), 0);
             return () => clearTimeout(timer);
         }, [layout, fit]);
+        useEffect(() => {
+            const hidden = () => { if (document.hidden) cancelGesture(); };
+            window.addEventListener('blur', cancelGesture); document.addEventListener('visibilitychange', hidden);
+            return () => {
+                window.removeEventListener('blur', cancelGesture); document.removeEventListener('visibilitychange', hidden);
+                if (frame.current !== null) cancelAnimationFrame(frame.current);
+                const previous = [...pointers.current.entries()]; pointers.current.clear(); gesture.current = null;
+                previous.forEach(([id, point]) => releasePointer(id, point));
+            };
+        }, []);
         useEffect(() => {
             const el = viewport.current; if (!el || !window.ResizeObserver) return;
             const observer = new ResizeObserver(() => {
                 const w = el.clientWidth, ht = el.clientHeight, previous = dimensions.current;
-                if (Math.abs(w - previous.width) > 5 || Math.abs(ht - previous.height) > 5) { setView(v => ({ ...v, x: v.x + (w - previous.width) / 2, y: v.y + (ht - previous.height) / 2 })); dimensions.current = { width: w, height: ht }; }
+                if (Math.abs(w - previous.width) > 5 || Math.abs(ht - previous.height) > 5) { cancelGesture(); updateView(v => ({ ...v, x: v.x + (w - previous.width) / 2, y: v.y + (ht - previous.height) / 2 })); dimensions.current = { width: w, height: ht }; }
             }); observer.observe(el); return () => observer.disconnect();
         }, []);
         const zoom = useCallback((factor, point) => {
             const el = viewport.current; if (!el) return;
             const rect = el.getBoundingClientRect(), p = point || { x: rect.width / 2, y: rect.height / 2 };
-            setView(v => { const scale = Math.max(.01, Math.min(2.2, v.scale * factor)), ratio = scale / v.scale; return { scale, x: p.x - (p.x - v.x) * ratio, y: p.y - (p.y - v.y) * ratio }; });
-        }, []);
+            updateView(v => { const scale = Math.max(.01, Math.min(2.2, v.scale * factor)), ratio = scale / v.scale; return { scale, x: p.x - (p.x - v.x) * ratio, y: p.y - (p.y - v.y) * ratio }; });
+        }, [updateView]);
         useEffect(() => {
             const el = viewport.current;
             const wheel = e => { if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); const r = el.getBoundingClientRect(); zoom(e.deltaY > 0 ? .92 : 1.08, { x: e.clientX - r.left, y: e.clientY - r.top }); };
             el?.addEventListener('wheel', wheel, { passive: false }); return () => el?.removeEventListener('wheel', wheel);
         }, [zoom]);
-        function pointerDown(e) {
-            if (e.target.closest('button,a,input,.wpmft-partner-marker')) return;
-            if (e.pointerType === 'mouse' && e.button !== 0) return;
-            const point = { x: e.clientX, y: e.clientY }; pointers.current.set(e.pointerId, point);
-            viewport.current.setPointerCapture(e.pointerId);
+        function beginGesture() {
             const all = [...pointers.current.values()];
-            gesture.current = all.length === 2 ? { type: 'pinch', distance: Math.hypot(all[0].x - all[1].x, all[0].y - all[1].y), view: { ...viewRef.current }, midpoint: { x: (all[0].x + all[1].x) / 2, y: (all[0].y + all[1].y) / 2 } } : { type: 'pan', point, view: { ...viewRef.current } };
-            setDragging(true);
+            if (all.length >= 2) {
+                suppressClick.current = true; setDragging(true);
+                gesture.current = { type: 'pinch', distance: Math.hypot(all[0].x - all[1].x, all[0].y - all[1].y), view: { ...viewRef.current }, midpoint: { x: (all[0].x + all[1].x) / 2, y: (all[0].y + all[1].y) / 2 } };
+            } else if (all.length === 1) {
+                gesture.current = { type: 'pan', point: { x: all[0].x, y: all[0].y }, view: { ...viewRef.current }, active: suppressClick.current, threshold: all[0].type === 'mouse' ? 4 : 8 };
+            } else { gesture.current = null; setDragging(false); }
+        }
+        function pointerDown(e) {
+            if (busy || e.target.closest('.wpmft-zoom-tools,.wpmft-tree-updating,a,input')) return;
+            if (e.pointerType === 'mouse' && e.button !== 0) return;
+            if (!pointers.current.size) suppressClick.current = false;
+            // Capture the original button so a tap remains a normal accessible button click.
+            const target = e.target.closest('.wpmft-node-person,.wpmft-node-branch,.wpmft-partner-marker') || viewport.current;
+            const point = { x: e.clientX, y: e.clientY, type: e.pointerType, target };
+            pointers.current.set(e.pointerId, point);
+            try { target.setPointerCapture(e.pointerId); } catch (_) {}
+            beginGesture();
         }
         function pointerMove(e) {
             if (!pointers.current.has(e.pointerId) || !gesture.current) return;
-            pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+            const point = pointers.current.get(e.pointerId); point.x = e.clientX; point.y = e.clientY;
             const all = [...pointers.current.values()], g = gesture.current;
             if (all.length >= 2 && g.type === 'pinch') {
                 const rect = viewport.current.getBoundingClientRect(), scale = Math.max(.01, Math.min(2.2, g.view.scale * Math.hypot(all[0].x - all[1].x, all[0].y - all[1].y) / Math.max(1, g.distance))), ratio = scale / g.view.scale;
                 const x = g.midpoint.x - rect.left, y = g.midpoint.y - rect.top;
-                setView({ scale, x: (all[0].x + all[1].x) / 2 - rect.left - (x - g.view.x) * ratio, y: (all[0].y + all[1].y) / 2 - rect.top - (y - g.view.y) * ratio });
-            } else if (g.type === 'pan') setView({ ...g.view, x: g.view.x + e.clientX - g.point.x, y: g.view.y + e.clientY - g.point.y });
+                updateView({ scale, x: (all[0].x + all[1].x) / 2 - rect.left - (x - g.view.x) * ratio, y: (all[0].y + all[1].y) / 2 - rect.top - (y - g.view.y) * ratio }, true);
+            } else if (g.type === 'pan') {
+                const dx = e.clientX - g.point.x, dy = e.clientY - g.point.y;
+                if (!g.active && Math.hypot(dx, dy) < g.threshold) return;
+                if (!g.active) { g.active = true; suppressClick.current = true; setDragging(true); }
+                updateView({ ...g.view, x: g.view.x + dx, y: g.view.y + dy }, true);
+            }
         }
         function pointerUp(e) {
+            if (!pointers.current.has(e.pointerId)) return;
+            const point = pointers.current.get(e.pointerId);
+            if (e.type === 'pointercancel' || e.type === 'lostpointercapture') suppressClick.current = true;
             pointers.current.delete(e.pointerId);
-            if (pointers.current.size === 1) gesture.current = { type: 'pan', point: [...pointers.current.values()][0], view: { ...viewRef.current } };
-            else { gesture.current = null; setDragging(false); }
+            releasePointer(e.pointerId, point); beginGesture();
+        }
+        function clickCapture(e) {
+            // A drag may still produce a browser click. Preserve keyboard clicks and zoom controls.
+            if (e.detail !== 0 && suppressClick.current && !e.target.closest('.wpmft-zoom-tools')) { e.preventDefault(); e.stopPropagation(); }
         }
         function keyboard(e) {
             if (e.target !== viewport.current) return;
@@ -656,12 +707,12 @@
             if (e.key === '-') { e.preventDefault(); zoom(1 / 1.15); }
             if (e.key === 'Home') { e.preventDefault(); fit(); }
             const offsets = { ArrowLeft: [50, 0], ArrowRight: [-50, 0], ArrowUp: [0, 50], ArrowDown: [0, -50] };
-            if (offsets[e.key]) { e.preventDefault(); const a = offsets[e.key]; setView(v => ({ ...v, x: v.x + a[0], y: v.y + a[1] })); }
+            if (offsets[e.key]) { e.preventDefault(); const a = offsets[e.key]; updateView(v => ({ ...v, x: v.x + a[0], y: v.y + a[1] })); }
         }
         const root = layout.points.get(String(data?.root));
         return h('section', { className: 'wpmft-tree-panel', 'aria-busy': busy },
             h('div', { className: 'wpmft-tree-context' }, h('div', null, h('span', { className: 'wpmft-kicker' }, tr(lang, 'familyOf')), h('h2', null, root?.name || tr(lang, 'title'))), h('span', { className: 'wpmft-view-count' }, tr(lang, 'countShown', { count: layout.nodes.length }))),
-            h('div', { ref: viewport, className: cls('wpmft-tree-viewport', dragging && 'is-dragging'), tabIndex: 0, role: 'region', 'aria-label': tr(lang, 'tree'), 'aria-describedby': 'wpmft-pan-hint', style: { '--tree-height': Math.max(520, Math.min(1100, Number(settings.treeHeight) || 710)) + 'px' }, onPointerDown: pointerDown, onPointerMove: pointerMove, onPointerUp: pointerUp, onPointerCancel: pointerUp, onKeyDown: keyboard },
+            h('div', { ref: viewport, className: cls('wpmft-tree-viewport', dragging && 'is-dragging'), tabIndex: 0, role: 'region', 'aria-label': tr(lang, 'tree'), 'aria-describedby': 'wpmft-pan-hint', style: { '--tree-height': Math.max(520, Math.min(1100, Number(settings.treeHeight) || 710)) + 'px' }, onPointerDown: pointerDown, onPointerMove: pointerMove, onPointerUp: pointerUp, onPointerCancel: pointerUp, onLostPointerCapture: pointerUp, onClickCapture: clickCapture, onDragStartCapture: e => e.preventDefault(), onKeyDown: keyboard },
                 h('div', { className: 'wpmft-tree-scene', style: { width: layout.width + 'px', height: layout.height + 'px', transform: 'translate(' + view.x + 'px,' + view.y + 'px) scale(' + view.scale + ')' } },
                     h('svg', { className: 'wpmft-oak-art', width: layout.width, height: layout.height, viewBox: '0 0 ' + layout.width + ' ' + layout.height, 'aria-hidden': true, dangerouslySetInnerHTML: { __html: oakArt(layout.width, layout.height, 'wpmft-oak-' + (data?.root || 0)) } }),
                     h('svg', { className: 'wpmft-relationship-lines', width: layout.width, height: layout.height, 'aria-hidden': true }, layout.edges.map((edge, i) => h('path', { key: i, d: edgePath(edge, layout.points), className: edge.type === 'spouse' ? 'is-spouse' : 'is-parent' }))),
@@ -673,7 +724,7 @@
                     ['plus', 'zoomIn', () => zoom(1.2)], ['minus', 'zoomOut', () => zoom(1 / 1.2)], ['fit', 'fit', () => fit()], ['home', 'reset', onHome]
                 ].map(([icon, label, action]) => h('button', { type: 'button', key: icon, onClick: action, 'aria-label': tr(lang, label), title: tr(lang, label) }, h(Icon, { name: icon, size: 20 }))), h('span', { 'aria-hidden': true }, Math.round(view.scale * 100) + '%')),
                 busy && h('div', { className: 'wpmft-tree-updating' }, h(Loader, { label: tr(lang, 'loading'), small: true }))),
-            h('div', { className: 'wpmft-tree-bottom' }, h('div', { className: 'wpmft-legend' }, [['ancestors', 'ancestor'], ['selected', 'selected'], ['descendants', 'descendant']].map(([label, type]) => h('span', { key: type }, h('i', { className: 'is-' + type }), tr(lang, label))), layout.partners.length > 0 && h('span', null, h(Icon, { name: 'rings', size: 16 }), tr(lang, 'currentPartner'))), h('p', { id: 'wpmft-pan-hint' }, tr(lang, window.matchMedia?.('(max-width: 650px)').matches ? 'panHintMobile' : 'panHint'))),
+            h('div', { className: 'wpmft-tree-bottom' }, h('div', { className: 'wpmft-legend' }, [['ancestors', 'ancestor'], ['selected', 'selected'], ['descendants', 'descendant']].map(([label, type]) => h('span', { key: type }, h('i', { className: 'is-' + type }), tr(lang, label))), layout.partners.length > 0 && h('span', null, h(Icon, { name: 'rings', size: 16 }), tr(lang, 'currentPartner'))), h('p', { id: 'wpmft-pan-hint' }, tr(lang, window.matchMedia?.('(pointer: coarse), (max-width: 650px)').matches ? 'panHintMobile' : 'panHint'))),
             data?.truncated && h('p', { className: 'wpmft-branch-notice' }, h(Icon, { name: 'branch', size: 17 }), tr(lang, 'branchNotice')));
     }
 
