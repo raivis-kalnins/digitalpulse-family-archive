@@ -132,13 +132,18 @@
     color:#344838
 }
 
-.wpmft-field input:not([type=color]),.wpmft-field select {
+.wpmft-field input:not([type=color]),.wpmft-field select,.wpmft-field textarea {
     width:100%;
     max-width:620px;
     min-height:38px;
     border-color:#adbfad;
     border-radius:5px;
     background:#fff
+}
+
+.wpmft-field textarea {
+    resize:vertical;
+    line-height:1.6
 }
 
 .wpmft-field input[type=number] {
@@ -239,6 +244,133 @@
 
 .wpmft-person-editor {
     padding:8px 4px 15px
+}
+
+.wpmft-person-panel {
+    margin:18px 0 26px;
+    padding:24px;
+    border:1px solid #d3dfcf;
+    border-radius:12px;
+    background:#fff;
+    box-shadow:0 3px 12px rgba(35,64,43,.035)
+}
+
+#poststuff .wpmft-person-panel>h2 {
+    padding:0 4px 16px;
+    font-size:21px;
+    color:#254232
+}
+
+#poststuff .wpmft-biography-heading {
+    padding:0 0 12px;
+    font-size:18px;
+    color:#254232
+}
+
+.wpmft-admin-language-control {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 14px;
+    align-items:center;
+    margin:0 0 24px;
+    padding:14px 16px;
+    border-radius:8px;
+    background:#f4f7f0
+}
+
+.wpmft-settings-form>.wpmft-admin-language-control {
+    border-radius:0;
+    margin:0;
+    padding:18px 28px
+}
+
+.wpmft-admin-language-control>label {
+    font-weight:600
+}
+
+.wpmft-admin-language-control>.description {
+    flex-basis:100%;
+    margin:0;
+    font-size:12px;
+    line-height:1.6
+}
+
+.wpmft-portrait-editor {
+    display:flex;
+    align-items:center;
+    gap:22px;
+    margin:20px 0 28px;
+    padding:18px;
+    border:1px solid #d3dfcf;
+    border-radius:10px;
+    background:#fbfcf8
+}
+
+.wpmft-portrait-editor h3 {
+    margin:0 0 8px
+}
+
+.wpmft-portrait-editor .description {
+    margin:0 0 14px;
+    max-width:600px;
+    line-height:1.65
+}
+
+.wpmft-portrait-preview {
+    flex:0 0 100px;
+    width:100px;
+    height:124px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+    overflow:hidden;
+    background:#eaf0e5;
+    color:#7e987b
+}
+
+.wpmft-portrait-preview>img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center top
+}
+
+.wpmft-portrait-preview>.dashicons {
+    width:48px;
+    height:48px;
+    font-size:48px
+}
+
+.wpmft-portrait-editor .button-link-delete {
+    margin:8px 0 8px 10px
+}
+
+.wpmft-field-wide {
+    grid-column:1/-1
+}
+
+.wpmft-contact-details {
+    margin:28px 0;
+    padding-top:4px
+}
+
+.wpmft-contact-details>.description {
+    line-height:1.65;
+    max-width:850px
+}
+
+.wpmft-upload-formats {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 22px;
+    margin:10px 0 8px
+}
+
+.wpmft-upload-formats legend {
+    margin-bottom:14px;
+    font-size:13px;
+    font-weight:600
 }
 
 .wpmft-person-editor>.description {
@@ -427,6 +559,7 @@
     width:100%;
     height:100%;
     object-fit:cover;
+    object-position:center top;
     border-radius:8px
 }
 
@@ -478,6 +611,19 @@
 }
 
 @media(max-width:782px) {
+    .wpmft-person-panel {
+        padding:16px 12px
+    }
+    .wpmft-portrait-editor {
+        align-items:flex-start;
+        gap:14px;
+        padding:14px
+    }
+    .wpmft-portrait-preview {
+        flex-basis:76px;
+        width:76px;
+        height:98px
+    }
     .wpmft-settings {
         margin-right:10px
     }

@@ -3,7 +3,7 @@
  * Plugin Name: WP My Family Tree
  * Plugin URI: https://github.com/raivis-kalnins/wp-my-family-tree
  * Description: A private, interactive oak family tree with person galleries, a block and shortcode, and English/Latvian support. Reuses WP Family Tree posts.
- * Version: 1.0.2
+ * Version: 1.1.0
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Author: Raivis Kalnins — DigitalPulse
@@ -16,7 +16,7 @@
  * @package WPMyFamilyTree
  */
 defined( 'ABSPATH' ) || exit;
-define( 'WPMFT_VERSION', '1.0.2' );
+define( 'WPMFT_VERSION', '1.1.0' );
 define( 'WPMFT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WPMFT_URL', plugin_dir_url( __FILE__ ) );
 
@@ -24,8 +24,10 @@ require_once WPMFT_DIR . 'includes/functions.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-data.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-security.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-media.php';
+require_once WPMFT_DIR . 'includes/class-wpmft-contact-upload.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-api.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-admin.php';
+require_once WPMFT_DIR . 'includes/class-wpmft-app.php';
 
 function wpmft_activate() {
 	$s = wpmft_settings();
@@ -93,3 +95,4 @@ WPMFT_Security::init();
 WPMFT_Media::init();
 WPMFT_API::init();
 WPMFT_Admin::init();
+WPMFT_App::init();

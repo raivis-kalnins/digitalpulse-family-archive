@@ -11,11 +11,22 @@
     <custom-field action="copy">_wpmft_spouses</custom-field>
     <custom-field action="copy">_wpmft_partner_status</custom-field>
     <custom-field action="copy">_wpmft_gallery</custom-field>
+    <custom-field action="copy">_wpmft_email</custom-field>
+    <custom-field action="copy">_wpmft_phone</custom-field>
+    <custom-field action="copy">_wpmft_mobile</custom-field>
+    <custom-field action="copy">_wpmft_website</custom-field>
+    <custom-field action="copy">_wpmft_social_facebook</custom-field>
+    <custom-field action="copy">_wpmft_social_instagram</custom-field>
+    <custom-field action="copy">_wpmft_social_linkedin</custom-field>
+    <custom-field action="copy">_wpmft_social_x</custom-field>
+    <custom-field action="copy">_wpmft_social_youtube</custom-field>
+    <custom-field action="copy">_wpmft_social_tiktok</custom-field>
     <custom-field action="translate">_wpmft_maiden_name</custom-field>
     <custom-field action="translate">_wpmft_birth_place</custom-field>
     <custom-field action="translate">_wpmft_death_place</custom-field>
     <custom-field action="translate">_wpmft_location</custom-field>
     <custom-field action="translate">_wpmft_occupation</custom-field>
+    <custom-field action="translate">_wpmft_address</custom-field>
   </custom-fields>
   <gutenberg-blocks>
     <gutenberg-block type="wp-my-family-tree/tree" translate="0" />

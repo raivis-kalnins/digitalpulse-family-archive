@@ -244,6 +244,27 @@ final class WPMFT_Data {
 		foreach ( array( 'birthPlace' => '_wpmft_birth_place', 'deathPlace' => '_wpmft_death_place', 'location' => '_wpmft_location', 'occupation' => '_wpmft_occupation', 'maidenName' => '_wpmft_maiden_name' ) as $key => $meta ) {
 			$result[$key] = (string) ( get_post_meta( $display, $meta, true ) ?: get_post_meta( $id, $meta, true ) );
 		}
+		$contact = function ( $key ) use ( $display, $id ) {
+			$value = get_post_meta( $display, '_wpmft_' . $key, true ) ?: get_post_meta( $id, '_wpmft_' . $key, true );
+			return is_scalar( $value ) ? (string) $value : '';
+		};
+		$email = sanitize_email( $contact( 'email' ) );
+		$result['contacts'] = array(
+			'email' => is_email( $email ) ? $email : '',
+			'phone' => sanitize_text_field( $contact( 'phone' ) ), 'mobile' => sanitize_text_field( $contact( 'mobile' ) ),
+			'address' => sanitize_textarea_field( $contact( 'address' ) ), 'website' => self::contact_url( $contact( 'website' ) ),
+		);
+		$result['socials'] = array();
+		foreach ( array( 'facebook' => 'Facebook', 'instagram' => 'Instagram', 'linkedin' => 'LinkedIn', 'x' => 'X', 'youtube' => 'YouTube', 'tiktok' => 'TikTok' ) as $key => $label ) {
+			$url = self::contact_url( $contact( 'social_' . $key ) );
+			if ( $url ) { $result['socials'][] = array( 'key' => $key, 'label' => $label, 'url' => $url ); }
+		}
+		// Unlocking the family password never grants WordPress editing permissions.
+		if ( is_user_logged_in() ) {
+			$edit_id = current_user_can( 'edit_post', $display ) ? $display : ( current_user_can( 'edit_post', $id ) ? $id : 0 );
+			$edit_url = $edit_id ? get_edit_post_link( $edit_id, 'raw' ) : '';
+			if ( $edit_url ) { $result['editUrl'] = esc_url_raw( add_query_arg( 'wpmft_admin_lang', wpmft_language( $lang ), $edit_url ), array( 'http', 'https' ) ); }
+		}
 		// Use saved static block HTML; never run arbitrary embedded shortcodes or remote dynamic blocks here.
 		$content = preg_replace( '/<!--.*?-->/s', '', $p->post_content );
 		$content = strip_shortcodes( $content );
@@ -268,6 +289,13 @@ final class WPMFT_Data {
 			}, $ids );
 		}
 		return $result;
+	}
+
+	/** Contact links are ordinary HTTP(S) URLs, never script, data, local or relative URLs. */
+	private static function contact_url( $value ) {
+		$url = esc_url_raw( trim( $value ), array( 'http', 'https' ) );
+		$parts = wp_parse_url( $url );
+		return is_array( $parts ) && ! empty( $parts['host'] ) && isset( $parts['scheme'] ) && in_array( strtolower( $parts['scheme'] ), array( 'http', 'https' ), true ) && ! isset( $parts['user'] ) && ! isset( $parts['pass'] ) ? $url : '';
 	}
 
 	public static function search( $query, $page, $lang ) {

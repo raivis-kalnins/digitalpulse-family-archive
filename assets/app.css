@@ -31,7 +31,6 @@
 .wpmft-app svg, .wpmft-overlay svg { flex-shrink: 0; vertical-align: middle; }
 .wpmft-app a, .wpmft-overlay a { color: var(--wpmft-accent); }
 .wpmft-shell { position: relative; min-width: 0; width: 100%; background: var(--wpmft-bg); overflow: clip; }
-.wpmft-shell::before { content: ''; display: block; height: 5px; background: repeating-linear-gradient(90deg, #803443 0 14px, #caa299 14px 17px, #803443 17px 20px, #f0d8c6 20px 22px, #803443 22px 36px); }
 .wpmft-skip-link { position: absolute; left: 16px; top: 12px; z-index: 100; padding: 10px 18px; border-radius: 8px; background: #fff; transform: translateY(-160%); }
 .wpmft-skip-link:focus { transform: none; }
 .wpmft-header { border-bottom: 1px solid var(--wpmft-line); background: rgba(255, 254, 248, .72); }
@@ -148,12 +147,21 @@
 .wpmft-footer-story { display: flex; align-items: center; gap: 12px; color: #637255; }
 .wpmft-footer-story svg { transform: rotate(-23deg); }
 .wpmft-footer-story p { color: #637255; font-family: var(--wpmft-serif); font-size: 16px; line-height: 1.6; font-style: italic; }
+.wpmft-footer-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; min-width: 0; }
 .wpmft-footer-contact { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 20px; }
 .wpmft-footer-contact > span { color: #637255; font-size: 11px; overflow-wrap: anywhere; }
 .wpmft-footer-contact .wpmft-button { background: #f9faf0; border-color: #ccd7bb; }
 .wpmft-credit { text-align: center; color: #637255; font-size: 10px; padding: 18px 20px 0; }
 .wpmft-credit a { text-decoration: none; color: #60754e; }
 .wpmft-credit a:hover { text-decoration: underline; }
+.wpmft-install-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px 13px; }
+.wpmft-install-label { color: #637255; font-size: 10px; line-height: 1.5; }
+.wpmft-install-buttons { display: flex; gap: 7px; flex-wrap: wrap; }
+.wpmft-install .wpmft-install-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 38px; border: 1px solid #cbd4bf; border-radius: 9px; background: #f8f9ef; padding: 8px 11px; color: #47613d; font-size: 11px; line-height: 1.3; font-weight: 500; transition: background .18s, border-color .18s; }
+.wpmft-install-button:hover { background: #fffef7; border-color: #a9ba94; }
+.wpmft-install-button .wpmft-spinner { width: 17px; height: 17px; }
+.wpmft-installed { display: inline-flex; align-items: center; gap: 7px; color: #5d7350; font-size: 11px; }
+.wpmft-install-status { flex-basis: 100%; text-align: right; color: #637255; font-size: 10px; }
 
 /* Password gate. No family information is rendered before authorization. */
 .wpmft-gate { min-height: 680px; position: relative; display: flex; align-items: center; justify-content: center; margin: -10px 0 6px; padding: 26px 0 55px; }
@@ -179,6 +187,31 @@
 .wpmft-form .wpmft-checkbox { display: flex; align-items: flex-start; gap: 9px; font-size: 11px; font-weight: 400; color: #637255; margin-bottom: 23px; }
 .wpmft-checkbox input { appearance: auto; -webkit-appearance: auto; width: 15px; height: 15px; min-height: 0; margin: 2px 0 0; accent-color: #496b3b; flex-shrink: 0; }
 .wpmft-form .wpmft-form-note { font-size: 11px; color: #637255; margin: 0 0 16px; }
+.wpmft-upload { margin: 0 0 21px; }
+.wpmft-upload-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 8px; color: #4a6044; font-size: 12px; line-height: 1.5; font-weight: 500; }
+.wpmft-upload-heading > span:last-child { color: #637255; font-size: 10px; font-weight: 400; }
+.wpmft-upload-zone { padding: 0 15px 14px; border: 1px dashed #b6c5a3; border-radius: 13px; background: #f6f8ee; transition: border-color .18s, background .18s, box-shadow .18s; }
+.wpmft-upload-zone:hover, .wpmft-upload-zone:focus-within, .wpmft-upload-zone.is-dragging { border-color: #6f8e55; background: #eff5e4; }
+.wpmft-upload-zone.is-dragging { box-shadow: 0 0 0 3px #8fa77526; }
+.wpmft-upload-zone.is-disabled { opacity: .65; }
+.wpmft-upload.has-error .wpmft-upload-zone { border-color: #bc7d6e; background: #fcf7f1; }
+.wpmft-upload input[type='file'] { display: none; }
+.wpmft-upload-choose { width: 100%; display: flex; align-items: center; justify-content: center; gap: 13px; padding: 18px 2px 10px; border: 0; border-radius: 8px; background: transparent; color: #4b6940; text-align: left; line-height: 1.5; }
+.wpmft-upload-icon { display: grid; place-items: center; flex: 0 0 43px; width: 43px; height: 43px; border: 1px solid #dbe4cc; border-radius: 14px 6px 14px 6px; background: #fffef7; }
+.wpmft-upload-choose strong { display: block; font-weight: 500; font-size: 12px; }
+.wpmft-upload-choose small { display: block; color: #637255; font-size: 11px; margin-top: 2px; }
+.wpmft-form .wpmft-upload-limits { color: #637255; font-size: 10px; text-align: center; line-height: 1.6; margin: 0; overflow-wrap: anywhere; }
+.wpmft-upload-preview { display: flex; align-items: center; gap: 11px; padding: 10px; margin-top: 9px; border: 1px solid #d9e1cd; border-radius: 11px; background: #fffef8; }
+.wpmft-upload-thumbnail { display: grid; place-items: center; width: 48px; height: 48px; flex: 0 0 48px; overflow: hidden; border-radius: 8px; background: #edf2e1; color: #7b9068; }
+.wpmft-upload-thumbnail img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.wpmft-upload-file { flex: 1; min-width: 0; }
+.wpmft-upload-file strong { display: block; overflow-wrap: anywhere; color: #46633b; font-weight: 500; font-size: 11px; line-height: 1.5; }
+.wpmft-upload-file small { display: block; color: #637255; font-size: 10px; margin-top: 3px; }
+.wpmft-upload-remove { display: grid; place-items: center; flex: 0 0 34px; width: 34px; height: 34px; border: 1px solid #e0e5d7; border-radius: 8px; padding: 0; background: #f6f7ef; color: #788170; }
+.wpmft-upload-remove:hover { border-color: #bcaaa0; background: #f9f0eb; color: #8d5d4e; }
+.wpmft-form .wpmft-upload-error { display: flex; align-items: flex-start; gap: 7px; color: #8b4b3f; font-size: 11px; line-height: 1.6; margin: 9px 1px 0; }
+.wpmft-upload-error svg { margin-top: 1px; }
+.wpmft-upload .wpmft-upload-clear { display: block; padding: 6px 0; margin-top: 3px; border: 0; background: none; color: #637255; font-size: 11px; line-height: 1.5; text-decoration: underline; text-underline-offset: 3px; }
 .wpmft-captcha { min-height: 80px; margin: 10px 0 20px; }
 .wpmft-captcha > div:first-child { max-width: 100%; }
 .wpmft-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
@@ -210,10 +243,14 @@
 .wpmft-dialog.is-wide { width: min(100%, 900px); }
 .wpmft-modal-close { position: absolute; top: 18px; right: 18px; z-index: 4; background: #fffef8e8; width: 36px; height: 36px; border-radius: 50%; border-color: #d5ddc6; color: #637255; }
 .wpmft-modal-close:hover { background: #fff; color: #355b3e; }
+.wpmft-person-edit { position: absolute; top: 18px; right: 64px; z-index: 4; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 7px 11px; border: 1px solid #dce0d7; border-radius: 9px; background: #f8f9f5e8; color: #737b70; font-size: 11px; line-height: 1.3; text-decoration: none; }
+.wpmft-overlay .wpmft-person-edit { color: #737b70; }
+.wpmft-person-edit:hover { background: #fff; border-color: #bbc7b0; color: #52644a; }
 .wpmft-modal-loading { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 320px; padding: 55px; }
 .wpmft-person-cover { padding: 34px 44px 31px; background-color: #edf1df; background-image: radial-gradient(ellipse at 86% -10%, #ccd8ad70, transparent 60%); position: relative; border-bottom: 1px solid #dce4c9; }
 .wpmft-person-cover::after { content: ''; position: absolute; right: 70px; top: 50px; width: 85px; height: 110px; border: 1px solid #b4c19540; border-radius: 100% 0 100% 0; transform: rotate(24deg); pointer-events: none; }
 .wpmft-person-cover > .wpmft-kicker { color: #637255; font-size: 9px; letter-spacing: 2px; margin-bottom: 23px; }
+.wpmft-person-cover.has-edit > .wpmft-kicker { padding-right: 112px; }
 .wpmft-person-identity { display: flex; align-items: center; gap: 29px; position: relative; z-index: 1; }
 .wpmft-portrait-button { background: none; border: 0; padding: 0; position: relative; flex-shrink: 0; border-radius: 24px; }
 .wpmft-portrait-button:disabled { opacity: 1; }
@@ -239,7 +276,18 @@
 .wpmft-prose table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .wpmft-prose td, .wpmft-prose th { padding: 8px; border: 1px solid #dce3ce; }
 .wpmft-muted { color: #637255; font-size: 13px; line-height: 1.8; }
-.wpmft-gallery-section, .wpmft-relations { margin-top: 31px; padding-top: 27px; border-top: 1px solid #e0e6d2; }
+.wpmft-gallery-section, .wpmft-relations, .wpmft-person-contact { margin-top: 31px; padding-top: 27px; border-top: 1px solid #e0e6d2; }
+.wpmft-contact-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px 24px; padding: 0; margin: 0; }
+.wpmft-contact-detail { min-width: 0; }
+.wpmft-contact-detail dt { display: flex; align-items: center; gap: 6px; color: #637255; font-size: 10px; line-height: 1.5; margin: 0 0 5px; padding: 0; }
+.wpmft-contact-detail dd { color: #4a6440; font-size: 12px; line-height: 1.7; margin: 0; padding: 0; overflow-wrap: anywhere; }
+.wpmft-contact-detail.is-address dd { white-space: pre-line; }
+.wpmft-contact-detail a { color: inherit; text-decoration-color: #bdcbae; text-underline-offset: 3px; }
+.wpmft-contact-detail a:hover { text-decoration-color: currentColor; }
+.wpmft-contact-detail a > svg { margin-left: 5px; }
+.wpmft-social-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 19px; }
+.wpmft-social-links a { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 7px 11px; border: 1px solid #dbe3cd; border-radius: 8px; background: #f5f7ec; color: #546e46; font-size: 11px; line-height: 1.4; text-decoration: none; }
+.wpmft-social-links a:hover { background: #eaf0de; border-color: #bfcead; }
 .wpmft-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 17px; }
 .wpmft-section-heading h3 { margin: 0; }
 .wpmft-section-heading > span { display: inline-flex; align-items: center; justify-content: center; min-width: 25px; padding: 2px 7px; font-size: 10px; background: #edf1e2; border-radius: 20px; color: #637255; }
@@ -260,7 +308,16 @@
 .wpmft-contact-content { padding: 38px 39px 35px; }
 .wpmft-contact-symbol { display: grid; place-items: center; width: 57px; height: 57px; color: #637255; background: #edf2df; border-radius: 18px 6px 18px 6px; margin-bottom: 20px; }
 .wpmft-contact-content h2 { font: 400 32px/1.2 var(--wpmft-serif); color: #355230; letter-spacing: -.6px; padding-right: 20px; }
-.wpmft-contact-intro { margin: 13px 0 25px; font-size: 13px; color: #637255; line-height: 1.8; }
+.wpmft-contact-content .wpmft-contact-intro { margin: 13px 0 25px; font-size: 13px; color: #637255; line-height: 1.8; }
+.wpmft-install-content { padding: 38px 39px 35px; }
+.wpmft-install-content h2 { font: 400 31px/1.25 var(--wpmft-serif); color: #355230; letter-spacing: -.5px; padding-right: 12px; }
+.wpmft-install-content .wpmft-install-intro { color: #637255; font-size: 13px; line-height: 1.8; margin: 13px 0 23px; }
+.wpmft-install-steps { display: flex; flex-direction: column; gap: 16px; list-style: none; padding: 0; margin: 0; }
+.wpmft-install-steps li { display: flex; align-items: flex-start; gap: 13px; color: #526b46; font-size: 13px; line-height: 1.75; margin: 0; padding: 0; }
+.wpmft-install-step-number { display: inline-grid; place-items: center; width: 27px; height: 27px; flex: 0 0 27px; border-radius: 50%; background: #edf2e1; color: #5e7950; font-size: 11px; line-height: 1; border: 1px solid #dbe4ce; }
+.wpmft-install-steps li > span:last-child > svg { margin-left: 8px; color: #526b46; }
+.wpmft-install-content .wpmft-install-note { display: flex; align-items: flex-start; gap: 8px; color: #69795e; font-size: 11px; line-height: 1.7; padding: 15px 0 0; border-top: 1px solid #e0e5d5; margin: 22px 0; }
+.wpmft-install-note svg { margin-top: 2px; }
 .wpmft-lightbox { z-index: 100060; padding: 25px; background: #101c18eb; backdrop-filter: blur(10px); }
 .wpmft-lightbox .wpmft-dialog { width: min(100%, 1300px); height: calc(100dvh - 50px); max-height: 100dvh; border: 0; border-radius: 0; box-shadow: none; background: none; overflow: hidden; color: #f7faee; display: flex; flex-direction: column; }
 .wpmft-lightbox-top { display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; min-height: 48px; padding: 0 58px 0 12px; color: #c9d2bc; font-size: 11px; }
@@ -308,6 +365,7 @@
     .wpmft-export-actions { gap: 6px; }
     .wpmft-toolbar { row-gap: 13px; }
     .wpmft-footer-inner { align-items: flex-start; }
+    .wpmft-footer-actions { max-width: 57%; }
     .wpmft-footer-contact { gap: 10px; }
     .wpmft-footer-story p { max-width: 250px; font-size: 14px; }
     .wpmft-directory { padding: 24px; }
@@ -367,12 +425,18 @@
     .wpmft-branch-notice { padding: 12px 16px; font-size: 10px; align-items: flex-start; gap: 8px; }
     .wpmft-footer { padding: 21px 0 17px; }
     .wpmft-footer-inner { flex-direction: column; gap: 19px; align-items: center; }
+    .wpmft-footer-actions { width: 100%; max-width: none; align-items: center; gap: 16px; }
     .wpmft-footer-story { gap: 10px; }
     .wpmft-footer-story p { max-width: none; font-size: 14px; text-align: center; }
     .wpmft-footer-story svg { width: 24px; height: 24px; }
     .wpmft-footer-contact { justify-content: center; gap: 15px; }
     .wpmft-footer-contact .wpmft-button { padding: 9px 12px; font-size: 10px; min-height: 36px; }
     .wpmft-footer-contact > span { font-size: 10px; }
+    .wpmft-install-controls { justify-content: center; gap: 8px; }
+    .wpmft-install-label { flex-basis: 100%; text-align: center; }
+    .wpmft-install-buttons { justify-content: center; gap: 8px; }
+    .wpmft-install .wpmft-install-button { min-height: 42px; padding: 10px 14px; font-size: 11px; }
+    .wpmft-install-status { text-align: center; }
     .wpmft-gate { min-height: 610px; margin: 0; padding: 5px 0 30px; }
     .wpmft-gate-card { width: min(100%, 410px); padding: 27px 26px 25px; border-radius: 22px; }
     .wpmft-gate-card h2 { font-size: 29px; }
@@ -395,8 +459,12 @@
     .wpmft-overlay { padding: 12px; }
     .wpmft-dialog { border-radius: 20px; max-height: calc(100dvh - 24px); }
     .wpmft-modal-close { top: 12px; right: 12px; width: 33px; height: 33px; }
+    .wpmft-person-edit { top: 12px; right: 54px; width: 33px; min-height: 33px; padding: 7px; border-radius: 50%; }
+    .wpmft-person-edit > span { display: none; }
+    .wpmft-person-edit svg { width: 15px; height: 15px; }
     .wpmft-person-cover { padding: 27px 22px 24px; }
     .wpmft-person-cover > .wpmft-kicker { margin-bottom: 23px; font-size: 8px; }
+    .wpmft-person-cover.has-edit > .wpmft-kicker { padding-right: 67px; }
     .wpmft-person-cover::after { right: 30px; width: 65px; height: 80px; }
     .wpmft-person-identity { gap: 18px; align-items: flex-start; }
     .wpmft-person-identity .wpmft-avatar { width: 88px; height: 88px; --avatar-size: 88px; }
@@ -418,7 +486,17 @@
     .wpmft-relation-list > button { padding: 9px 11px; }
     .wpmft-contact-content { padding: 31px 25px 28px; }
     .wpmft-contact-content h2 { font-size: 29px; }
-    .wpmft-contact-intro { font-size: 12px; }
+    .wpmft-contact-content .wpmft-contact-intro { font-size: 12px; }
+    .wpmft-contact-details { grid-template-columns: 1fr; gap: 15px; }
+    .wpmft-upload-zone { padding-inline: 12px; }
+    .wpmft-upload-choose { gap: 10px; }
+    .wpmft-upload-icon { width: 38px; height: 38px; flex-basis: 38px; }
+    .wpmft-upload-choose strong { font-size: 11px; }
+    .wpmft-upload-choose small { font-size: 10px; }
+    .wpmft-upload-remove { width: 38px; height: 38px; flex-basis: 38px; }
+    .wpmft-install-content { padding: 31px 25px 28px; }
+    .wpmft-install-content h2 { font-size: 27px; padding-right: 0; }
+    .wpmft-install-content .wpmft-install-intro, .wpmft-install-steps li { font-size: 12px; }
     .wpmft-lightbox { padding: 10px; }
     .wpmft-lightbox .wpmft-dialog { height: calc(100dvh - 20px); }
     .wpmft-lightbox-top { padding-left: 0; min-height: 45px; }

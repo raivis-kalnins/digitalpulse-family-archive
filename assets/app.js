@@ -31,8 +31,20 @@
             memories: 'Photographs & memories', gallery: 'Open photograph gallery', photos: 'photographs', photo: 'Photograph', previousPhoto: 'Previous photograph', nextPhoto: 'Next photograph', zoomPhoto: 'Zoom photograph',
             noBiography: 'There is more to this story. Contact the family administrator to share a memory or photograph.', connections: 'Family connections', noConnections: 'No family connections have been added yet.',
             contactHeading: 'Keep the story growing', contactIntro: 'Have a memory, a photograph or a correction to share? Send a message to the family administrator.',
-            name: 'Your name', email: 'Email address', message: 'Your message', messagePlaceholder: 'Tell us what you would like to share…', send: 'Send message', sending: 'Sending…',
+            name: 'Your full name', email: 'Email address', message: 'Your message', messagePlaceholder: 'Tell us what you would like to share…', send: 'Send message', sending: 'Sending…',
             sentTitle: 'Thank you for getting in touch.', sent: 'Your message has been sent to the family administrator.', contactNote: 'Your details are used only to respond to this message.',
+            attachPhoto: 'Add a photograph', optional: 'Optional', choosePhoto: 'Choose a photograph', replacePhoto: 'Choose a different photograph', dropPhoto: 'or drag and drop it here',
+            photoLimits: '{formats} · Up to {size}', removePhoto: 'Remove photograph', skipPhoto: 'Continue without a photograph', selectedPhoto: 'Selected photograph: {name}', photoOne: 'Please choose one photograph at a time.',
+            photoType: 'Choose a photograph in one of these formats: {formats}.', photoSize: 'This photograph is too large. Choose a file no larger than {size}.', photoEmpty: 'This file is empty. Choose another photograph.',
+            contactDetails: 'Contact & social profiles', phone: 'Phone', mobile: 'Mobile', address: 'Address', website: 'Website', edit: 'Edit', editPerson: 'Edit this person',
+            socialProfile: '{platform} profile (opens in a new tab)', newTab: '{label} (opens in a new tab)',
+            install: 'Add to your home screen', installAndroid: 'Android', installApple: 'iPhone / iPad', installAndroidLabel: 'Add to home screen on Android', installAppleLabel: 'Add to home screen on iPhone or iPad',
+            installTitleAndroid: 'Your family tree on Android', installTitleApple: 'Your family tree on iPhone & iPad', installIntro: 'Keep your family archive one tap away with a shortcut on your home screen.',
+            installAndroidStep1: 'Open this page in Chrome on your Android phone or tablet.', installAndroidStep2: 'Open the browser menu (⋮) beside the address bar.',
+            installAndroidStep3: 'Choose “Install and create shortcut” → “Install”, or “Add to Home screen”, then follow your browser’s instructions.',
+            installAppleStep1: 'Open this page in Safari on your iPhone or iPad.', installAppleStep2: 'Tap the Share button in Safari.',
+            installAppleStep3: 'Choose “Add to Home Screen”. If it is missing, look under “Edit Actions”.', installAppleStep4: 'If offered, turn on “Open as Web App”, then tap “Add”.',
+            installOnline: 'An internet connection is needed to open the family archive.', installDone: 'Got it', installInstalled: 'Added to this device', installAccepted: 'Installation requested. Follow your browser to finish.',
             captcha: 'Please complete the security check.', captchaError: 'The security check could not load. Please try again.', required: 'Required',
             yearsUnknown: 'Dates not recorded', listIntro: 'The people who make up our family story.', allPeople: 'Explore the family archive',
             printReady: 'Your print window is ready.', countShown: '{count} people in this view', personCount: '{count} family members', clearSearch: 'Clear search',
@@ -61,8 +73,20 @@
             memories: 'Fotogrāfijas un atmiņas', gallery: 'Atvērt fotogaleriju', photos: 'fotogrāfijas', photo: 'Fotogrāfija', previousPhoto: 'Iepriekšējā fotogrāfija', nextPhoto: 'Nākamā fotogrāfija', zoomPhoto: 'Pietuvināt fotogrāfiju',
             noBiography: 'Šim stāstam vēl ir turpinājums. Sazinies ar dzimtas administratoru, lai pievienotu atmiņu vai fotogrāfiju.', connections: 'Ģimenes saites', noConnections: 'Ģimenes saites vēl nav pievienotas.',
             contactHeading: 'Turpināsim dzimtas stāstu', contactIntro: 'Vēlies dalīties ar atmiņu, fotogrāfiju vai precizējumu? Nosūti ziņu dzimtas administratoram.',
-            name: 'Tavs vārds', email: 'E-pasta adrese', message: 'Tava ziņa', messagePlaceholder: 'Pastāsti, ar ko vēlies dalīties…', send: 'Nosūtīt ziņu', sending: 'Nosūta…',
+            name: 'Vārds Uzvārds', email: 'E-pasta adrese', message: 'Tava ziņa', messagePlaceholder: 'Pastāsti, ar ko vēlies dalīties…', send: 'Nosūtīt ziņu', sending: 'Nosūta…',
             sentTitle: 'Paldies par tavu ziņu!', sent: 'Tava ziņa ir nosūtīta dzimtas administratoram.', contactNote: 'Tavi dati tiks izmantoti tikai atbildes sniegšanai.',
+            attachPhoto: 'Pievienot fotogrāfiju', optional: 'Neobligāti', choosePhoto: 'Izvēlēties fotogrāfiju', replacePhoto: 'Izvēlēties citu fotogrāfiju', dropPhoto: 'vai ievelc to šeit',
+            photoLimits: '{formats} · Līdz {size}', removePhoto: 'Noņemt fotogrāfiju', skipPhoto: 'Turpināt bez fotogrāfijas', selectedPhoto: 'Izvēlētā fotogrāfija: {name}', photoOne: 'Lūdzu, izvēlies vienu fotogrāfiju.',
+            photoType: 'Izvēlies fotogrāfiju kādā no šiem formātiem: {formats}.', photoSize: 'Šī fotogrāfija ir pārāk liela. Izvēlies failu, kas nepārsniedz {size}.', photoEmpty: 'Šis fails ir tukšs. Izvēlies citu fotogrāfiju.',
+            contactDetails: 'Kontaktinformācija un sociālie profili', phone: 'Tālrunis', mobile: 'Mobilais tālrunis', address: 'Adrese', website: 'Tīmekļvietne', edit: 'Rediģēt', editPerson: 'Rediģēt šo cilvēku',
+            socialProfile: '{platform} profils (atveras jaunā cilnē)', newTab: '{label} (atveras jaunā cilnē)',
+            install: 'Pievienot sākuma ekrānam', installAndroid: 'Android', installApple: 'iPhone / iPad', installAndroidLabel: 'Pievienot sākuma ekrānam Android ierīcē', installAppleLabel: 'Pievienot sākuma ekrānam iPhone vai iPad ierīcē',
+            installTitleAndroid: 'Tavs dzimtas koks Android ierīcē', installTitleApple: 'Tavs dzimtas koks iPhone un iPad', installIntro: 'Pievieno dzimtas arhīvu sākuma ekrānam, lai tas vienmēr būtu viena pieskāriena attālumā.',
+            installAndroidStep1: 'Atver šo lapu pārlūkā Chrome savā Android tālrunī vai planšetdatorā.', installAndroidStep2: 'Atver pārlūka izvēlni (⋮) blakus adreses joslai.',
+            installAndroidStep3: 'Izvēlies “Instalēt un izveidot saīsni” → “Instalēt” vai “Pievienot sākuma ekrānam” un izpildi pārlūka norādījumus.',
+            installAppleStep1: 'Atver šo lapu pārlūkā Safari savā iPhone vai iPad.', installAppleStep2: 'Pieskaries Safari pogai “Kopīgot”.',
+            installAppleStep3: 'Izvēlies “Pievienot sākuma ekrānam”. Ja šīs iespējas nav, meklē to sadaļā “Rediģēt darbības”.', installAppleStep4: 'Ja šī iespēja ir pieejama, ieslēdz “Atvērt kā tīmekļa lietotni” un pieskaries “Pievienot”.',
+            installOnline: 'Lai atvērtu dzimtas arhīvu, nepieciešams interneta savienojums.', installDone: 'Sapratu', installInstalled: 'Pievienots šai ierīcei', installAccepted: 'Instalēšana pieprasīta. Pabeidz to pārlūkā.',
             captcha: 'Lūdzu, izpildi drošības pārbaudi.', captchaError: 'Drošības pārbaudi neizdevās ielādēt. Lūdzu, mēģini vēlreiz.', required: 'Obligāti',
             yearsUnknown: 'Datumi nav norādīti', listIntro: 'Cilvēki, kuri veido mūsu dzimtas stāstu.', allPeople: 'Iepazīsti dzimtas arhīvu',
             printReady: 'Drukas logs ir gatavs.', countShown: 'Šajā skatā ir {count} cilvēki', personCount: '{count} dzimtas locekļi', clearSearch: 'Notīrīt meklēšanu',
@@ -85,7 +109,16 @@
         check: 'm5 12 4 4L19 6', eye: 'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12ZM15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
         branch: 'M7 3v12a4 4 0 0 0 4 4h6M7 10h7a4 4 0 0 0 4-4V3M4 3h6M15 3h6m-7 13 3 3-3 3',
         rings: 'M14 12a5 5 0 1 1-10 0a5 5 0 1 1 10 0M20 12a5 5 0 1 1-10 0a5 5 0 1 1 10 0',
-        info: 'M12 11v6M12 7h.01M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z'
+        info: 'M12 11v6M12 7h.01M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z',
+        upload: 'M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6',
+        edit: 'm16 3 5 5M4 15 17 2l5 5L9 20l-7 2zM4 15l5 5',
+        phone: 'M7 3H3c-1 10 8 19 18 18v-4l-5-3-2 3a18 18 0 0 1-7-7l3-2z',
+        mobile: 'M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2ZM10 5h4M12 18h.01',
+        globe: 'M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0ZM2 12h20M12 2c5 5 5 15 0 20-5-5-5-15 0-20Z',
+        external: 'M15 3h6v6m0-6L10 14M10 3H3v18h18v-7',
+        share: 'M12 15V2m-4 4 4-4 4 4M7 9H3v12h18V9h-4',
+        android: 'M5 11a7 7 0 0 1 14 0v7H5zM8 3 6 1M16 3l2-2M8 7h.01M16 7h.01M2 10v7M22 10v7M8 18v4M16 18v4',
+        apple: 'M16 2c0 2-1 4-4 4 0-2 1-4 4-4ZM12 8c-3-2-7-2-8 3-1 4 2 10 5 11l3-1 3 1c2-1 4-4 5-7-3-1-4-5-1-7-2-2-4-2-7 0Z'
     };
     const leafPath = 'M48 2C40 10 38 3 32 9C26 16 20 7 16 15C12 23 6 18 6 28C7 35 1 37 5 45C10 52 5 57 14 62C20 66 14 72 25 75C33 77 31 87 42 87C48 87 47 96 50 98C53 90 59 90 62 84C67 80 74 85 76 75C79 69 87 71 88 62C89 54 97 53 94 44C92 36 99 32 91 25C86 20 89 14 80 14C72 14 75 6 66 7C57 9 56 0 48 2Z';
     const tr = (lang, key, vars) => (WORDS[lang] || WORDS.en)[key]?.replace(/\{(\w+)\}/g, (_, v) => String(vars?.[v] ?? '')) || key;
@@ -105,6 +138,25 @@
     const validPhoto = url => {
         if (!url) return '';
         try { const u = new URL(url, location.href); return u.origin === location.origin && /^https?:$/.test(u.protocol) ? u.href : ''; } catch (_) { return ''; }
+    };
+    const validLink = url => {
+        if (typeof url !== 'string' || !url.trim()) return '';
+        try { const u = new URL(url, location.href); return /^https?:$/.test(u.protocol) && !u.username && !u.password ? u.href : ''; } catch (_) { return ''; }
+    };
+    const fileSize = (bytes, lang) => new Intl.NumberFormat(lang === 'lv' ? 'lv-LV' : 'en-GB', { maximumFractionDigits: 1 }).format(bytes / (bytes >= 1048576 ? 1048576 : 1024)) + (bytes >= 1048576 ? ' MB' : ' KB');
+    const photoConfig = upload => {
+        const safeFormats = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
+        const formats = Array.isArray(upload?.extensions) ? upload.extensions.map(ext => String(ext).toLowerCase().replace(/^\./, '')).filter(ext => safeFormats.includes(ext)) : safeFormats.slice(0, 4);
+        const extensions = [...new Set(formats)];
+        return { enabled: enabled(upload?.enabled, true) && extensions.length > 0, extensions, accept: extensions.map(ext => '.' + ext).join(','), maxBytes: Number(upload?.maxBytes) > 0 ? Number(upload.maxBytes) : 10 * 1048576 };
+    };
+    const photoError = (file, config, lang) => {
+        if (!file) return null;
+        const formats = config.extensions.map(ext => ext.toUpperCase()).join(', ');
+        if (!config.extensions.includes((file.name.match(/\.([^.]+)$/) || [])[1]?.toLowerCase())) return { key: 'photoType', vars: { formats } };
+        if (!file.size) return { key: 'photoEmpty' };
+        if (file.size > config.maxBytes) return { key: 'photoSize', vars: { size: fileSize(config.maxBytes, lang) } };
+        return null;
     };
     const mediaIdentity = url => {
         const safe = validPhoto(url); if (!safe) return '';
@@ -281,6 +333,71 @@
         return h('button', { type: 'button', className: cls('wpmft-icon-button', 'wpmft-modal-close', dark && 'is-dark'), 'aria-label': tr(lang, 'close'), onClick }, h(Icon, { name: 'close', size: 23 }));
     }
 
+    function InstallControls({ lang }) {
+        const [platform, setPlatform] = useState(''), [busy, setBusy] = useState(false), [installed, setInstalled] = useState(!!window.WPMFT_INSTALL?.installed()), [accepted, setAccepted] = useState(false);
+        const alive = useRef(true);
+        useEffect(() => {
+            alive.current = true;
+            const refresh = () => setInstalled(!!window.WPMFT_INSTALL?.installed());
+            window.addEventListener('wpmft:installchange', refresh); refresh();
+            return () => { alive.current = false; window.removeEventListener('wpmft:installchange', refresh); };
+        }, []);
+        async function android() {
+            if (busy) return;
+            const installer = window.WPMFT_INSTALL;
+            if (!installer?.available()) { setPlatform('Android'); return; }
+            setBusy(true); setAccepted(false);
+            try {
+                // Calling prompt directly from the click keeps the browser's user gesture.
+                const result = await installer.prompt();
+                if (!alive.current) return;
+                setInstalled(!!installer.installed());
+                if (result === 'unavailable') setPlatform('Android');
+                if (result === 'accepted') setAccepted(true);
+            } catch (_) { if (alive.current) setPlatform('Android'); }
+            finally { if (alive.current) setBusy(false); }
+        }
+        const steps = platform === 'Apple' ? [1, 2, 3, 4] : [1, 2, 3];
+        return h('div', { className: 'wpmft-install' },
+            installed ? h('p', { className: 'wpmft-installed', role: 'status' }, h(Icon, { name: 'check', size: 16 }), tr(lang, 'installInstalled')) :
+                h('div', { className: 'wpmft-install-controls' }, h('span', { className: 'wpmft-install-label' }, tr(lang, 'install')),
+                    h('div', { className: 'wpmft-install-buttons' },
+                        h('button', { type: 'button', className: 'wpmft-install-button', disabled: busy, 'aria-label': tr(lang, 'installAndroidLabel'), onClick: android }, busy ? h('span', { className: 'wpmft-spinner' }) : h(Icon, { name: 'android', size: 18 }), tr(lang, 'installAndroid')),
+                        h('button', { type: 'button', className: 'wpmft-install-button', 'aria-label': tr(lang, 'installAppleLabel'), onClick: () => setPlatform('Apple') }, h(Icon, { name: 'apple', size: 18 }), tr(lang, 'installApple'))),
+                    accepted && h('p', { className: 'wpmft-install-status', role: 'status' }, tr(lang, 'installAccepted'))),
+            platform && h(Modal, { title: tr(lang, 'installTitle' + platform), labelId: 'wpmft-install-title', onClose: () => setPlatform(''), className: 'wpmft-install-overlay' },
+                h(CloseButton, { lang, onClick: () => setPlatform('') }),
+                h('div', { className: 'wpmft-install-content' },
+                    h('span', { className: 'wpmft-contact-symbol' }, h(Icon, { name: platform === 'Apple' ? 'apple' : 'android', size: 28 })),
+                    h('h2', { id: 'wpmft-install-title' }, tr(lang, 'installTitle' + platform)),
+                    h('p', { className: 'wpmft-install-intro' }, tr(lang, 'installIntro')),
+                    h('ol', { className: 'wpmft-install-steps' }, steps.map(step => h('li', { key: step }, h('span', { className: 'wpmft-install-step-number', 'aria-hidden': true }, step), h('span', null, tr(lang, 'install' + platform + 'Step' + step), platform === 'Apple' && step === 2 && h(Icon, { name: 'share', size: 18 }))))),
+                    h('p', { className: 'wpmft-install-note' }, h(Icon, { name: 'globe', size: 16 }), tr(lang, 'installOnline')),
+                    h('button', { type: 'button', className: 'wpmft-button is-primary is-full', onClick: () => setPlatform('') }, tr(lang, 'installDone')))));
+    }
+
+    function PersonContacts({ person, lang }) {
+        const contacts = person.contacts || {};
+        const socialLabels = { facebook: 'Facebook', instagram: 'Instagram', linkedin: 'LinkedIn', x: 'X', youtube: 'YouTube', tiktok: 'TikTok' };
+        const socials = (Array.isArray(person.socials) ? person.socials : []).filter(item => socialLabels[item.key] && validLink(item.url));
+        const fields = ['email', 'phone', 'mobile', 'address', 'website'].filter(key => typeof contacts[key] === 'string' && contacts[key].trim());
+        if (!fields.length && !socials.length) return null;
+        function contactValue(key) {
+            const value = contacts[key];
+            if (key === 'email') return h('a', { href: 'mailto:' + encodeURIComponent(value) }, value);
+            if (key === 'phone' || key === 'mobile') {
+                const number = value.replace(/[^\d+]/g, '');
+                return number ? h('a', { href: 'tel:' + number }, value) : value;
+            }
+            if (key === 'website' && validLink(value)) return h('a', { href: validLink(value), target: '_blank', rel: 'noopener noreferrer', 'aria-label': tr(lang, 'newTab', { label: value }) }, value.replace(/^https?:\/\//i, '').replace(/\/$/, ''), h(Icon, { name: 'external', size: 12 }));
+            return value;
+        }
+        return h('section', { className: 'wpmft-person-contact' }, h('h3', null, tr(lang, 'contactDetails')),
+            fields.length > 0 && h('dl', { className: 'wpmft-contact-details' }, fields.map(key => h('div', { key, className: cls('wpmft-contact-detail', key === 'address' && 'is-address') },
+                h('dt', null, h(Icon, { name: { email: 'mail', phone: 'phone', mobile: 'mobile', address: 'pin', website: 'globe' }[key], size: 15 }), tr(lang, key)), h('dd', null, contactValue(key))))),
+            socials.length > 0 && h('div', { className: 'wpmft-social-links' }, socials.map(item => h('a', { key: item.key, href: validLink(item.url), target: '_blank', rel: 'noopener noreferrer', 'aria-label': tr(lang, 'socialProfile', { platform: socialLabels[item.key] }) }, socialLabels[item.key], h(Icon, { name: 'external', size: 13 })))));
+    }
+
     function Lightbox({ gallery, start, lang, onClose }) {
         const [index, setIndex] = useState(start || 0), [zoom, setZoom] = useState(false);
         const current = gallery[index], next = useCallback(delta => { setIndex(i => (i + delta + gallery.length) % gallery.length); setZoom(false); }, [gallery.length]);
@@ -328,31 +445,78 @@
         ].filter(group => group.people.length);
         return h(Modal, { title: person?.name || tr(lang, 'loadingPerson'), labelId: person ? titleId : undefined, onClose, wide: true, className: 'wpmft-person-overlay' },
             h(CloseButton, { lang, onClick: onClose }),
+            person?.editUrl && validLink(person.editUrl) && h('a', { className: 'wpmft-person-edit', href: validLink(person.editUrl), 'aria-label': tr(lang, 'editPerson'), title: tr(lang, 'editPerson') }, h(Icon, { name: 'edit', size: 15 }), h('span', null, tr(lang, 'edit'))),
             !person && !error && h('div', { className: 'wpmft-modal-loading' }, h(Loader, { label: tr(lang, 'loadingPerson') })),
             error && h('div', { className: 'wpmft-modal-loading' }, h(Message, null, error), h('button', { className: 'wpmft-button', type: 'button', onClick: () => setRetry(n => n + 1) }, tr(lang, 'retry'))),
             person && h('div', { className: 'wpmft-person' },
-                h('div', { className: 'wpmft-person-cover' }, h('span', { className: 'wpmft-kicker' }, tr(lang, 'roots')), h('div', { className: 'wpmft-person-identity' },
+                h('div', { className: cls('wpmft-person-cover', person.editUrl && validLink(person.editUrl) && 'has-edit') }, h('span', { className: 'wpmft-kicker' }, tr(lang, 'roots')), h('div', { className: 'wpmft-person-identity' },
                     h('button', { className: 'wpmft-portrait-button', type: 'button', disabled: !gallery.length, onClick: () => setLightbox(0), 'aria-label': tr(lang, 'gallery') }, h(Photo, { person, size: 132, leaf: true }), gallery.length > 0 && h('span', { className: 'wpmft-portrait-count' }, h(Icon, { name: 'photo', size: 14 }), gallery.length)),
                     h('div', null, h('h2', { id: titleId }, person.name), years(person) && h('p', { className: 'wpmft-life-years' }, years(person)), person.location && h('p', { className: 'wpmft-person-location' }, h(Icon, { name: 'pin', size: 16 }), person.location),
                         h('button', { type: 'button', className: 'wpmft-button is-primary', onClick: () => { onClose(); onRoot(person.id); } }, h(Icon, { name: 'branch', size: 18 }), tr(lang, 'explore'))))),
                 h('div', { className: 'wpmft-person-body' },
                     h('div', { className: 'wpmft-life-facts' }, ['born', 'died', 'birthPlace', 'deathPlace', 'maidenName', 'occupation'].filter(k => person[k]).map(k => h('div', { className: 'wpmft-life-fact', key: k }, h('span', null, tr(lang, k)), h('strong', null, k === 'born' || k === 'died' ? dateLabel(person[k], lang) : person[k])))),
                     h('section', { className: 'wpmft-biography' }, h('h3', null, tr(lang, 'about')), person.bio ? h('div', { className: 'wpmft-prose', onClick: biographyClick, dangerouslySetInnerHTML: { __html: person.bio } }) : h('p', { className: 'wpmft-muted' }, tr(lang, 'noBiography'))),
+                    h(PersonContacts, { person, lang }),
                     gallery.length > 0 && h('section', { className: 'wpmft-gallery-section' }, h('div', { className: 'wpmft-section-heading' }, h('h3', null, tr(lang, 'memories')), h('span', null, gallery.length)), h('div', { className: 'wpmft-gallery' }, gallery.map((photo, i) => h('button', { type: 'button', key: photo.id || i, onClick: () => setLightbox(i), 'aria-label': (photo.alt || tr(lang, 'photo')) + ' — ' + (i + 1) + '/' + gallery.length }, h('img', { src: validPhoto(photo.thumb || photo.url), alt: photo.alt || '', loading: 'lazy', decoding: 'async' }), h('span', { 'aria-hidden': true }, h(Icon, { name: 'plus' })))))),
                     h('section', { className: 'wpmft-relations' }, h('h3', null, tr(lang, 'connections')), !relationGroups.length && h('p', { className: 'wpmft-muted' }, tr(lang, 'noConnections')), relationGroups.map(group => h('div', { key: group.key, className: 'wpmft-relation-group' }, h('h4', null, group.icon && h(Icon, { name: group.icon, size: 17 }), tr(lang, group.key)), h('div', { className: 'wpmft-relation-list' }, group.people.map(p => h('button', { type: 'button', key: p.id, onClick: () => onPerson(p.id) }, h(Photo, { person: p, size: 42 }), h('span', null, h('strong', null, p.name), years(p) && h('small', null, years(p))), h(Icon, { name: 'right', size: 17 }))))))))),
             lightbox !== null && h(Lightbox, { gallery, start: lightbox, lang, onClose: () => setLightbox(null) }));
     }
 
-    function ContactDialog({ lang, api, captcha, onClose }) {
-        const [busy, setBusy] = useState(false), [error, setError] = useState(''), [sent, setSent] = useState(''), [token, setToken] = useState(''), [reset, setReset] = useState(0);
+    function PhotoUpload({ lang, config, file, onFile, error, onError, disabled }) {
+        const input = useRef(null), dragDepth = useRef(0);
+        const [dragging, setDragging] = useState(false), [preview, setPreview] = useState(''), [previewFailed, setPreviewFailed] = useState(false);
+        const formats = config.extensions.map(ext => ext.toUpperCase()).join(', '), limitsId = 'wpmft-upload-limits', errorId = 'wpmft-upload-error';
+        useEffect(() => {
+            setPreviewFailed(false);
+            if (!file) { setPreview(''); return; }
+            const url = URL.createObjectURL(file); setPreview(url);
+            return () => URL.revokeObjectURL(url);
+        }, [file]);
+        function choose(files) {
+            if (disabled || !files?.length) return;
+            if (files.length !== 1) { onError({ key: 'photoOne' }); return; }
+            const selected = files[0], problem = photoError(selected, config, lang);
+            if (problem) { onError(problem); return; }
+            onError(null); onFile(selected);
+        }
+        const isFileDrag = event => Array.from(event.dataTransfer?.types || []).includes('Files');
+        return h('div', { className: cls('wpmft-upload', error && 'has-error') },
+            h('div', { className: 'wpmft-upload-heading' }, h('span', { id: 'wpmft-upload-label' }, tr(lang, 'attachPhoto')), h('span', null, tr(lang, 'optional'))),
+            h('div', { className: cls('wpmft-upload-zone', dragging && 'is-dragging', disabled && 'is-disabled'),
+                onDragEnter: event => { if (!isFileDrag(event)) return; event.preventDefault(); if (!disabled) { dragDepth.current++; setDragging(true); } },
+                onDragOver: event => { if (!isFileDrag(event)) return; event.preventDefault(); event.dataTransfer.dropEffect = disabled ? 'none' : 'copy'; },
+                onDragLeave: event => { event.preventDefault(); dragDepth.current = Math.max(0, dragDepth.current - 1); if (!dragDepth.current) setDragging(false); },
+                onDrop: event => { event.preventDefault(); dragDepth.current = 0; setDragging(false); choose(event.dataTransfer.files); }
+            },
+                h('input', { ref: input, type: 'file', accept: config.accept, hidden: true, disabled, tabIndex: -1, onChange: event => { choose(event.target.files); event.target.value = ''; } }),
+                h('button', { type: 'button', className: 'wpmft-upload-choose', disabled, onClick: () => input.current?.click(), 'aria-describedby': limitsId + (error ? ' ' + errorId : ''), 'aria-invalid': error ? 'true' : undefined },
+                    h('span', { className: 'wpmft-upload-icon', 'aria-hidden': true }, h(Icon, { name: 'upload', size: 23 })),
+                    h('span', null, h('strong', null, tr(lang, file ? 'replacePhoto' : 'choosePhoto')), h('small', null, tr(lang, 'dropPhoto')))),
+                h('p', { id: limitsId, className: 'wpmft-upload-limits' }, tr(lang, 'photoLimits', { formats, size: fileSize(config.maxBytes, lang) }))),
+            file && h('div', { className: 'wpmft-upload-preview', role: 'status', 'aria-label': tr(lang, 'selectedPhoto', { name: file.name }) },
+                h('span', { className: 'wpmft-upload-thumbnail' }, preview && !previewFailed ? h('img', { src: preview, alt: '', onError: () => setPreviewFailed(true) }) : h(Icon, { name: 'photo', size: 23 })),
+                h('span', { className: 'wpmft-upload-file' }, h('strong', null, file.name), h('small', null, fileSize(file.size, lang))),
+                h('button', { type: 'button', className: 'wpmft-upload-remove', disabled, 'aria-label': tr(lang, 'removePhoto'), title: tr(lang, 'removePhoto'), onClick: () => { onFile(null); onError(null); } }, h(Icon, { name: 'close', size: 18 }))),
+            error && h('p', { id: errorId, className: 'wpmft-upload-error', role: 'alert' }, h(Icon, { name: 'info', size: 16 }), tr(lang, error.key, error.vars)),
+            error && !file && h('button', { type: 'button', className: 'wpmft-upload-clear', disabled, onClick: () => onError(null) }, tr(lang, 'skipPhoto')));
+    }
+
+    function ContactDialog({ lang, api, captcha, upload, onClose }) {
+        const [busy, setBusy] = useState(false), [error, setError] = useState(''), [sent, setSent] = useState(''), [token, setToken] = useState(''), [reset, setReset] = useState(0), [photo, setPhoto] = useState(null), [uploadError, setUploadError] = useState(null);
         const started = useRef(Math.floor(Date.now() / 1000)), alive = useRef(true);
+        const config = photoConfig(upload);
         useEffect(() => () => { alive.current = false; }, []);
         async function submit(e) {
             e.preventDefault(); setError('');
+            if (busy) return;
+            const invalidPhoto = config.enabled && (uploadError || photoError(photo, config, lang));
+            if (invalidPhoto) { setUploadError(invalidPhoto); e.currentTarget.querySelector('.wpmft-upload-choose')?.focus(); return; }
             if (captcha?.contact && captcha.siteKey && !token) { setError(tr(lang, 'captcha')); return; }
             const form = new FormData(e.currentTarget);
+            form.set('started', String(started.current)); form.set('h-captcha-response', token);
+            if (config.enabled && photo) form.set('photo', photo, photo.name);
             setBusy(true);
-            try { const data = await api('contact', { name: form.get('name'), email: form.get('email'), message: form.get('message'), website: form.get('website'), started: started.current, 'h-captcha-response': token }); if (alive.current) setSent(data.message || tr(lang, 'sent')); }
+            try { const data = await api('contact', form); if (alive.current) { setPhoto(null); setUploadError(null); setSent(data.message || tr(lang, 'sent')); } }
             catch (err) { if (alive.current) { setError(err.message); setReset(v => v + 1); } }
             finally { if (alive.current) setBusy(false); }
         }
@@ -366,6 +530,7 @@
                         h('label', null, tr(lang, 'name'), h('input', { name: 'name', autoComplete: 'name', required: true, maxLength: 120, disabled: busy })),
                         h('label', null, tr(lang, 'email'), h('input', { name: 'email', type: 'email', autoComplete: 'email', required: true, maxLength: 190, disabled: busy })),
                         h('label', null, tr(lang, 'message'), h('textarea', { name: 'message', required: true, minLength: 10, maxLength: 5000, rows: 5, placeholder: tr(lang, 'messagePlaceholder'), disabled: busy })),
+                        config.enabled && h(PhotoUpload, { lang, config, file: photo, onFile: setPhoto, error: uploadError, onError: setUploadError, disabled: busy }),
                         h('div', { className: 'wpmft-honeypot', 'aria-hidden': true }, h('label', null, 'Website', h('input', { name: 'website', tabIndex: -1, autoComplete: 'off' }))),
                         captcha?.contact && captcha.siteKey && h(Captcha, { siteKey: captcha.siteKey, lang, onToken: setToken, resetKey: reset }),
                         h('p', { className: 'wpmft-form-note' }, tr(lang, 'contactNote')),
@@ -622,11 +787,14 @@
         const subtitle = (lang === 'lv' && settings.subtitleLv) || settings.subtitle || tr(lang, 'subtitle');
         locked.current = () => { setBoot(b => b ? { ...b, authorized: false } : b); setTree(null); setPersonId(null); exportLayout.current = null; setNotice(''); setTreeError(''); setStartupError(tr(language.current, 'expired')); };
         const api = useCallback(async (op, fields = {}, signal) => {
-            const body = new URLSearchParams({ action: 'wpmft_api', op, lang: language.current, csrf: csrf.current });
-            Object.entries(fields).forEach(([key, value]) => body.set(key, value == null ? '' : String(value)));
+            const multipart = fields instanceof FormData, body = multipart ? new FormData() : new URLSearchParams();
+            if (multipart) fields.forEach((value, key) => body.append(key, value));
+            else Object.entries(fields).forEach(([key, value]) => body.set(key, value == null ? '' : String(value)));
+            Object.entries({ action: 'wpmft_api', op, lang: language.current, csrf: csrf.current }).forEach(([key, value]) => body.set(key, value));
             let response, payload;
             try {
-                response = await fetch(CONFIG.ajaxUrl || '/wp-admin/admin-ajax.php', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }, body, signal });
+                // Let the browser supply the multipart boundary when a photograph is attached.
+                response = await fetch(CONFIG.ajaxUrl || '/wp-admin/admin-ajax.php', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: multipart ? undefined : { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }, body, signal });
                 payload = await response.json();
             } catch (e) { if (e.name === 'AbortError') throw e; throw new Error(tr(language.current, 'networkError')); }
             if (!response.ok || !payload?.success) {
@@ -700,9 +868,11 @@
                             enabled(settings.allowExport) && view === 'tree' && h('div', { className: 'wpmft-export-actions' }, h('button', { type: 'button', className: 'wpmft-button is-small', onClick: () => snapshot(false), disabled: exporting || !tree?.nodes?.length }, h(Icon, { name: 'download', size: 17 }), tr(lang, exporting ? 'exporting' : 'export')), h('button', { type: 'button', className: 'wpmft-icon-button', onClick: () => snapshot(true), disabled: exporting || !tree?.nodes?.length, 'aria-label': tr(lang, 'print'), title: tr(lang, 'print') }, h(Icon, { name: 'print', size: 19 })))),
                         h(Message, null, treeError), treeError && h('button', { type: 'button', className: 'wpmft-button is-small wpmft-retry', onClick: () => setReload(v => v + 1) }, tr(lang, 'retry')), notice && h(Message, { kind: 'success' }, notice),
                         view === 'list' ? h(Directory, { key: lang, lang, api, onPerson: setPersonId, onRoot: chooseRoot }) : tree?.nodes?.length ? h(Tree, { data: tree, lang, busy: treeBusy, onPerson: setPersonId, onRoot: chooseRoot, onHome: () => chooseRoot(initialRoot.current), settings, exportRef: exportLayout }) : treeBusy ? h('div', { className: 'wpmft-starting' }, h(Loader, { label: tr(lang, 'loading') })) : h('section', { className: 'wpmft-empty' }, h(OakMark, { size: 80 }), h('h2', null, tr(lang, 'noPeople')), h('p', null, tr(lang, 'noPeopleHelp'))))),
-            h('footer', { className: 'wpmft-footer' }, h('div', { className: 'wpmft-footer-inner' }, h('div', { className: 'wpmft-footer-story' }, h(OakMark, { size: 28 }), h('p', null, tr(lang, 'footer'))), h('div', { className: 'wpmft-footer-contact' }, settings.contactEmail && h('span', null, settings.contactEmail), contactEnabled && h('button', { type: 'button', className: 'wpmft-button is-small', onClick: () => setContact(true) }, h(Icon, { name: 'mail', size: 17 }), tr(lang, 'contact')))),
+            h('footer', { className: 'wpmft-footer' }, h('div', { className: 'wpmft-footer-inner' }, h('div', { className: 'wpmft-footer-story' }, h(OakMark, { size: 28 }), h('p', null, tr(lang, 'footer'))),
+                h('div', { className: 'wpmft-footer-actions' }, h('div', { className: 'wpmft-footer-contact' }, settings.contactEmail && h('span', null, settings.contactEmail), contactEnabled && h('button', { type: 'button', className: 'wpmft-button is-small', onClick: () => setContact(true) }, h(Icon, { name: 'mail', size: 17 }), tr(lang, 'contact'))),
+                    enabled(settings.appInstall, false) && h(InstallControls, { lang }))),
                 enabled(settings.showCredit, false) && h('div', { className: 'wpmft-credit' }, tr(lang, 'credit'), ' ', h('a', { href: 'https://digitalpulse.click/', target: '_blank', rel: 'noopener noreferrer' }, 'DigitalPulse · Raivis Kalnins'))),
-            personId && authorized && h(PersonDialog, { key: lang, id: personId, lang, api, onClose: () => setPersonId(null), onPerson: setPersonId, onRoot: chooseRoot }), contact && boot && contactEnabled && h(ContactDialog, { lang, api, captcha: boot.hcaptcha, onClose: () => setContact(false) }));
+            personId && authorized && h(PersonDialog, { key: lang, id: personId, lang, api, onClose: () => setPersonId(null), onPerson: setPersonId, onRoot: chooseRoot }), contact && boot && contactEnabled && h(ContactDialog, { lang, api, captcha: boot.hcaptcha, upload: settings.contactUpload, onClose: () => setContact(false) }));
     }
     function mount() {
         document.querySelectorAll('.wpmft-app').forEach(element => {

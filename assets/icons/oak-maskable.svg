@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">WP My Family Tree — oak</title>
+  <defs>
+    <linearGradient id="forest" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#254e3b"/><stop offset="1" stop-color="#123c2e"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#f7f3df"/><stop offset="1" stop-color="#dfe8cf"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#forest)" d="M0 0h512v512H0z"/>
+  <g transform="translate(51.2 51.2) scale(.8)">
+  <circle cx="256" cy="252" r="204" fill="none" stroke="#d8ba78" stroke-opacity=".15" stroke-width="2"/>
+  <path fill="url(#leaf)" d="M244 110c-14-26-49-25-62-1-28-8-51 12-49 36-29 2-44 26-34 50-27 18-22 54 4 66-11 30 11 58 40 57 9 29 46 36 65 14 13 20 37 23 48 5 17 18 40 14 52-5 21 22 56 15 65-14 29 1 51-27 40-57 26-12 31-48 4-66 10-24-5-48-34-50 2-24-21-44-49-36-13-24-48-25-62 1-7-7-21-7-28 0Z"/>
+  <g fill="none" stroke="#204a37" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M256 315V162m0 83-55-50m55 77 64-57m-64 94-101-55m101 41 95-29"/>
+    <path d="m201 195-4-25m4 25-27-1m146 21 7-29m-7 29 27-1m-192 40-5-23m201 35 11-23" stroke-width="6"/>
+  </g>
+  <path fill="#e8e6c9" d="M244 303h24l5 65c2 18 17 29 36 38l15 8c6 3 3 12-4 11l-29-6-30-19-1 29c0 6-9 6-10 0l-4-28-28 18-26 6c-7 2-11-7-5-11l14-8c21-12 35-22 36-39Z"/>
+  <path d="M256 339v44" fill="none" stroke="#a9bd9b" stroke-width="4" stroke-linecap="round"/>
+  <path d="M225 449h62" fill="none" stroke="#d8ba78" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>

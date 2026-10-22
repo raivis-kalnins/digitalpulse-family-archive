@@ -3,8 +3,139 @@
     'use strict';
     var config = window.WPMFT_ADMIN || {};
     var strings = config.strings || {};
+    var dictionary = config.translations || {};
+    var reverseDictionary = Object.create(null);
+    Object.keys(dictionary).forEach(function (key) { reverseDictionary[dictionary[key]] = key; });
+    function sourceText(text) {
+        if (Object.prototype.hasOwnProperty.call(dictionary, text)) return text;
+        return reverseDictionary[text] || null;
+    }
+    function translate(text) {
+        var source = sourceText(text);
+        return source ? (config.language === 'lv' ? dictionary[source] : source) : text;
+    }
+    var sourceStrings = {};
+    Object.keys(strings).forEach(function (key) { sourceStrings[key] = sourceText(strings[key]) || strings[key]; });
+    var textSources = new WeakMap();
+    var attributeSources = new WeakMap();
+
+    // Change labels only. Never replace HTML, form values, names, biography or chosen people.
+    function translateLabels(root) {
+        var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        var node;
+        while ((node = walker.nextNode())) {
+            var parent = node.parentElement;
+            if (!parent || parent.closest('script,style,textarea,.wpmft-person-chip,.wpmft-person-results,.wpmft-gallery-preview,.wpmft-portrait-preview,[data-wpmft-user-content]')) continue;
+            if (parent.tagName === 'OPTION' && parent.parentElement && ['wpmft[category_id]', 'wpmft[page_id]'].includes(parent.parentElement.name) && Number(parent.value) > 0) continue;
+            var saved = textSources.get(node);
+            if (!saved) {
+                var text = node.nodeValue.trim();
+                var source = sourceText(text);
+                if (!source) continue;
+                saved = {source: source, before: node.nodeValue.slice(0, node.nodeValue.indexOf(text)), after: node.nodeValue.slice(node.nodeValue.indexOf(text) + text.length)};
+                textSources.set(node, saved);
+            }
+            node.nodeValue = saved.before + (config.language === 'lv' ? dictionary[saved.source] : saved.source) + saved.after;
+        }
+        root.querySelectorAll('[placeholder],[aria-label],[title],input[type="submit"]').forEach(function (element) {
+            var saved = attributeSources.get(element) || {};
+            ['placeholder', 'aria-label', 'title'].concat(element.matches('input[type="submit"]') ? ['value'] : []).forEach(function (attribute) {
+                var source = saved[attribute] || sourceText(element.getAttribute(attribute) || '');
+                if (!source) return;
+                saved[attribute] = source;
+                element.setAttribute(attribute, config.language === 'lv' ? dictionary[source] : source);
+            });
+            attributeSources.set(element, saved);
+        });
+        root.querySelectorAll('template').forEach(function (template) { translateLabels(template.content); });
+    }
+
+    function setLanguage(language) {
+        if (language !== 'en' && language !== 'lv') return;
+        config.language = language;
+        Object.keys(sourceStrings).forEach(function (key) { strings[key] = translate(sourceStrings[key]); });
+        document.querySelectorAll('.wpmft-settings,.wpmft-person-panel,#wpmft-person,.wpmft-biography-heading,#toplevel_page_wpmft .wp-menu-name,#toplevel_page_wpmft .wp-submenu a').forEach(translateLabels);
+        document.querySelectorAll('[name="wpmft_admin_lang"]').forEach(function (field) { field.value = language; });
+        var titlePrompt = document.getElementById('title-prompt-text');
+        if (titlePrompt && document.querySelector('.wpmft-person-panel')) titlePrompt.textContent = translate('Person’s full name');
+    }
 
     function ready() {
+        setLanguage(config.language === 'lv' ? 'lv' : 'en');
+        document.addEventListener('change', function (event) {
+            if (event.target.matches('.wpmft-admin-language,.post_lang_choice,#post_lang_choice,select[name="post_lang_choice"]')) setLanguage(event.target.value);
+        });
+        // Polylang can revert the selection after its confirmation dialog is cancelled.
+        if (window.jQuery) window.jQuery(document).on('dialogclose.wpmft', '#pll-dialog', function () {
+            setTimeout(function () {
+                var choice = document.querySelector('.post_lang_choice,[name="post_lang_choice"]');
+                if (choice) setLanguage(choice.value);
+            }, 0);
+        });
+        document.querySelectorAll('.wpmft-settings form').forEach(function (form) {
+            if (form.querySelector('[name="wpmft_admin_lang"]')) return;
+            var language = document.createElement('input');
+            language.type = 'hidden'; language.name = 'wpmft_admin_lang'; language.value = config.language;
+            form.append(language);
+        });
+
+        var classicPerson = document.querySelector('.wpmft-person-editor[data-classic-person="1"]');
+        var biography = document.getElementById('content');
+        if (classicPerson && biography) {
+            var keepBiography = document.createElement('input');
+            keepBiography.type = 'hidden'; keepBiography.name = 'wpmft_person[keep_biography]'; keepBiography.value = '1';
+            classicPerson.append(keepBiography);
+            var initialBiography = biography.value;
+            ['input', 'change'].forEach(function (event) {
+                biography.addEventListener(event, function () { if (biography.value !== initialBiography) keepBiography.value = '0'; });
+            });
+            function watchEditor(editor) {
+                if (!editor || editor.id !== 'content' || editor.wpmftBiographyWatched) return;
+                editor.wpmftBiographyWatched = true;
+                editor.on('input change undo redo', function () { if (editor.isDirty()) keepBiography.value = '0'; });
+            }
+            if (window.jQuery) window.jQuery(document).on('tinymce-editor-init.wpmft', function (event, editor) { watchEditor(editor); });
+            if (window.tinymce) watchEditor(window.tinymce.get('content'));
+        }
+
+        var portraitButton = document.getElementById('wpmft-choose-portrait');
+        var portraitRemove = document.getElementById('wpmft-remove-portrait');
+        var portraitInput = document.getElementById('wpmft-portrait-id');
+        var portraitPreview = document.getElementById('wpmft-portrait-preview');
+        if (portraitButton && portraitRemove && portraitInput && portraitPreview) {
+            portraitButton.addEventListener('click', function () {
+                if (!window.wp || !wp.media) return;
+                var frame = wp.media({title: strings.choosePortrait, button: {text: strings.usePortrait}, library: {type: 'image'}, multiple: false});
+                frame.on('open', function () {
+                    var id = Number(portraitInput.value);
+                    if (id > 0) { var attachment = wp.media.attachment(id); attachment.fetch(); frame.state().get('selection').add(attachment); }
+                });
+                frame.on('select', function () {
+                    var selected = frame.state().get('selection').first();
+                    if (!selected) return;
+                    var item = selected.toJSON();
+                    if (item.type !== 'image') return;
+                    var image = document.createElement('img');
+                    image.src = item.sizes && item.sizes.medium ? item.sizes.medium.url : item.url;
+                    image.alt = item.alt || '';
+                    portraitPreview.replaceChildren(image);
+                    portraitInput.value = String(item.id);
+                    portraitRemove.hidden = false;
+                    document.getElementById('wpmft-portrait-status').textContent = '';
+                });
+                frame.open();
+            });
+            portraitRemove.addEventListener('click', function () {
+                portraitInput.value = '0';
+                var placeholder = document.createElement('span');
+                placeholder.className = 'dashicons dashicons-admin-users'; placeholder.setAttribute('aria-hidden', 'true');
+                portraitPreview.replaceChildren(placeholder);
+                portraitRemove.hidden = true;
+                document.getElementById('wpmft-portrait-status').textContent = strings.noPortrait;
+                portraitButton.focus();
+            });
+        }
+
         var tabs = document.querySelector('.wpmft-admin-tabs');
         if (tabs) {
             var links = Array.from(tabs.querySelectorAll('a'));
@@ -40,7 +171,7 @@
                     return fetch(config.ajaxUrl, {
                         method: 'POST', credentials: 'same-origin', cache: 'no-store',
                         headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
-                        body: new URLSearchParams({action: 'wpmft_admin_protect_media', nonce: config.mediaNonce}).toString()
+                        body: new URLSearchParams({action: 'wpmft_admin_protect_media', nonce: config.mediaNonce, wpmft_admin_lang: config.language}).toString()
                     }).then(function (response) {
                         if (!response.ok) throw new Error(strings.protectionError);
                         return response.json();
@@ -117,7 +248,7 @@
                 fetch(config.ajaxUrl, {
                     method: 'POST', credentials: 'same-origin', cache: 'no-store', signal: controller.signal,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
-                    body: new URLSearchParams({action: 'wpmft_admin_people', nonce: config.nonce, q: input.value}).toString()
+                    body: new URLSearchParams({action: 'wpmft_admin_people', nonce: config.nonce, q: input.value, wpmft_admin_lang: config.language}).toString()
                 }).then(function (response) {
                     if (!response.ok) throw new Error('Search failed');
                     return response.json();
@@ -198,6 +329,7 @@
                 next++;
                 var row = fragment.querySelector('.wpmft-partner-row');
                 rows.append(fragment);
+                translateLabels(row);
                 row.querySelectorAll('.wpmft-person-picker').forEach(initPersonPicker);
                 status.textContent = '';
                 row.querySelector('.wpmft-person-search').focus();

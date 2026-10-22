@@ -8,6 +8,8 @@ final class WPMFT_API {
 		add_action( 'wp_ajax_nopriv_wpmft_api', array( __CLASS__, 'dispatch' ) );
 	}
 	private static function error( $error, $status = 400 ) {
+		// Even an early CSRF/spam rejection must leave no uploaded photo behind.
+		if ( ! empty( $_FILES ) ) { WPMFT_Contact_Upload::cleanup(); }
 		wp_send_json_error( array( 'message' => $error->get_error_message(), 'code' => $error->get_error_code() ), $status );
 	}
 	private static function value( $key, $default = '' ) { return isset( $_POST[$key] ) && is_scalar( $_POST[$key] ) ? wp_unslash( $_POST[$key] ) : $default; }
@@ -68,11 +70,22 @@ final class WPMFT_API {
 		$started = (int) self::value( 'started' );
 		if ( self::value( 'website' ) !== '' || $started > time() - 3 || $started < time() - DAY_IN_SECONDS ) { self::error( new WP_Error( 'spam', __( 'Please wait a few seconds and submit the form again.', 'wp-my-family-tree' ) ) ); }
 		$name = sanitize_text_field( self::value( 'name' ) ); $email = sanitize_email( self::value( 'email' ) ); $message = sanitize_textarea_field( self::value( 'message' ) );
-		if ( ! $name || strlen( $name ) > 160 || ! is_email( $email ) || strlen( $email ) > 254 || strlen( $message ) < 10 || strlen( $message ) > 10000 ) { self::error( new WP_Error( 'fields', __( 'Enter your name, a valid email address, and a message of 10–10,000 characters.', 'wp-my-family-tree' ) ) ); }
+		if ( ! $name || strlen( $name ) > 160 || ! is_email( $email ) || strlen( $email ) > 254 || strlen( $message ) < 10 || strlen( $message ) > 10000 ) { self::error( new WP_Error( 'fields', __( 'Enter your full name, a valid email address, and a message of 10–10,000 characters.', 'wp-my-family-tree' ) ) ); }
 		$check = WPMFT_Security::captcha( 'contact' ); if ( is_wp_error( $check ) ) { self::error( $check ); }
 		$subject = __( 'Family tree contact', 'wp-my-family-tree' ) . ' — ' . sanitize_text_field( $s['title'] );
-		$body = "Name: {$name}\nEmail: {$email}\n\n{$message}";
-		$sent = wp_mail( $s['contact_email'], $subject, $body, array( 'Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $email ) );
+		$body = __( 'Full name', 'wp-my-family-tree' ) . ': ' . $name . "\n" . __( 'Email', 'wp-my-family-tree' ) . ': ' . $email . "\n\n" . $message;
+		$sent = false; $attachments = array();
+		try {
+			$attachments = WPMFT_Contact_Upload::receive();
+			if ( ! is_wp_error( $attachments ) ) { $sent = wp_mail( $s['contact_email'], $subject, $body, array( 'Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $email ), $attachments ); }
+		} catch ( Throwable $error ) {
+			// Do not expose paths, SMTP credentials or image-library exceptions in an AJAX response.
+			$sent = false;
+		} finally {
+			WPMFT_Contact_Upload::cleanup();
+		}
+		// wp_send_json_* exits; it must run after the finally block has removed the temporary upload.
+		if ( is_wp_error( $attachments ) ) { self::error( $attachments ); }
 		if ( ! $sent ) { self::error( new WP_Error( 'mail_failed', __( 'The message could not be sent. Please try again later or use the administrator contact details.', 'wp-my-family-tree' ) ), 503 ); }
 		wp_send_json_success( array( 'message' => __( 'Thank you. Your message has been sent to the family administrator.', 'wp-my-family-tree' ) ) );
 	}

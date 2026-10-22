@@ -8,8 +8,15 @@
 defined( 'ABSPATH' ) || exit;
 
 final class WPMFT_Admin {
+	private static $catalog;
 
 	public static function init() {
+		// Override only this plugin's text, never the WordPress dashboard or theme locale.
+		add_filter( 'gettext_wp-my-family-tree', array( __CLASS__, 'translate_admin' ), 10, 3 );
+		add_filter( 'use_block_editor_for_post', array( __CLASS__, 'block_editor' ), 100, 2 );
+		add_filter( 'wp_insert_post_data', array( __CLASS__, 'preserve_biography' ), 99, 2 );
+		add_filter( 'enter_title_here', array( __CLASS__, 'title_placeholder' ), 10, 2 );
+		add_action( 'edit_form_after_title', array( __CLASS__, 'person_panel' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'assets' ) );
 		add_action( 'add_meta_boxes_post', array( __CLASS__, 'meta_boxes' ) );
@@ -22,6 +29,90 @@ final class WPMFT_Admin {
 		add_action( 'wp_ajax_wpmft_admin_protect_media', array( __CLASS__, 'protect_media_ajax' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( WPMFT_DIR . 'wp-my-family-tree.php' ), array( __CLASS__, 'action_links' ) );
+	}
+
+	/** Explicit UI choice, then the Polylang person language, then the editor's profile. */
+	public static function language() {
+		foreach ( array( $_POST['wpmft_admin_lang'] ?? '', $_GET['wpmft_admin_lang'] ?? '', $_POST['post_lang_choice'] ?? '', $_GET['new_lang'] ?? '' ) as $candidate ) {
+			if ( in_array( $candidate, array( 'en', 'lv' ), true ) ) { return $candidate; }
+		}
+		global $post;
+		$id = $post instanceof WP_Post ? $post->ID : 0;
+		foreach ( array( $_GET['post'] ?? 0, $_POST['post_ID'] ?? 0, $_POST['post_id'] ?? 0 ) as $candidate ) {
+			if ( is_scalar( $candidate ) && absint( $candidate ) ) { $id = absint( $candidate ); break; }
+		}
+		if ( $id && function_exists( 'pll_get_post_language' ) && 'post' === get_post_type( $id ) ) {
+			$lang = pll_get_post_language( $id, 'slug' );
+			if ( in_array( $lang, array( 'en', 'lv' ), true ) ) { return $lang; }
+		}
+		return 0 === strpos( get_user_locale(), 'lv' ) ? 'lv' : 'en';
+	}
+
+	private static function catalog() {
+		if ( null === self::$catalog ) {
+			if ( ! class_exists( 'MO' ) ) { require_once ABSPATH . WPINC . '/pomo/mo.php'; }
+			self::$catalog = new MO();
+			self::$catalog->import_from_file( WPMFT_DIR . 'languages/wp-my-family-tree-lv.mo' );
+		}
+		return self::$catalog;
+	}
+
+	public static function translate_admin( $translation, $text, $domain ) {
+		if ( ! is_admin() || ! did_action( 'init' ) ) { return $translation; }
+		// Front-end AJAX has its own request language; do not replace it with a user profile.
+		if ( wp_doing_ajax() && ! in_array( $_REQUEST['action'] ?? '', array( 'wpmft_admin_people', 'wpmft_admin_protect_media' ), true ) ) { return $translation; }
+		return 'lv' === self::language() ? self::catalog()->translate( $text ) : $text;
+	}
+
+	private static function language_control() {
+		?>
+		<div class="wpmft-admin-language-control">
+			<label for="wpmft-admin-language"><?php esc_html_e( 'Plugin interface language', 'wp-my-family-tree' ); ?></label>
+			<select id="wpmft-admin-language" class="wpmft-admin-language" name="wpmft_admin_lang"><option value="en" <?php selected( self::language(), 'en' ); ?>>English</option><option value="lv" <?php selected( self::language(), 'lv' ); ?>>Latviešu</option></select>
+			<p class="description"><?php esc_html_e( 'Person labels follow the Polylang language. This switch changes plugin labels only; names, biographies and the WordPress dashboard are unchanged.', 'wp-my-family-tree' ); ?></p>
+		</div>
+		<?php
+	}
+
+	/** Ordinary posts retain their usual editor. New translations inherit person context. */
+	public static function person_context( $post ) {
+		if ( ! $post instanceof WP_Post || 'post' !== $post->post_type ) { return false; }
+		if ( wpmft_is_person( $post->ID ) ) { return true; }
+		if ( 'auto-draft' !== $post->post_status && 'post-new.php' !== ( $GLOBALS['pagenow'] ?? '' ) ) { return false; }
+		if ( isset( $_GET['wpmft_person'] ) && '1' === $_GET['wpmft_person'] ) { return true; }
+		$from = isset( $_GET['from_post'] ) && is_scalar( $_GET['from_post'] ) ? absint( $_GET['from_post'] ) : 0;
+		return $from && wpmft_is_person( $from );
+	}
+
+	public static function block_editor( $use_block_editor, $post ) {
+		return self::person_context( $post ) && empty( wpmft_settings()['person_block_editor'] ) ? false : $use_block_editor;
+	}
+
+	private static function classic_person_screen( $post ) {
+		if ( ! self::person_context( $post ) || isset( $_GET['meta-box-loader'] ) ) { return false; }
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		return $screen && ! $screen->is_block_editor();
+	}
+
+	public static function title_placeholder( $title, $post ) {
+		return self::person_context( $post ) ? __( 'Person’s full name', 'wp-my-family-tree' ) : $title;
+	}
+
+	public static function person_panel( $post ) {
+		if ( ! self::classic_person_screen( $post ) ) { return; }
+		echo '<section class="wpmft-person-panel" aria-labelledby="wpmft-person-heading"><h2 id="wpmft-person-heading">' . esc_html__( 'Family tree — person details', 'wp-my-family-tree' ) . '</h2>';
+		self::person_box( $post );
+		echo '</section><h2 class="wpmft-biography-heading">' . esc_html__( 'Biography', 'wp-my-family-tree' ) . '</h2>';
+	}
+
+	/** TinyMCE can normalise block markup on an untouched save. Retain the original bytes. */
+	public static function preserve_biography( $data, $postarr ) {
+		$id = isset( $postarr['ID'] ) ? absint( $postarr['ID'] ) : 0;
+		if ( ! $id || 'post' !== ( $data['post_type'] ?? '' ) || wp_is_post_revision( $id ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ! current_user_can( 'edit_post', $id ) ) { return $data; }
+		if ( ! isset( $_POST['wpmft_person']['keep_biography'], $_POST['wpmft_person_nonce'] ) || '1' !== $_POST['wpmft_person']['keep_biography'] || ! is_string( $_POST['wpmft_person_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wpmft_person_nonce'] ) ), 'wpmft_save_person_' . $id ) ) { return $data; }
+		$original = get_post( $id );
+		if ( $original && self::person_context( $original ) ) { $data['post_content'] = wp_slash( $original->post_content ); }
+		return $data;
 	}
 
 	public static function menu() {
@@ -41,12 +132,17 @@ final class WPMFT_Admin {
 			return;
 		}
 		wp_enqueue_style( 'wpmft-admin', WPMFT_URL . 'assets/admin.css', array(), WPMFT_VERSION );
-		wp_enqueue_script( 'wpmft-admin', WPMFT_URL . 'assets/admin.js', array(), WPMFT_VERSION, true );
+		wp_enqueue_script( 'wpmft-admin', WPMFT_URL . 'assets/admin.js', array( 'jquery' ), WPMFT_VERSION, true );
 		if ( $is_post ) {
 			wp_enqueue_media();
 		}
+		$translations = array();
+		foreach ( self::catalog()->entries as $entry ) {
+			if ( ! $entry->context && ! $entry->is_plural && ! empty( $entry->translations[0] ) ) { $translations[ $entry->singular ] = $entry->translations[0]; }
+		}
 		wp_localize_script( 'wpmft-admin', 'WPMFT_ADMIN', array(
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'language' => self::language(), 'translations' => $translations,
 			'nonce' => wp_create_nonce( 'wpmft_admin_people' ),
 			'mediaNonce' => wp_create_nonce( 'wpmft_protect_media' ),
 			'strings' => array(
@@ -61,6 +157,9 @@ final class WPMFT_Admin {
 				'remaining' => __( 'Photographs remaining:', 'wp-my-family-tree' ),
 				'protectionError' => __( 'Some photographs could not be protected. Keep the original backup and review the error before publishing.', 'wp-my-family-tree' ),
 				'relationshipLimit' => __( 'Add no more than 50 partner relationships for one person.', 'wp-my-family-tree' ),
+				'choosePortrait' => __( 'Choose a portrait', 'wp-my-family-tree' ),
+				'usePortrait' => __( 'Use this portrait', 'wp-my-family-tree' ),
+				'noPortrait' => __( 'No portrait selected', 'wp-my-family-tree' ),
 			),
 		) );
 	}
@@ -73,7 +172,7 @@ final class WPMFT_Admin {
 	}
 
 	private static function redirect( $message = 'saved' ) {
-		wp_safe_redirect( add_query_arg( 'wpmft_notice', $message, admin_url( 'admin.php?page=wpmft' ) ) );
+		wp_safe_redirect( add_query_arg( array( 'wpmft_notice' => $message, 'wpmft_admin_lang' => self::language() ), admin_url( 'admin.php?page=wpmft' ) ) );
 		exit;
 	}
 
@@ -141,9 +240,13 @@ final class WPMFT_Admin {
 			</nav>
 			<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post" class="wpmft-settings-form">
 				<input type="hidden" name="action" value="wpmft_save_settings">
+				<input type="hidden" name="wpmft[v110_present]" value="1">
 				<?php wp_nonce_field( 'wpmft_save_settings' ); ?>
+				<?php self::language_control(); ?>
 				<section id="wpmft-general" class="wpmft-settings-section"><h2><?php esc_html_e( 'General', 'wp-my-family-tree' ); ?></h2>
 					<?php self::checkbox( 'enabled', __( 'Enable the family tree', 'wp-my-family-tree' ), $s ); ?>
+					<?php self::checkbox( 'person_block_editor', __( 'Enable the WordPress block editor for family people', 'wp-my-family-tree' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'By default, people open with their details form above the biography editor. Other posts and pages keep their usual editor. Existing biographies are preserved when only person details change.', 'wp-my-family-tree' ); ?></p>
 					<label class="wpmft-field"><span><?php esc_html_e( 'Family member category', 'wp-my-family-tree' ); ?></span><?php wp_dropdown_categories( array( 'name' => 'wpmft[category_id]', 'selected' => absint( $s['category_id'] ), 'hide_empty' => false, 'show_option_none' => esc_html__( 'Select a category', 'wp-my-family-tree' ), 'option_none_value' => 0, 'hierarchical' => true ) ); ?><small><?php esc_html_e( 'Existing WP Family Tree posts remain ordinary WordPress posts in this category.', 'wp-my-family-tree' ); ?></small></label>
 					<label class="wpmft-field"><span><?php esc_html_e( 'Tree page', 'wp-my-family-tree' ); ?></span><?php wp_dropdown_pages( array( 'name' => 'wpmft[page_id]', 'selected' => absint( $s['page_id'] ), 'show_option_none' => esc_html__( 'Choose a page', 'wp-my-family-tree' ), 'option_none_value' => 0 ) ); ?></label>
 					<?php self::person_picker( 'wpmft-root-person', 'wpmft[root_id]', $s['root_id'], __( 'Starting person', 'wp-my-family-tree' ) ); ?>
@@ -171,6 +274,8 @@ final class WPMFT_Admin {
 					<?php self::field( 'tree_height', __( 'Tree canvas height on large screens (px)', 'wp-my-family-tree' ), $s, 'number', array( 'min' => 480, 'max' => 1400 ) ); ?>
 					<?php self::checkbox( 'allow_export', __( 'Allow signed-in family visitors to save a tree image and print', 'wp-my-family-tree' ), $s ); ?>
 					<?php self::checkbox( 'show_credit', __( 'Show an optional “Built by DigitalPulse” footer link', 'wp-my-family-tree' ), $s ); ?>
+					<?php self::checkbox( 'app_install', __( 'Show Android and Apple installation options in the footer', 'wp-my-family-tree' ), $s ); ?>
+					<?php self::checkbox( 'app_icons', __( 'Use the included oak leaf favicon and touch icons on the tree page', 'wp-my-family-tree' ), $s ); ?>
 				</section>
 				<section id="wpmft-contact" class="wpmft-settings-section"><h2><?php esc_html_e( 'Contact & hCaptcha', 'wp-my-family-tree' ); ?></h2>
 					<?php self::checkbox( 'contact_enabled', __( 'Enable the Contact Us form', 'wp-my-family-tree' ), $s ); ?>
@@ -178,6 +283,14 @@ final class WPMFT_Admin {
 					<?php self::field( 'contact_email', __( 'Family administrator email', 'wp-my-family-tree' ), $s, 'email' ); ?>
 					<?php self::checkbox( 'show_email', __( 'Display the contact email in the footer and exported tree image', 'wp-my-family-tree' ), $s ); ?>
 					<p class="description"><?php esc_html_e( 'Contact messages use WordPress mail delivery. The form does not save message contents to the family tree database. Your mail provider may retain delivered messages.', 'wp-my-family-tree' ); ?></p>
+					<h3><?php esc_html_e( 'Contact photo uploads', 'wp-my-family-tree' ); ?></h3>
+					<?php self::checkbox( 'contact_upload_enabled', __( 'Allow one photograph with a contact message', 'wp-my-family-tree' ), $s ); ?>
+					<?php self::field( 'contact_upload_max_mb', __( 'Maximum photograph size (MB)', 'wp-my-family-tree' ), $s, 'number', array( 'min' => 1, 'max' => 100, 'step' => 1 ) ); ?>
+					<p class="description"><?php esc_html_e( 'The default is 10 MB. Choose 1–100 MB; a lower server upload limit still applies. Photographs are emailed to the administrator and are not added to the public media library.', 'wp-my-family-tree' ); ?></p>
+					<fieldset class="wpmft-upload-formats"><legend><?php esc_html_e( 'Allowed photograph formats', 'wp-my-family-tree' ); ?></legend>
+					<?php foreach ( array( 'jpg', 'jpeg', 'png', 'webp', 'gif', 'avif' ) as $format ) : ?><label class="wpmft-check"><input type="checkbox" name="wpmft[contact_upload_formats][]" value="<?php echo esc_attr( $format ); ?>" <?php checked( in_array( $format, (array) $s['contact_upload_formats'], true ) ); ?>><span><?php echo esc_html( strtoupper( $format ) ); ?></span></label><?php endforeach; ?>
+					</fieldset>
+					<p class="description"><?php esc_html_e( 'JPG, JPEG, PNG and WebP are selected by default. GIF and AVIF are optional when the server supports them. At least one format is required; selecting none restores the defaults.', 'wp-my-family-tree' ); ?></p>
 					<?php self::checkbox( 'hcaptcha_enabled', __( 'Enable hCaptcha (external anti-spam service)', 'wp-my-family-tree' ), $s ); ?>
 					<?php self::field( 'hcaptcha_site_key', __( 'hCaptcha site key', 'wp-my-family-tree' ), $s ); ?>
 					<label class="wpmft-field"><span><?php esc_html_e( 'hCaptcha secret key', 'wp-my-family-tree' ); ?></span><input type="password" name="wpmft[hcaptcha_secret]" autocomplete="new-password" value=""><small><?php esc_html_e( 'Leave blank to keep the stored secret. It is never included in the public page.', 'wp-my-family-tree' ); ?></small></label>
@@ -217,6 +330,15 @@ final class WPMFT_Admin {
 		$input = isset( $_POST['wpmft'] ) && is_array( $_POST['wpmft'] ) ? wp_unslash( $_POST['wpmft'] ) : array();
 		foreach ( array( 'enabled', 'standalone', 'contact_enabled', 'show_email', 'password_protection', 'hide_living_dates', 'private_media', 'language_switch', 'allow_export', 'show_credit', 'hcaptcha_enabled', 'hcaptcha_login', 'hcaptcha_contact' ) as $key ) {
 			$s[ $key ] = empty( $input[ $key ] ) ? 0 : 1;
+		}
+		// Older forms left open during an upgrade must not reset settings they never displayed.
+		if ( isset( $input['v110_present'] ) && '1' === $input['v110_present'] ) {
+			foreach ( array( 'person_block_editor', 'app_install', 'app_icons', 'contact_upload_enabled' ) as $key ) { $s[$key] = empty( $input[$key] ) ? 0 : 1; }
+			$max_mb = isset( $input['contact_upload_max_mb'] ) && is_scalar( $input['contact_upload_max_mb'] ) ? absint( $input['contact_upload_max_mb'] ) : 10;
+			$s['contact_upload_max_mb'] = max( 1, min( 100, $max_mb ) );
+			$formats = isset( $input['contact_upload_formats'] ) && is_array( $input['contact_upload_formats'] ) ? array_filter( $input['contact_upload_formats'], 'is_string' ) : array();
+			$s['contact_upload_formats'] = array_values( array_intersect( array( 'jpg', 'jpeg', 'png', 'webp', 'gif', 'avif' ), $formats ) );
+			if ( ! $s['contact_upload_formats'] ) { $s['contact_upload_formats'] = array( 'jpg', 'jpeg', 'png', 'webp' ); }
 		}
 		foreach ( array( 'title', 'title_lv', 'subtitle', 'subtitle_lv', 'contact_name', 'hcaptcha_site_key' ) as $key ) {
 			$s[ $key ] = isset( $input[ $key ] ) && is_scalar( $input[ $key ] ) ? substr( sanitize_text_field( $input[ $key ] ), 0, 500 ) : '';
@@ -306,6 +428,10 @@ final class WPMFT_Admin {
 	}
 
 	public static function meta_boxes( $post ) {
+		if ( self::classic_person_screen( $post ) ) {
+			remove_meta_box( 'postimagediv', 'post', 'side' );
+			return;
+		}
 		add_meta_box( 'wpmft-person', __( 'Family tree — person details', 'wp-my-family-tree' ), array( __CLASS__, 'person_box' ), 'post', 'normal', 'high', array( '__block_editor_compatible_meta_box' => true ) );
 	}
 
@@ -380,12 +506,21 @@ final class WPMFT_Admin {
 
 	public static function person_box( $post ) {
 		wp_nonce_field( 'wpmft_save_person_' . $post->ID, 'wpmft_person_nonce' );
-		$settings = wpmft_settings();
-		$is_person = wpmft_is_person( $post->ID ) || isset( $_GET['wpmft_person'] );
+		$is_person = self::person_context( $post );
+		$is_classic = self::classic_person_screen( $post );
 		?>
-		<div class="wpmft-person-editor">
+		<div class="wpmft-person-editor" data-classic-person="<?php echo $is_classic ? '1' : '0'; ?>">
+			<?php self::language_control(); ?>
 			<label class="wpmft-check"><input type="checkbox" name="wpmft_person[enabled]" value="1" <?php checked( $is_person ); ?>><span><?php esc_html_e( 'Include this post as a person in the family tree', 'wp-my-family-tree' ); ?></span></label>
-			<p class="description"><?php esc_html_e( 'Use the post title for the person’s name, the block editor for their biography, and Featured image for their portrait. Parent, partner and date fields reuse your existing WP Family Tree data.', 'wp-my-family-tree' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Use the post title for the person’s full name and the biography editor for their story. Parent, partner and date fields reuse your existing WP Family Tree data.', 'wp-my-family-tree' ); ?></p>
+			<?php if ( $is_classic ) : $portrait = get_post_thumbnail_id( $post->ID ); ?>
+			<div class="wpmft-portrait-editor">
+				<input type="hidden" id="wpmft-portrait-id" name="wpmft_person[_thumbnail_id]" value="<?php echo absint( $portrait ); ?>">
+				<div id="wpmft-portrait-preview" class="wpmft-portrait-preview"><?php if ( $portrait ) { echo wp_get_attachment_image( $portrait, 'medium' ); } else { echo '<span class="dashicons dashicons-admin-users" aria-hidden="true"></span>'; } ?></div>
+				<div><h3><?php esc_html_e( 'Portrait', 'wp-my-family-tree' ); ?></h3><p class="description"><?php esc_html_e( 'The portrait is the post’s featured image. Faces stay at the top of photo frames.', 'wp-my-family-tree' ); ?></p><button type="button" class="button" id="wpmft-choose-portrait"><?php esc_html_e( 'Choose a portrait', 'wp-my-family-tree' ); ?></button> <button type="button" class="button-link-delete" id="wpmft-remove-portrait" <?php echo $portrait ? '' : 'hidden'; ?>><?php esc_html_e( 'Remove portrait', 'wp-my-family-tree' ); ?></button><p id="wpmft-portrait-status" class="screen-reader-text" role="status"></p></div>
+			</div>
+			<?php endif; ?>
+			<h3><?php esc_html_e( 'Personal details', 'wp-my-family-tree' ); ?></h3>
 			<div class="wpmft-person-grid">
 				<label class="wpmft-field"><span><?php esc_html_e( 'Gender', 'wp-my-family-tree' ); ?></span><select name="wpmft_person[gender]">
 				<?php foreach ( array( '' => __( 'Not specified', 'wp-my-family-tree' ), 'm' => __( 'Male', 'wp-my-family-tree' ), 'f' => __( 'Female', 'wp-my-family-tree' ), 'x' => __( 'Other', 'wp-my-family-tree' ) ) as $value => $label ) : ?><option value="<?php echo esc_attr( $value ); ?>" <?php selected( get_post_meta( $post->ID, 'gender', true ), $value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?>
@@ -400,6 +535,22 @@ final class WPMFT_Admin {
 			<?php self::person_picker( 'wpmft-spouses', 'wpmft_person[_wpmft_spouses]', get_post_meta( $post->ID, '_wpmft_spouses', true ), __( 'Other spouses / partners', 'wp-my-family-tree' ), true ); ?>
 			</div>
 			<?php self::partner_editor( $post->ID ); ?>
+			<section class="wpmft-contact-details"><h3><?php esc_html_e( 'Contact details', 'wp-my-family-tree' ); ?></h3>
+				<p class="description"><?php esc_html_e( 'Only add details this person is comfortable sharing with everyone who can access the family tree.', 'wp-my-family-tree' ); ?></p>
+				<div class="wpmft-person-grid">
+				<?php foreach ( array( '_wpmft_email' => array( __( 'Email address', 'wp-my-family-tree' ), 'email', 254 ), '_wpmft_phone' => array( __( 'Telephone', 'wp-my-family-tree' ), 'tel', 64 ), '_wpmft_mobile' => array( __( 'Mobile phone', 'wp-my-family-tree' ), 'tel', 64 ), '_wpmft_website' => array( __( 'Website', 'wp-my-family-tree' ), 'url', 2048 ) ) as $key => $field ) : ?>
+					<label class="wpmft-field"><span><?php echo esc_html( $field[0] ); ?></span><input type="<?php echo esc_attr( $field[1] ); ?>" name="wpmft_person[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( get_post_meta( $post->ID, $key, true ) ); ?>" maxlength="<?php echo absint( $field[2] ); ?>" <?php echo 'url' === $field[1] ? 'placeholder="https://"' : ''; ?>></label>
+				<?php endforeach; ?>
+					<label class="wpmft-field wpmft-field-wide"><span><?php esc_html_e( 'Postal address', 'wp-my-family-tree' ); ?></span><textarea name="wpmft_person[_wpmft_address]" rows="3" maxlength="500"><?php echo esc_textarea( get_post_meta( $post->ID, '_wpmft_address', true ) ); ?></textarea></label>
+				</div>
+				<h3><?php esc_html_e( 'Social profiles', 'wp-my-family-tree' ); ?></h3>
+				<div class="wpmft-person-grid">
+				<?php foreach ( array( 'facebook' => 'Facebook', 'instagram' => 'Instagram', 'linkedin' => 'LinkedIn', 'x' => 'X / Twitter', 'youtube' => 'YouTube', 'tiktok' => 'TikTok' ) as $network => $label ) : ?>
+					<label class="wpmft-field"><span><?php echo esc_html( $label ); ?></span><input type="url" name="wpmft_person[_wpmft_social_<?php echo esc_attr( $network ); ?>]" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpmft_social_' . $network, true ) ); ?>" maxlength="2048" placeholder="https://"></label>
+				<?php endforeach; ?>
+				</div>
+				<p class="description"><?php esc_html_e( 'Use a complete public profile URL beginning with https:// or http://.', 'wp-my-family-tree' ); ?></p>
+			</section>
 			<h3><?php esc_html_e( 'Photo gallery', 'wp-my-family-tree' ); ?></h3>
 			<?php $gallery = array_filter( array_map( 'absint', (array) get_post_meta( $post->ID, '_wpmft_gallery', true ) ) ); ?>
 			<input type="hidden" id="wpmft-gallery-ids" name="wpmft_person[_wpmft_gallery]" value="<?php echo esc_attr( implode( ',', $gallery ) ); ?>">
@@ -486,6 +637,34 @@ final class WPMFT_Admin {
 		return $year > 0 && checkdate( $month, $day, $year );
 	}
 
+	private static function limit_text( $value, $limit ) {
+		return function_exists( 'mb_substr' ) ? mb_substr( $value, 0, $limit, 'UTF-8' ) : wp_check_invalid_utf8( substr( $value, 0, $limit ), true );
+	}
+
+	private static function save_contact_details( $post_id, $input ) {
+		$invalid = false;
+		if ( array_key_exists( '_wpmft_email', $input ) && is_string( $input['_wpmft_email'] ) ) {
+			$email = trim( $input['_wpmft_email'] );
+			if ( '' === $email || ( strlen( $email ) <= 254 && is_email( $email ) ) ) { update_post_meta( $post_id, '_wpmft_email', sanitize_email( $email ) ); }
+			else { $invalid = true; }
+		}
+		foreach ( array( '_wpmft_phone', '_wpmft_mobile', '_wpmft_address' ) as $key ) {
+			if ( ! array_key_exists( $key, $input ) || ! is_string( $input[$key] ) ) { continue; }
+			$value = '_wpmft_address' === $key ? sanitize_textarea_field( $input[$key] ) : sanitize_text_field( $input[$key] );
+			update_post_meta( $post_id, $key, self::limit_text( $value, '_wpmft_address' === $key ? 500 : 64 ) );
+		}
+		foreach ( array( '_wpmft_website', '_wpmft_social_facebook', '_wpmft_social_instagram', '_wpmft_social_linkedin', '_wpmft_social_x', '_wpmft_social_youtube', '_wpmft_social_tiktok' ) as $key ) {
+			if ( ! array_key_exists( $key, $input ) || ! is_string( $input[$key] ) ) { continue; }
+			$value = trim( $input[$key] );
+			if ( '' === $value ) { update_post_meta( $post_id, $key, '' ); continue; }
+			$parts = wp_parse_url( $value );
+			$url = esc_url_raw( $value, array( 'http', 'https' ) );
+			if ( strlen( $value ) > 2048 || ! $url || ! is_array( $parts ) || empty( $parts['host'] ) || ! in_array( strtolower( $parts['scheme'] ?? '' ), array( 'http', 'https' ), true ) || isset( $parts['user'] ) || isset( $parts['pass'] ) ) { $invalid = true; continue; }
+			update_post_meta( $post_id, $key, $url );
+		}
+		if ( $invalid ) { self::editor_notice( __( 'A contact field was not saved. Use a valid email address and complete http:// or https:// links. The previous value has been retained.', 'wp-my-family-tree' ) ); }
+	}
+
 	public static function save_person( $post_id, $post, $update ) {
 		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_is_post_revision( $post_id ) || ! current_user_can( 'edit_post', $post_id ) || ! isset( $_POST['wpmft_person_nonce'] ) || ! is_string( $_POST['wpmft_person_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wpmft_person_nonce'] ) ), 'wpmft_save_person_' . $post_id ) ) {
 			return;
@@ -502,10 +681,16 @@ final class WPMFT_Admin {
 			if ( $categories ) { wp_remove_object_terms( $post_id, $categories, 'category' ); }
 			return;
 		}
-		$gender = isset( $input['gender'] ) && is_string( $input['gender'] ) ? $input['gender'] : '';
-		update_post_meta( $post_id, 'gender', in_array( $gender, array( '', 'm', 'f', 'x' ), true ) ? $gender : '' );
+		self::save_contact_details( $post_id, $input );
+		if ( isset( $input['_thumbnail_id'] ) && is_scalar( $input['_thumbnail_id'] ) && preg_match( '/^\d+$/D', (string) $input['_thumbnail_id'] ) ) {
+			$portrait = absint( $input['_thumbnail_id'] );
+			if ( ! $portrait ) { delete_post_thumbnail( $post_id ); }
+			elseif ( wp_attachment_is_image( $portrait ) && ( current_user_can( 'edit_post', $portrait ) || $portrait === (int) get_post_thumbnail_id( $post_id ) ) ) { set_post_thumbnail( $post_id, $portrait ); }
+		}
+		if ( isset( $input['gender'] ) && is_string( $input['gender'] ) && in_array( $input['gender'], array( '', 'm', 'f', 'x' ), true ) ) { update_post_meta( $post_id, 'gender', $input['gender'] ); }
 		foreach ( array( 'born', 'died', '_wpmft_maiden_name', '_wpmft_birth_place', '_wpmft_death_place', '_wpmft_location', '_wpmft_occupation' ) as $key ) {
-			$value = isset( $input[ $key ] ) && is_scalar( $input[ $key ] ) ? substr( sanitize_text_field( $input[ $key ] ), 0, 250 ) : '';
+			if ( ! array_key_exists( $key, $input ) || ! is_scalar( $input[$key] ) ) { continue; }
+			$value = self::limit_text( sanitize_text_field( $input[$key] ), 250 );
 			if ( in_array( $key, array( 'born', 'died' ), true ) && $value !== get_post_meta( $post_id, $key, true ) && ! self::valid_date( $value ) ) {
 				self::editor_notice( __( 'A date was not saved. Use YYYY, YYYY-MM or a valid YYYY-MM-DD. The previous value has been retained.', 'wp-my-family-tree' ) );
 				continue;
@@ -513,7 +698,8 @@ final class WPMFT_Admin {
 			update_post_meta( $post_id, $key, $value );
 		}
 		foreach ( array( 'father', 'mother', 'spouse' ) as $key ) {
-			$id = isset( $input[ $key ] ) && is_scalar( $input[ $key ] ) ? self::valid_relation( $input[ $key ], $post_id ) : 0;
+			if ( ! array_key_exists( $key, $input ) || ! is_scalar( $input[$key] ) ) { continue; }
+			$id = self::valid_relation( $input[$key], $post_id );
 			if ( in_array( $key, array( 'father', 'mother' ), true ) && $id && self::parent_cycle( $post_id, $id ) ) {
 				self::editor_notice( __( 'A parent relationship was not saved because it would make a person their own ancestor.', 'wp-my-family-tree' ) );
 				continue;
@@ -525,7 +711,7 @@ final class WPMFT_Admin {
 			$id = self::valid_relation( $id, $post_id );
 			if ( $id ) { $spouses[] = $id; }
 		}
-		update_post_meta( $post_id, '_wpmft_spouses', array_values( array_unique( array_slice( $spouses, 0, 50 ) ) ) );
+		if ( isset( $input['_wpmft_spouses'] ) && is_string( $input['_wpmft_spouses'] ) ) { update_post_meta( $post_id, '_wpmft_spouses', array_values( array_unique( array_slice( $spouses, 0, 50 ) ) ) ); }
 		if ( isset( $input['partner_status_present'] ) && '1' === $input['partner_status_present'] ) {
 			$partners = array();
 			// Preserve declarations the current editor cannot inspect; never modify the other person's post.
@@ -548,7 +734,7 @@ final class WPMFT_Admin {
 			// A new association may trigger encryption; only select files this editor owns or can edit.
 			if ( $id && wp_attachment_is_image( $id ) && ( current_user_can( 'edit_post', $id ) || in_array( $id, $existing_gallery, true ) ) ) { $gallery[] = $id; }
 		}
-		update_post_meta( $post_id, '_wpmft_gallery', array_values( array_unique( array_slice( $gallery, 0, 100 ) ) ) );
+		if ( isset( $input['_wpmft_gallery'] ) && is_string( $input['_wpmft_gallery'] ) ) { update_post_meta( $post_id, '_wpmft_gallery', array_values( array_unique( array_slice( $gallery, 0, 100 ) ) ) ); }
 		do_action( 'wpmft_person_saved', $post_id );
 	}
 
@@ -558,7 +744,7 @@ final class WPMFT_Admin {
 			<li><strong><?php esc_html_e( 'Choose your family category.', 'wp-my-family-tree' ); ?></strong> <?php esc_html_e( 'An existing WP Family Tree category is detected during setup. Keep it selected to reuse your people and relationships.', 'wp-my-family-tree' ); ?></li>
 			<li><strong><?php esc_html_e( 'Create or edit the tree page.', 'wp-my-family-tree' ); ?></strong> <?php esc_html_e( 'Insert the Family Tree block, or a Shortcode block containing [wp_my_family_tree]. Choose a starting person in General.', 'wp-my-family-tree' ); ?></li>
 			<li><strong><?php esc_html_e( 'Set access and contact details.', 'wp-my-family-tree' ); ?></strong> <?php esc_html_e( 'Private access starts locked until you set a password. Set the family administrator email and optionally enable hCaptcha.', 'wp-my-family-tree' ); ?></li>
-			<li><strong><?php esc_html_e( 'Add people as WordPress posts.', 'wp-my-family-tree' ); ?></strong> <?php esc_html_e( 'Tick “Include this post as a person”, add a portrait and biography, then choose parents, partners and photographs in the person details box. Children and siblings are derived from parent links.', 'wp-my-family-tree' ); ?></li>
+			<li><strong><?php esc_html_e( 'Add people as WordPress posts.', 'wp-my-family-tree' ); ?></strong> <?php esc_html_e( 'Choose Add a person, enter the full name as the title, then add a portrait, dates, parents, partners, contact details and photographs in the form at the top. Write the biography below. Children and siblings come from parent links.', 'wp-my-family-tree' ); ?></li>
 			<li><strong><?php esc_html_e( 'Check privacy while signed out.', 'wp-my-family-tree' ); ?></strong> <?php esc_html_e( 'Open a private window. Test the tree, a person’s old URL, a feed and an old direct photograph URL. Clear previous caches. The original plugin should be inactive.', 'wp-my-family-tree' ); ?></li>
 		</ol>
 		<h3><?php esc_html_e( 'Shortcodes', 'wp-my-family-tree' ); ?></h3>
@@ -566,6 +752,9 @@ final class WPMFT_Admin {
 		<p><?php esc_html_e( 'The root is a WordPress post ID. Legacy [family-tree] and [family-members] shortcodes are supported for migration.', 'wp-my-family-tree' ); ?></p>
 		<h3><?php esc_html_e( 'Languages', 'wp-my-family-tree' ); ?></h3>
 		<p><?php esc_html_e( 'English and Latvian interface text is included. Names and biographies are never automatically translated. With Polylang, add English and Latvian under Languages and create linked page/post translations as needed.', 'wp-my-family-tree' ); ?></p>
+		<p><?php esc_html_e( 'In the default person editor, plugin labels follow the selected Polylang language without reloading or discarding unsaved edits. Other plugin screens start in your WordPress profile language and include an English / Latvian label switch. With the optional block editor, Polylang may save and reload when its content language changes.', 'wp-my-family-tree' ); ?></p>
+		<h3><?php esc_html_e( 'Person editor', 'wp-my-family-tree' ); ?></h3>
+		<p><?php esc_html_e( 'Family people use a details-first classic editor by default. Enable the block editor in General if you prefer it. This setting does not change other posts, pages or saved biography content.', 'wp-my-family-tree' ); ?></p>
 		<h3><?php esc_html_e( 'Restore backups safely', 'wp-my-family-tree' ); ?></h3>
 		<p><?php esc_html_e( 'Restore a matching UpdraftPlus set on staging first. Preserve every filename exactly, including its date, site name, 12-character identifier and -db.gz / -plugins.zip / -themes.zip / -uploads.zip suffix. A standalone plugin ZIP is installed using Plugins → Add New → Upload Plugin, not the Updraft restore screen.', 'wp-my-family-tree' ); ?></p>
 		<h3><?php esc_html_e( 'Developer', 'wp-my-family-tree' ); ?></h3>
