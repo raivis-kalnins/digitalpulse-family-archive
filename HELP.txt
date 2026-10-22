@@ -58,11 +58,19 @@ Open **Posts → Add New**, or use **Add a person** in the family tree settings.
 - **Family tree — person details:** tick **Include this post as a person**. This adds the person to the configured family category.
 - **Dates:** enter a year, year and month, or complete date: `1942`, `1942-08` or `1942-08-17`. Leave the death date blank for a living person. Existing older date text is retained unless changed.
 - **Parents:** search for existing people and select them. Children and siblings are calculated from these links.
-- **Partners:** choose a primary spouse/partner and any additional partners.
+- **Partners:** retain a primary spouse/partner and any additional legacy links as needed. Use the partner-status rows to select another person and explicitly mark the pair as Together, Divorced, Separated or Former partner.
 - **Locations and occupation:** optional text fields.
 - **Photo gallery:** choose photographs in the WordPress media picker. Reordering affects the dialog gallery. Removing a gallery item does not delete the media file.
 
 Publish a person when the record is ready to appear to family visitors. The relationship fields store post IDs; names can therefore change without breaking the links. The editor prevents a parent relationship that would make a person their own ancestor.
+
+### Current partners, divorce and children
+
+Set a partner-status row to **Together** for the current partner. The current partner is shown beside the selected person with a paired-rings icon. This icon means current partner; it does not assert that the couple is married. A legacy spouse link with no explicit status is shown neutrally, without rings. Sharing a child does not establish a current relationship.
+
+Choose **Divorced**, **Separated** or **Former partner** when the relationship has ended. The former partner is excluded from the selected person's partner branch. Select their shared child to see both recorded parents and the lines connecting them to the child. These statuses do not delete a parent or change a child's father/mother fields. Adding a current partner does not make that person a parent of existing children.
+
+The plugin reads a partner status from either person's post, including linked Polylang translations. Saving one person's details updates only that person's status rows. If explicit statuses disagree, the former status wins; review both records to resolve the disagreement. Remove an explicit status row only when you intend to fall back to the legacy or shared-child information.
 
 ## 4. Set privacy and remembered access
 
@@ -100,9 +108,13 @@ When enabled, hCaptcha loads an external script and processes technical browser 
 
 ## 6. English, Latvian and Polylang
 
-English is the default interface language. Latvian interface text is included. Enable the language switch under **General** and set the English and Latvian titles and introductions under **Appearance**.
+English is the default interface language. Latvian interface text is included. Enable the language switch under **General** and set the English and Latvian titles and introductions under **Appearance**. Without configured Polylang languages, the switch changes only the plugin interface and keeps the selection in the page URL.
 
-Names and biographies are preserved as entered; switching the interface does not machine-translate them. To manage translated pages and biographies, install Polylang separately, add English and Latvian under **Languages**, and connect the translated pages and posts. The plugin's `wpml-config.xml` describes the relationship and custom-field translation behaviour. Existing relationship IDs continue to identify the same family members.
+To synchronize the tree with the theme, install Polylang separately, add English (`en`) and Latvian (`lv`, WordPress locale `lv`) under **Languages**, and connect the translated tree pages. Put the same Family Tree block or shortcode on both pages. The plugin follows the current Polylang page language and uses its native translated-page URLs. A theme switch powered by Polylang selects the same language. An old `wpmft_lang` query parameter does not override Polylang's current page. Merely activating Polylang without adding languages does not complete this setup.
+
+Names and biographies are preserved as entered; switching language does not machine-translate them. A linked published person translation is used when available, with the original biography as a fallback. The plugin's `wpml-config.xml` describes relationship and custom-field translation behaviour. Existing relationship IDs continue to identify the same family members. Polylang string translations can override the registered title and introduction; the English/Latvian plugin settings remain the fallback.
+
+The repository README at `README.md` displays the included `docs/screenshot.png`. That image uses fictional demonstration records and is suitable for public GitHub documentation. Keep production backups and real family photographs out of a public repository.
 
 ## 7. Appearance, image export and printing
 
@@ -135,6 +147,7 @@ The optional DigitalPulse footer credit is disabled on a fresh installation and 
 3. Sadaļā **Privacy & access** iestatiet vismaz 12 rakstzīmju paroli. Piekļuvi var atcerēties līdz 30 dienām.
 4. Katru personu veidojiet kā WordPress ierakstu: virsrakstā norādiet vārdu, saturā — dzīvesstāstu, bet Featured image — portretu.
 5. Personas laukos izvēlieties vecākus, partnerus, datumus un galerijas attēlus. Bērni un brāļi/māsas tiek noteikti no vecāku saitēm.
+   Partnera statusā norādiet, vai pāris ir kopā, šķīries, dzīvo atsevišķi vai tās ir bijušas attiecības. Gredzenu ikona apzīmē pašreizējo partneri. Bērna kokā abi norādītie vecāki paliek redzami arī pēc šķiršanās.
 6. Ieslēdziet angļu/latviešu valodas pārslēgu un norādiet latvisko virsrakstu. Polylang ir izvēles iespēja satura tulkojumiem.
 7. Norādiet dzimtas administratora e-pastu kontaktformai. hCaptcha var ieslēgt ar savām atslēgām.
 8. Pirms attēlu aizsardzības saglabājiet pilnu rezerves kopiju. Šifrētos uploads failus un datubāzi vienmēr atjaunojiet no vienas kopas.

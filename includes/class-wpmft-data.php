@@ -1,0 +1,283 @@
+<?php
+/** Read the original WordPress posts and relationships without duplicating them. @package WPMyFamilyTree */
+defined( 'ABSPATH' ) || exit;
+
+final class WPMFT_Data {
+	private static $index = null;
+	private static $canonical = array();
+	private static $partners = array();
+
+	/** Read explicit declarations only; shared children never imply a current romantic relationship. */
+	public static function partner_declarations( $id ) {
+		$stored = get_post_meta( $id, '_wpmft_partner_status', true ); $result = array();
+		foreach ( is_array( $stored ) ? $stored : array() as $person => $status ) {
+			if ( ( is_int( $person ) || is_string( $person ) && ctype_digit( $person ) ) && (int) $person > 0 && (int) $person !== (int) $id && in_array( $status, array( 'together', 'divorced', 'separated', 'former' ), true ) ) {
+				$result[(int) $person] = $status;
+			}
+		}
+		return $result;
+	}
+
+	/** Resolve disagreements conservatively and deterministically, regardless of record order. */
+	public static function resolve_partner_status( $first, $second ) {
+		$rank = array( '' => 0, 'co_parent' => 1, 'legacy' => 2, 'together' => 3, 'former' => 4, 'separated' => 5, 'divorced' => 6 );
+		return ( $rank[$second] ?? 0 ) > ( $rank[$first] ?? 0 ) ? $second : $first;
+	}
+
+	public static function former_status( $status ) { return in_array( $status, array( 'divorced', 'separated', 'former' ), true ); }
+
+	private static function connect_partners( $a, $b, $status ) {
+		if ( $a === $b || ! isset( self::$index[$a], self::$index[$b] ) ) { return; }
+		$status = self::resolve_partner_status( self::$partners[$a][$b] ?? '', $status );
+		self::$partners[$a][$b] = $status; self::$partners[$b][$a] = $status;
+	}
+
+	public static function partner_statuses( $id ) { self::index(); return self::$partners[self::$canonical[$id] ?? $id] ?? array(); }
+	public static function partner_status( $a, $b ) {
+		self::index(); $a = self::$canonical[$a] ?? $a; $b = self::$canonical[$b] ?? $b;
+		return self::$partners[$a][$b] ?? '';
+	}
+
+	public static function categories() {
+		$s = wpmft_settings();
+		$id = absint( $s['category_id'] );
+		if ( ! $id ) {
+			$t = get_term_by( 'name', get_option( 'family_tree_category_key', 'Family' ), 'category' );
+			$id = $t ? (int) $t->term_id : 0;
+		}
+		$ids = $id ? array( $id ) : array();
+		if ( $id && function_exists( 'pll_get_term_translations' ) ) { $ids = array_merge( $ids, array_values( pll_get_term_translations( $id ) ) ); }
+		foreach ( $ids as $cat ) {
+			$children = get_term_children( $cat, 'category' );
+			if ( ! is_wp_error( $children ) ) { $ids = array_merge( $ids, $children ); }
+		}
+		return array_values( array_unique( array_map( 'absint', $ids ) ) );
+	}
+
+	public static function is_person( $id ) {
+		if ( ! $id || 'post' !== get_post_type( $id ) ) { return false; }
+		if ( get_post_meta( $id, '_wpmft_person', true ) ) { return true; }
+		$cats = self::categories();
+		return $cats && has_category( $cats, $id );
+	}
+
+	public static function ids( $published = true ) {
+		global $wpdb;
+		$categories = self::categories() ?: array( 0 );
+		$placeholders = implode( ',', array_fill( 0, count( $categories ), '%d' ) );
+		// The dynamic portion contains only fixed %d tokens; every category value is prepared.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$sql = $wpdb->prepare( "SELECT p.ID FROM {$wpdb->posts} p WHERE p.post_type='post' AND (%d=0 OR p.post_status='publish') AND (%d=1 OR p.post_status NOT IN ('trash','auto-draft')) AND (EXISTS (SELECT 1 FROM {$wpdb->term_relationships} tr INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id=tt.term_taxonomy_id WHERE tr.object_id=p.ID AND tt.taxonomy='category' AND tt.term_id IN ({$placeholders})) OR EXISTS (SELECT 1 FROM {$wpdb->postmeta} marker WHERE marker.post_id=p.ID AND marker.meta_key='_wpmft_person' AND marker.meta_value='1')) ORDER BY p.post_title,p.ID", array_merge( array( (int) $published, (int) $published ), $categories ) );
+		// This category-or-marker query intentionally bypasses public filters and persistent family-data caches.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Prepared immediately above.
+		$ids = array_map( 'intval', $wpdb->get_col( $sql ) );
+		if ( $ids ) { _prime_post_caches( $ids, false, true ); }
+		return $ids;
+	}
+
+	private static function relation_ids( $value ) {
+		$result = array();
+		foreach ( (array) $value as $id ) {
+			if ( is_array( $id ) ) { $result = array_merge( $result, self::relation_ids( $id ) ); }
+			elseif ( ( is_int( $id ) || is_string( $id ) && ctype_digit( $id ) ) && (int) $id > 0 ) { $result[] = (int) $id; }
+		}
+		return array_values( array_unique( $result ) );
+	}
+	public static function index() {
+		if ( null !== self::$index ) { return self::$index; }
+		$ids = self::ids();
+		self::$index = array();
+		self::$partners = array();
+		if ( ! $ids ) { return self::$index; }
+		update_meta_cache( 'post', $ids );
+		$all = array_fill_keys( $ids, true );
+		foreach ( $ids as $id ) {
+			$canonical = $id;
+			if ( function_exists( 'pll_get_post_translations' ) ) {
+				$translations = array_intersect( array_values( pll_get_post_translations( $id ) ), $ids );
+				if ( $translations ) { $canonical = min( $translations ); }
+			}
+			self::$canonical[$id] = (int) $canonical;
+		}
+		foreach ( $ids as $id ) {
+			if ( self::$canonical[$id] !== $id ) { continue; }
+			$parents = array_merge( self::relation_ids( get_post_meta( $id, 'father', true ) ), self::relation_ids( get_post_meta( $id, 'mother', true ) ) );
+			$extra = get_post_meta( $id, '_wpmft_spouses', true );
+			$spouses = array_merge( self::relation_ids( get_post_meta( $id, 'spouse', true ) ), self::relation_ids( $extra ) );
+			$normalize = function ( $items ) use ( $id, $all ) {
+				$result = array();
+				foreach ( array_map( 'absint', $items ) as $item ) {
+					if ( isset( $all[$item] ) ) { $item = self::$canonical[$item]; if ( $item !== $id ) { $result[] = $item; } }
+				}
+				return array_values( array_unique( $result ) );
+			};
+			self::$index[$id] = array( 'parents' => $normalize( $parents ), 'spouses' => $normalize( $spouses ), 'children' => array(), 'siblings' => array() );
+		}
+		foreach ( self::$index as $id => $r ) {
+			foreach ( $r['parents'] as $parent ) { if ( isset( self::$index[$parent] ) ) { self::$index[$parent]['children'][] = $id; } }
+			foreach ( $r['spouses'] as $spouse ) { self::connect_partners( $id, $spouse, 'legacy' ); }
+			// Two recorded parents are co-parents, with no assumption about their relationship status.
+			if ( count( $r['parents'] ) === 2 ) {
+				list( $a, $b ) = $r['parents']; self::connect_partners( $a, $b, 'co_parent' );
+			}
+		}
+		// Read either person's declaration, including translated records, without writing to other posts.
+		foreach ( $ids as $id ) {
+			foreach ( self::partner_declarations( $id ) as $partner => $status ) {
+				if ( isset( self::$canonical[$partner] ) ) { self::connect_partners( self::$canonical[$id], self::$canonical[$partner], $status ); }
+			}
+		}
+		foreach ( self::$index as $id => $r ) {
+			$siblings = array();
+			foreach ( $r['parents'] as $parent ) { $siblings = array_merge( $siblings, self::$index[$parent]['children'] ); }
+			self::$index[$id]['siblings'] = array_values( array_diff( array_unique( $siblings ), array( $id ) ) );
+			self::$index[$id]['spouses'] = array_keys( array_filter( self::$partners[$id] ?? array(), function ( $status ) { return ! self::former_status( $status ); } ) );
+		}
+		return self::$index;
+	}
+
+	public static function canonical( $id ) { self::index(); return self::$canonical[$id] ?? $id; }
+	public static function display_id( $id, $lang ) {
+		if ( function_exists( 'pll_get_post' ) ) {
+			$t = pll_get_post( $id, $lang );
+			if ( $t && 'publish' === get_post_status( $t ) && self::is_person( $t ) ) { return (int) $t; }
+		}
+		return $id;
+	}
+
+	public static function summary( $id, $lang = 'en' ) {
+		$display = self::display_id( $id, $lang );
+		$p = get_post( $display );
+		$s = wpmft_settings();
+		$died = (string) get_post_meta( $id, 'died', true );
+		$thumb = get_post_thumbnail_id( $display ) ?: get_post_thumbnail_id( $id );
+		return array(
+			'id' => (int) $id, 'name' => $p ? html_entity_decode( $p->post_title, ENT_QUOTES, 'UTF-8' ) : '',
+			'born' => $s['hide_living_dates'] && ! $died ? '' : (string) get_post_meta( $id, 'born', true ),
+			'died' => $died, 'gender' => (string) get_post_meta( $id, 'gender', true ),
+			// WordPress medium images preserve the source proportions; hard-cropped thumbnails can cut off faces.
+			'photo' => $thumb ? WPMFT_Media::url( $thumb, 'medium' ) : '',
+		);
+	}
+
+	public static function tree( $root, $depth, $lang ) {
+		$index = self::index(); $root = self::canonical( $root );
+		if ( ! isset( $index[$root] ) ) { $root = (int) ( array_key_first( $index ) ?? 0 ); }
+		if ( ! $root ) { return array( 'root' => 0, 'nodes' => array(), 'edges' => array(), 'total' => 0, 'truncated' => false ); }
+		$depth = max( 1, min( 3, $depth ) );
+		// A former partner remains visible when they are a recorded ancestor of the selected person.
+		$ancestors = array(); $ancestor_queue = array( $root );
+		while ( $ancestor_queue ) {
+			$id = array_pop( $ancestor_queue );
+			if ( isset( $ancestors[$id] ) || ! isset( $index[$id] ) ) { continue; }
+			$ancestors[$id] = true; $ancestor_queue = array_merge( $ancestor_queue, $index[$id]['parents'] );
+		}
+		$excluded = array(); $household = array( $root );
+		foreach ( $index[$root]['spouses'] as $partner ) {
+			if ( in_array( self::partner_status( $root, $partner ), array( 'together', 'legacy' ), true ) ) { $household[] = $partner; }
+		}
+		foreach ( $household as $person ) {
+			foreach ( self::partner_statuses( $person ) as $partner => $status ) {
+				if ( self::former_status( $status ) && ! isset( $ancestors[$partner] ) ) { $excluded[$partner] = true; }
+			}
+		}
+		$queue = array( array( $root, 0, 0, 'self' ) ); $seen = array(); $nodes = array(); $truncated = false;
+		while ( $queue ) {
+			list( $id, $distance, $generation, $role ) = array_shift( $queue );
+			if ( isset( $seen[$id] ) || isset( $excluded[$id] ) || ! isset( $index[$id] ) ) { continue; }
+			if ( count( $nodes ) >= 60 ) { $truncated = true; break; }
+			$seen[$id] = true;
+			$node = self::summary( $id, $lang );
+			$node['generation'] = $generation;
+			$direct = $index[$root];
+			if ( $id === $root ) { $role = 'self'; }
+			elseif ( in_array( $id, $direct['parents'], true ) ) { $role = 'parent'; }
+			elseif ( in_array( $id, $direct['spouses'], true ) ) { $role = 'spouse'; $node['partnerStatus'] = self::partner_status( $root, $id ); }
+			elseif ( in_array( $id, $direct['children'], true ) ) { $role = 'child'; }
+			elseif ( in_array( $id, $direct['siblings'], true ) ) { $role = 'sibling'; }
+			else { $role = 'relative'; }
+			$node['role'] = $role;
+			$nodes[$id] = $node;
+			if ( $distance >= $depth ) { continue; }
+			foreach ( $index[$id]['parents'] as $next ) {
+				$former_pair = false;
+				foreach ( $index[$id]['parents'] as $other ) { if ( $other !== $next && self::former_status( self::partner_status( $next, $other ) ) ) { $former_pair = true; break; } }
+				// Expanding a descendant must not reintroduce their parent's former partner into this view.
+				if ( $generation > 0 && $former_pair && ! isset( $ancestors[$next] ) && ! isset( $seen[$next] ) ) { continue; }
+				$queue[] = array( $next, $distance + 1, $generation - 1, $generation <= -1 ? 'grandparent' : 'parent' );
+			}
+			foreach ( $index[$id]['spouses'] as $next ) { $queue[] = array( $next, $distance + 1, $generation, 'spouse' ); }
+			foreach ( $index[$id]['children'] as $next ) { $queue[] = array( $next, $distance + 1, $generation + 1, $generation >= 1 ? 'grandchild' : 'child' ); }
+			if ( $distance === 0 ) { foreach ( $index[$id]['siblings'] as $next ) { $queue[] = array( $next, 1, $generation, 'sibling' ); } }
+		}
+		$edges = array();
+		foreach ( $nodes as $id => &$node ) {
+			$r = $index[$id];
+			$node['hasMore'] = (bool) array_diff( array_merge( $r['parents'], $r['spouses'], $r['children'], $r['siblings'] ), array_keys( $nodes ) );
+			foreach ( $r['parents'] as $parent ) { if ( isset( $nodes[$parent] ) ) { $edges[] = array( 'from' => $parent, 'to' => $id, 'type' => 'parent' ); } }
+			foreach ( $r['spouses'] as $spouse ) { if ( $id < $spouse && isset( $nodes[$spouse] ) ) { $edges[] = array( 'from' => $id, 'to' => $spouse, 'type' => 'spouse', 'status' => self::partner_status( $id, $spouse ) ); } }
+		}
+		unset( $node );
+		return array( 'root' => $root, 'nodes' => array_values( $nodes ), 'edges' => $edges, 'total' => count( $index ), 'truncated' => $truncated );
+	}
+
+	public static function gallery_ids( $id, $with_children = true ) {
+		$ids = array( get_post_thumbnail_id( $id ) );
+		$gallery = get_post_meta( $id, '_wpmft_gallery', true );
+		if ( is_array( $gallery ) ) { $ids = array_merge( $ids, $gallery ); }
+		$p = get_post( $id );
+		if ( $p ) {
+			preg_match_all( '/wp-image-(\d+)|"id"\s*:\s*(\d+)/', $p->post_content, $matches );
+			$ids = array_merge( $ids, $matches[1], $matches[2] );
+			preg_match_all( '/\[gallery\b[^\]]*ids=[\x22\x27]([0-9, ]+)/i', $p->post_content, $matches );
+			foreach ( $matches[1] as $list ) { $ids = array_merge( $ids, explode( ',', $list ) ); }
+		}
+		$children = $with_children ? get_posts( array( 'post_type' => 'attachment', 'post_parent' => $id, 'post_status' => 'inherit', 'numberposts' => -1, 'fields' => 'ids', 'wpmft_internal' => true, 'suppress_filters' => false, 'lang' => '' ) ) : array();
+		$ids = array_values( array_unique( array_filter( array_map( 'absint', array_merge( $ids, $children ) ) ) ) );
+		return array_values( array_filter( $ids, function ( $attachment ) { return wp_attachment_is_image( $attachment ); } ) );
+	}
+
+	public static function person( $id, $lang ) {
+		$id = self::canonical( $id ); $index = self::index();
+		if ( ! isset( $index[$id] ) ) { return new WP_Error( 'not_found', __( 'This person could not be found.', 'wp-my-family-tree' ) ); }
+		$result = self::summary( $id, $lang ); $display = self::display_id( $id, $lang ); $p = get_post( $display );
+		foreach ( array( 'birthPlace' => '_wpmft_birth_place', 'deathPlace' => '_wpmft_death_place', 'location' => '_wpmft_location', 'occupation' => '_wpmft_occupation', 'maidenName' => '_wpmft_maiden_name' ) as $key => $meta ) {
+			$result[$key] = (string) ( get_post_meta( $display, $meta, true ) ?: get_post_meta( $id, $meta, true ) );
+		}
+		// Use saved static block HTML; never run arbitrary embedded shortcodes or remote dynamic blocks here.
+		$content = preg_replace( '/<!--.*?-->/s', '', $p->post_content );
+		$content = strip_shortcodes( $content );
+		// Photographs are shown once in the controlled gallery, avoiding duplicate image downloads.
+		$content = preg_replace( '/<img\b[^>]*>/i', '', $content );
+		$content = preg_replace( '/<a\b[^>]*>\s*<\/a>/i', '', $content );
+		$result['bio'] = WPMFT_Media::rewrite_html( wp_kses_post( wpautop( $content ) ) );
+		$result['gallery'] = array();
+		foreach ( array_unique( array_merge( self::gallery_ids( $id ), self::gallery_ids( $display ) ) ) as $photo ) {
+			$a = get_post( $photo );
+			$result['gallery'][] = array( 'id' => $photo, 'url' => WPMFT_Media::url( $photo, 'full' ), 'thumb' => WPMFT_Media::url( $photo, 'medium' ), 'alt' => (string) get_post_meta( $photo, '_wp_attachment_image_alt', true ), 'caption' => $a ? wp_strip_all_tags( $a->post_excerpt ) : '' );
+		}
+		$portrait = get_post_thumbnail_id( $display ) ?: get_post_thumbnail_id( $id );
+		if ( $portrait ) { $result['photo'] = WPMFT_Media::url( $portrait, 'large' ); }
+		elseif ( $result['gallery'] ) { $result['photo'] = WPMFT_Media::url( $result['gallery'][0]['id'], 'large' ); }
+		$result['relations'] = array();
+		foreach ( $index[$id] as $relation => $ids ) {
+			$result['relations'][$relation] = array_map( function ( $related ) use ( $lang, $id, $relation ) {
+				$person = self::summary( $related, $lang );
+				if ( $relation === 'spouses' ) { $person['partnerStatus'] = self::partner_status( $id, $related ); }
+				return $person;
+			}, $ids );
+		}
+		return $result;
+	}
+
+	public static function search( $query, $page, $lang ) {
+		$index = self::index(); $query = trim( $query ); $matches = array();
+		foreach ( array_keys( $index ) as $id ) {
+			$p = get_post( self::display_id( $id, $lang ) );
+			$haystack = remove_accents( $p->post_title ); $needle = remove_accents( $query );
+			if ( $query === '' || stripos( $haystack, $needle ) !== false || ( function_exists( 'mb_stripos' ) && mb_stripos( $haystack, $needle, 0, 'UTF-8' ) !== false ) ) { $matches[] = $id; }
+		}
+		$offset = ( max( 1, min( 10000, $page ) ) - 1 ) * 24;
+		return array( 'people' => array_map( function ( $id ) use ( $lang ) { return self::summary( $id, $lang ); }, array_slice( $matches, $offset, 24 ) ), 'more' => count( $matches ) > $offset + 24 );
+	}
+}

@@ -1,0 +1,815 @@
+# WP My Family Tree translation catalog.
+# Copyright (C) 2026 Raivis Kalnins / DigitalPulse
+# Licensed under GPL-3.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP My Family Tree 1.0.2\n"
+"Report-Msgid-Bugs-To: https://digitalpulse.click/\n"
+"POT-Creation-Date: 2026-10-22 12:00+0100\n"
+"PO-Revision-Date: 2026-10-22 12:00+0100\n"
+"Language: lv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n!=0 ? 1 : 2);\n"
+
+#: includes/class-wpmft-api.php:39 includes/class-wpmft-security.php:49
+msgid "A POST request is required."
+msgstr "Nepieciešams POST pieprasījums."
+
+#: includes/class-wpmft-admin.php:120
+msgid "A batch of family photographs has been protected. Continue until no photographs remain."
+msgstr "Dzimtas fotogrāfiju grupa ir aizsargāta. Turpiniet, līdz vairs nav atlikušu fotogrāfiju."
+
+#: includes/class-wpmft-admin.php:510
+msgid "A date was not saved. Use YYYY, YYYY-MM or a valid YYYY-MM-DD. The previous value has been retained."
+msgstr "Datums netika saglabāts. Izmantojiet GGGG, GGGG-MM vai derīgu GGGG-MM-DD. Iepriekšējā vērtība ir saglabāta."
+
+#: includes/class-wpmft-admin.php:518
+msgid "A parent relationship was not saved because it would make a person their own ancestor."
+msgstr "Vecāka saite netika saglabāta, jo tā padarītu personu par savu priekšteci."
+
+#: includes/class-wpmft-media.php:163
+msgid "A photograph could not be encrypted."
+msgstr "Fotogrāfiju neizdevās šifrēt."
+
+#: includes/class-wpmft-media.php:200
+msgid "A photograph could not be protected because you do not have permission to edit it. Ask an administrator to protect it or upload your own copy."
+msgstr "Fotogrāfiju nevarēja aizsargāt, jo jums nav atļaujas to rediģēt. Lūdziet administratoram to aizsargāt vai augšupielādējiet savu kopiju."
+
+#: includes/class-wpmft-media.php:159
+msgid "A photograph could not be read."
+msgstr "Fotogrāfiju neizdevās nolasīt."
+
+#: includes/class-wpmft-media.php:155
+msgid "A source photograph is missing. Restore the matching uploads backup."
+msgstr "Trūkst sākotnējās fotogrāfijas. Atjaunojiet atbilstošo uploads rezerves kopiju."
+
+#: includes/class-wpmft-admin.php:170
+msgid "Accent colour"
+msgstr "Akcenta krāsa"
+
+#: includes/class-wpmft-admin.php:297 includes/class-wpmft-admin.php:417
+msgid "Access denied."
+msgstr "Piekļuve liegta."
+
+#: includes/class-wpmft-admin.php:133
+msgid "Add a person"
+msgstr "Pievienot personu"
+
+#: includes/class-wpmft-admin.php:63
+msgid "Add no more than 50 partner relationships for one person."
+msgstr "Vienai personai var pievienot ne vairāk kā 50 partnerattiecību ierakstus."
+
+#: includes/class-wpmft-admin.php:373
+msgid "Add partner relationship"
+msgstr "Pievienot partnerattiecības"
+
+#: includes/class-wpmft-admin.php:561
+msgid "Add people as WordPress posts."
+msgstr "Pievienojiet personas kā WordPress ierakstus."
+
+#: includes/class-wpmft-admin.php:127
+msgid "Add the Family Tree block or this shortcode to a page:"
+msgstr "Pievienojiet lapai Dzimtas koka bloku vai šo īskodu:"
+
+#: includes/class-wpmft-admin.php:115
+msgid "All remembered family sessions have been revoked."
+msgstr "Visas atcerētās dzimtas piekļuves sesijas ir atsauktas."
+
+#: includes/class-wpmft-admin.php:172
+msgid "Allow signed-in family visitors to save a tree image and print"
+msgstr "Atļaut dzimtas apmeklētājiem ar piekļuvi saglabāt koka attēlu un drukāt"
+
+#: includes/class-wpmft-media.php:140
+msgid "An attachment has no source file."
+msgstr "Pielikumam nav sākotnējā faila."
+
+#: includes/class-wpmft-admin.php:558
+msgid "An existing WP Family Tree category is detected during setup. Keep it selected to reuse your people and relationships."
+msgstr "Iestatīšanas laikā tiek noteikta esošā WP Family Tree kategorija. Saglabājiet tās izvēli, lai izmantotu esošās personas un radniecības saites."
+
+#: block.json:9
+msgid "An interactive oak family tree with person dialogs and optional private access."
+msgstr "Interaktīvs dzimtas koks ozola veidolā ar personu dialoglogiem un iespēju aizsargāt piekļuvi."
+
+#: includes/class-wpmft-media.php:178
+msgid "An original photograph could not be removed. Check file permissions before sharing the site."
+msgstr "Neizdevās noņemt sākotnējo fotogrāfiju. Pirms vietnes kopīgošanas pārbaudiet failu piekļuves atļaujas."
+
+#: includes/class-wpmft-admin.php:138 includes/class-wpmft-admin.php:165
+msgid "Appearance"
+msgstr "Izskats"
+
+#: includes/class-wpmft-admin.php:158
+msgid "At least 12 characters. Leave blank to keep the current password. The password is stored as a one-way hash."
+msgstr "Vismaz 12 rakstzīmes. Atstājiet tukšu, lai saglabātu pašreizējo paroli. Parole tiek glabāta kā vienvirziena jaucējvērtība."
+
+#: includes/class-wpmft-media.php:215
+#, php-format
+msgid "Attachment %1$d: %2$s"
+msgstr "Pielikums %1$d: %2$s"
+
+#: includes/class-wpmft-admin.php:161
+msgid "Automatically encrypt family photograph files when people are saved"
+msgstr "Automātiski šifrēt dzimtas fotogrāfiju failus, saglabājot personas"
+
+#: includes/class-wpmft-admin.php:170
+msgid "Background colour"
+msgstr "Fona krāsa"
+
+#: includes/class-wpmft-admin.php:393
+msgid "Birth / maiden name"
+msgstr "Dzimtais / meitas uzvārds"
+
+#: includes/class-wpmft-admin.php:393
+msgid "Birthplace"
+msgstr "Dzimšanas vieta"
+
+#: includes/class-wpmft-admin.php:562
+msgid "Check privacy while signed out."
+msgstr "Pārbaudiet privātumu bez pieteikšanās."
+
+#: includes/class-wpmft-admin.php:409
+msgid "Choose / reorder photographs"
+msgstr "Izvēlēties / pārkārtot fotogrāfijas"
+
+#: includes/class-wpmft-admin.php:367
+msgid "Choose Together for a current partner and rings in the tree. Shared children alone never imply a current relationship."
+msgstr "Pašreizējam partnerim izvēlieties statusu Kopā; kokā būs redzami gredzeni. Kopīgi bērni paši par sevi nenozīmē pašreizējas attiecības."
+
+#: includes/class-wpmft-admin.php:148
+msgid "Choose a page"
+msgstr "Izvēlieties lapu"
+
+#: includes/class-wpmft-admin.php:53
+msgid "Choose family photographs"
+msgstr "Izvēlieties dzimtas fotogrāfijas"
+
+#: includes/class-wpmft-admin.php:558
+msgid "Choose your family category."
+msgstr "Izvēlieties dzimtas kategoriju."
+
+#: includes/class-wpmft-admin.php:138 includes/class-wpmft-admin.php:175
+msgid "Contact & hCaptcha"
+msgstr "Kontakti un hCaptcha"
+
+#: includes/class-wpmft-admin.php:180
+msgid "Contact messages use WordPress mail delivery. The form does not save message contents to the family tree database. Your mail provider may retain delivered messages."
+msgstr "Saziņas ziņojumi izmanto WordPress pasta sūtīšanu. Forma nesaglabā ziņojumu saturu dzimtas koka datubāzē. Jūsu pasta pakalpojuma sniedzējs var saglabāt piegādātos ziņojumus."
+
+#: includes/class-wpmft-security.php:155 includes/class-wpmft-security.php:159 includes/class-wpmft-security.php:163
+msgid "Content not found."
+msgstr "Saturs nav atrasts."
+
+#: includes/class-wpmft-admin.php:192
+msgid "Create a tree page"
+msgstr "Izveidot koka lapu"
+
+#: includes/class-wpmft-admin.php:559
+msgid "Create or edit the tree page."
+msgstr "Izveidojiet vai rediģējiet koka lapu."
+
+#: includes/class-wpmft-admin.php:393
+msgid "Date of birth"
+msgstr "Dzimšanas datums"
+
+#: includes/class-wpmft-admin.php:393
+msgid "Date of death (leave blank if living)"
+msgstr "Miršanas datums (dzīvai personai atstājiet tukšu)"
+
+#: includes/class-wpmft-admin.php:397
+msgid "Dates accept YYYY, YYYY-MM or YYYY-MM-DD. Older date text is retained unless you change it."
+msgstr "Datumiem izmantojiet GGGG, GGGG-MM vai GGGG-MM-DD. Iepriekšējais datuma teksts tiek saglabāts, ja to nemaināt."
+
+#: includes/class-wpmft-admin.php:102
+msgid "Deactivate the original WP Family Tree plugin. Its older public routes can bypass the privacy settings of this replacement. Your posts and photographs are retained."
+msgstr "Deaktivizējiet sākotnējo WP Family Tree spraudni. Tā vecākie publiskie piekļuves ceļi var apiet šī aizstājēja privātuma iestatījumus. Jūsu ieraksti un fotogrāfijas tiks saglabāti."
+
+#: includes/class-wpmft-admin.php:152
+msgid "Default interface language"
+msgstr "Noklusējuma saskarnes valoda"
+
+#: includes/class-wpmft-admin.php:571
+msgid "Developer"
+msgstr "Izstrādātājs"
+
+#: includes/class-wpmft-admin.php:179
+msgid "Display the contact email in the footer and exported tree image"
+msgstr "Rādīt kontaktu e-pastu kājenē un eksportētajā koka attēlā"
+
+#: includes/class-wpmft-admin.php:326
+msgid "Divorced"
+msgstr "Šķīrušies"
+
+#: includes/class-wpmft-admin.php:368
+msgid "Divorced, separated and former partners are hidden from each other’s own tree. Both recorded parents remain visible when their child is selected."
+msgstr "Šķīrušies, šķirti dzīvojoši un bijušie partneri netiek rādīti viens otra kokā. Atlasot viņu bērnu, abi ierakstītie vecāki paliek redzami."
+
+#: includes/class-wpmft-admin.php:340
+msgid "Edit the other person’s record"
+msgstr "Rediģēt otras personas ierakstu"
+
+#: includes/class-wpmft-admin.php:131
+msgid "Edit tree page"
+msgstr "Rediģēt koka lapu"
+
+#: includes/class-wpmft-admin.php:181
+msgid "Enable hCaptcha (external anti-spam service)"
+msgstr "Ieslēgt hCaptcha (ārējs aizsardzības pakalpojums pret surogātpastu)"
+
+#: includes/class-wpmft-admin.php:176
+msgid "Enable the Contact Us form"
+msgstr "Ieslēgt saziņas formu"
+
+#: includes/class-wpmft-admin.php:146
+msgid "Enable the family tree"
+msgstr "Ieslēgt dzimtas koku"
+
+#: includes/class-wpmft-admin.php:162
+msgid "Encrypted photographs are served through the family access check. This switch controls protection of new files; disabling it does not make already encrypted photographs public. Use “Protect existing family photos” below to process older files."
+msgstr "Šifrētās fotogrāfijas tiek izsniegtas pēc dzimtas piekļuves pārbaudes. Šis slēdzis vada jaunu failu aizsardzību; izslēdzot to, jau šifrētās fotogrāfijas nekļūst publiskas. Vecākiem failiem izmantojiet pogu “Aizsargāt esošās dzimtas fotogrāfijas”."
+
+#: includes/class-wpmft-admin.php:568
+msgid "English and Latvian interface text is included. Names and biographies are never automatically translated. With Polylang, add English and Latvian under Languages and create linked page/post translations as needed."
+msgstr "Ir iekļauts angļu un latviešu saskarnes teksts. Vārdi un dzīvesstāsti nekad netiek tulkoti automātiski. Polylang sadaļā Valodas pievienojiet angļu un latviešu valodu un pēc vajadzības izveidojiet saistītus lapu/ierakstu tulkojumus."
+
+#: includes/class-wpmft-api.php:71
+msgid "Enter your name, a valid email address, and a message of 10–10,000 characters."
+msgstr "Norādiet savu vārdu, derīgu e-pasta adresi un ziņojumu, kura garums ir 10–10 000 rakstzīmju."
+
+#: includes/class-wpmft-admin.php:147
+msgid "Existing WP Family Tree posts remain ordinary WordPress posts in this category."
+msgstr "Esošie WP Family Tree ieraksti paliek parastie WordPress ieraksti šajā kategorijā."
+
+#: includes/class-wpmft-admin.php:28 block.json:6
+msgid "Family Tree"
+msgstr "Dzimtas koks"
+
+#: includes/class-wpmft-admin.php:178
+msgid "Family administrator email"
+msgstr "Dzimtas administratora e-pasts"
+
+#: includes/class-wpmft-admin.php:177
+msgid "Family administrator name"
+msgstr "Dzimtas administratora vārds"
+
+#: includes/class-wpmft-admin.php:147
+msgid "Family member category"
+msgstr "Dzimtas personu kategorija"
+
+#: includes/class-wpmft-admin.php:60
+msgid "Family photograph protection is complete."
+msgstr "Dzimtas fotogrāfiju aizsardzība ir pabeigta."
+
+#: assets/editor.js:11
+msgid "Family tree"
+msgstr "Dzimtas koks"
+
+#: includes/class-wpmft-api.php:73
+msgid "Family tree contact"
+msgstr "Dzimtas koka kontaktforma"
+
+#: includes/class-wpmft-admin.php:137
+msgid "Family tree settings"
+msgstr "Dzimtas koka iestatījumi"
+
+#: includes/class-wpmft-admin.php:309
+msgid "Family tree — person details"
+msgstr "Dzimtas koks — personas informācija"
+
+#: includes/class-wpmft-admin.php:399
+msgid "Father / parent 1"
+msgstr "Tēvs / 1. vecāks"
+
+#: includes/class-wpmft-admin.php:391
+msgid "Female"
+msgstr "Sieviete"
+
+#: includes/class-wpmft-admin.php:328
+msgid "Former partners"
+msgstr "Bijušie partneri"
+
+#: includes/class-wpmft-admin.php:390
+msgid "Gender"
+msgstr "Dzimums"
+
+#: includes/class-wpmft-admin.php:138 includes/class-wpmft-admin.php:145
+msgid "General"
+msgstr "Vispārīgi"
+
+#: includes/class-wpmft-admin.php:138 includes/class-wpmft-admin.php:188
+msgid "Getting started"
+msgstr "Darba sākšana"
+
+#: includes/class-wpmft-admin.php:160
+msgid "Hide the birth dates of living people in the tree and person dialogs"
+msgstr "Paslēpt dzīvo personu dzimšanas datumus kokā un personu dialoglogos"
+
+#: includes/class-wpmft-admin.php:387
+msgid "Include this post as a person in the family tree"
+msgstr "Iekļaut šo ierakstu kā personu dzimtas kokā"
+
+#: includes/class-wpmft-admin.php:559
+msgid "Insert the Family Tree block, or a Shortcode block containing [wp_my_family_tree]. Choose a starting person in General."
+msgstr "Ievietojiet Dzimtas koka bloku vai Īskoda bloku ar [wp_my_family_tree]. Sadaļā Vispārīgi izvēlieties sākuma personu."
+
+#: includes/class-wpmft-admin.php:168
+msgid "Introduction (English)"
+msgstr "Ievadteksts (angļu valodā)"
+
+#: includes/class-wpmft-admin.php:169
+msgid "Introduction (Latvian)"
+msgstr "Ievadteksts (latviešu valodā)"
+
+#: includes/class-wpmft-admin.php:163
+msgid "Keep a full backup before protecting files. Protection replaces public family image files with an encrypted vault. The database encryption key and encrypted uploads must be backed up together. Older cached or externally copied photographs cannot be recalled."
+msgstr "Pirms failu aizsardzības saglabājiet pilnu rezerves kopiju. Aizsardzība aizstāj publiskos dzimtas attēlu failus ar šifrētu glabātuvi. Datubāzes šifrēšanas atslēga un šifrētie uploads faili jādublē kopā. Iepriekš kešatmiņā saglabātās vai citur nokopētās fotogrāfijas nevar atsaukt."
+
+#: includes/class-wpmft-admin.php:124
+msgid "Keep the stories. Connect the generations."
+msgstr "Saglabājiet stāstus. Savienojiet paaudzes."
+
+#: includes/class-wpmft-admin.php:567
+msgid "Languages"
+msgstr "Valodas"
+
+#: assets/editor.js:14
+msgid "Leave 0 to use the starting person from Family Tree settings."
+msgstr "Atstājiet 0, lai izmantotu dzimtas koka iestatījumos izvēlēto sākuma personu."
+
+#: includes/class-wpmft-admin.php:183
+msgid "Leave blank to keep the stored secret. It is never included in the public page."
+msgstr "Atstājiet tukšu, lai saglabātu esošo slepeno atslēgu. Tā nekad netiek iekļauta publiskajā lapā."
+
+#: wp-my-family-tree.php:80
+msgid "Loading the family tree…"
+msgstr "Ielādē dzimtas koku…"
+
+#: includes/class-wpmft-admin.php:393
+msgid "Location"
+msgstr "Atrašanās vieta"
+
+#: includes/class-wpmft-admin.php:391
+msgid "Male"
+msgstr "Vīrietis"
+
+#: includes/class-wpmft-admin.php:134
+msgid "Manage family posts"
+msgstr "Pārvaldīt dzimtas ierakstus"
+
+#: includes/class-wpmft-admin.php:159
+msgid "Maximum remembered access (days)"
+msgstr "Maksimālais piekļuves atcerēšanās laiks (dienas)"
+
+#: includes/class-wpmft-admin.php:399
+msgid "Mother / parent 2"
+msgstr "Māte / 2. vecāks"
+
+#: includes/class-wpmft-admin.php:56
+msgid "No family members found."
+msgstr "Dzimtas personas nav atrastas."
+
+#: includes/class-wpmft-admin.php:324 includes/class-wpmft-admin.php:391
+msgid "Not specified"
+msgstr "Nav norādīts"
+
+#: includes/class-wpmft-admin.php:393
+msgid "Occupation"
+msgstr "Nodarbošanās"
+
+#: includes/class-wpmft-admin.php:375
+msgid "Only this person’s record is saved. To change a status stored on both records, update both people. Choosing Not specified removes this record’s status without removing a partner or parent selected above."
+msgstr "Tiek saglabāts tikai šīs personas ieraksts. Lai mainītu abos ierakstos saglabātu statusu, atjauniniet abas personas. Izvēloties Nav norādīts, tiek noņemts šī ieraksta statuss, nenoņemot iepriekš atlasīto partneri vai vecāku."
+
+#: includes/class-wpmft-admin.php:562
+msgid "Open a private window. Test the tree, a person’s old URL, a feed and an old direct photograph URL. Clear previous caches. The original plugin should be inactive."
+msgstr "Atveriet privātu pārlūka logu. Pārbaudiet koku, personas veco adresi, plūsmu un veco tiešo fotogrāfijas adresi. Iztīriet iepriekšējās kešatmiņas. Sākotnējam spraudnim jābūt deaktivizētam."
+
+#: includes/class-wpmft-media.php:133
+msgid "OpenSSL is required to protect photographs."
+msgstr "Fotogrāfiju aizsardzībai nepieciešams OpenSSL."
+
+#: includes/class-wpmft-admin.php:391
+msgid "Other"
+msgstr "Cits"
+
+#: includes/class-wpmft-admin.php:400
+msgid "Other spouses / partners"
+msgstr "Citi laulātie / partneri"
+
+#: assets/editor.js:28
+msgid "Our family tree"
+msgstr "Mūsu dzimtas koks"
+
+#: includes/class-wpmft-admin.php:335
+msgid "Partner / co-parent"
+msgstr "Partneris / kopīgā bērna vecāks"
+
+#: includes/class-wpmft-admin.php:366
+msgid "Partner relationships"
+msgstr "Partnerattiecības"
+
+#: includes/class-wpmft-admin.php:403
+msgid "Photo gallery"
+msgstr "Fotogalerija"
+
+#: includes/class-wpmft-admin.php:61
+msgid "Photographs remaining:"
+msgstr "Atlikušās fotogrāfijas:"
+
+#: includes/class-wpmft-admin.php:393
+msgid "Place of death"
+msgstr "Miršanas vieta"
+
+#: includes/class-wpmft-security.php:101
+msgid "Please complete the security challenge."
+msgstr "Lūdzu, izpildiet drošības pārbaudi."
+
+#: wp-my-family-tree.php:80
+msgid "Please enable JavaScript to explore this interactive family tree."
+msgstr "Lūdzu, ieslēdziet JavaScript, lai skatītu šo interaktīvo dzimtas koku."
+
+#: includes/class-wpmft-security.php:58
+msgid "Please refresh the page and try again."
+msgstr "Lūdzu, pārlādējiet lapu un mēģiniet vēlreiz."
+
+#: includes/class-wpmft-api.php:69
+msgid "Please wait a few seconds and submit the form again."
+msgstr "Lūdzu, uzgaidiet dažas sekundes un iesniedziet formu vēlreiz."
+
+#: includes/class-wpmft-api.php:54
+msgid "Please wait a moment before trying again."
+msgstr "Lūdzu, nedaudz uzgaidiet, pirms mēģināt vēlreiz."
+
+#: includes/class-wpmft-admin.php:154
+msgid "Polylang is optional. When installed, it can manage translated pages and biographies; the plugin interface works in English and Latvian without it."
+msgstr "Polylang nav obligāts. Ja tas ir uzstādīts, tajā var pārvaldīt tulkotās lapas un dzīvesstāstus; spraudņa saskarne darbojas angļu un latviešu valodā arī bez tā."
+
+#: includes/class-wpmft-admin.php:399
+msgid "Primary spouse / partner"
+msgstr "Galvenais laulātais / partneris"
+
+#: includes/class-wpmft-admin.php:138 includes/class-wpmft-admin.php:156
+msgid "Privacy & access"
+msgstr "Privātums un piekļuve"
+
+#: includes/class-wpmft-admin.php:186
+msgid "Privacy policy"
+msgstr "Privātuma politika"
+
+#: includes/class-wpmft-admin.php:560
+msgid "Private access starts locked until you set a password. Set the family administrator email and optionally enable hCaptcha."
+msgstr "Privātā piekļuve ir bloķēta, līdz iestatāt paroli. Norādiet dzimtas administratora e-pastu un, ja vēlaties, ieslēdziet hCaptcha."
+
+#: includes/class-wpmft-security.php:183
+msgid "Private family record"
+msgstr "Privāts dzimtas ieraksts"
+
+#: includes/class-wpmft-admin.php:163
+msgid "Private pages and family API responses use no-store headers. Exclude the tree page, admin-ajax.php and protected media from host/CDN page caching. Purge older public caches after migration."
+msgstr "Privātajām lapām un dzimtas API atbildēm tiek nosūtītas no-store galvenes. Izslēdziet koka lapu, admin-ajax.php un aizsargātos attēlus no servera/CDN lapu kešatmiņas. Pēc migrācijas iztīriet iepriekšējās publiskās kešatmiņas."
+
+#: includes/class-wpmft-admin.php:194
+msgid "Protect existing family photos"
+msgstr "Aizsargāt esošās dzimtas fotogrāfijas"
+
+#: includes/class-wpmft-admin.php:59
+msgid "Protecting family photographs…"
+msgstr "Aizsargā dzimtas fotogrāfijas…"
+
+#: includes/class-wpmft-admin.php:336
+msgid "Relationship status"
+msgstr "Attiecību statuss"
+
+#: includes/class-wpmft-admin.php:55
+msgid "Remove"
+msgstr "Noņemt"
+
+#: includes/class-wpmft-admin.php:407
+msgid "Remove photograph from gallery"
+msgstr "Noņemt fotogrāfiju no galerijas"
+
+#: includes/class-wpmft-admin.php:338
+msgid "Remove relationship row"
+msgstr "Noņemt attiecību rindu"
+
+#: includes/class-wpmft-admin.php:317
+msgid "Remove selected person"
+msgstr "Noņemt izvēlēto personu"
+
+#: includes/class-wpmft-admin.php:410
+msgid "Removing a photograph here only removes it from this gallery. It does not delete the original media file."
+msgstr "Fotogrāfijas noņemšana šeit to noņem tikai no šīs galerijas. Sākotnējais multivides fails netiek dzēsts."
+
+#: includes/class-wpmft-admin.php:157
+msgid "Require a family password"
+msgstr "Pieprasīt dzimtas paroli"
+
+#: includes/class-wpmft-admin.php:570
+msgid "Restore a matching UpdraftPlus set on staging first. Preserve every filename exactly, including its date, site name, 12-character identifier and -db.gz / -plugins.zip / -themes.zip / -uploads.zip suffix. A standalone plugin ZIP is installed using Plugins → Add New → Upload Plugin, not the Updraft restore screen."
+msgstr "Vispirms atjaunojiet vienu pilnu UpdraftPlus kopu testa vietnē. Precīzi saglabājiet katru faila nosaukumu, tostarp datumu, vietnes nosaukumu, 12 rakstzīmju identifikatoru un -db.gz / -plugins.zip / -themes.zip / -uploads.zip galotni. Atsevišķu spraudņa ZIP uzstāda sadaļā Spraudņi → Pievienot jaunu → Augšupielādēt spraudni, nevis Updraft atjaunošanas logā."
+
+#: includes/class-wpmft-admin.php:569
+msgid "Restore backups safely"
+msgstr "Droši atjaunojiet rezerves kopijas"
+
+#: includes/class-wpmft-admin.php:193
+msgid "Revoke all remembered access"
+msgstr "Atsaukt visu atcerēto piekļuvi"
+
+#: includes/class-wpmft-admin.php:189
+msgid "Save settings"
+msgstr "Saglabāt iestatījumus"
+
+#: includes/class-wpmft-admin.php:319
+msgid "Search by name…"
+msgstr "Meklēt pēc vārda…"
+
+#: includes/class-wpmft-admin.php:57
+msgid "Search could not load. Please try again."
+msgstr "Meklēšanu neizdevās ielādēt. Lūdzu, mēģiniet vēlreiz."
+
+#: includes/class-wpmft-admin.php:58
+msgid "Searching…"
+msgstr "Meklē…"
+
+#: includes/class-wpmft-admin.php:147
+msgid "Select a category"
+msgstr "Izvēlieties kategoriju"
+
+#: includes/class-wpmft-admin.php:327
+msgid "Separated"
+msgstr "Dzīvo šķirti"
+
+#: includes/class-wpmft-admin.php:158
+msgid "Set a new family password"
+msgstr "Iestatīt jaunu dzimtas paroli"
+
+#: includes/class-wpmft-admin.php:560
+msgid "Set access and contact details."
+msgstr "Iestatiet piekļuvi un kontaktinformāciju."
+
+#: assets/editor.js:30
+msgid "Set the family category, password, languages, colours and contact details in Family Tree → Settings & help."
+msgstr "Norādiet dzimtas kategoriju, paroli, valodas, krāsas un kontaktinformāciju sadaļā Dzimtas koks → Iestatījumi un palīdzība."
+
+#: includes/class-wpmft-admin.php:29 includes/class-wpmft-admin.php:33
+msgid "Settings"
+msgstr "Iestatījumi"
+
+#: includes/class-wpmft-admin.php:29
+msgid "Settings & help"
+msgstr "Iestatījumi un palīdzība"
+
+#: includes/class-wpmft-admin.php:189
+msgid "Settings belong to the plugin and work independently of your theme."
+msgstr "Iestatījumi pieder spraudnim un darbojas neatkarīgi no tēmas."
+
+#: includes/class-wpmft-admin.php:113
+msgid "Settings saved."
+msgstr "Iestatījumi saglabāti."
+
+#: includes/class-wpmft-admin.php:117
+msgid "Settings were not saved. Add both hCaptcha keys before enabling it."
+msgstr "Iestatījumi netika saglabāti. Pirms hCaptcha ieslēgšanas pievienojiet abas atslēgas."
+
+#: includes/class-wpmft-admin.php:119
+msgid "Settings were not saved. Enter a valid family administrator email address."
+msgstr "Iestatījumi netika saglabāti. Ievadiet derīgu dzimtas administratora e-pasta adresi."
+
+#: includes/class-wpmft-admin.php:116
+msgid "Settings were not saved. Use a family password with at least 12 characters."
+msgstr "Iestatījumi netika saglabāti. Dzimtas parolei izmantojiet vismaz 12 rakstzīmes."
+
+#: includes/class-wpmft-admin.php:564
+msgid "Shortcodes"
+msgstr "Īskodi"
+
+#: includes/class-wpmft-admin.php:173
+msgid "Show an optional “Built by DigitalPulse” footer link"
+msgstr "Rādīt izvēles kājenes saiti “Izstrādāja DigitalPulse”"
+
+#: includes/class-wpmft-admin.php:153
+msgid "Show the English / Latvian language switch"
+msgstr "Rādīt angļu / latviešu valodas pārslēgu"
+
+#: includes/class-wpmft-admin.php:62
+msgid "Some photographs could not be protected. Keep the original backup and review the error before publishing."
+msgstr "Dažas fotogrāfijas neizdevās aizsargāt. Saglabājiet sākotnējo rezerves kopiju un pirms publicēšanas pārbaudiet kļūdu."
+
+#: includes/class-wpmft-admin.php:149
+msgid "Starting person"
+msgstr "Sākuma persona"
+
+#: assets/editor.js:13
+msgid "Starting person — post ID"
+msgstr "Sākuma persona — ieraksta ID"
+
+#: includes/class-wpmft-admin.php:186
+msgid "Terms"
+msgstr "Noteikumi"
+
+#: includes/class-wpmft-api.php:77
+msgid "Thank you. Your message has been sent to the family administrator."
+msgstr "Paldies! Jūsu ziņojums ir nosūtīts dzimtas administratoram."
+
+#: includes/class-wpmft-api.php:66
+msgid "The contact form is not available."
+msgstr "Kontaktforma nav pieejama."
+
+#: includes/class-wpmft-media.php:167
+msgid "The encrypted photograph could not be verified."
+msgstr "Šifrēto fotogrāfiju neizdevās pārbaudīt."
+
+#: includes/class-wpmft-api.php:32
+msgid "The family tree is currently unavailable."
+msgstr "Dzimtas koks pašlaik nav pieejams."
+
+#: includes/class-wpmft-api.php:76
+msgid "The message could not be sent. Please try again later or use the administrator contact details."
+msgstr "Ziņojumu neizdevās nosūtīt. Lūdzu, vēlāk mēģiniet vēlreiz vai izmantojiet administratora kontaktinformāciju."
+
+#: includes/class-wpmft-admin.php:118
+msgid "The page could not be created. Please try again."
+msgstr "Lapu neizdevās izveidot. Lūdzu, mēģiniet vēlreiz."
+
+#: includes/class-wpmft-security.php:83
+msgid "The password is incorrect or family access has not been configured."
+msgstr "Parole nav pareiza vai piekļuve dzimtai vēl nav iestatīta."
+
+#: includes/class-wpmft-api.php:46
+msgid "The password is too long."
+msgstr "Parole ir pārāk gara."
+
+#: includes/class-wpmft-admin.php:151
+msgid "The plugin provides its own title, header and contact footer. This applies to pages containing the tree shortcode or block."
+msgstr "Spraudnis nodrošina savu virsrakstu, galveni un kontaktu kājeni. Tas attiecas uz lapām, kurās ir dzimtas koka īskods vai bloks."
+
+#: includes/class-wpmft-media.php:177
+msgid "The private file index could not be saved. Originals were retained."
+msgstr "Neizdevās saglabāt privāto failu sarakstu. Oriģināli tika saglabāti."
+
+#: includes/class-wpmft-media.php:147
+msgid "The private media folder could not be created."
+msgstr "Neizdevās izveidot privāto attēlu mapi."
+
+#: includes/class-wpmft-media.php:137
+msgid "The private media key could not be created."
+msgstr "Neizdevās izveidot privāto attēlu atslēgu."
+
+#: includes/class-wpmft-admin.php:299
+msgid "The protected media service is not available."
+msgstr "Aizsargāto attēlu pakalpojums nav pieejams."
+
+#: includes/class-wpmft-security.php:56
+msgid "The request origin could not be verified."
+msgstr "Neizdevās pārbaudīt pieprasījuma izcelsmi."
+
+#: includes/class-wpmft-admin.php:566
+msgid "The root is a WordPress post ID. Legacy [family-tree] and [family-members] shortcodes are supported for migration."
+msgstr "Sākuma persona ir norādīta ar WordPress ieraksta ID. Migrācijai tiek atbalstīti vecie [family-tree] un [family-members] īskodi."
+
+#: includes/class-wpmft-security.php:103
+msgid "The security challenge could not be verified. Please try again."
+msgstr "Neizdevās apstiprināt drošības pārbaudi. Lūdzu, mēģiniet vēlreiz."
+
+#: includes/class-wpmft-security.php:105
+msgid "The security challenge expired or failed. Please try again."
+msgstr "Drošības pārbaudes laiks ir beidzies vai tā nav izdevusies. Lūdzu, mēģiniet vēlreiz."
+
+#: includes/class-wpmft-security.php:99
+msgid "The security challenge is not configured. Please contact the site administrator."
+msgstr "Drošības pārbaude nav iestatīta. Lūdzu, sazinieties ar vietnes administratoru."
+
+#: includes/class-wpmft-admin.php:360
+msgid "The two records have different statuses. A former relationship takes priority; update both records to resolve the difference."
+msgstr "Abos ierakstos norādīti atšķirīgi statusi. Bijušo attiecību statusam ir priekšroka; lai novērstu atšķirību, atjauniniet abus ierakstus."
+
+#: includes/class-wpmft-media.php:175
+msgid "There are no photograph files to protect."
+msgstr "Nav fotogrāfiju failu, ko aizsargāt."
+
+#: includes/class-wpmft-api.php:62
+msgid "This action is not available."
+msgstr "Šī darbība nav pieejama."
+
+#: includes/class-wpmft-data.php:242
+msgid "This person could not be found."
+msgstr "Šī persona nav atrasta."
+
+#: includes/class-wpmft-media.php:242
+msgid "This photograph is encrypted. Download it from the family gallery, edit it on your device, and upload the revised photograph."
+msgstr "Šī fotogrāfija ir šifrēta. Lejupielādējiet to no dzimtas galerijas, rediģējiet savā ierīcē un augšupielādējiet laboto fotogrāfiju."
+
+#: includes/class-wpmft-admin.php:358
+msgid "This status comes from the other person’s record. Removing this row does not change their record."
+msgstr "Šis statuss ir norādīts otras personas ierakstā. Noņemot šo rindu, otras personas ieraksts netiek mainīts."
+
+#: includes/class-wpmft-admin.php:561
+msgid "Tick “Include this post as a person”, add a portrait and biography, then choose parents, partners and photographs in the person details box. Children and siblings are derived from parent links."
+msgstr "Atzīmējiet “Iekļaut šo ierakstu kā personu”, pievienojiet portretu un dzīvesstāstu, pēc tam personas informācijas laukos izvēlieties vecākus, partnerus un fotogrāfijas. Bērni un brāļi/māsas tiek noteikti pēc vecāku saitēm."
+
+#: includes/class-wpmft-admin.php:166
+msgid "Title (English)"
+msgstr "Virsraksts (angļu valodā)"
+
+#: includes/class-wpmft-admin.php:167
+msgid "Title (Latvian)"
+msgstr "Virsraksts (latviešu valodā)"
+
+#: includes/class-wpmft-admin.php:325
+msgid "Together / current partners"
+msgstr "Kopā / pašreizējie partneri"
+
+#: includes/class-wpmft-api.php:45 includes/class-wpmft-security.php:81
+msgid "Too many attempts. Please try again in 15 minutes."
+msgstr "Pārāk daudz mēģinājumu. Lūdzu, mēģiniet vēlreiz pēc 15 minūtēm."
+
+#: includes/class-wpmft-api.php:67
+msgid "Too many messages. Please try again later."
+msgstr "Nosūtīts pārāk daudz ziņojumu. Lūdzu, vēlāk mēģiniet vēlreiz."
+
+#: includes/class-wpmft-admin.php:171
+msgid "Tree canvas height on large screens (px)"
+msgstr "Koka laukuma augstums lielos ekrānos (px)"
+
+#: includes/class-wpmft-admin.php:148
+msgid "Tree page"
+msgstr "Koka lapa"
+
+#: includes/class-wpmft-admin.php:185
+msgid "Use hCaptcha on the contact form"
+msgstr "Izmantot hCaptcha saziņas formā"
+
+#: includes/class-wpmft-admin.php:184
+msgid "Use hCaptcha on the family password form"
+msgstr "Izmantot hCaptcha dzimtas paroles formā"
+
+#: includes/class-wpmft-admin.php:54
+msgid "Use selected photographs"
+msgstr "Izmantot izvēlētās fotogrāfijas"
+
+#: includes/class-wpmft-admin.php:150
+msgid "Use the full-window layout without the theme header and footer"
+msgstr "Izmantot pilna loga izkārtojumu bez tēmas galvenes un kājenes"
+
+#: includes/class-wpmft-admin.php:388
+msgid "Use the post title for the person’s name, the block editor for their biography, and Featured image for their portrait. Parent, partner and date fields reuse your existing WP Family Tree data."
+msgstr "Personas vārdam izmantojiet ieraksta virsrakstu, dzīvesstāstam — bloku redaktoru, bet portretam — izcelto attēlu. Vecāku, partneru un datumu lauki izmanto esošos WP Family Tree datus."
+
+#: includes/class-wpmft-admin.php:130
+msgid "View tree"
+msgstr "Skatīt koku"
+
+#: includes/class-wpmft-admin.php:28 includes/class-wpmft-admin.php:124
+msgid "WP My Family Tree"
+msgstr "WP My Family Tree"
+
+#: includes/class-wpmft-admin.php:186
+msgid "When enabled, hCaptcha receives technical browser information and verifies form tokens. Review its service terms and add it to your privacy notice."
+msgstr "Ja hCaptcha ir ieslēgts, tas saņem pārlūkprogrammas tehnisko informāciju un pārbauda formu apliecinājumus. Iepazīstieties ar tā pakalpojuma noteikumiem un pievienojiet informāciju savam privātuma paziņojumam."
+
+#: includes/class-wpmft-admin.php:70
+msgid "You do not have permission to change family tree settings."
+msgstr "Jums nav atļaujas mainīt dzimtas koka iestatījumus."
+
+#: includes/class-wpmft-api.php:53
+msgid "Your family session has ended. Please unlock the tree again."
+msgstr "Jūsu dzimtas piekļuves sesija ir beigusies. Lūdzu, atbloķējiet koku vēlreiz."
+
+#: includes/class-wpmft-admin.php:99
+msgid "Your family tree is locked for visitors. Set a family password in Privacy to allow access, or explicitly turn password protection off for a public tree."
+msgstr "Apmeklētājiem jūsu dzimtas koks ir bloķēts. Iestatiet dzimtas paroli sadaļā Privātums, lai atļautu piekļuvi, vai izslēdziet paroles aizsardzību, ja koks būs publisks."
+
+#: includes/class-wpmft-admin.php:114
+msgid "Your family tree page is ready."
+msgstr "Jūsu dzimtas koka lapa ir gatava."
+
+#: assets/editor.js:29
+msgid "Your interactive oak tree appears here on the page. People open in dialogs and relatives load as visitors explore."
+msgstr "Šeit lapā būs redzams interaktīvais ozols. Personu informācija atveras dialoglogos, un radinieki tiek ielādēti, pētot koku."
+
+#: includes/class-wpmft-admin.php:127
+msgid "Your tree, in any theme"
+msgstr "Jūsu koks jebkurā tēmā"
+
+#: block.json:10
+msgid "family"
+msgstr "dzimta"
+
+#: block.json:10
+msgid "genealogy"
+msgstr "ģenealoģija"
+
+#: includes/class-wpmft-admin.php:183
+msgid "hCaptcha secret key"
+msgstr "hCaptcha slepenā atslēga"
+
+#: includes/class-wpmft-admin.php:182
+msgid "hCaptcha site key"
+msgstr "hCaptcha vietnes atslēga"
+
+#: block.json:10
+msgid "oak"
+msgstr "ozols"

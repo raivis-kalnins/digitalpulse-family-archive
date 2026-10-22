@@ -1,8 +1,9 @@
 <?php
 /**
  * Plugin Name: WP My Family Tree
+ * Plugin URI: https://github.com/raivis-kalnins/wp-my-family-tree
  * Description: A private, interactive oak family tree with person galleries, a block and shortcode, and English/Latvian support. Reuses WP Family Tree posts.
- * Version: 1.0.0
+ * Version: 1.0.2
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Author: Raivis Kalnins — DigitalPulse
@@ -15,7 +16,7 @@
  * @package WPMyFamilyTree
  */
 defined( 'ABSPATH' ) || exit;
-define( 'WPMFT_VERSION', '1.0.0' );
+define( 'WPMFT_VERSION', '1.0.2' );
 define( 'WPMFT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WPMFT_URL', plugin_dir_url( __FILE__ ) );
 
@@ -70,11 +71,12 @@ function wpmft_shortcode( $attributes = array(), $content = null, $tag = 'wp_my_
 	$root = $root ?: $s['root_id'];
 	wp_enqueue_script( 'wpmft-app' );
 	wp_enqueue_style( 'wpmft-app' );
+	$language = wpmft_language(); $public_settings = wpmft_public_settings();
 	wp_localize_script( 'wpmft-app', 'WPMFT_CONFIG', array(
 		'ajaxUrl' => admin_url( 'admin-ajax.php' ), 'rootId' => $root,
-		'language' => wpmft_language(), 'settings' => wpmft_public_settings(),
+		'language' => $language, 'i18n' => wpmft_language_config(), 'settings' => $public_settings,
 	) );
-	$title = wpmft_language() === 'lv' ? $s['title_lv'] : $s['title'];
+	$title = $language === 'lv' ? $public_settings['titleLv'] : $public_settings['title'];
 	return '<div class="wpmft-app" data-view="' . ( $attributes['view'] === 'list' ? 'list' : 'tree' ) . '" data-root="' . esc_attr( $root ) . '"><div class="wpmft-boot"><h1>' . esc_html( $title ) . '</h1><p role="status">' . esc_html__( 'Loading the family tree…', 'wp-my-family-tree' ) . '</p><noscript>' . esc_html__( 'Please enable JavaScript to explore this interactive family tree.', 'wp-my-family-tree' ) . '</noscript></div></div>';
 }
 

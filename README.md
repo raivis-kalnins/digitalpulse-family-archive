@@ -1,159 +1,137 @@
-# wp-my-family-tree
-WP My Family Tree - WordPress plugin
+# WP My Family Tree
 
-=== WP My Family Tree ===
-Tags: family tree, genealogy, family history, privacy, shortcode
-Requires at least: 6.5
-Tested up to: 7.1
-Requires PHP: 7.4
-Stable tag: 1.0.0
-License: GPLv3 or later
-License URI: https://www.gnu.org/licenses/gpl-3.0.html
+A WordPress family tree with an oak-inspired React interface, private person dialogs, photo galleries, and English / Latvian language support.
 
-An interactive oak family tree with person dialogs, photo galleries, English and Latvian interfaces, and optional password-protected access.
+**Version 1.0.2** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
+Developed by **Raivis Kalnins**, web developer at [DigitalPulse](https://digitalpulse.click/).
 
-== Description ==
+![WP My Family Tree with its page title, oak tree, language switch and contact footer](docs/screenshot.png)
 
-WP My Family Tree connects generations while keeping your family stories in ordinary WordPress posts. Add the Family Tree block or [wp_my_family_tree] shortcode to a page. The plugin provides a responsive oak tree, its own header and footer, person dialogs and a contact form independently of your theme.
+*The screenshot uses fictional people and illustrated demo portraits. It contains no private family records or photographs.*
 
-Created by Raivis Kalnins, web developer at DigitalPulse: https://digitalpulse.click/
+## What changed in 1.0.2
 
-Features:
+- People can have explicitly recorded current, divorced, separated or former partners. A current partner appears beside the selected person with a paired-rings symbol; the symbol means **current partner**, without assuming marriage.
+- Former partners are omitted from each other's partner branch. Selecting their shared child still shows both recorded parents and their parent-to-child lines, without a current-partner symbol between them.
+- Existing parent links are preserved. Sharing a child does not by itself label two people as a current couple, and a current partner is not automatically made a child's parent.
+- Partner statuses are available in English and Latvian in the person editor and follow the person's Polylang translations.
 
-* React interface using WordPress's bundled wp-element package.
-* Bounded Ajax tree loading, person search and navigation to related branches.
-* Person dialogs with portraits, biographies, dates, locations and a gallery lightbox.
-* A Gutenberg block and theme-independent full-window layout.
-* Ordinary WordPress posts for people; use the block editor for biographies.
-* Compatibility with the original WP Family Tree category and father, mother, spouse, born, died and gender fields.
-* Extra fields for birth/maiden name, birthplace, place of death, location, occupation, additional partners and photograph galleries.
-* English and Latvian interface text, with an optional language switch.
-* Optional Polylang integration for translated pages and person biographies.
-* Optional password access with remembered sessions lasting no more than 30 days.
-* No-store responses for private family data and access checks for family endpoints.
-* Protected photograph delivery and encrypted family photograph files.
-* Contact dialog with optional hCaptcha, server-side validation and anti-spam controls.
-* Tree image export with the title and contact footer, plus printing.
-* Configurable titles, colours, starting person and contact details.
-* Optional DigitalPulse footer attribution, off by default.
+### Included fixes from 1.0.1
 
-The standalone plugin contains no real family records, photographs, access passwords or hCaptcha keys.
+- Framed portraits and gallery previews align to the top of each image. Tree portraits use proportionally resized images so an older square thumbnail does not hide the top of the original photograph. The lightbox still shows the whole image.
+- When English and Latvian are configured in Polylang, the tree follows the current page language. Its switch uses Polylang's translated page URLs, keeping the theme, page language and tree interface together. The independent EN / LV interface remains available when Polylang is absent or unconfigured.
+- The contact form has a 16 px gap between its privacy note and the Send button.
+- The repository preserves the folders required by the plugin, and this README displays the included screenshot directly on GitHub.
 
-= Getting started =
+## Features
 
-1. Activate the plugin and open Family Tree -> Settings & help.
-2. Select the category containing your family posts.
-3. Add the Family Tree block or [wp_my_family_tree] to a page, or use Create a tree page.
-4. Set the starting person, title and family administrator email.
-5. Set a strong family password. New private installations stay locked until a password is configured.
-6. Add or edit people under Posts. Enable Include this post as a person in the person details box.
+- A responsive oak tree with leaf-shaped portraits, branch navigation, pan, zoom and search.
+- A person dialog with a biography, dates, locations, relationships and a gallery lightbox.
+- Ordinary WordPress posts for people, with the Gutenberg editor for biography content.
+- A **Family Tree** block and the `[wp_my_family_tree]` shortcode.
+- Optional full-window layout with its own title, header and contact footer, independent of the active WordPress theme.
+- Compatibility with the original WP Family Tree category and relationship/date fields.
+- Explicit current/former partner status, with current-partner rings and preserved parentage after divorce or separation.
+- Optional password access with remembered viewing sessions lasting up to 30 days.
+- Authenticated delivery of encrypted family media and no-store responses for protected data.
+- A Contact Us dialog with optional hCaptcha and WordPress mail delivery.
+- English and Latvian interfaces, optional Polylang content translations, and configurable titles and colours.
+- PNG export and printing with the tree title and contact footer.
 
-For full instructions, read HELP.txt in the plugin folder.
+## Install
 
-= Privacy and photograph protection =
+1. Download the installable plugin ZIP, or place the repository's files in `wp-content/plugins/wp-my-family-tree/` while preserving the folder structure below.
+2. Activate **WP My Family Tree** under **Plugins**. If the original **WP Family Tree** plugin is active, deactivate that older plugin to avoid shortcode conflicts.
+3. Open **Family Tree → Settings & help**. Select the family category and starting person.
+4. Add the **Family Tree** block or shortcode to a page and choose that page in the plugin settings.
+5. Configure a family password and contact details. New private installations remain locked until a password is set.
+6. Open the page in a signed-out browser window and check the chosen access settings.
 
-When password protection is enabled, access is checked on the server. Remembered access uses a session cookie; the family password is not kept in browser storage. Changing the password or revoking remembered access invalidates old sessions.
+This repository contains a **plugin**. It works with Twenty Twenty-Five and other compatible WordPress themes. Full-window mode supplies the family page layout; switching off that setting embeds the tree inside the theme.
 
-The protected-media workflow encrypts linked family image files and serves photographs through the authorized media endpoint. Keep a full backup before protecting existing files. The database encryption key and encrypted uploads belong to the same backup set. Do not remove the plugin or restore only one half of this set while relying on encrypted photographs.
+### Shortcodes
 
-The existing-media batch also protects other attachments belonging to family posts. Protected files outside the supported photograph formats are offered as downloads through the same access check. Automatic protection on person saves covers photographs; the person gallery is for images.
-
-Previously public copies, search-engine copies and CDN caches cannot be recalled by the plugin. Purge old caches, exclude private routes from page caching, and test an old direct image URL while signed out.
-
-Access checks require this plugin to remain active. Original WordPress publication statuses are preserved, so published person text can become accessible again if the plugin is deactivated. Put the site behind separate site-wide access protection before deactivating or uninstalling it. Preserve the media encryption key while encrypted uploads exist.
-
-Contact messages are sent through WordPress wp_mail. The plugin does not save message contents as family records. Your mail server or an installed mail logging plugin may retain messages. The site administrator is responsible for the site's privacy notice and for obtaining appropriate permission to publish family information.
-
-= External services =
-
-hCaptcha is optional and disabled by default. No hCaptcha request is required unless an administrator enables it and supplies the site and secret keys. When enabled on a form, the browser loads hCaptcha's script from https://js.hcaptcha.com and submits technical browser information to hCaptcha. The server verifies the response token with https://api.hcaptcha.com/siteverify. The hCaptcha secret is sent only by the server.
-
-Service: https://www.hcaptcha.com/
-Privacy: https://www.hcaptcha.com/privacy
-Terms: https://www.hcaptcha.com/terms
-
-Polylang is optional. It is installed separately and follows its own configuration and privacy behaviour. The tree interface works in English and Latvian without Polylang.
-
-== Installation ==
-
-1. In WordPress, open Plugins -> Add New -> Upload Plugin.
-2. Upload wp-my-family-tree.zip and activate it.
-3. If migrating from WP Family Tree, deactivate the original plugin. Do not delete your family posts or media.
-4. Open Family Tree -> Settings & help and review the detected category and access settings.
-5. Insert the block or shortcode on a page.
-6. Set a password and verify the tree from a private browser window before sharing it.
-
-The plugin ZIP is separate from an UpdraftPlus backup. Do not upload a plugin ZIP into the UpdraftPlus restore screen. Use the matching database, plugins, themes and uploads files when restoring a supplied UpdraftPlus set.
-
-== Frequently Asked Questions ==
-
-= Do I need a special theme? =
-
-No. Full-window mode uses the plugin's own page layout and removes the theme header and footer on the tree page. Turn full-window mode off to embed the tree inside your theme.
-
-= What is the shortcode? =
-
+```text
 [wp_my_family_tree]
-
-To choose a person by WordPress post ID:
-
 [wp_my_family_tree root="123"]
+[wp_my_family_tree view="list"]
+```
 
-The legacy [family-tree] and [family-members] shortcodes are supported for migration. Deactivate the original plugin to avoid shortcode conflicts and its older public routes.
+`root` is a WordPress person-post ID. The legacy `[family-tree]` and `[family-members]` shortcodes remain supported for migration.
 
-= Will this keep my existing WP Family Tree people? =
+## English, Latvian and Polylang
 
-The plugin reads ordinary posts in your family category and reuses the legacy relationship and date fields. It does not require changing post IDs or moving people into a new post type. Keep a full database and uploads backup before migration.
+Polylang is optional. Without configured Polylang languages, the plugin's EN / LV control changes the interface and stores that choice in the page URL.
 
-= How do I add a person? =
+For language switching that also follows the theme:
 
-Create a WordPress post. Use its title for the person's name, its block editor content for the biography and its featured image for the portrait. In Family tree — person details, enable the person and choose parents, partners, dates and a gallery. Publish the post when it is ready for family visitors.
+1. Install and activate [Polylang](https://wordpress.org/plugins/polylang/).
+2. Add English (`en`) and Latvian (`lv`) under **Languages**. Choose the desired default language. The WordPress locale for Latvian is `lv`.
+3. Assign a language to the original tree page. Create its translated page with the same block or shortcode, then link the two pages as translations in Polylang.
+4. Keep the English and Latvian titles and introductions in **Family Tree → Appearance**. Registered title and subtitle translations can also be managed in Polylang's string translations.
+5. Keep the plugin's language switch enabled. It will use the native translated page URLs. A theme language switch using Polylang will select the same page language.
 
-= Why are there no visitors on the tree after activation? =
+The plugin preserves names and biographies as entered. It uses a published linked biography translation when available and otherwise shows the original record. It does not duplicate people or machine-translate family histories. A stale `wpmft_lang` query parameter does not override the current Polylang page language.
 
-Private installations start locked until a family password has been set. Configure a password under Family Tree -> Privacy & access, or explicitly turn password protection off for a public tree.
+This integration uses languages on the same site, such as `/` and `/lv/dzimtas-koks/`. The exact paths follow Polylang's URL settings. Separate language domains or subdomains are not supported by this release's origin checks and viewing-session cookies.
 
-= Does the password protect photographs as well? =
+See the [official Polylang function reference](https://polylang.pro/documentation/support/developers/function-reference/) for the native page-language and translation APIs used by this integration.
 
-Photographs encrypted by the plugin are served through its access check. Existing unprotected uploads need the Protect existing family photos action. Old public CDN or third-party copies are outside WordPress control. Keep the encrypted uploads and their database key together in backups.
+## People and photographs
 
-= Does it automatically translate names and biographies? =
+Create or edit a normal WordPress post. Use its title for the person's name, the block editor for the biography, and a featured image for the portrait. The **Family tree — person details** panel provides dates, locations, parents, partners and gallery controls.
 
-No. English and Latvian interface text is included. You can translate your content manually with Polylang. Existing Latvian names and biographies are preserved.
+### Current and former partners
 
-= Can visitors edit people? =
+In the person details panel, add a partner-status row, select the other person, and choose **Together**, **Divorced**, **Separated** or **Former partner**. Save the post. The status is read in both directions, so saving it on one person is sufficient. Editing a person does not silently change the other person's post.
 
-No. The family password permits viewing. Person and settings changes require the appropriate WordPress editor or administrator permissions.
+Choose **Together** for the current partner. Only an explicit current relationship receives the paired-rings symbol. Legacy spouse links without a new status remain neutral partner links, and two people linked only through a shared child remain co-parents.
 
-= Does hCaptcha need an API key? =
+A divorced, separated or former partner does not appear as the selected person's partner. When their child is selected, both recorded parents remain visible. Father and mother fields continue to determine parentage: adding a new partner never creates a parent link for that partner's children.
 
-Yes. Create a site key and secret in your own hCaptcha account, then enable the relevant forms in the plugin settings. Both forms can work with hCaptcha disabled.
+If both person records explicitly declare conflicting statuses, a former status takes precedence so the pair is not incorrectly shown as current. Review both records and make their statuses agree to resolve the conflict. The editor shows status context from the other record.
 
-= Is email delivery guaranteed? =
+Image frames use `object-position: center top`. This controls the visible part of a proportionally resized source. It cannot recover content already removed from an original photograph; upload the uncropped original if a source file itself is cropped. The gallery lightbox shows the full available image.
 
-No. The contact form uses your WordPress mail configuration. Check mail delivery on staging or use a properly configured SMTP plugin if your host requires one.
+## Privacy and backups
 
-== Screenshots ==
+The family password permits viewing. Editing still requires an appropriate WordPress account. Remembered access uses a server-validated cookie; the family password is not stored in browser local storage. Changing the password or revoking access invalidates existing viewing sessions.
 
-1. Desktop oak tree with the page title, header, branch controls and contact footer. All people and illustrated portraits are synthetic demonstration data.
-2. Person dialog with a portrait, dates, location, biography and photograph gallery, using synthetic demonstration data.
-3. Responsive mobile tree in Latvian, including the language switch, page title and contact footer, using synthetic demonstration data.
+Keep the database and encrypted uploads together in backups: the database contains the key required to decrypt those files. Keep the plugin active while relying on its protection. Deactivating it can make originally published person text accessible through WordPress again; use separate site access protection before maintenance that disables it.
 
-== Changelog ==
+Old public image URLs, third-party copies and caches are outside the plugin's control. Exclude private tree and media requests from host/CDN caches and review any older public copies after migration.
 
-= 1.0.0 =
-* Initial release with the oak tree interface, legacy post data compatibility, person galleries, private access, English/Latvian interface and independent contact settings.
+**Keep databases, Updraft backups, real family media, passwords, encryption keys and production configuration out of this public Git repository.** The included screenshot is safe demonstration content.
 
-== Upgrade Notice ==
+## Contact form and optional services
 
-= 1.0.0 =
-Back up the database and uploads together before migration. Deactivate the original WP Family Tree plugin and review privacy settings before sharing the new tree.
+Set the recipient in **Family Tree → Contact & hCaptcha**. Messages use `wp_mail`; delivery depends on the site's mail configuration. The plugin does not store message bodies as family records. A host or mail-logging plugin may retain its own copies.
 
-== Development ==
+hCaptcha is disabled by default. Enabling it requires your own site key and secret and loads hCaptcha's browser service. The secret is verified only on the server. See [hCaptcha privacy](https://www.hcaptcha.com/privacy) and [terms](https://www.hcaptcha.com/terms).
 
-All PHP, JavaScript and CSS source is readable and included in the ZIP. The frontend and block use WordPress-provided React and block packages. No JavaScript compilation step is required. assets/editor.asset.php declares the block's WordPress script dependencies.
+## Repository layout
 
-Copyright (c) 2026 Raivis Kalnins / DigitalPulse. Distributed under the GNU General Public License, version 3 or any later version. The complete license is included in LICENSE.
+| Path | Purpose |
+| --- | --- |
+| `wp-my-family-tree.php` | Plugin entry point and WordPress hooks |
+| `includes/` | Data, privacy, media, AJAX, settings and person editing |
+| `assets/` | Readable React interface, editor scripts and styles |
+| `templates/standalone.php` | Optional full-window page template |
+| `languages/` | English source strings and Latvian translation catalogs |
+| `docs/screenshot.png` | Public demonstration screenshot used above |
+| `block.json` | Gutenberg block registration |
+| `wpml-config.xml` | Translation rules for person fields |
+| `readme.txt` | WordPress.org-format description and changelog |
+| `HELP.txt` | Full installation and administration guide |
 
-Legacy data compatibility refers to WP Family Tree by Arvind Shah. This is a separate plugin; the original plugin's data schema is retained for migration, and its runtime is not required.
+Keep these directories intact when uploading through Git or installing the plugin. Flattening the files into the repository root breaks the PHP include and asset paths.
 
+No JavaScript build step is required. The frontend uses WordPress's bundled `wp-element` React APIs. The readable PHP, JavaScript and CSS are the source used at runtime.
+
+## Release and licensing
+
+Use the installable plugin archive for WordPress's plugin uploader. UpdraftPlus database/plugins/themes archives belong in the UpdraftPlus restore screen and must not be committed here. A ZIP containing only changed files is for a careful file replacement workflow, not WordPress's full-plugin replacement uploader.
+
+Before a public release, check the actual ZIP in the supported WordPress/PHP environments, run Plugin Check, and verify the WordPress.org contributor account and assigned slug. No automated check constitutes directory approval.
+
+Copyright © 2026 Raivis Kalnins / DigitalPulse. Licensed under the [GNU General Public License, version 3 or later](LICENSE). Legacy-data compatibility refers to WP Family Tree by Arvind Shah; this plugin retains that data model without requiring the older runtime.

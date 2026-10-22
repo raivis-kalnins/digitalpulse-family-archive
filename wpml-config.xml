@@ -9,6 +9,7 @@
     <custom-field action="copy">mother</custom-field>
     <custom-field action="copy">spouse</custom-field>
     <custom-field action="copy">_wpmft_spouses</custom-field>
+    <custom-field action="copy">_wpmft_partner_status</custom-field>
     <custom-field action="copy">_wpmft_gallery</custom-field>
     <custom-field action="translate">_wpmft_maiden_name</custom-field>
     <custom-field action="translate">_wpmft_birth_place</custom-field>
