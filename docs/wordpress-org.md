@@ -2,16 +2,31 @@
 
 This package includes a WordPress.org-format readme.txt, a detailed Markdown guide, readable source, prebuilt production assets, licensing and external-service disclosures. Preparing these files does not submit or publish the plugin, and does not mean the WordPress.org Plugins Team has approved it.
 
+## Free plugin distribution
+
+My Family Tree is prepared for free distribution through the [WordPress.org Plugin Directory submission form](https://wordpress.org/plugins/developers/add/). All included plugin features are available free of charge, with no paid plugin license or subscription required. The complete source is distributed under GPL-3.0-or-later. Optional integrations remain subject to their providers' terms.
+
+### Submission description
+
+My Family Tree is a free, open-source WordPress plugin for creating interactive family trees and preserving family stories. It provides person profiles, biographies, photo galleries with mobile swipe navigation, relationship browsing, multilingual interface labels, optional password-protected viewing, a contact form with photo attachments, fullscreen tree viewing and optional demonstration content. Add a Family Tree block or shortcode to a page and manage people through ordinary WordPress posts. All included plugin features are available free of charge under GPL-3.0-or-later, with no paid plugin license or subscription required.
+
+### Reviewer notes
+
+This submission contains the complete installable plugin, readable PHP, JavaScript and CSS sources, prebuilt production assets, build instructions and license information. It has been verified on WordPress 7.1.3; the readme uses the corresponding directory header, `Tested up to: 7.1`.
+
+The plugin has no telemetry, author-operated service or paid feature gate. Polylang is optional for content translations. hCaptcha is optional, disabled by default, and documented with its endpoints, transmitted data and service/privacy links in readme.txt. Demonstration content and shared demo access require separate administrator opt-in; no shared demo account is created on ordinary activation.
+
 ## Package metadata
 
 | Item | Value |
 | --- | --- |
 | Plugin name | My Family Tree |
 | Proposed plugin slug / text domain | my-family-tree |
-| Version / stable tag | 1.2.3 |
+| Version / stable tag | 1.2.4 |
 | Minimum WordPress | 6.5 |
 | Minimum PHP | 7.4 |
-| WordPress runtime used for previous local checks | 6.8.3 |
+| Tested up to (directory header) | 7.1 |
+| WordPress runtime used for release verification | 7.1.3 |
 | License | GPL-3.0-or-later |
 | Author | Raivis Kalnins / DigitalPulse |
 
@@ -19,9 +34,13 @@ This package includes a WordPress.org-format readme.txt, a detailed Markdown gui
 
 The publisher's **WordPress.org username has not been supplied or verified**. The Contributors header is therefore omitted rather than populated with a guessed GitHub username. Before submission, add the verified WordPress.org user ID(s) to readme.txt; the account used for submission must be controlled by the publisher. The PHP Author field already identifies the supplied author.
 
+## Compatibility metadata for resubmission
+
+Version 1.2.4 updates `Tested up to` to `7.1`, the major release branch used by the directory. Release verification uses the official WordPress 7.1.3 archive. The previous local test environment blocked external HTTP, and Plugin Check skipped its version comparison when current release information was unavailable. The release check now requires current official version data and verifies that the former 6.8.3 header is rejected before checking the corrected header.
+
 ## Name correction for resubmission
 
-Version 1.2.3 changes the PHP `Plugin Name` header and directory readme title to **My Family Tree**, addressing the reviewer's objection to the former leading “WP”. The installable ZIP is `my-family-tree-1.2.3.zip`, with one `my-family-tree/` folder, the `my-family-tree.php` entry point and the matching `my-family-tree` text domain. Directory acceptance and the final permalink remain subject to the Plugins Team's review.
+Version 1.2.3 changes the PHP `Plugin Name` header and directory readme title to **My Family Tree**, addressing the reviewer's objection to the former leading “WP”. The installable ZIP is `my-family-tree-1.2.4.zip`, with one `my-family-tree/` folder, the `my-family-tree.php` entry point and the matching `my-family-tree` text domain. Directory acceptance and the final permalink remain subject to the Plugins Team's review.
 
 The source repository remains at `https://github.com/raivis-kalnins/wp-my-family-tree`. That existing repository URL is not the proposed WordPress.org permalink. Internal `wpmft` data keys, existing shortcodes and the saved block identifier `wp-my-family-tree/tree` are retained for compatibility.
 

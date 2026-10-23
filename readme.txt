@@ -1,19 +1,25 @@
 === My Family Tree ===
 Tags: family tree, genealogy, family, privacy, shortcode
 Requires at least: 6.5
-Tested up to: 6.8.3
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Build a private family tree with biographies, touch galleries, multilingual labels, fullscreen viewing and optional demo content.
+Free, open-source family tree with biographies, touch galleries, multilingual labels, private access and fullscreen viewing.
 
 == Description ==
 
-My Family Tree turns ordinary WordPress posts into an interactive family archive. An oak-inspired tree, leaf-shaped portraits and personal stories help visitors explore relationships across generations.
+My Family Tree is a free, open-source WordPress plugin that turns ordinary posts into an interactive family archive. An oak-inspired tree, leaf-shaped portraits and personal stories help visitors explore relationships across generations.
 
 Add a Family Tree block or the [wp_my_family_tree] shortcode to a page. Choose a full-window layout or embed the tree in your theme. People remain WordPress posts, and compatible records from the older WP Family Tree plugin can be reused.
+
+= Free and open source =
+
+All included plugin features are available free of charge, with no paid plugin license or subscription required. The plugin is released under GPL-3.0-or-later and includes readable source code for modification and redistribution under that license.
+
+hCaptcha and Polylang are optional integrations. Their requirements and external-service terms are described below.
 
 = Explore the family =
 
@@ -99,7 +105,7 @@ See readme.md for the complete administration, privacy, backup and troubleshooti
 
 == Installation ==
 
-1. Upload the complete my-family-tree-1.2.3.zip through Plugins > Add New Plugin > Upload Plugin, or place the my-family-tree directory in wp-content/plugins.
+1. Upload the complete my-family-tree-1.2.4.zip through Plugins > Add New Plugin > Upload Plugin, or place the my-family-tree directory in wp-content/plugins.
 2. Activate My Family Tree. If migrating from WP My Family Tree, follow the rename instructions below before activation.
 3. Deactivate the older WP Family Tree plugin if it is still active. Keep its existing posts and media.
 4. Open Family Tree settings, select the family category and starting person, and create or select a tree page.
@@ -109,6 +115,10 @@ See readme.md for the complete administration, privacy, backup and troubleshooti
 8. Check the visitor experience in a signed-out browser window.
 
 The shortcode accepts root="123" for a starting person or view="list" for the directory. Legacy [family-tree] and [family-members] shortcodes are supported for migration.
+
+= Updating My Family Tree 1.2.3 or later =
+
+Back up the site, then upload the complete new ZIP through Plugins > Add New Plugin > Upload Plugin and choose Replace current with uploaded. Keep the my-family-tree folder name and verify the tree after updating. Existing family data and settings are retained.
 
 = Upgrading from WP My Family Tree 1.2.2 or earlier =
 
@@ -123,6 +133,10 @@ Version 1.2.3 changes the public plugin name and folder to My Family Tree / my-f
 Deactivation revokes shared demo access. On an isolated demonstration site, re-enable shared demo mode explicitly if needed; imported samples and their saved reset baseline remain available. Future updates within the my-family-tree folder can use WordPress's normal replacement workflow.
 
 == Frequently Asked Questions ==
+
+= Is My Family Tree free to use? =
+
+Yes. My Family Tree is a free, open-source WordPress plugin licensed under GPL-3.0-or-later. All included features are available without a paid plugin license or subscription. Optional third-party integrations remain subject to their providers' terms.
 
 = Does it work without Polylang? =
 
@@ -186,6 +200,12 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 
 == Changelog ==
 
+= 1.2.4 =
+
+* Updated the directory compatibility header to WordPress 7.1, with current-core verification on WordPress 7.1.3.
+* Synchronized release metadata and installation guidance for the complete 1.2.4 package.
+* Clarified free, open-source distribution, GPL licensing and optional integrations for the WordPress.org submission.
+
 = 1.2.3 =
 
 * Renamed the public plugin to My Family Tree, with the my-family-tree folder and matching translation domain, for directory resubmission.
@@ -243,6 +263,10 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 * Initial interactive tree, person gallery, legacy-data compatibility and private viewing support.
 
 == Upgrade Notice ==
+
+= 1.2.4 =
+
+Updates WordPress compatibility metadata to 7.1. Replace My Family Tree 1.2.3 with this complete ZIP. Existing data and settings are retained. For the older WP My Family Tree name, follow Installation migration steps.
 
 = 1.2.3 =
 

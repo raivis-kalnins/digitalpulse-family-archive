@@ -1,16 +1,26 @@
 # My Family Tree
 
-An oak-inspired WordPress family tree for the stories, photographs and people that connect generations. Explore relatives in a responsive React interface, open a person in a detailed modal, and manage the archive through familiar WordPress posts.
+A free, open-source WordPress plugin for the stories, photographs and people that connect generations. Explore relatives in a responsive oak-inspired family tree, open a person in a detailed modal, and manage the archive through familiar WordPress posts.
 
-**Version 1.2.3** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
+**Version 1.2.4** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
 Developed by **Raivis Kalnins**, web developer at [DigitalPulse](https://digitalpulse.click/).  
 Project: [github.com/raivis-kalnins/wp-my-family-tree](https://github.com/raivis-kalnins/wp-my-family-tree)
+
+**Free plugin:** all included features are available free of charge, with no paid plugin license or subscription required. Source code is included under **GPL-3.0-or-later**. Optional hCaptcha and Polylang integrations are documented separately and follow their providers' terms.
+
+The package is prepared for free distribution through the [WordPress.org Plugin Directory submission process](https://wordpress.org/plugins/developers/add/). Directory publication remains subject to review. A reusable submission description and reviewer notes are included in [docs/wordpress-org.md](docs/wordpress-org.md).
 
 ![My Family Tree with its page title, oak tree, language switch and contact footer](docs/screenshot.png)
 
 *The screenshot contains fictional demonstration records and illustrated portraits. No private family records or photographs are included in this plugin.*
 
-## What is new in 1.2.3
+## What is new in 1.2.4
+
+- **Current WordPress compatibility metadata.** The directory readme declares `Tested up to: 7.1`, with verification performed against the official WordPress 7.1.3 release.
+- **Release consistency.** The plugin header, stable tag, asset version, block metadata and translation catalog metadata identify version 1.2.4.
+- **Free distribution information.** The descriptions, FAQ and submission notes explain that the complete plugin is free and open source under GPL-3.0-or-later.
+
+## Version 1.2.3 improvements
 
 - **Updated public name.** The plugin is now **My Family Tree**, packaged in `my-family-tree/` with a matching translation domain and a `my-family-tree.php` entry point. The new ZIP addresses the directory reviewer's name objection; acceptance and the final directory permalink remain subject to review.
 - **Existing archive compatibility.** Family records, settings, shortcodes and saved blocks retain their existing identifiers. Follow the rename migration below once when updating from the old `wp-my-family-tree` folder.
@@ -57,13 +67,17 @@ The existing private-media, contact-photo, relationship-status, mobile tree-gest
 
 ## Update an existing installation
 
+### Update My Family Tree 1.2.3 or later
+
+Back up the site, upload the complete `my-family-tree-1.2.4.zip` through **Plugins → Add New Plugin → Upload Plugin**, and choose **Replace current with uploaded**. Keep the `my-family-tree/` folder name, then verify the tree page, photographs and contact form. Existing data and settings are retained.
+
 ### Migrate from WP My Family Tree 1.2.2 or earlier
 
 The package now uses `my-family-tree/`. WordPress treats this folder as a separate plugin; uploading it does not replace the old `wp-my-family-tree/` copy.
 
 1. Back up the site's database and uploads together. If the archive contains private published content, enable independent site access protection for the switch because deactivating the old plugin stops its access checks.
 2. Open **Plugins** and deactivate **WP My Family Tree**. If it is network-active, deactivate it in Network Admin first.
-3. Open **Plugins → Add New Plugin → Upload Plugin**, select the complete `my-family-tree-1.2.3.zip`, and click **Install Now**.
+3. Open **Plugins → Add New Plugin → Upload Plugin**, select the complete `my-family-tree-1.2.4.zip`, and click **Install Now**.
 4. Activate **My Family Tree**. Keep the old copy inactive; the new entry point blocks activation while the previous copy is active.
 5. Open the tree page and verify the privacy gate, photographs, person editor and **Contact us / Pieteikties** form. Review **Family Tree → Settings & help**, then clear the Family Tree cache and any applicable page cache.
 6. After verifying the new version, delete the inactive **WP My Family Tree** copy from the Plugins screen. Its bundled code has no uninstall data-deletion routine. Leave **My Family Tree** active.
@@ -354,7 +368,7 @@ Errors naming `wp-family-tree/family-tree.php`, `class.node.php` or `class.tree.
 
 ## Īsā pamācība latviski
 
-1. Pirms atjaunināšanas dublējiet datubāzi un augšupielādes. Privātai vietnei pārejas laikā nodrošiniet atsevišķu piekļuves aizsardzību. Deaktivizējiet **WP My Family Tree**, pēc tam sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni** instalējiet pilno `my-family-tree-1.2.3.zip` pakotni un aktivizējiet **My Family Tree**. Jaunās mapes dēļ WordPress to uzskata par atsevišķu spraudni; abas versijas reizē neaktivizējiet. Pārbaudiet koku, piekļuvi, fotogrāfijas un kontaktformu, tad veco neaktīvo spraudni var izdzēst. Esošie dati un iestatījumi paliek; datubāzes imports un motīva nomaiņa nav vajadzīga. Demonstrācijas koplietojamo režīmu pēc šīs pārejas ieslēdziet atkārtoti tikai tad, ja tas nepieciešams.
+1. Pirms atjaunināšanas dublējiet datubāzi un augšupielādes. Privātai vietnei pārejas laikā nodrošiniet atsevišķu piekļuves aizsardzību. Deaktivizējiet **WP My Family Tree**, pēc tam sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni** instalējiet pilno `my-family-tree-1.2.4.zip` pakotni un aktivizējiet **My Family Tree**. Jaunās mapes dēļ WordPress to uzskata par atsevišķu spraudni; abas versijas reizē neaktivizējiet. Pārbaudiet koku, piekļuvi, fotogrāfijas un kontaktformu, tad veco neaktīvo spraudni var izdzēst. Esošie dati un iestatījumi paliek; datubāzes imports un motīva nomaiņa nav vajadzīga. Demonstrācijas koplietojamo režīmu pēc šīs pārejas ieslēdziet atkārtoti tikai tad, ja tas nepieciešams.
 2. Spraudņa iestatījumos izvēlieties dzimtas ierakstu kategoriju, sākuma personu un koka lapu. Lapā ievietojiet bloku **Family Tree** vai īskodu `[wp_my_family_tree]`.
 3. Personas rediģēšanā detalizētā forma atrodas uzreiz zem virsraksta. Virsrakstā norādiet personas pilnu vārdu, izvēlieties portretu, vecākus, partnerus, datumus un galeriju. Dzīvesstāsta redaktors atrodas zem formas. Bloku redaktoru personām pēc vajadzības var ieslēgt spraudņa iestatījumos.
 4. Pievienojiet e-pastu, tālruni, mobilo tālruni, adresi, mājaslapu un sociālo tīklu saites tikai tad, ja persona piekrīt tās kopīgot ar koka apmeklētājiem.
@@ -410,6 +424,10 @@ Keep databases, real family media, Updraft backup sets, passwords, keys, test cr
 Copyright © 2026 **Raivis Kalnins / DigitalPulse**. Licensed under the [GNU General Public License, version 3 or later](LICENSE). Icon artwork is included under the same license. Legacy-data compatibility refers to WP Family Tree by Arvind Shah; this is a separate plugin using compatible existing data.
 
 ## Changelog
+
+### 1.2.4
+
+Updated the directory compatibility header to WordPress 7.1, with current-core verification on WordPress 7.1.3. Synchronized release metadata and documented ordinary ZIP replacement for installations already using the My Family Tree name. Added explicit free-plugin information, GPL licensing details and reusable submission notes.
 
 ### 1.2.3
 
