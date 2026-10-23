@@ -13,7 +13,7 @@ for (const name of ['app.js', 'admin.js', 'install.js', 'app.css', 'admin.css', 
         target:name.endsWith('.js') ? ['es2020'] : ['chrome90', 'firefox90', 'safari14'],
         legalComments:'inline',
         charset:'utf8',
-        banner:name.endsWith('.js') ? {js:'/*! WP My Family Tree | GPL-3.0-or-later | Source: ' + name + ' */'} : {css:'/*! WP My Family Tree | GPL-3.0-or-later | Source: ' + name + ' */'},
+        banner:name.endsWith('.js') ? {js:'/*! My Family Tree | GPL-3.0-or-later | Source: ' + name + ' */'} : {css:'/*! My Family Tree | GPL-3.0-or-later | Source: ' + name + ' */'},
         logLevel:'warning'
     });
     console.log('Built ' + name.replace(/\.(js|css)$/, '.min.$1'));

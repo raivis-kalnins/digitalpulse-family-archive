@@ -1,4 +1,4 @@
-/* WP My Family Tree: browser installation, deliberately without offline storage. */
+/* My Family Tree: browser installation, deliberately without offline storage. */
 (function () {
   'use strict';
   var pending = null;

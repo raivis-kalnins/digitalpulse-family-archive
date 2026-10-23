@@ -102,7 +102,7 @@ final class WPMFT_Demo {
 
 	private static function owns_write_lock( $lock ) { return is_string( $lock ) && hash_equals( $lock, (string) self::fresh_option( self::WRITE_LOCK, '' ) ); }
 
-	private static function reset_error() { return new WP_Error( 'demo_reset', __( 'The demo is resetting or its reset could not finish. Please try again shortly.', 'wp-my-family-tree' ) ); }
+	private static function reset_error() { return new WP_Error( 'demo_reset', __( 'The demo is resetting or its reset could not finish. Please try again shortly.', 'my-family-tree' ) ); }
 
 	private static function revision_ids( $id ) {
 		global $wpdb;
@@ -159,13 +159,13 @@ final class WPMFT_Demo {
 
 	/** Replacing a known baseline is an explicit administrator action while sharing is off. */
 	public static function capture_baseline() {
-		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Access denied.', 'wp-my-family-tree' ) ); }
+		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Access denied.', 'my-family-tree' ) ); }
 		$lock = self::acquire_write_lock();
 		if ( ! $lock ) { return self::reset_error(); }
 		try {
 			$state = self::fresh_option( self::STATE_OPTION );
 			if ( false === $state ) { return self::reset_error(); }
-			if ( ! empty( $state['enabled'] ) ) { return new WP_Error( 'demo_enabled', __( 'Disable demo sharing before saving a new reset baseline.', 'wp-my-family-tree' ) ); }
+			if ( ! empty( $state['enabled'] ) ) { return new WP_Error( 'demo_enabled', __( 'Disable demo sharing before saving a new reset baseline.', 'my-family-tree' ) ); }
 			$baseline = self::make_baseline();
 			if ( is_wp_error( $baseline ) || ! self::valid_baseline( $baseline ) || ! self::owns_write_lock( $lock ) ) { return self::reset_error(); }
 			update_option( self::BASELINE_OPTION, $baseline, false );
@@ -273,7 +273,7 @@ final class WPMFT_Demo {
 	}
 
 	public static function reset_now() {
-		return current_user_can( 'manage_options' ) ? self::reset_if_due( true ) : new WP_Error( 'permission', __( 'Access denied.', 'wp-my-family-tree' ) );
+		return current_user_can( 'manage_options' ) ? self::reset_if_due( true ) : new WP_Error( 'permission', __( 'Access denied.', 'my-family-tree' ) );
 	}
 
 	/** Public saves/restores do not create a second retained copy of visitor edits. */
@@ -417,9 +417,9 @@ final class WPMFT_Demo {
 	}
 
 	public static function unlock( $password, $remember = false ) {
-		if ( ! self::active() ) { return new WP_Error( 'demo_locked', __( 'Demo sharing is unavailable. Please contact the site administrator.', 'wp-my-family-tree' ) ); }
-		if ( ! WPMFT_Security::rate_limit( 'demo_unlock', 10, 15 * MINUTE_IN_SECONDS ) ) { return new WP_Error( 'rate_limit', __( 'Too many attempts. Please try again in 15 minutes.', 'wp-my-family-tree' ) ); }
-		if ( ! is_string( $password ) || ! hash_equals( 'demo', $password ) ) { return new WP_Error( 'password', __( 'The demo password is incorrect.', 'wp-my-family-tree' ) ); }
+		if ( ! self::active() ) { return new WP_Error( 'demo_locked', __( 'Demo sharing is unavailable. Please contact the site administrator.', 'my-family-tree' ) ); }
+		if ( ! WPMFT_Security::rate_limit( 'demo_unlock', 10, 15 * MINUTE_IN_SECONDS ) ) { return new WP_Error( 'rate_limit', __( 'Too many attempts. Please try again in 15 minutes.', 'my-family-tree' ) ); }
+		if ( ! is_string( $password ) || ! hash_equals( 'demo', $password ) ) { return new WP_Error( 'password', __( 'The demo password is incorrect.', 'my-family-tree' ) ); }
 		self::logout();
 		$token = bin2hex( random_bytes( 32 ) );
 		$ttl = $remember ? DAY_IN_SECONDS : HOUR_IN_SECONDS;
@@ -440,8 +440,8 @@ final class WPMFT_Demo {
 		$manifest = self::manifest();
 		return array(
 			'active' => $active, 'guarded' => self::guard_required(),
-			'label' => $active ? __( 'Cinema family demo', 'wp-my-family-tree' ) : '',
-			'notice' => $active ? __( 'Fictional crossover characters and invented relationships. Visitor edits are public and reset every 24 hours.', 'wp-my-family-tree' ) : '',
+			'label' => $active ? __( 'Cinema family demo', 'my-family-tree' ) : '',
+			'notice' => $active ? __( 'Fictional crossover characters and invented relationships. Visitor edits are public and reset every 24 hours.', 'my-family-tree' ) : '',
 			'password' => $active ? 'demo' : '',
 			'rootId' => $active ? absint( $manifest['items']['marty'] ?? 0 ) : 0,
 			'treeUrl' => $active && ! empty( $manifest['items']['tree-page'] ) ? get_permalink( $manifest['items']['tree-page'] ) : '',
@@ -450,10 +450,10 @@ final class WPMFT_Demo {
 
 	/** Administrator-only additive import. Existing records, pages and settings are left intact. */
 	public static function import() {
-		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Only an administrator can import demo content.', 'wp-my-family-tree' ) ); }
+		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Only an administrator can import demo content.', 'my-family-tree' ) ); }
 		$lock = get_option( 'wpmft_demo_import_lock', 0 );
 		if ( $lock && (int) $lock < time() - 10 * MINUTE_IN_SECONDS ) { delete_option( 'wpmft_demo_import_lock' ); }
-		if ( ! add_option( 'wpmft_demo_import_lock', time(), '', false ) ) { return new WP_Error( 'busy', __( 'Another demo import is running. Please try again shortly.', 'wp-my-family-tree' ) ); }
+		if ( ! add_option( 'wpmft_demo_import_lock', time(), '', false ) ) { return new WP_Error( 'busy', __( 'Another demo import is running. Please try again shortly.', 'my-family-tree' ) ); }
 		$write_lock = self::acquire_write_lock();
 		if ( ! $write_lock ) { delete_option( 'wpmft_demo_import_lock' ); return self::reset_error(); }
 		try {
@@ -465,7 +465,7 @@ final class WPMFT_Demo {
 			foreach ( $people as $key => $person ) {
 				$existing = self::existing_item( $manifest, $key );
 				if ( $existing ) {
-					if ( ! self::is_demo_post( $existing ) ) { return new WP_Error( 'demo_changed', __( 'A previous demo record was repurposed. The importer stopped without changing it; restore its demo marker or use a separate demo site.', 'wp-my-family-tree' ) ); }
+					if ( ! self::is_demo_post( $existing ) ) { return new WP_Error( 'demo_changed', __( 'A previous demo record was repurposed. The importer stopped without changing it; restore its demo marker or use a separate demo site.', 'my-family-tree' ) ); }
 					if ( ! get_post_meta( $existing, '_wpmft_demo_seeded', true ) ) { $created[$key] = $existing; }
 					continue;
 				}
@@ -523,10 +523,10 @@ final class WPMFT_Demo {
 		$file = WPMFT_DIR . 'assets/demo/' . $filename;
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- A bundled file from a fixed allowlist, never a remote or user-supplied path.
 		$bytes = file_get_contents( $file );
-		if ( false === $bytes ) { return new WP_Error( 'demo_image', __( 'A bundled demo illustration could not be read.', 'wp-my-family-tree' ) ); }
+		if ( false === $bytes ) { return new WP_Error( 'demo_image', __( 'A bundled demo illustration could not be read.', 'my-family-tree' ) ); }
 		$upload = wp_upload_bits( 'wpmft-demo-' . $filename, null, $bytes );
 		if ( ! empty( $upload['error'] ) ) { return new WP_Error( 'demo_image', $upload['error'] ); }
-		$id = wp_insert_attachment( array( 'post_title' => $alt, 'post_excerpt' => __( 'Original illustration for the fictional cinema family demo.', 'wp-my-family-tree' ), 'post_mime_type' => 'image/png', 'post_status' => 'inherit', 'post_parent' => absint( $parent ), 'meta_input' => array( '_wpmft_demo' => $manifest['token'], '_wpmft_demo_key' => $key, '_wp_attachment_image_alt' => $alt ) ), $upload['file'], $parent, true );
+		$id = wp_insert_attachment( array( 'post_title' => $alt, 'post_excerpt' => __( 'Original illustration for the fictional cinema family demo.', 'my-family-tree' ), 'post_mime_type' => 'image/png', 'post_status' => 'inherit', 'post_parent' => absint( $parent ), 'meta_input' => array( '_wpmft_demo' => $manifest['token'], '_wpmft_demo_key' => $key, '_wp_attachment_image_alt' => $alt ) ), $upload['file'], $parent, true );
 		if ( is_wp_error( $id ) ) { wp_delete_file( $upload['file'] ); return $id; }
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 		$metadata = wp_generate_attachment_metadata( $id, $upload['file'] );
@@ -537,18 +537,18 @@ final class WPMFT_Demo {
 	}
 
 	public static function enable() {
-		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Only an administrator can enable demo sharing.', 'wp-my-family-tree' ) ); }
+		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Only an administrator can enable demo sharing.', 'my-family-tree' ) ); }
 		$lock = self::acquire_write_lock();
 		if ( ! $lock ) { return self::reset_error(); }
 		try {
 			$before_state = self::fresh_option( self::STATE_OPTION );
 			if ( false === $before_state ) { return self::reset_error(); }
-			if ( is_multisite() ) { return new WP_Error( 'multisite', __( 'Shared demo accounts are available on single-site installations only. Demo content can still be imported on this network.', 'wp-my-family-tree' ) ); }
+			if ( is_multisite() ) { return new WP_Error( 'multisite', __( 'Shared demo accounts are available on single-site installations only. Demo content can still be imported on this network.', 'my-family-tree' ) ); }
 			$manifest = self::manifest();
-			if ( empty( $manifest['items']['marty'] ) || ! self::is_demo_post( $manifest['items']['marty'] ) || 'publish' !== get_post_status( $manifest['items']['marty'] ) ) { return new WP_Error( 'demo_missing', __( 'Import the demo first and keep its starting person published.', 'wp-my-family-tree' ) ); }
-			if ( self::real_family_count() ) { return new WP_Error( 'real_content', __( 'Demo sharing is blocked because real family records exist, including unpublished or trashed records. Use a separate demo site.', 'wp-my-family-tree' ) ); }
-			if ( self::guard_required() ) { return new WP_Error( 'already_enabled', __( 'Disable the existing demo session before enabling it again.', 'wp-my-family-tree' ) ); }
-			if ( username_exists( 'demo' ) ) { return new WP_Error( 'username_exists', __( 'The username demo already exists. No existing account has been changed. Use a separate demo site or rename that account yourself.', 'wp-my-family-tree' ) ); }
+			if ( empty( $manifest['items']['marty'] ) || ! self::is_demo_post( $manifest['items']['marty'] ) || 'publish' !== get_post_status( $manifest['items']['marty'] ) ) { return new WP_Error( 'demo_missing', __( 'Import the demo first and keep its starting person published.', 'my-family-tree' ) ); }
+			if ( self::real_family_count() ) { return new WP_Error( 'real_content', __( 'Demo sharing is blocked because real family records exist, including unpublished or trashed records. Use a separate demo site.', 'my-family-tree' ) ); }
+			if ( self::guard_required() ) { return new WP_Error( 'already_enabled', __( 'Disable the existing demo session before enabling it again.', 'my-family-tree' ) ); }
+			if ( username_exists( 'demo' ) ) { return new WP_Error( 'username_exists', __( 'The username demo already exists. No existing account has been changed. Use a separate demo site or rename that account yourself.', 'my-family-tree' ) ); }
 			$baseline = self::fresh_option( self::BASELINE_OPTION );
 			if ( false === $baseline ) { return self::reset_error(); }
 			if ( ! $baseline ) {
@@ -558,11 +558,11 @@ final class WPMFT_Demo {
 				update_option( self::BASELINE_OPTION, $baseline, false );
 				if ( self::fresh_option( self::BASELINE_OPTION ) !== $baseline ) { return self::reset_error(); }
 			}
-			if ( ! self::valid_baseline( $baseline ) ) { return new WP_Error( 'demo_baseline', __( 'The saved demo baseline no longer matches the marked samples. Review the demo content and save a new baseline before sharing.', 'wp-my-family-tree' ) ); }
+			if ( ! self::valid_baseline( $baseline ) ) { return new WP_Error( 'demo_baseline', __( 'The saved demo baseline no longer matches the marked samples. Review the demo content and save a new baseline before sharing.', 'my-family-tree' ) ); }
 			if ( ! self::owns_write_lock( $lock ) || self::fresh_option( self::STATE_OPTION ) !== $before_state ) { return self::reset_error(); }
 			// No standard Editor capabilities: this public account can use only our constrained editor.
 			remove_role( self::ROLE );
-			add_role( self::ROLE, __( 'Family Tree Demo Editor', 'wp-my-family-tree' ), array( 'read' => true, self::CAP => true ) );
+			add_role( self::ROLE, __( 'Family Tree Demo Editor', 'my-family-tree' ), array( 'read' => true, self::CAP => true ) );
 			$id = wp_insert_user( array( 'user_login' => 'demo', 'user_pass' => 'Demo@demo123Editor', 'user_email' => '', 'display_name' => 'Cinema Demo Editor', 'role' => self::ROLE, 'show_admin_bar_front' => 'false' ) );
 			if ( is_wp_error( $id ) ) { return $id; }
 			$account_token = wp_generate_uuid4();
@@ -604,10 +604,10 @@ final class WPMFT_Demo {
 	public static function deactivate() { self::disable(); }
 
 	private static function require_admin( $action ) {
-		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_die( esc_html__( 'A POST request is required.', 'wp-my-family-tree' ), '', array( 'response' => 405 ) ); }
-		if ( ! current_user_can( 'manage_options' ) ) { wp_die( esc_html__( 'Access denied.', 'wp-my-family-tree' ), '', array( 'response' => 403 ) ); }
+		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_die( esc_html__( 'A POST request is required.', 'my-family-tree' ), '', array( 'response' => 405 ) ); }
+		if ( ! current_user_can( 'manage_options' ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
 		check_admin_referer( $action );
-		if ( empty( $_POST['wpmft_demo_confirm'] ) || '1' !== $_POST['wpmft_demo_confirm'] ) { wp_die( esc_html__( 'Read and confirm the demo notice before continuing.', 'wp-my-family-tree' ), '', array( 'response' => 400 ) ); }
+		if ( empty( $_POST['wpmft_demo_confirm'] ) || '1' !== $_POST['wpmft_demo_confirm'] ) { wp_die( esc_html__( 'Read and confirm the demo notice before continuing.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
 	}
 
 	private static function finish( $result, $message ) {
@@ -616,11 +616,11 @@ final class WPMFT_Demo {
 		exit;
 	}
 
-	public static function handle_import() { self::require_admin( 'wpmft_demo_import' ); self::finish( self::import(), __( 'Demo content is ready. Existing content and settings were preserved. Sharing remains off until you explicitly enable it.', 'wp-my-family-tree' ) ); }
-	public static function handle_enable() { self::require_admin( 'wpmft_demo_enable' ); self::finish( self::enable(), __( 'Demo sharing is active. The shared editor can edit demo content only.', 'wp-my-family-tree' ) ); }
-	public static function handle_disable() { self::require_admin( 'wpmft_demo_disable' ); self::finish( self::disable(), __( 'Demo sharing is off. Its sessions and managed account have been revoked. Demo content is retained.', 'wp-my-family-tree' ) ); }
-	public static function handle_reset() { self::require_admin( 'wpmft_demo_reset' ); self::finish( self::reset_now(), __( 'Demo visitor edits have been reset. The next reset is due in 24 hours.', 'wp-my-family-tree' ) ); }
-	public static function handle_baseline() { self::require_admin( 'wpmft_demo_baseline' ); self::finish( self::capture_baseline(), __( 'The current demo titles, stories, dates, locations and occupations are saved as the reset baseline.', 'wp-my-family-tree' ) ); }
+	public static function handle_import() { self::require_admin( 'wpmft_demo_import' ); self::finish( self::import(), __( 'Demo content is ready. Existing content and settings were preserved. Sharing remains off until you explicitly enable it.', 'my-family-tree' ) ); }
+	public static function handle_enable() { self::require_admin( 'wpmft_demo_enable' ); self::finish( self::enable(), __( 'Demo sharing is active. The shared editor can edit demo content only.', 'my-family-tree' ) ); }
+	public static function handle_disable() { self::require_admin( 'wpmft_demo_disable' ); self::finish( self::disable(), __( 'Demo sharing is off. Its sessions and managed account have been revoked. Demo content is retained.', 'my-family-tree' ) ); }
+	public static function handle_reset() { self::require_admin( 'wpmft_demo_reset' ); self::finish( self::reset_now(), __( 'Demo visitor edits have been reset. The next reset is due in 24 hours.', 'my-family-tree' ) ); }
+	public static function handle_baseline() { self::require_admin( 'wpmft_demo_baseline' ); self::finish( self::capture_baseline(), __( 'The current demo titles, stories, dates, locations and occupations are saved as the reset baseline.', 'my-family-tree' ) ); }
 
 	public static function notices() {
 		if ( ! current_user_can( 'manage_options' ) ) { return; }
@@ -629,7 +629,7 @@ final class WPMFT_Demo {
 			delete_transient( 'wpmft_demo_notice_' . get_current_user_id() );
 			echo '<div class="notice ' . ( ! empty( $notice['error'] ) ? 'notice-error' : 'notice-success' ) . ' is-dismissible"><p>' . esc_html( $notice['message'] ) . '</p></div>';
 		}
-		if ( ! empty( self::state()['quarantined'] ) ) { echo '<div class="notice notice-error"><p>' . esc_html__( 'Family Tree demo sharing was locked because its content is no longer isolated. Shared access has been revoked. Disable demo mode in Family Tree settings before configuring normal family access.', 'wp-my-family-tree' ) . '</p></div>'; }
+		if ( ! empty( self::state()['quarantined'] ) ) { echo '<div class="notice notice-error"><p>' . esc_html__( 'Family Tree demo sharing was locked because its content is no longer isolated. Shared access has been revoked. Disable demo mode in Family Tree settings before configuring normal family access.', 'my-family-tree' ) . '</p></div>'; }
 	}
 
 	/** Buttons can live in the settings form; each targets its own external action form. */
@@ -638,42 +638,42 @@ final class WPMFT_Demo {
 		$active = self::active();
 		$guarded = self::guard_required();
 		?>
-		<h2><?php esc_html_e( 'Demo content & sharing', 'wp-my-family-tree' ); ?></h2>
-		<p><?php esc_html_e( 'Add eight fictional cinema characters, original gallery illustrations and two English pages. The importer adds marked sample content and preserves existing records, pages and settings. Repeating it keeps edits to existing demo items.', 'wp-my-family-tree' ); ?></p>
-		<p><?php esc_html_e( 'All family connections and dates are invented. Character names are illustrative references; no movie stills, celebrity photographs or official character social accounts are included.', 'wp-my-family-tree' ); ?></p>
-		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-import" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'I understand that demo people will be added alongside existing content. This does not enable public demo access.', 'wp-my-family-tree' ); ?></span></label>
-		<p><button type="submit" form="wpmft-demo-import" class="button button-secondary"><?php esc_html_e( 'Import demo content', 'wp-my-family-tree' ); ?></button></p>
+		<h2><?php esc_html_e( 'Demo content & sharing', 'my-family-tree' ); ?></h2>
+		<p><?php esc_html_e( 'Add eight fictional cinema characters, original gallery illustrations and two English pages. The importer adds marked sample content and preserves existing records, pages and settings. Repeating it keeps edits to existing demo items.', 'my-family-tree' ); ?></p>
+		<p><?php esc_html_e( 'All family connections and dates are invented. Character names are illustrative references; no movie stills, celebrity photographs or official character social accounts are included.', 'my-family-tree' ); ?></p>
+		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-import" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'I understand that demo people will be added alongside existing content. This does not enable public demo access.', 'my-family-tree' ); ?></span></label>
+		<p><button type="submit" form="wpmft-demo-import" class="button button-secondary"><?php esc_html_e( 'Import demo content', 'my-family-tree' ); ?></button></p>
 		<?php if ( ! empty( $manifest['items']['tree-page'] ) && get_post( $manifest['items']['tree-page'] ) ) : ?>
-		<p><a class="button" href="<?php echo esc_url( get_permalink( $manifest['items']['tree-page'] ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Open demo tree page', 'wp-my-family-tree' ); ?></a></p>
+		<p><a class="button" href="<?php echo esc_url( get_permalink( $manifest['items']['tree-page'] ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Open demo tree page', 'my-family-tree' ); ?></a></p>
 		<?php endif; ?>
 		<hr>
-		<h3><?php esc_html_e( 'Optional shared demo mode', 'wp-my-family-tree' ); ?></h3>
-		<p><?php esc_html_e( 'Use this on a separate demonstration site containing only demo family records. A restricted Family Tree Demo Editor can change marked sample names, dates and biographies, but cannot manage settings, other content, users, plugins or uploads. Contact sending is disabled during demo mode. Visitor edits are public and reset every 24 hours.', 'wp-my-family-tree' ); ?></p>
+		<h3><?php esc_html_e( 'Optional shared demo mode', 'my-family-tree' ); ?></h3>
+		<p><?php esc_html_e( 'Use this on a separate demonstration site containing only demo family records. A restricted Family Tree Demo Editor can change marked sample names, dates and biographies, but cannot manage settings, other content, users, plugins or uploads. Contact sending is disabled during demo mode. Visitor edits are public and reset every 24 hours.', 'my-family-tree' ); ?></p>
 		<?php if ( $active ) : ?>
-		<p><strong><?php esc_html_e( 'Demo mode is active.', 'wp-my-family-tree' ); ?></strong></p>
-		<dl><dt><?php esc_html_e( 'WordPress demo login', 'wp-my-family-tree' ); ?></dt><dd><code>demo</code></dd><dt><?php esc_html_e( 'WordPress demo password', 'wp-my-family-tree' ); ?></dt><dd><code>Demo@demo123Editor</code></dd><dt><?php esc_html_e( 'Front-end demo password', 'wp-my-family-tree' ); ?></dt><dd><code>demo</code></dd></dl>
+		<p><strong><?php esc_html_e( 'Demo mode is active.', 'my-family-tree' ); ?></strong></p>
+		<dl><dt><?php esc_html_e( 'WordPress demo login', 'my-family-tree' ); ?></dt><dd><code>demo</code></dd><dt><?php esc_html_e( 'WordPress demo password', 'my-family-tree' ); ?></dt><dd><code>Demo@demo123Editor</code></dd><dt><?php esc_html_e( 'Front-end demo password', 'my-family-tree' ); ?></dt><dd><code>demo</code></dd></dl>
 		<?php elseif ( $guarded ) : ?>
-		<p><strong><?php esc_html_e( 'Demo sharing is locked. Its isolation check failed; shared sessions have been revoked.', 'wp-my-family-tree' ); ?></strong></p>
+		<p><strong><?php esc_html_e( 'Demo sharing is locked. Its isolation check failed; shared sessions have been revoked.', 'my-family-tree' ); ?></strong></p>
 		<?php else : ?>
-		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-enable" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'I understand that this creates a shared public demo account with a published password, on an isolated demo tree only.', 'wp-my-family-tree' ); ?></span></label>
-		<p><button type="submit" form="wpmft-demo-enable" class="button"><?php esc_html_e( 'Enable shared demo mode', 'wp-my-family-tree' ); ?></button></p>
+		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-enable" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'I understand that this creates a shared public demo account with a published password, on an isolated demo tree only.', 'my-family-tree' ); ?></span></label>
+		<p><button type="submit" form="wpmft-demo-enable" class="button"><?php esc_html_e( 'Enable shared demo mode', 'my-family-tree' ); ?></button></p>
 		<?php endif; ?>
 		<?php if ( $guarded ) : ?>
-		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-disable" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Revoke the shared account and demo sessions, keep demo content, and restore the normal Privacy settings.', 'wp-my-family-tree' ); ?></span></label>
-		<p><button type="submit" form="wpmft-demo-disable" class="button"><?php esc_html_e( 'Disable demo mode', 'wp-my-family-tree' ); ?></button></p>
+		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-disable" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Revoke the shared account and demo sessions, keep demo content, and restore the normal Privacy settings.', 'my-family-tree' ); ?></span></label>
+		<p><button type="submit" form="wpmft-demo-disable" class="button"><?php esc_html_e( 'Disable demo mode', 'my-family-tree' ); ?></button></p>
 		<?php endif; ?>
 		<hr>
-		<h3><?php esc_html_e( 'Automatic demo reset', 'wp-my-family-tree' ); ?></h3>
-		<p><?php esc_html_e( 'The plugin restores demo titles, stories, birth dates, locations and occupations to a saved starting state every 24 hours. Settings, relationships, media and unrelated content are kept. No backup plugin is required.', 'wp-my-family-tree' ); ?></p>
-		<p class="description"><?php esc_html_e( 'WordPress runs scheduled tasks when the site receives a request. An overdue reset also runs before the next demo visit or save. An editor opened before a reset must be reloaded before saving.', 'wp-my-family-tree' ); ?></p>
+		<h3><?php esc_html_e( 'Automatic demo reset', 'my-family-tree' ); ?></h3>
+		<p><?php esc_html_e( 'The plugin restores demo titles, stories, birth dates, locations and occupations to a saved starting state every 24 hours. Settings, relationships, media and unrelated content are kept. No backup plugin is required.', 'my-family-tree' ); ?></p>
+		<p class="description"><?php esc_html_e( 'WordPress runs scheduled tasks when the site receives a request. An overdue reset also runs before the next demo visit or save. An editor opened before a reset must be reloaded before saving.', 'my-family-tree' ); ?></p>
 		<?php if ( $active ) : $reset_state = self::state(); ?>
-		<p><strong><?php esc_html_e( 'Next reset:', 'wp-my-family-tree' ); ?></strong> <?php echo esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $reset_state['next_reset_at'] ) ); ?></p>
-		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-reset" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Restore the saved demo starting state now and discard current visitor edits.', 'wp-my-family-tree' ); ?></span></label>
-		<p><button type="submit" form="wpmft-demo-reset" class="button"><?php esc_html_e( 'Reset demo now', 'wp-my-family-tree' ); ?></button></p>
+		<p><strong><?php esc_html_e( 'Next reset:', 'my-family-tree' ); ?></strong> <?php echo esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $reset_state['next_reset_at'] ) ); ?></p>
+		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-reset" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Restore the saved demo starting state now and discard current visitor edits.', 'my-family-tree' ); ?></span></label>
+		<p><button type="submit" form="wpmft-demo-reset" class="button"><?php esc_html_e( 'Reset demo now', 'my-family-tree' ); ?></button></p>
 		<?php elseif ( ! $guarded && ! empty( $manifest['items']['marty'] ) ) : ?>
-		<p><?php esc_html_e( 'The first activation saves the current demo as its starting state. That baseline is retained when sharing is disabled and enabled again. To deliberately change it, finish your demo edits while sharing is off, then save a new baseline below.', 'wp-my-family-tree' ); ?></p>
-		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-baseline" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Use the current demo titles, stories, dates, locations and occupations for future resets, replacing the previous baseline.', 'wp-my-family-tree' ); ?></span></label>
-		<p><button type="submit" form="wpmft-demo-baseline" class="button"><?php esc_html_e( 'Save current demo as reset baseline', 'wp-my-family-tree' ); ?></button></p>
+		<p><?php esc_html_e( 'The first activation saves the current demo as its starting state. That baseline is retained when sharing is disabled and enabled again. To deliberately change it, finish your demo edits while sharing is off, then save a new baseline below.', 'my-family-tree' ); ?></p>
+		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-baseline" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Use the current demo titles, stories, dates, locations and occupations for future resets, replacing the previous baseline.', 'my-family-tree' ); ?></span></label>
+		<p><button type="submit" form="wpmft-demo-baseline" class="button"><?php esc_html_e( 'Save current demo as reset baseline', 'my-family-tree' ); ?></button></p>
 		<?php endif; ?>
 		<?php
 	}
@@ -691,11 +691,11 @@ final class WPMFT_Demo {
 		wp_enqueue_script( 'wpmft-demo-admin', wpmft_asset_url( 'demo-admin.js' ), array(), wpmft_asset_version(), true );
 		wp_enqueue_style( 'wpmft-demo-admin', wpmft_asset_url( 'demo-admin.css' ), array(), wpmft_asset_version() );
 		wp_localize_script( 'wpmft-demo-admin', 'WPMFT_DEMO_ADMIN', array(
-			'import' => __( 'Add fictional demo people, gallery illustrations and English pages? Existing content will be kept. Importing does not enable shared demo access.', 'wp-my-family-tree' ),
-			'enable' => __( 'Enable a public shared demo login? Anyone given its published credentials can edit the marked sample stories. This requires an isolated demo tree.', 'wp-my-family-tree' ),
-			'disable' => __( 'Revoke the shared account and all demo sessions? Demo content will be kept and the normal Privacy settings will apply again.', 'wp-my-family-tree' ),
-			'reset' => __( 'Discard current visitor edits and restore the saved demo starting state? Other site content and settings will be kept.', 'wp-my-family-tree' ),
-			'baseline' => __( 'Replace the saved demo starting state with the current sample content? Future daily resets will restore these values.', 'wp-my-family-tree' ),
+			'import' => __( 'Add fictional demo people, gallery illustrations and English pages? Existing content will be kept. Importing does not enable shared demo access.', 'my-family-tree' ),
+			'enable' => __( 'Enable a public shared demo login? Anyone given its published credentials can edit the marked sample stories. This requires an isolated demo tree.', 'my-family-tree' ),
+			'disable' => __( 'Revoke the shared account and all demo sessions? Demo content will be kept and the normal Privacy settings will apply again.', 'my-family-tree' ),
+			'reset' => __( 'Discard current visitor edits and restore the saved demo starting state? Other site content and settings will be kept.', 'my-family-tree' ),
+			'baseline' => __( 'Replace the saved demo starting state with the current sample content? Future daily resets will restore these values.', 'my-family-tree' ),
 		) );
 	}
 
@@ -719,14 +719,14 @@ final class WPMFT_Demo {
 	}
 
 	public static function authenticate( $user, $password ) {
-		if ( $user instanceof WP_User && self::is_demo_user( $user->ID ) && ! self::active() ) { return new WP_Error( 'demo_disabled', __( 'Demo sharing is not active.', 'wp-my-family-tree' ) ); }
+		if ( $user instanceof WP_User && self::is_demo_user( $user->ID ) && ! self::active() ) { return new WP_Error( 'demo_disabled', __( 'Demo sharing is not active.', 'my-family-tree' ) ); }
 		return $user;
 	}
 
 	public static function application_passwords( $available, $user ) { return $user instanceof WP_User && self::is_demo_user( $user->ID ) ? false : $available; }
 	public static function allow_password_reset( $allow, $user_id ) { return self::is_demo_user( $user_id ) ? false : $allow; }
 	public static function guard_xmlrpc( $enabled ) { return self::guard_required() ? false : $enabled; }
-	public static function guard_rest( $result, $server, $request ) { return self::is_demo_user() ? new WP_Error( 'demo_rest', __( 'Use the restricted demo editor for sample content.', 'wp-my-family-tree' ), array( 'status' => 403 ) ) : $result; }
+	public static function guard_rest( $result, $server, $request ) { return self::is_demo_user() ? new WP_Error( 'demo_rest', __( 'Use the restricted demo editor for sample content.', 'my-family-tree' ), array( 'status' => 403 ) ) : $result; }
 
 	public static function restrict_queries( $where, $query ) {
 		if ( ! self::is_demo_user() ) { return $where; }
@@ -739,11 +739,11 @@ final class WPMFT_Demo {
 	public static function guard_admin() {
 		if ( ! self::is_demo_user() ) { return; }
 		WPMFT_Security::no_cache();
-		if ( ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Demo sharing is not active.', 'wp-my-family-tree' ), '', array( 'response' => 403 ) ); }
+		if ( ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Demo sharing is not active.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
 		$action = isset( $_REQUEST['action'] ) && is_string( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '';
 		if ( wp_doing_ajax() ) {
 			if ( in_array( $action, array( 'wpmft_api', 'wpmft_media' ), true ) ) { return; }
-			wp_send_json_error( array( 'message' => __( 'This action is not available to the demo editor.', 'wp-my-family-tree' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'This action is not available to the demo editor.', 'my-family-tree' ) ), 403 );
 		}
 		if ( 'admin-post.php' === ( $GLOBALS['pagenow'] ?? '' ) && 'wpmft_demo_save' === $action ) { return; }
 		$page = isset( $_GET['page'] ) && is_string( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
@@ -756,7 +756,7 @@ final class WPMFT_Demo {
 		if ( ! self::is_demo_user() ) { return; }
 		global $menu;
 		$menu = array();
-		add_menu_page( __( 'Family Tree Demo', 'wp-my-family-tree' ), __( 'Family Tree Demo', 'wp-my-family-tree' ), self::CAP, 'wpmft-demo-editor', array( __CLASS__, 'editor_page' ), 'dashicons-networking', 2 );
+		add_menu_page( __( 'Family Tree Demo', 'my-family-tree' ), __( 'Family Tree Demo', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor', array( __CLASS__, 'editor_page' ), 'dashicons-networking', 2 );
 	}
 
 	public static function editor_page() {
@@ -764,24 +764,24 @@ final class WPMFT_Demo {
 		$manifest = self::manifest();
 		$id = isset( $_GET['person'] ) && is_scalar( $_GET['person'] ) ? absint( $_GET['person'] ) : 0;
 		$post = $id && self::is_demo_post( $id ) ? get_post( $id ) : null;
-		echo '<div class="wrap wpmft-demo-editor"><h1>' . esc_html__( 'Cinema Family Demo Editor', 'wp-my-family-tree' ) . '</h1><p>' . esc_html__( 'You can edit marked demonstration stories only. Visitor edits are public and reset every 24 hours. Do not enter personal or confidential information.', 'wp-my-family-tree' ) . '</p>';
-		echo '<p><a class="button" href="' . esc_url( get_permalink( $manifest['items']['tree-page'] ) ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Open demo tree', 'wp-my-family-tree' ) . '</a> <a class="button" href="' . esc_url( wp_logout_url( home_url( '/' ) ) ) . '">' . esc_html__( 'Log out', 'wp-my-family-tree' ) . '</a></p>';
-		if ( isset( $_GET['saved'] ) ) { echo '<div class="notice notice-success"><p>' . esc_html__( 'Demo story saved.', 'wp-my-family-tree' ) . '</p></div>'; }
+		echo '<div class="wrap wpmft-demo-editor"><h1>' . esc_html__( 'Cinema Family Demo Editor', 'my-family-tree' ) . '</h1><p>' . esc_html__( 'You can edit marked demonstration stories only. Visitor edits are public and reset every 24 hours. Do not enter personal or confidential information.', 'my-family-tree' ) . '</p>';
+		echo '<p><a class="button" href="' . esc_url( get_permalink( $manifest['items']['tree-page'] ) ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Open demo tree', 'my-family-tree' ) . '</a> <a class="button" href="' . esc_url( wp_logout_url( home_url( '/' ) ) ) . '">' . esc_html__( 'Log out', 'my-family-tree' ) . '</a></p>';
+		if ( isset( $_GET['saved'] ) ) { echo '<div class="notice notice-success"><p>' . esc_html__( 'Demo story saved.', 'my-family-tree' ) . '</p></div>'; }
 		if ( $post && in_array( $post->post_type, array( 'post', 'page' ), true ) ) {
 			echo '<form action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" method="post"><input type="hidden" name="action" value="wpmft_demo_save"><input type="hidden" name="person" value="' . absint( $id ) . '">';
 			wp_nonce_field( 'wpmft_demo_save_' . $id );
 			echo '<input type="hidden" name="wpmft_demo_reset_cycle" value="' . esc_attr( self::state()['reset_cycle'] ?? '' ) . '">';
-			echo '<table class="form-table"><tr><th><label for="wpmft-demo-title">' . esc_html__( 'Name / title', 'wp-my-family-tree' ) . '</label></th><td><input class="large-text" id="wpmft-demo-title" name="demo_title" value="' . esc_attr( $post->post_title ) . '" maxlength="160" required></td></tr>';
+			echo '<table class="form-table"><tr><th><label for="wpmft-demo-title">' . esc_html__( 'Name / title', 'my-family-tree' ) . '</label></th><td><input class="large-text" id="wpmft-demo-title" name="demo_title" value="' . esc_attr( $post->post_title ) . '" maxlength="160" required></td></tr>';
 			if ( 'post' === $post->post_type ) {
-				foreach ( array( 'born' => __( 'Birth date (YYYY, YYYY-MM or YYYY-MM-DD)', 'wp-my-family-tree' ), '_wpmft_location' => __( 'Location', 'wp-my-family-tree' ), '_wpmft_occupation' => __( 'Occupation', 'wp-my-family-tree' ) ) as $key => $label ) {
+				foreach ( array( 'born' => __( 'Birth date (YYYY, YYYY-MM or YYYY-MM-DD)', 'my-family-tree' ), '_wpmft_location' => __( 'Location', 'my-family-tree' ), '_wpmft_occupation' => __( 'Occupation', 'my-family-tree' ) ) as $key => $label ) {
 					echo '<tr><th><label for="demo-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label></th><td><input class="regular-text" id="demo-' . esc_attr( $key ) . '" name="demo_meta[' . esc_attr( $key ) . ']" value="' . esc_attr( get_post_meta( $id, $key, true ) ) . '" maxlength="160"></td></tr>';
 				}
 			}
-			echo '<tr><th><label for="wpmft-demo-story">' . esc_html__( 'Story (basic HTML allowed)', 'wp-my-family-tree' ) . '</label></th><td><textarea class="large-text" rows="16" id="wpmft-demo-story" name="demo_story" maxlength="12000">' . esc_textarea( $post->post_content ) . '</textarea></td></tr></table>';
-			submit_button( __( 'Save demo story', 'wp-my-family-tree' ) );
+			echo '<tr><th><label for="wpmft-demo-story">' . esc_html__( 'Story (basic HTML allowed)', 'my-family-tree' ) . '</label></th><td><textarea class="large-text" rows="16" id="wpmft-demo-story" name="demo_story" maxlength="12000">' . esc_textarea( $post->post_content ) . '</textarea></td></tr></table>';
+			submit_button( __( 'Save demo story', 'my-family-tree' ) );
 			echo '</form>';
 		}
-		echo '<h2>' . esc_html__( 'Sample people & pages', 'wp-my-family-tree' ) . '</h2><ul>';
+		echo '<h2>' . esc_html__( 'Sample people & pages', 'my-family-tree' ) . '</h2><ul>';
 		foreach ( $manifest['items'] ?? array() as $item ) {
 			$sample = get_post( $item );
 			if ( ! $sample || ! self::is_demo_post( $item ) || ! in_array( $sample->post_type, array( 'post', 'page' ), true ) ) { continue; }
@@ -791,13 +791,13 @@ final class WPMFT_Demo {
 	}
 
 	public static function handle_save() {
-		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'wp-my-family-tree' ), '', array( 'response' => 403 ) ); }
+		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
 		$id = isset( $_POST['person'] ) && is_scalar( $_POST['person'] ) ? absint( $_POST['person'] ) : 0;
 		check_admin_referer( 'wpmft_demo_save_' . $id );
-		if ( ! self::is_demo_post( $id ) || ! in_array( get_post_type( $id ), array( 'post', 'page' ), true ) ) { wp_die( esc_html__( 'This is not editable demo content.', 'wp-my-family-tree' ), '', array( 'response' => 403 ) ); }
+		if ( ! self::is_demo_post( $id ) || ! in_array( get_post_type( $id ), array( 'post', 'page' ), true ) ) { wp_die( esc_html__( 'This is not editable demo content.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
 		$title = isset( $_POST['demo_title'] ) && is_string( $_POST['demo_title'] ) ? sanitize_text_field( wp_unslash( $_POST['demo_title'] ) ) : '';
 		$story = isset( $_POST['demo_story'] ) && is_string( $_POST['demo_story'] ) ? wp_unslash( $_POST['demo_story'] ) : '';
-		if ( '' === $title || strlen( $title ) > 640 || strlen( $story ) > 48000 ) { wp_die( esc_html__( 'Enter a title and a story within the displayed length limits.', 'wp-my-family-tree' ), '', array( 'response' => 400 ) ); }
+		if ( '' === $title || strlen( $title ) > 640 || strlen( $story ) > 48000 ) { wp_die( esc_html__( 'Enter a title and a story within the displayed length limits.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
 		// Shortcodes and dynamic blocks are deliberately unavailable to shared demo editors.
 		$story = preg_replace( '/<!--.*?-->/s', '', $story );
 		$story = preg_replace( '/\[[^\]]*\]/', '', $story );
@@ -821,7 +821,7 @@ final class WPMFT_Demo {
 			$state = self::fresh_option( self::STATE_OPTION );
 			$type = get_post_type( $id );
 			if ( empty( $state['enabled'] ) || ! empty( $state['quarantined'] ) || ! empty( $state['reset_pending'] ) || (int) ( $state['next_reset_at'] ?? 0 ) <= time() || ! self::owns_write_lock( $lock ) || ! in_array( $type, array( 'post', 'page' ), true ) || self::real_family_count() || ! self::validate_owned_ids( array( $id => $type ) ) ) { return self::reset_error(); }
-			if ( ! is_string( $cycle ) || empty( $state['reset_cycle'] ) || ! hash_equals( (string) $state['reset_cycle'], $cycle ) ) { return new WP_Error( 'demo_stale', __( 'The demo has reset since this editor was opened. Reload the editor before saving again.', 'wp-my-family-tree' ) ); }
+			if ( ! is_string( $cycle ) || empty( $state['reset_cycle'] ) || ! hash_equals( (string) $state['reset_cycle'], $cycle ) ) { return new WP_Error( 'demo_stale', __( 'The demo has reset since this editor was opened. Reload the editor before saving again.', 'my-family-tree' ) ); }
 			self::$mutating_post = (int) $id;
 			$result = wp_update_post( wp_slash( array( 'ID' => $id, 'post_title' => $title, 'post_content' => $story ) ), true );
 			self::$mutating_post = 0;

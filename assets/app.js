@@ -1,4 +1,4 @@
-/* WP My Family Tree — original, dependency-free React interface.
+/* My Family Tree — original, dependency-free React interface.
  * Copyright (c) 2026 Raivis Kalnins / DigitalPulse. GPL-3.0-or-later.
  * Uses the React runtime supplied by WordPress (wp.element).
  */

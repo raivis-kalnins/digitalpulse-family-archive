@@ -6,18 +6,26 @@ This package includes a WordPress.org-format readme.txt, a detailed Markdown gui
 
 | Item | Value |
 | --- | --- |
-| Plugin name | WP My Family Tree |
-| Plugin slug / text domain | wp-my-family-tree |
-| Version / stable tag | 1.2.2 |
+| Plugin name | My Family Tree |
+| Proposed plugin slug / text domain | my-family-tree |
+| Version / stable tag | 1.2.3 |
 | Minimum WordPress | 6.5 |
 | Minimum PHP | 7.4 |
-| WordPress runtime used for current local checks | 6.8.3 |
+| WordPress runtime used for previous local checks | 6.8.3 |
 | License | GPL-3.0-or-later |
 | Author | Raivis Kalnins / DigitalPulse |
 
 **Tested up to** records actual testing, not an assumption that a newer WordPress release was tested. Run release checks on the latest supported WordPress/PHP environment before submitting or updating that field.
 
 The publisher's **WordPress.org username has not been supplied or verified**. The Contributors header is therefore omitted rather than populated with a guessed GitHub username. Before submission, add the verified WordPress.org user ID(s) to readme.txt; the account used for submission must be controlled by the publisher. The PHP Author field already identifies the supplied author.
+
+## Name correction for resubmission
+
+Version 1.2.3 changes the PHP `Plugin Name` header and directory readme title to **My Family Tree**, addressing the reviewer's objection to the former leading “WP”. The installable ZIP is `my-family-tree-1.2.3.zip`, with one `my-family-tree/` folder, the `my-family-tree.php` entry point and the matching `my-family-tree` text domain. Directory acceptance and the final permalink remain subject to the Plugins Team's review.
+
+The source repository remains at `https://github.com/raivis-kalnins/wp-my-family-tree`. That existing repository URL is not the proposed WordPress.org permalink. Internal `wpmft` data keys, existing shortcodes and the saved block identifier `wp-my-family-tree/tree` are retained for compatibility.
+
+For existing sites, deactivate **WP My Family Tree** before installing and activating **My Family Tree**. The changed folder is a separate WordPress plugin, so it is not an in-place uploader replacement. See the detailed migration steps in readme.md, including backups, private-site access during the switch, verification and optional removal of the old inactive copy. Deactivation revokes shared demo access; re-enable it only when appropriate after migration.
 
 ## Public-source and license review
 
@@ -35,7 +43,7 @@ Email uses WordPress's configured mail transport. Social/website/author links ar
 
 ## Before submitting
 
-1. Add the verified WordPress.org contributor username and confirm ownership of the intended repository/name.
+1. Add the verified WordPress.org contributor username and confirm the intended repository/name. For this resubmission, verify that both plugin headers use My Family Tree and that the ZIP root, entry point and text domain use my-family-tree.
 2. Run the official readme validator and current Plugin Check, review findings and keep the actual results with the release process.
 3. Test activation, updating, signed-out privacy, protected media, demo isolation, language changes, gallery gestures and fullscreen on the intended WordPress/PHP versions.
 4. Keep the main PHP version, Stable tag, package metadata, block metadata and generated assets synchronized.

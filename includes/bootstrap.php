@@ -1,24 +1,11 @@
 <?php
 /**
- * Plugin Name: WP My Family Tree
- * Plugin URI: https://github.com/raivis-kalnins/wp-my-family-tree
- * Description: A private, interactive family tree with touch galleries, multilingual labels, demo tools, a block and shortcode. Reuses WP Family Tree posts.
- * Version: 1.2.2
- * Requires at least: 6.5
- * Requires PHP: 7.4
- * Author: Raivis Kalnins — DigitalPulse
- * Author URI: https://digitalpulse.click/
- * License: GPL-3.0-or-later
- * License URI: https://www.gnu.org/licenses/gpl-3.0.html
- * Text Domain: wp-my-family-tree
- * Domain Path: /languages
+ * Shared plugin initialization after the duplicate-copy guard.
  *
- * @package WPMyFamilyTree
+ * @package MyFamilyTree
  */
+
 defined( 'ABSPATH' ) || exit;
-define( 'WPMFT_VERSION', '1.2.2' );
-define( 'WPMFT_DIR', plugin_dir_path( __FILE__ ) );
-define( 'WPMFT_URL', plugin_dir_url( __FILE__ ) );
 
 require_once WPMFT_DIR . 'includes/functions.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-languages.php';
@@ -50,20 +37,20 @@ function wpmft_activate() {
 	if ( ! $s['session_version'] ) { $s['session_version'] = wp_generate_password( 32, false ); }
 	update_option( 'wpmft_settings', $s, false );
 }
-register_activation_hook( __FILE__, 'wpmft_activate' );
-register_deactivation_hook( __FILE__, array( 'WPMFT_Demo', 'deactivate' ) );
+register_activation_hook( WPMFT_FILE, 'wpmft_activate' );
+register_deactivation_hook( WPMFT_FILE, array( 'WPMFT_Demo', 'deactivate' ) );
 
 add_action( 'init', function () {
-	load_plugin_textdomain( 'wp-my-family-tree', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	load_plugin_textdomain( 'my-family-tree', false, dirname( plugin_basename( WPMFT_FILE ) ) . '/languages' );
 	wp_register_script( 'wpmft-app', wpmft_asset_url( 'app.js' ), array( 'wp-element' ), wpmft_asset_version(), true );
 	wp_register_style( 'wpmft-app', wpmft_asset_url( 'app.css' ), array(), wpmft_asset_version() );
 	register_block_type( WPMFT_DIR, array( 'render_callback' => 'wpmft_block' ) );
-	wp_set_script_translations( 'wp-my-family-tree-tree-editor-script', 'wp-my-family-tree', WPMFT_DIR . 'languages' );
+	wp_set_script_translations( 'wp-my-family-tree-tree-editor-script', 'my-family-tree', WPMFT_DIR . 'languages' );
 	foreach ( array( 'wp_my_family_tree', 'family-tree', 'family-members' ) as $tag ) { add_shortcode( $tag, 'wpmft_shortcode' ); }
 	if ( function_exists( 'pll_register_string' ) ) {
 		$s = wpmft_settings();
-		pll_register_string( 'wpmft-title', $s['title'], 'WP My Family Tree' );
-		pll_register_string( 'wpmft-subtitle', $s['subtitle'], 'WP My Family Tree' );
+		pll_register_string( 'wpmft-title', $s['title'], 'My Family Tree' );
+		pll_register_string( 'wpmft-subtitle', $s['subtitle'], 'My Family Tree' );
 	}
 }, 20 );
 
@@ -88,7 +75,7 @@ function wpmft_shortcode( $attributes = array(), $content = null, $tag = 'wp_my_
 		'translations' => WPMFT_Languages::dictionaries( 'frontend', wpmft_polylang_languages() ),
 	) );
 	$title = $public_settings['translations'][$language]['title'] ?? $public_settings['title'];
-	return '<div class="wpmft-app" data-view="' . ( $attributes['view'] === 'list' ? 'list' : 'tree' ) . '" data-root="' . esc_attr( $root ) . '"><div class="wpmft-boot"><h1>' . esc_html( $title ) . '</h1><p role="status">' . esc_html__( 'Loading the family tree…', 'wp-my-family-tree' ) . '</p><noscript>' . esc_html__( 'Please enable JavaScript to explore this interactive family tree.', 'wp-my-family-tree' ) . '</noscript></div></div>';
+	return '<div class="wpmft-app" data-view="' . ( $attributes['view'] === 'list' ? 'list' : 'tree' ) . '" data-root="' . esc_attr( $root ) . '"><div class="wpmft-boot"><h1>' . esc_html( $title ) . '</h1><p role="status">' . esc_html__( 'Loading the family tree…', 'my-family-tree' ) . '</p><noscript>' . esc_html__( 'Please enable JavaScript to explore this interactive family tree.', 'my-family-tree' ) . '</noscript></div></div>';
 }
 
 add_filter( 'template_include', function ( $template ) {

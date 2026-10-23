@@ -2,7 +2,7 @@ Original demo artwork
 ====================
 
 These eleven PNG files are original geometric landscapes and monogram designs
-created for WP My Family Tree. They are distributed under the plugin's
+created for My Family Tree. They are distributed under the plugin's
 GPL-3.0-or-later license. The illustrations contain no movie stills, photographs,
 studio logos, or depictions of actors.
 

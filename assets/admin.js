@@ -1,4 +1,4 @@
-/* WP My Family Tree admin. Readable source; no build step required. */
+/* My Family Tree admin. Readable source; no build step required. */
 (function () {
     'use strict';
     var config = window.WPMFT_ADMIN || {};

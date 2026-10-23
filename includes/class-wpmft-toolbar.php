@@ -22,15 +22,15 @@ final class WPMFT_Toolbar {
 		$settings_url = admin_url( 'admin.php?page=wpmft#wpmft-performance' );
 		$admin_bar->add_node( array(
 			'id' => 'wpmft-cache',
-			'title' => '<span class="ab-icon wpmft-cache-icon" aria-hidden="true"></span><span class="ab-label">' . esc_html__( 'Family Tree cache', 'wp-my-family-tree' ) . '</span>',
+			'title' => '<span class="ab-icon wpmft-cache-icon" aria-hidden="true"></span><span class="ab-label">' . esc_html__( 'Family Tree cache', 'my-family-tree' ) . '</span>',
 			// A useful fallback when JavaScript is unavailable; JavaScript supplies the POST action.
 			'href' => $settings_url,
-			'meta' => array( 'title' => __( 'Clear Family Tree cache', 'wp-my-family-tree' ) ),
+			'meta' => array( 'title' => __( 'Clear Family Tree cache', 'my-family-tree' ) ),
 		) );
 		$admin_bar->add_node( array(
 			'id' => 'wpmft-cache-settings',
 			'parent' => 'wpmft-cache',
-			'title' => __( 'Performance & cache settings', 'wp-my-family-tree' ),
+			'title' => __( 'Performance & cache settings', 'my-family-tree' ),
 			'href' => $settings_url,
 		) );
 	}
@@ -44,11 +44,11 @@ final class WPMFT_Toolbar {
 			'action' => self::ACTION,
 			'nonce' => wp_create_nonce( self::ACTION ),
 			'labels' => array(
-				'idle' => __( 'Family Tree cache', 'wp-my-family-tree' ),
-				'clear' => __( 'Clear Family Tree cache', 'wp-my-family-tree' ),
-				'busy' => __( 'Clearing cache…', 'wp-my-family-tree' ),
-				'done' => __( 'Cache cleared', 'wp-my-family-tree' ),
-				'failed' => __( 'The cache could not be cleared. Please reload and try again.', 'wp-my-family-tree' ),
+				'idle' => __( 'Family Tree cache', 'my-family-tree' ),
+				'clear' => __( 'Clear Family Tree cache', 'my-family-tree' ),
+				'busy' => __( 'Clearing cache…', 'my-family-tree' ),
+				'done' => __( 'Cache cleared', 'my-family-tree' ),
+				'failed' => __( 'The cache could not be cleared. Please reload and try again.', 'my-family-tree' ),
 			),
 		) );
 	}
@@ -56,17 +56,17 @@ final class WPMFT_Toolbar {
 	public static function clear_cache() {
 		nocache_headers();
 		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
-			wp_send_json_error( array( 'message' => __( 'A POST request is required.', 'wp-my-family-tree' ) ), 405 );
+			wp_send_json_error( array( 'message' => __( 'A POST request is required.', 'my-family-tree' ) ), 405 );
 		}
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'You do not have permission to clear this cache.', 'wp-my-family-tree' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to clear this cache.', 'my-family-tree' ) ), 403 );
 		}
 		if ( ! isset( $_REQUEST['nonce'] ) || ! is_string( $_REQUEST['nonce'] ) || ! check_ajax_referer( self::ACTION, 'nonce', false ) ) {
-			wp_send_json_error( array( 'message' => __( 'Your session has expired. Please reload and try again.', 'wp-my-family-tree' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'Your session has expired. Please reload and try again.', 'my-family-tree' ) ), 403 );
 		}
 		WPMFT_Cache::purge();
 		wp_send_json_success( array(
-			'message' => __( 'Family Tree cache cleared. The relationship index rebuilds on the next tree request.', 'wp-my-family-tree' ),
+			'message' => __( 'Family Tree cache cleared. The relationship index rebuilds on the next tree request.', 'my-family-tree' ),
 			'clearedAt' => (int) get_option( 'wpmft_cache_cleared_at', 0 ),
 		) );
 	}

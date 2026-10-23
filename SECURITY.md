@@ -1,6 +1,6 @@
 # Security and privacy
 
-WP My Family Tree stores family stories and relationships in the site's WordPress database. It is designed to keep viewing access separate from editing permission.
+My Family Tree stores family stories and relationships in the site's WordPress database. It is designed to keep viewing access separate from editing permission.
 
 ## Access model
 

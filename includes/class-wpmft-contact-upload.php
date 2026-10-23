@@ -33,13 +33,13 @@ final class WPMFT_Contact_Upload {
 	}
 
 	private static function invalid() {
-		return new WP_Error( 'photo_invalid', __( 'The photo could not be verified. Choose a valid image and try again.', 'wp-my-family-tree' ) );
+		return new WP_Error( 'photo_invalid', __( 'The photo could not be verified. Choose a valid image and try again.', 'my-family-tree' ) );
 	}
 
 	private static function too_large( $config ) {
 		return new WP_Error( 'photo_size', sprintf(
 			/* translators: %s: effective maximum upload size, such as 10 MB. */
-			__( 'The photo is too large. The maximum file size is %s.', 'wp-my-family-tree' ), size_format( $config['maxBytes'], 2 )
+			__( 'The photo is too large. The maximum file size is %s.', 'my-family-tree' ), size_format( $config['maxBytes'], 2 )
 		) );
 	}
 
@@ -52,7 +52,7 @@ final class WPMFT_Contact_Upload {
 	public static function receive() {
 		if ( empty( $_FILES ) ) { return array(); }
 		if ( count( $_FILES ) !== 1 || ! isset( $_FILES['photo'] ) || ! is_array( $_FILES['photo'] ) ) {
-			return new WP_Error( 'photo_count', __( 'Attach one photo only.', 'wp-my-family-tree' ) );
+			return new WP_Error( 'photo_count', __( 'Attach one photo only.', 'my-family-tree' ) );
 		}
 		$file = $_FILES['photo'];
 		foreach ( array( 'name', 'tmp_name', 'size', 'error' ) as $key ) {
@@ -62,10 +62,10 @@ final class WPMFT_Contact_Upload {
 		$error = (int) $file['error'];
 		if ( UPLOAD_ERR_NO_FILE === $error && $file['tmp_name'] === '' && (int) $file['size'] === 0 ) { return array(); }
 		$config = self::config();
-		if ( ! $config['enabled'] ) { return new WP_Error( 'photo_disabled', __( 'Photo attachments are not available. Remove the photo and send your message again.', 'wp-my-family-tree' ) ); }
+		if ( ! $config['enabled'] ) { return new WP_Error( 'photo_disabled', __( 'Photo attachments are not available. Remove the photo and send your message again.', 'my-family-tree' ) ); }
 		if ( in_array( $error, array( UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE ), true ) ) { return self::too_large( $config ); }
-		if ( UPLOAD_ERR_PARTIAL === $error ) { return new WP_Error( 'photo_partial', __( 'The photo upload was interrupted. Please choose the photo again.', 'wp-my-family-tree' ) ); }
-		if ( UPLOAD_ERR_OK !== $error ) { return new WP_Error( 'photo_upload', __( 'The photo could not be uploaded. Please try again, or send your message without a photo.', 'wp-my-family-tree' ) ); }
+		if ( UPLOAD_ERR_PARTIAL === $error ) { return new WP_Error( 'photo_partial', __( 'The photo upload was interrupted. Please choose the photo again.', 'my-family-tree' ) ); }
+		if ( UPLOAD_ERR_OK !== $error ) { return new WP_Error( 'photo_upload', __( 'The photo could not be uploaded. Please try again, or send your message without a photo.', 'my-family-tree' ) ); }
 		$path = $file['tmp_name'];
 		// Do not accept arbitrary local paths, even when their contents are valid images.
 		if ( ! is_uploaded_file( $path ) || ! is_file( $path ) || ! is_readable( $path ) ) { return self::invalid(); }
@@ -76,7 +76,7 @@ final class WPMFT_Contact_Upload {
 		if ( strlen( $name ) > 255 || preg_match( '/[\x00-\x1f\x7f\/\\\\]/', $name ) || preg_match( '/(?:^|\.)(?:php\d*|phtml|phar|cgi|pl|py|exe|com|bat|cmd|sh|ps1|vbs|js|html?|svgz?)(?:\.|$)/i', $name ) ) { return self::invalid(); }
 		$extension = strtolower( pathinfo( $name, PATHINFO_EXTENSION ) );
 		if ( ! in_array( $extension, $config['extensions'], true ) ) {
-			return new WP_Error( 'photo_type', __( 'This photo format is not allowed. Choose one of the listed image formats.', 'wp-my-family-tree' ) );
+			return new WP_Error( 'photo_type', __( 'This photo format is not allowed. Choose one of the listed image formats.', 'my-family-tree' ) );
 		}
 		$types = self::types(); $mime = $types[$extension];
 		// Ignore the browser's Content-Type. Match both the actual raster signature and its extension.
@@ -91,7 +91,7 @@ final class WPMFT_Contact_Upload {
 		$memory = wp_convert_hr_to_bytes( ini_get( 'memory_limit' ) );
 		$needed = $pixels * 6 + $bytes * 2 + 16 * MB_IN_BYTES;
 		if ( max( $dimensions[0], $dimensions[1] ) > 16000 || $pixels > 50000000 || ( $memory > 0 && $needed > $memory - memory_get_usage( true ) ) ) {
-			return new WP_Error( 'photo_dimensions', __( 'The photo is too large to process safely. Choose a smaller image.', 'wp-my-family-tree' ) );
+			return new WP_Error( 'photo_dimensions', __( 'The photo is too large to process safely. Choose a smaller image.', 'my-family-tree' ) );
 		}
 		// A matching header alone is insufficient: require the local image decoder to load it.
 		$editor = wp_get_image_editor( $path, array( 'mime_type' => $mime ) );

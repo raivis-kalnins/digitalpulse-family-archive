@@ -1,16 +1,16 @@
-# WP My Family Tree translation catalog.
+# My Family Tree translation catalog.
 # Copyright (C) 2026 Raivis Kalnins / DigitalPulse
 # Licensed under GPL-3.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP My Family Tree 1.2.1\n"
+"Project-Id-Version: My Family Tree 1.2.3\n"
 "Report-Msgid-Bugs-To: https://digitalpulse.click/\n"
-"POT-Creation-Date: 2026-10-23 09:47+0000\n"
+"POT-Creation-Date: 2026-10-23 10:59+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: includes/class-wpmft-security.php:49 includes/class-wpmft-demo.php:601 includes/class-wpmft-api.php:52 includes/class-wpmft-admin.php:158 includes/class-wpmft-admin.php:360 includes/class-wpmft-admin.php:473 includes/class-wpmft-languages.php:167 includes/class-wpmft-toolbar.php:59
+#: includes/class-wpmft-admin.php:158 includes/class-wpmft-admin.php:360 includes/class-wpmft-admin.php:473 includes/class-wpmft-toolbar.php:59 includes/class-wpmft-demo.php:607 includes/class-wpmft-security.php:49 includes/class-wpmft-api.php:52 includes/class-wpmft-languages.php:167
 msgid "A POST request is required."
 msgstr ""
 
@@ -18,7 +18,7 @@ msgstr ""
 msgid "A batch of family photographs has been protected. Continue until no photographs remain."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:525
+#: includes/class-wpmft-demo.php:526
 msgid "A bundled demo illustration could not be read."
 msgstr ""
 
@@ -50,7 +50,7 @@ msgstr ""
 msgid "A photograph could not be read."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:467
+#: includes/class-wpmft-demo.php:468
 msgid "A previous demo record was repurposed. The importer stopped without changing it; restore its demo marker or use a separate demo site."
 msgstr ""
 
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Accent colour"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:162 includes/class-wpmft-demo.php:275 includes/class-wpmft-demo.php:602 includes/class-wpmft-demo.php:788 includes/class-wpmft-admin.php:474 includes/class-wpmft-admin.php:623
+#: includes/class-wpmft-admin.php:474 includes/class-wpmft-admin.php:623 includes/class-wpmft-demo.php:162 includes/class-wpmft-demo.php:276 includes/class-wpmft-demo.php:608 includes/class-wpmft-demo.php:794
 msgid "Access denied."
 msgstr ""
 
@@ -74,11 +74,11 @@ msgstr ""
 msgid "Add a person"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:636
+#: includes/class-wpmft-demo.php:642
 msgid "Add eight fictional cinema characters, original gallery illustrations and two English pages. The importer adds marked sample content and preserves existing records, pages and settings. Repeating it keeps edits to existing demo items."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:688
+#: includes/class-wpmft-demo.php:694
 msgid "Add fictional demo people, gallery illustrations and English pages? Existing content will be kept. Importing does not enable shared demo access."
 msgstr ""
 
@@ -102,7 +102,7 @@ msgstr ""
 msgid "Admin and server messages (JSON)"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:637
+#: includes/class-wpmft-demo.php:643
 msgid "All family connections and dates are invented. Character names are illustrative references; no movie stills, celebrity photographs or official character social accounts are included."
 msgstr ""
 
@@ -138,8 +138,12 @@ msgstr ""
 msgid "An original photograph could not be removed. Check file permissions before sharing the site."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:455
+#: includes/class-wpmft-demo.php:456
 msgid "Another demo import is running. Please try again shortly."
+msgstr ""
+
+#: my-family-tree.php:34
+msgid "Another family tree plugin is active"
 msgstr ""
 
 #: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:265
@@ -163,7 +167,7 @@ msgstr ""
 msgid "Automatic"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:660
+#: includes/class-wpmft-demo.php:666
 msgid "Automatic demo reset"
 msgstr ""
 
@@ -187,7 +191,7 @@ msgstr ""
 msgid "Birth / maiden name"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:770
+#: includes/class-wpmft-demo.php:776
 msgid "Birth date (YYYY, YYYY-MM or YYYY-MM-DD)"
 msgstr ""
 
@@ -259,11 +263,11 @@ msgstr ""
 msgid "Choose your family category."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:761
+#: includes/class-wpmft-demo.php:767
 msgid "Cinema Family Demo Editor"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:442
+#: includes/class-wpmft-demo.php:443
 msgid "Cinema family demo"
 msgstr ""
 
@@ -331,6 +335,10 @@ msgstr ""
 msgid "Dates accept YYYY, YYYY-MM or YYYY-MM-DD. Older date text is retained unless you change it."
 msgstr ""
 
+#: my-family-tree.php:33
+msgid "Deactivate the older WP My Family Tree plugin or any duplicate copy before activating My Family Tree. Your family posts, photographs and saved settings will be retained."
+msgstr ""
+
 #: includes/class-wpmft-admin.php:194
 msgid "Deactivate the original WP Family Tree plugin. Its older public routes can bypass the privacy settings of this replacement. Your posts and photographs are retained."
 msgstr ""
@@ -343,47 +351,47 @@ msgstr ""
 msgid "Demo"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:635
+#: includes/class-wpmft-demo.php:641
 msgid "Demo content & sharing"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:613
+#: includes/class-wpmft-demo.php:619
 msgid "Demo content is ready. Existing content and settings were preserved. Sharing remains off until you explicitly enable it."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:647
+#: includes/class-wpmft-demo.php:653
 msgid "Demo mode is active."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:614
+#: includes/class-wpmft-demo.php:620
 msgid "Demo sharing is active. The shared editor can edit demo content only."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:546
+#: includes/class-wpmft-demo.php:549
 msgid "Demo sharing is blocked because real family records exist, including unpublished or trashed records. Use a separate demo site."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:650
+#: includes/class-wpmft-demo.php:656
 msgid "Demo sharing is locked. Its isolation check failed; shared sessions have been revoked."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:716 includes/class-wpmft-demo.php:736
+#: includes/class-wpmft-demo.php:722 includes/class-wpmft-demo.php:742
 msgid "Demo sharing is not active."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:615
+#: includes/class-wpmft-demo.php:621
 msgid "Demo sharing is off. Its sessions and managed account have been revoked. Demo content is retained."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:419
+#: includes/class-wpmft-demo.php:420
 msgid "Demo sharing is unavailable. Please contact the site administrator."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:763
+#: includes/class-wpmft-demo.php:769
 msgid "Demo story saved."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:616
+#: includes/class-wpmft-demo.php:622
 msgid "Demo visitor edits have been reset. The next reset is due in 24 hours."
 msgstr ""
 
@@ -395,7 +403,7 @@ msgstr ""
 msgid "Disable comments and pingbacks on posts, pages and media"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:657
+#: includes/class-wpmft-demo.php:663
 msgid "Disable demo mode"
 msgstr ""
 
@@ -403,7 +411,7 @@ msgstr ""
 msgid "Disable demo sharing before saving a new reset baseline."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:547
+#: includes/class-wpmft-demo.php:550
 msgid "Disable the existing demo session before enabling it again."
 msgstr ""
 
@@ -411,7 +419,7 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:691
+#: includes/class-wpmft-demo.php:697
 msgid "Discard current visitor edits and restore the saved demo starting state? Other site content and settings will be kept."
 msgstr ""
 
@@ -447,7 +455,7 @@ msgstr ""
 msgid "Email address"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:689
+#: includes/class-wpmft-demo.php:695
 msgid "Enable a public shared demo login? Anyone given its published credentials can edit the marked sample stories. This requires an isolated demo tree."
 msgstr ""
 
@@ -459,7 +467,7 @@ msgstr ""
 msgid "Enable language"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:653
+#: includes/class-wpmft-demo.php:659
 msgid "Enable shared demo mode"
 msgstr ""
 
@@ -491,7 +499,7 @@ msgstr ""
 msgid "Enter a language name and a valid locale, such as English and en_US."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:794
+#: includes/class-wpmft-demo.php:800
 msgid "Enter a title and a story within the displayed length limits."
 msgstr ""
 
@@ -511,11 +519,11 @@ msgstr ""
 msgid "Family Tree"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:753 includes/class-wpmft-demo.php:753
+#: includes/class-wpmft-demo.php:759 includes/class-wpmft-demo.php:759
 msgid "Family Tree Demo"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:560
+#: includes/class-wpmft-demo.php:565
 msgid "Family Tree Demo Editor"
 msgstr ""
 
@@ -531,7 +539,7 @@ msgstr ""
 msgid "Family Tree cache cleared. The relationship index rebuilds on the next tree request."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:626
+#: includes/class-wpmft-demo.php:632
 msgid "Family Tree demo sharing was locked because its content is no longer isolated. Shared access has been revoked. Disable demo mode in Family Tree settings before configuring normal family access."
 msgstr ""
 
@@ -579,7 +587,7 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:443
+#: includes/class-wpmft-demo.php:444
 msgid "Fictional crossover characters and invented relationships. Visitor edits are public and reset every 24 hours."
 msgstr ""
 
@@ -591,7 +599,7 @@ msgstr ""
 msgid "Fourteen front-end language presets are included. Add more languages and translation overrides in the Languages tab. Names and biographies are never automatically translated. With optional Polylang, configure your content languages and link translated pages and people."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:648
+#: includes/class-wpmft-demo.php:654
 msgid "Front-end demo password"
 msgstr ""
 
@@ -619,19 +627,19 @@ msgstr ""
 msgid "Hide the birth dates of living people in the tree and person dialogs"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:638
+#: includes/class-wpmft-demo.php:644
 msgid "I understand that demo people will be added alongside existing content. This does not enable public demo access."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:652
+#: includes/class-wpmft-demo.php:658
 msgid "I understand that this creates a shared public demo account with a published password, on an isolated demo tree only."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:639
+#: includes/class-wpmft-demo.php:645
 msgid "Import demo content"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:545
+#: includes/class-wpmft-demo.php:548
 msgid "Import the demo first and keep its starting person published."
 msgstr ""
 
@@ -704,7 +712,7 @@ msgstr ""
 msgid "Leave blank to keep the stored secret. It is never included in the public page."
 msgstr ""
 
-#: wp-my-family-tree.php:91
+#: includes/bootstrap.php:78
 msgid "Loading the family tree…"
 msgstr ""
 
@@ -712,11 +720,11 @@ msgstr ""
 msgid "Locale"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:770 includes/class-wpmft-admin.php:583
+#: includes/class-wpmft-admin.php:583 includes/class-wpmft-demo.php:776
 msgid "Location"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:762
+#: includes/class-wpmft-demo.php:768
 msgid "Log out"
 msgstr ""
 
@@ -744,7 +752,15 @@ msgstr ""
 msgid "Mother / parent 2"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:768
+#: includes/class-wpmft-admin.php:111 includes/class-wpmft-admin.php:217
+msgid "My Family Tree"
+msgstr ""
+
+#: my-family-tree.php:42
+msgid "My Family Tree is not running because another copy is active. Deactivate the older WP My Family Tree plugin or duplicate copy, then activate My Family Tree."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:774
 msgid "Name / title"
 msgstr ""
 
@@ -760,7 +776,7 @@ msgstr ""
 msgid "New language"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:664
+#: includes/class-wpmft-demo.php:670
 msgid "Next reset:"
 msgstr ""
 
@@ -780,7 +796,7 @@ msgstr ""
 msgid "Not specified"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:770 includes/class-wpmft-admin.php:583
+#: includes/class-wpmft-admin.php:583 includes/class-wpmft-demo.php:776
 msgid "Occupation"
 msgstr ""
 
@@ -788,11 +804,11 @@ msgstr ""
 msgid "Only add details this person is comfortable sharing with everyone who can access the family tree."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:539
+#: includes/class-wpmft-demo.php:540
 msgid "Only an administrator can enable demo sharing."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:452
+#: includes/class-wpmft-demo.php:453
 msgid "Only an administrator can import demo content."
 msgstr ""
 
@@ -808,11 +824,11 @@ msgstr ""
 msgid "Open a private window. Test the tree, a person’s old URL, a feed and an old direct photograph URL. Clear previous caches. The original plugin should be inactive."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:762
+#: includes/class-wpmft-demo.php:768
 msgid "Open demo tree"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:641
+#: includes/class-wpmft-demo.php:647
 msgid "Open demo tree page"
 msgstr ""
 
@@ -824,7 +840,7 @@ msgstr ""
 msgid "OpenSSL is required to protect photographs."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:644
+#: includes/class-wpmft-demo.php:650
 msgid "Optional shared demo mode"
 msgstr ""
 
@@ -832,7 +848,7 @@ msgstr ""
 msgid "Optional: omit theme styles, global presets and theme fonts. Keep this off when biographies or other page content use theme-styled blocks. Core block styles remain available; embedded pages retain their theme styling."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:528
+#: includes/class-wpmft-demo.php:529
 msgid "Original illustration for the fictional cinema family demo."
 msgstr ""
 
@@ -912,7 +928,7 @@ msgstr ""
 msgid "Please complete the security challenge."
 msgstr ""
 
-#: wp-my-family-tree.php:91
+#: includes/bootstrap.php:78
 msgid "Please enable JavaScript to explore this interactive family tree."
 msgstr ""
 
@@ -984,7 +1000,7 @@ msgstr ""
 msgid "Protecting family photographs…"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:604
+#: includes/class-wpmft-demo.php:610
 msgid "Read and confirm the demo notice before continuing."
 msgstr ""
 
@@ -1040,7 +1056,7 @@ msgstr ""
 msgid "Removing a photograph here only removes it from this gallery. It does not delete the original media file."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:692
+#: includes/class-wpmft-demo.php:698
 msgid "Replace the saved demo starting state with the current sample content? Future daily resets will restore these values."
 msgstr ""
 
@@ -1048,7 +1064,7 @@ msgstr ""
 msgid "Require a family password"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:666
+#: includes/class-wpmft-demo.php:672
 msgid "Reset demo now"
 msgstr ""
 
@@ -1060,7 +1076,7 @@ msgstr ""
 msgid "Restore backups safely"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:665
+#: includes/class-wpmft-demo.php:671
 msgid "Restore the saved demo starting state now and discard current visitor edits."
 msgstr ""
 
@@ -1076,15 +1092,15 @@ msgstr ""
 msgid "Revoke all remembered access"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:690
+#: includes/class-wpmft-demo.php:696
 msgid "Revoke the shared account and all demo sessions? Demo content will be kept and the normal Privacy settings will apply again."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:656
+#: includes/class-wpmft-demo.php:662
 msgid "Revoke the shared account and demo sessions, keep demo content, and restore the normal Privacy settings."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:778
+#: includes/class-wpmft-demo.php:784
 msgid "Sample people & pages"
 msgstr ""
 
@@ -1092,11 +1108,11 @@ msgstr ""
 msgid "Save changed settings before using the cache tool. Private family pages and API responses continue to use no-store headers."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:670
+#: includes/class-wpmft-demo.php:676
 msgid "Save current demo as reset baseline"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:775
+#: includes/class-wpmft-demo.php:781
 msgid "Save demo story"
 msgstr ""
 
@@ -1168,7 +1184,7 @@ msgstr ""
 msgid "Settings were not saved. Use a family password with at least 12 characters."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:543
+#: includes/class-wpmft-demo.php:546
 msgid "Shared demo accounts are available on single-site installations only. Demo content can still be imported on this network."
 msgstr ""
 
@@ -1208,7 +1224,7 @@ msgstr ""
 msgid "Storage"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:774
+#: includes/class-wpmft-demo.php:780
 msgid "Story (basic HTML allowed)"
 msgstr ""
 
@@ -1232,7 +1248,7 @@ msgstr ""
 msgid "The contact form is not available."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:617
+#: includes/class-wpmft-demo.php:623
 msgid "The current demo titles, stories, dates, locations and occupations are saved as the reset baseline."
 msgstr ""
 
@@ -1244,7 +1260,7 @@ msgstr ""
 msgid "The default is 15 minutes. Person and relationship edits refresh the index automatically. Only numeric relationships are stored on the server; personal profiles, photographs and access tokens are not cached by this feature."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:818
+#: includes/class-wpmft-demo.php:824
 msgid "The demo has reset since this editor was opened. Reload the editor before saving again."
 msgstr ""
 
@@ -1252,7 +1268,7 @@ msgstr ""
 msgid "The demo is resetting or its reset could not finish. Please try again shortly."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:421
+#: includes/class-wpmft-demo.php:422
 msgid "The demo password is incorrect."
 msgstr ""
 
@@ -1264,7 +1280,7 @@ msgstr ""
 msgid "The family tree is currently unavailable."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:668
+#: includes/class-wpmft-demo.php:674
 msgid "The first activation saves the current demo as its starting state. That baseline is retained when sharing is disabled and enabled again. To deliberately change it, finish your demo edits while sharing is off, then save a new baseline below."
 msgstr ""
 
@@ -1277,7 +1293,7 @@ msgid "The message could not be sent. Please try again later or use the administ
 msgstr ""
 
 #: includes/class-wpmft-compatibility.php:36
-msgid "The older WP Family Tree plugin can still fail on missing parent records or invalid birth dates. Check your tree with WP My Family Tree, then deactivate the older WP Family Tree plugin. Your existing family posts and relationships are retained."
+msgid "The older WP Family Tree plugin can still fail on missing parent records or invalid birth dates. Check your tree with My Family Tree, then deactivate the older WP Family Tree plugin. Your existing family posts and relationships are retained."
 msgstr ""
 
 #: includes/class-wpmft-admin.php:210
@@ -1317,7 +1333,7 @@ msgstr ""
 msgid "The plugin provides its own title, header and contact footer. This applies to pages containing the tree shortcode or block."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:661
+#: includes/class-wpmft-demo.php:667
 msgid "The plugin restores demo titles, stories, birth dates, locations and occupations to a saved starting state every 24 hours. Settings, relationships, media and unrelated content are kept. No backup plugin is required."
 msgstr ""
 
@@ -1349,7 +1365,7 @@ msgstr ""
 msgid "The root is a WordPress post ID. Legacy [family-tree] and [family-members] shortcodes are supported for migration."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:557
+#: includes/class-wpmft-demo.php:561
 msgid "The saved demo baseline no longer matches the marked samples. Review the demo content and save a new baseline before sharing."
 msgstr ""
 
@@ -1373,7 +1389,7 @@ msgstr ""
 msgid "The two records have different statuses. A former relationship takes priority; update both records to resolve the difference."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:548
+#: includes/class-wpmft-demo.php:551
 msgid "The username demo already exists. No existing account has been changed. Use a separate demo site or rename that account yourself."
 msgstr ""
 
@@ -1381,7 +1397,7 @@ msgstr ""
 msgid "There are no photograph files to protect."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:740
+#: includes/class-wpmft-demo.php:746
 msgid "This action is not available to the demo editor."
 msgstr ""
 
@@ -1389,7 +1405,7 @@ msgstr ""
 msgid "This action is not available."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:791
+#: includes/class-wpmft-demo.php:797
 msgid "This is not editable demo content."
 msgstr ""
 
@@ -1421,7 +1437,7 @@ msgstr ""
 msgid "Together / current partners"
 msgstr ""
 
-#: includes/class-wpmft-security.php:84 includes/class-wpmft-demo.php:420 includes/class-wpmft-api.php:58
+#: includes/class-wpmft-demo.php:421 includes/class-wpmft-security.php:84 includes/class-wpmft-api.php:58
 msgid "Too many attempts. Please try again in 15 minutes."
 msgstr ""
 
@@ -1481,7 +1497,7 @@ msgstr ""
 msgid "Use selected photographs"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:669
+#: includes/class-wpmft-demo.php:675
 msgid "Use the current demo titles, stories, dates, locations and occupations for future resets, replacing the previous baseline."
 msgstr ""
 
@@ -1497,11 +1513,11 @@ msgstr ""
 msgid "Use the post title for the person’s full name and the biography editor for their story. Parent, partner and date fields reuse your existing WP Family Tree data."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:723
+#: includes/class-wpmft-demo.php:729
 msgid "Use the restricted demo editor for sample content."
 msgstr ""
 
-#: includes/class-wpmft-demo.php:645
+#: includes/class-wpmft-demo.php:651
 msgid "Use this on a separate demonstration site containing only demo family records. A restricted Family Tree Demo Editor can change marked sample names, dates and biographies, but cannot manage settings, other content, users, plugins or uploads. Contact sending is disabled during demo mode. Visitor edits are public and reset every 24 hours."
 msgstr ""
 
@@ -1511,10 +1527,6 @@ msgstr ""
 
 #: includes/class-wpmft-admin.php:223
 msgid "View tree"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:111 includes/class-wpmft-admin.php:217
-msgid "WP My Family Tree"
 msgstr ""
 
 #: includes/class-wpmft-admin.php:596
@@ -1533,15 +1545,15 @@ msgstr ""
 msgid "WordPress database transients"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:648
+#: includes/class-wpmft-demo.php:654
 msgid "WordPress demo login"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:648
+#: includes/class-wpmft-demo.php:654
 msgid "WordPress demo password"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:662
+#: includes/class-wpmft-demo.php:668
 msgid "WordPress runs scheduled tasks when the site receives a request. An overdue reset also runs before the next demo visit or save. An editor opened before a reset must be reloaded before saving."
 msgstr ""
 
@@ -1553,7 +1565,7 @@ msgstr ""
 msgid "Would you like to translate people and pages too?"
 msgstr ""
 
-#: includes/class-wpmft-demo.php:761
+#: includes/class-wpmft-demo.php:767
 msgid "You can edit marked demonstration stories only. Visitor edits are public and reset every 24 hours. Do not enter personal or confidential information."
 msgstr ""
 

@@ -1,9 +1,9 @@
 {
-  "name": "wp-my-family-tree",
-  "version": "1.2.2",
+  "name": "my-family-tree",
+  "version": "1.2.3",
   "private": true,
   "license": "GPL-3.0-or-later",
-  "description": "Reproducible static-asset build for WP My Family Tree.",
+  "description": "Reproducible static-asset build for My Family Tree.",
   "scripts": { "build": "node scripts/build-assets.mjs" },
   "devDependencies": { "esbuild": "0.25.5" }
 }

@@ -1,9 +1,9 @@
-=== WP My Family Tree ===
+=== My Family Tree ===
 Tags: family tree, genealogy, family, privacy, shortcode
 Requires at least: 6.5
 Tested up to: 6.8.3
 Requires PHP: 7.4
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -11,7 +11,7 @@ Build a private family tree with biographies, touch galleries, multilingual labe
 
 == Description ==
 
-WP My Family Tree turns ordinary WordPress posts into an interactive family archive. An oak-inspired tree, leaf-shaped portraits and personal stories help visitors explore relationships across generations.
+My Family Tree turns ordinary WordPress posts into an interactive family archive. An oak-inspired tree, leaf-shaped portraits and personal stories help visitors explore relationships across generations.
 
 Add a Family Tree block or the [wp_my_family_tree] shortcode to a page. Choose a full-window layout or embed the tree in your theme. People remain WordPress posts, and compatible records from the older WP Family Tree plugin can be reused.
 
@@ -99,8 +99,8 @@ See readme.md for the complete administration, privacy, backup and troubleshooti
 
 == Installation ==
 
-1. Upload the complete plugin ZIP through Plugins > Add New Plugin > Upload Plugin, or place the wp-my-family-tree directory in wp-content/plugins.
-2. Activate WP My Family Tree. For an update, choose WordPress's replacement option for the existing plugin.
+1. Upload the complete my-family-tree-1.2.3.zip through Plugins > Add New Plugin > Upload Plugin, or place the my-family-tree directory in wp-content/plugins.
+2. Activate My Family Tree. If migrating from WP My Family Tree, follow the rename instructions below before activation.
 3. Deactivate the older WP Family Tree plugin if it is still active. Keep its existing posts and media.
 4. Open Family Tree settings, select the family category and starting person, and create or select a tree page.
 5. Insert the Family Tree block or [wp_my_family_tree] shortcode on the page.
@@ -109,6 +109,18 @@ See readme.md for the complete administration, privacy, backup and troubleshooti
 8. Check the visitor experience in a signed-out browser window.
 
 The shortcode accepts root="123" for a starting person or view="list" for the directory. Legacy [family-tree] and [family-members] shortcodes are supported for migration.
+
+= Upgrading from WP My Family Tree 1.2.2 or earlier =
+
+Version 1.2.3 changes the public plugin name and folder to My Family Tree / my-family-tree. WordPress treats it as a separate plugin, so its uploader will not replace the old wp-my-family-tree folder.
+
+1. Back up the database and uploads together. For a private archive, enable independent site access protection during the switch because the old plugin's access checks stop when it is deactivated.
+2. Deactivate WP My Family Tree, including its network activation if applicable.
+3. Upload the complete new ZIP and activate My Family Tree. Do not activate both copies together.
+4. Verify the tree page, privacy settings, contact form, photographs and person editing. Existing people, relationships, settings, media-encryption keys, shortcodes and saved blocks are retained; no database import is required.
+5. After verification, remove the inactive old plugin through Plugins. Its bundled code has no uninstall data-deletion routine. Keep the new My Family Tree plugin active.
+
+Deactivation revokes shared demo access. On an isolated demonstration site, re-enable shared demo mode explicitly if needed; imported samples and their saved reset baseline remain available. Future updates within the my-family-tree folder can use WordPress's normal replacement workflow.
 
 == Frequently Asked Questions ==
 
@@ -174,6 +186,12 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 
 == Changelog ==
 
+= 1.2.3 =
+
+* Renamed the public plugin to My Family Tree, with the my-family-tree folder and matching translation domain, for directory resubmission.
+* Updated plugin metadata, translation filenames and release documentation while preserving family data, settings, existing shortcodes and saved blocks.
+* Added guidance and activation protection for switching from the old wp-my-family-tree folder.
+
 = 1.2.2 =
 
 * Restored the footer contact form for signed-out and signed-in visitors, replacing unintended account links.
@@ -225,6 +243,10 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 * Initial interactive tree, person gallery, legacy-data compatibility and private viewing support.
 
 == Upgrade Notice ==
+
+= 1.2.3 =
+
+Renamed to My Family Tree. Back up, deactivate WP My Family Tree, install this ZIP, then activate My Family Tree. The new folder is a separate plugin. Family data and settings are retained. See Installation for migration steps.
 
 = 1.2.2 =
 

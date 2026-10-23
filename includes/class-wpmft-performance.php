@@ -149,7 +149,7 @@ final class WPMFT_Performance {
 		// This setting closes new discussions; existing comments remain available for moderation.
 		if ( $request->get_param( 'id' ) ) { return $prepared; }
 		if ( self::affected_post( $prepared['comment_post_ID'] ?? $request->get_param( 'post' ) ) ) {
-			return new WP_Error( 'wpmft_comments_disabled', __( 'Comments are disabled for posts, pages and media.', 'wp-my-family-tree' ), array( 'status' => 403 ) );
+			return new WP_Error( 'wpmft_comments_disabled', __( 'Comments are disabled for posts, pages and media.', 'my-family-tree' ), array( 'status' => 403 ) );
 		}
 		return $prepared;
 	}
