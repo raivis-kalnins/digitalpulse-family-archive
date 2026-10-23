@@ -82,7 +82,7 @@
     "photoPosition": "Valokuva {current}/{total}",
     "branchNotice": "Tämä näkymä näyttää osan suvusta. Tutki lisää valitsemalla henkilön sukuhaaran painike.",
     "noPeople": "Sukusi tarina alkaa tästä.",
-    "noPeopleHelp": "Ylläpitäjä voi lisätä henkilön WordPressin Artikkelit-osiossa ja valita suvun kategorian.",
+    "noPeopleHelp": "Ylläpitäjä voi lisätä henkilön WordPressin hallintapaneelissa ja valita suvun kategorian.",
     "about": "Elämäntarina",
     "details": "Elämän tiedot",
     "born": "Syntynyt",

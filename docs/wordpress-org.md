@@ -22,7 +22,7 @@ The plugin has no telemetry, author-operated service or paid feature gate. Polyl
 | --- | --- |
 | Plugin name | My Family Tree |
 | Proposed plugin slug / text domain | my-family-tree |
-| Version / stable tag | 1.2.4 |
+| Version / stable tag | 1.2.5 |
 | Minimum WordPress | 6.5 |
 | Minimum PHP | 7.4 |
 | Tested up to (directory header) | 7.1 |
@@ -38,9 +38,11 @@ The publisher's **WordPress.org username has not been supplied or verified**. Th
 
 Version 1.2.4 updates `Tested up to` to `7.1`, the major release branch used by the directory. Release verification uses the official WordPress 7.1.3 archive. The previous local test environment blocked external HTTP, and Plugin Check skipped its version comparison when current release information was unavailable. The release check now requires current official version data and verifies that the former 6.8.3 header is rejected before checking the corrected header.
 
+Version 1.2.5 retains that compatibility header and fixes gallery retention, portrait controls and the language selector. Person-oriented dashboard labels are enabled by default and can be disabled in General settings. The shared demo dashboard now supports adding, editing and removing demo persons and pages, with a read-only settings overview. Its daily reset restores original samples and removes verified visitor-created records. The plugin continues to store people as ordinary posts; existing family records retain their IDs and relationships.
+
 ## Name correction for resubmission
 
-Version 1.2.3 changes the PHP `Plugin Name` header and directory readme title to **My Family Tree**, addressing the reviewer's objection to the former leading “WP”. The installable ZIP is `my-family-tree-1.2.4.zip`, with one `my-family-tree/` folder, the `my-family-tree.php` entry point and the matching `my-family-tree` text domain. Directory acceptance and the final permalink remain subject to the Plugins Team's review.
+Version 1.2.3 changes the PHP `Plugin Name` header and directory readme title to **My Family Tree**, addressing the reviewer's objection to the former leading “WP”. The installable ZIP is `my-family-tree-1.2.5.zip`, with one `my-family-tree/` folder, the `my-family-tree.php` entry point and the matching `my-family-tree` text domain. Directory acceptance and the final permalink remain subject to the Plugins Team's review.
 
 The source repository remains at `https://github.com/raivis-kalnins/wp-my-family-tree`. That existing repository URL is not the proposed WordPress.org permalink. Internal `wpmft` data keys, existing shortcodes and the saved block identifier `wp-my-family-tree/tree` are retained for compatibility.
 

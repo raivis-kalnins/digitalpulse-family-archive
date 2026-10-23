@@ -82,7 +82,7 @@
     "photoPosition": "Fotografi {current} av {total}",
     "branchNotice": "Den här vyn visar en del av familjen. Välj en persons grenknapp för att utforska vidare.",
     "noPeople": "Din familjehistoria börjar här.",
-    "noPeopleHelp": "Administratören kan lägga till en person under Inlägg i WordPress och välja familjekategorin.",
+    "noPeopleHelp": "Administratören kan lägga till en person via WordPress-kontrollpanelen och välja familjekategorin.",
     "about": "Livsberättelse",
     "details": "Livsuppgifter",
     "born": "Född",

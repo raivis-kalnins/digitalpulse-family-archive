@@ -2,7 +2,7 @@
 
 A free, open-source WordPress plugin for the stories, photographs and people that connect generations. Explore relatives in a responsive oak-inspired family tree, open a person in a detailed modal, and manage the archive through familiar WordPress posts.
 
-**Version 1.2.4** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
+**Version 1.2.5** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
 Developed by **Raivis Kalnins**, web developer at [DigitalPulse](https://digitalpulse.click/).  
 Project: [github.com/raivis-kalnins/wp-my-family-tree](https://github.com/raivis-kalnins/wp-my-family-tree)
 
@@ -14,7 +14,15 @@ The package is prepared for free distribution through the [WordPress.org Plugin 
 
 *The screenshot contains fictional demonstration records and illustrated portraits. No private family records or photographs are included in this plugin.*
 
-## What is new in 1.2.4
+## What is new in 1.2.5
+
+- **Gallery additions keep existing photographs.** Use **Add photographs** to append images without replacing the current selection. **Reorder photographs** loads the complete gallery before opening the ordering dialog; cancellation or a loading failure leaves the gallery unchanged.
+- **A clearer portrait removal button.** The secondary red button has matching spacing, a removal icon, a visible keyboard focus state and a mobile-friendly size. Removing a portrait keeps its original media attachment.
+- **Flags in the language switch.** Local SVG flags and readable language names replace the outlined native select. The menu supports touch and keyboard navigation, preserves Polylang page links, and gives custom languages a neutral fallback icon.
+- **Person names in the dashboard.** Posts are labeled **Persons**, **All persons**, **Add person** and **Edit person**, with Latvian equivalents. New-person links open the person form. Sites that also publish news can turn off person labels in the General settings.
+- **A fuller demo dashboard.** Shared visitors can add, edit and remove demo persons and pages, open the public tree, and inspect a read-only overview of the main plugin settings. The daily reset restores the original samples and removes visitor-created records.
+
+## Version 1.2.4 improvements
 
 - **Current WordPress compatibility metadata.** The directory readme declares `Tested up to: 7.1`, with verification performed against the official WordPress 7.1.3 release.
 - **Release consistency.** The plugin header, stable tag, asset version, block metadata and translation catalog metadata identify version 1.2.4.
@@ -69,7 +77,7 @@ The existing private-media, contact-photo, relationship-status, mobile tree-gest
 
 ### Update My Family Tree 1.2.3 or later
 
-Back up the site, upload the complete `my-family-tree-1.2.4.zip` through **Plugins → Add New Plugin → Upload Plugin**, and choose **Replace current with uploaded**. Keep the `my-family-tree/` folder name, then verify the tree page, photographs and contact form. Existing data and settings are retained.
+Back up the site, upload the complete `my-family-tree-1.2.5.zip` through **Plugins → Add New Plugin → Upload Plugin**, and choose **Replace current with uploaded**. Keep the `my-family-tree/` folder name, then verify the tree page, photographs and contact form. Existing data and settings are retained.
 
 ### Migrate from WP My Family Tree 1.2.2 or earlier
 
@@ -77,7 +85,7 @@ The package now uses `my-family-tree/`. WordPress treats this folder as a separa
 
 1. Back up the site's database and uploads together. If the archive contains private published content, enable independent site access protection for the switch because deactivating the old plugin stops its access checks.
 2. Open **Plugins** and deactivate **WP My Family Tree**. If it is network-active, deactivate it in Network Admin first.
-3. Open **Plugins → Add New Plugin → Upload Plugin**, select the complete `my-family-tree-1.2.4.zip`, and click **Install Now**.
+3. Open **Plugins → Add New Plugin → Upload Plugin**, select the complete `my-family-tree-1.2.5.zip`, and click **Install Now**.
 4. Activate **My Family Tree**. Keep the old copy inactive; the new entry point blocks activation while the previous copy is active.
 5. Open the tree page and verify the privacy gate, photographs, person editor and **Contact us / Pieteikties** form. Review **Family Tree → Settings & help**, then clear the Family Tree cache and any applicable page cache.
 6. After verifying the new version, delete the inactive **WP My Family Tree** copy from the Plugins screen. Its bundled code has no uninstall data-deletion routine. Leave **My Family Tree** active.
@@ -125,7 +133,7 @@ On a computer, drag the tree or use the on-screen zoom and fit controls. With th
 
 ## Add and edit people
 
-Use **Family Tree → Settings & help → Add a person**, or edit an existing family post. The post title is the person's full name.
+Use **Persons → Add person**, **Family Tree → Settings & help → Add a person**, or edit an existing family record. The title is the person's full name. The **Persons** menu uses ordinary WordPress posts internally, so existing records, IDs, categories and links are retained. Turn off person labels in **Family Tree → Settings & help → General** to restore the usual Posts menu on a site that also publishes news.
 
 With the default editor setting, the person form appears immediately below the title. It includes:
 
@@ -134,7 +142,7 @@ With the default editor setting, the person form appears immediately below the t
 - Father / parent 1, mother / parent 2, primary and additional partners, and explicit partner statuses.
 - Email, telephone, mobile phone, postal address and website.
 - Facebook, Instagram, LinkedIn, X / Twitter, YouTube and TikTok profile URLs.
-- A gallery picker for adding and reordering photographs.
+- Separate **Add photographs** and **Reorder photographs** controls.
 
 The biography editor follows the form. Save or publish the WordPress post to save its details. The plugin retains an existing biography, including its block markup, when you only change person fields. If you edit the biography itself in the classic editor, it is saved using that editor's normal behaviour.
 
@@ -147,6 +155,8 @@ Dates accept `YYYY`, `YYYY-MM` or `YYYY-MM-DD`. Leave the date of death blank fo
 Use full `https://` or `http://` URLs for websites and social profiles. Contact details are visible to everyone who can view the tree, including public visitors when password protection is off. Add details with the person's agreement. Empty fields do not produce empty contact cards in the modal.
 
 Portraits and gallery previews align to the top of the available photograph. The lightbox shows the full image. If the original file was already cropped, upload an uncropped source to restore the missing area. Removing a photograph from a gallery removes its gallery reference; it does not delete the original media file.
+
+**Add photographs** appends selected images to the existing gallery and ignores duplicates. Use **Reorder photographs** to change the order or remove items in the gallery dialog, or use the remove button on a preview. Cancelling a dialog keeps the current gallery. Save or update the person after making changes.
 
 ### Current and former partners
 
@@ -230,7 +240,13 @@ On a separate single-site installation containing only demo family records, enab
 
 These intentionally public credentials apply only after an administrator enables the mode. No account or demo mode is enabled by default. An existing user named `demo` is never taken over or assigned a new password; activation stops instead.
 
-The shared account has a custom **Family Tree Demo Editor** role. It opens a constrained editor for marked sample people and pages, including names/titles, story text and selected person fields. It is not a standard WordPress Editor. It cannot manage settings, real content, users, plugins, uploads, arbitrary shortcodes or dynamic blocks. Contact sending is disabled while demo sharing is guarded. Visitor edits to sample stories are public.
+The shared account has a custom **Family Tree Demo Editor** role. It opens a constrained editor for marked demo people and pages, including names/titles, story text and selected person fields. Visitors can create demo records and remove eligible demo records until the next reset. The account is not a standard WordPress Editor; it cannot manage settings, real content, users, plugins, uploads, arbitrary shortcodes or dynamic blocks. Contact sending is disabled while demo sharing is guarded. Visitor changes are public.
+
+After signing in, open **Persons** to add a demo person or choose **Edit person** beside an existing one. Save the form to update its name, story, birth date, location or occupation. **Demo pages** provides the corresponding page actions. Removal requires confirmation and hides the record until reset. The starting person and tree landing page remain available so visitors can always open the demonstration. Up to 50 visitor-created records are allowed per reset cycle.
+
+The dashboard links to the public tree and shows the next reset time. Returning to the person or page list keeps navigation within the restricted demo editor. The tree landing page's title can be edited; its tree shortcode remains intact.
+
+Open **Settings overview** to see how the tree page, appearance, languages, access, contact and performance options work. These demonstration controls are read-only: shared visitors can inspect the features while only the site administrator can change site settings. Recipient addresses, service keys, password hashes and other private configuration are excluded from the overview.
 
 Enabling shared mode is blocked if real family posts exist, including drafts, private posts and items in the trash. If a real family record is introduced later or the demo's isolation checks fail, shared access is locked and demo sessions are revoked. An administrator must disable the mode to restore the normal privacy configuration. Demo sharing is unavailable on Multisite; importing the sample content remains available.
 
@@ -238,11 +254,11 @@ The demo gate uses its own cookie and session generation. It leaves the normal f
 
 ### Automatic reset every 24 hours
 
-Shared demo mode keeps a saved starting copy of the fields visitors can edit: person/page titles and stories, birth dates, locations and occupations. The plugin restores those fields every 24 hours. The starting copy is retained across resets and demo-mode restarts, so a visitor edit does not become the new default merely because sharing was switched off and on.
+Shared demo mode keeps a saved starting copy of the fields visitors can edit: original person/page titles, stories and publication status, birth dates, locations and occupations. Every 24 hours it restores the original records, brings back originals removed by visitors, and deletes records created through the shared demo editor. The starting copy is retained across resets and demo-mode restarts, so visitor changes do not become the new default merely because sharing was switched off and on.
 
 To deliberately replace the starting copy, disable demo sharing, finish the sample edits as an administrator, then use **Save current demo as reset baseline** and confirm the replacement. Enable sharing again when the saved examples are ready.
 
-The reset affects only records still owned by the demo importer. Relationships, photographs, unrelated posts, real family data and normal site settings are not restored or deleted. UpdraftPlus or another backup plugin is not required. A first upgrade from an already-active 1.2.0 demo without a saved copy uses the original bundled sample fields.
+The reset affects only records whose plugin-managed demo ownership can still be verified. Relationships, photographs, unrelated posts, real family data and normal site settings are not restored or deleted. UpdraftPlus or another backup plugin is not required. A first upgrade from an already-active 1.2.0 demo without a saved copy uses the original bundled sample fields.
 
 WordPress schedules the daily task. On an idle site, WP-Cron may run after its scheduled time; the plugin also checks for an overdue reset before allowing the next demo access or edit. The Demo settings show the next reset and provide a separately confirmed **Reset demo now** action. A form opened before a reset must be reloaded before it can save again.
 
@@ -368,7 +384,7 @@ Errors naming `wp-family-tree/family-tree.php`, `class.node.php` or `class.tree.
 
 ## Īsā pamācība latviski
 
-1. Pirms atjaunināšanas dublējiet datubāzi un augšupielādes. Privātai vietnei pārejas laikā nodrošiniet atsevišķu piekļuves aizsardzību. Deaktivizējiet **WP My Family Tree**, pēc tam sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni** instalējiet pilno `my-family-tree-1.2.4.zip` pakotni un aktivizējiet **My Family Tree**. Jaunās mapes dēļ WordPress to uzskata par atsevišķu spraudni; abas versijas reizē neaktivizējiet. Pārbaudiet koku, piekļuvi, fotogrāfijas un kontaktformu, tad veco neaktīvo spraudni var izdzēst. Esošie dati un iestatījumi paliek; datubāzes imports un motīva nomaiņa nav vajadzīga. Demonstrācijas koplietojamo režīmu pēc šīs pārejas ieslēdziet atkārtoti tikai tad, ja tas nepieciešams.
+1. Pirms atjaunināšanas dublējiet datubāzi un augšupielādes. Privātai vietnei pārejas laikā nodrošiniet atsevišķu piekļuves aizsardzību. Deaktivizējiet **WP My Family Tree**, pēc tam sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni** instalējiet pilno `my-family-tree-1.2.5.zip` pakotni un aktivizējiet **My Family Tree**. Jaunās mapes dēļ WordPress to uzskata par atsevišķu spraudni; abas versijas reizē neaktivizējiet. Pārbaudiet koku, piekļuvi, fotogrāfijas un kontaktformu, tad veco neaktīvo spraudni var izdzēst. Esošie dati un iestatījumi paliek; datubāzes imports un motīva nomaiņa nav vajadzīga. Demonstrācijas koplietojamo režīmu pēc šīs pārejas ieslēdziet atkārtoti tikai tad, ja tas nepieciešams.
 2. Spraudņa iestatījumos izvēlieties dzimtas ierakstu kategoriju, sākuma personu un koka lapu. Lapā ievietojiet bloku **Family Tree** vai īskodu `[wp_my_family_tree]`.
 3. Personas rediģēšanā detalizētā forma atrodas uzreiz zem virsraksta. Virsrakstā norādiet personas pilnu vārdu, izvēlieties portretu, vecākus, partnerus, datumus un galeriju. Dzīvesstāsta redaktors atrodas zem formas. Bloku redaktoru personām pēc vajadzības var ieslēgt spraudņa iestatījumos.
 4. Pievienojiet e-pastu, tālruni, mobilo tālruni, adresi, mājaslapu un sociālo tīklu saites tikai tad, ja persona piekrīt tās kopīgot ar koka apmeklētājiem.
@@ -424,6 +440,10 @@ Keep databases, real family media, Updraft backup sets, passwords, keys, test cr
 Copyright © 2026 **Raivis Kalnins / DigitalPulse**. Licensed under the [GNU General Public License, version 3 or later](LICENSE). Icon artwork is included under the same license. Legacy-data compatibility refers to WP Family Tree by Arvind Shah; this is a separate plugin using compatible existing data.
 
 ## Changelog
+
+### 1.2.5
+
+Fixed gallery additions that could discard earlier photographs while attachment metadata was loading. Added separate append and reorder controls, guarded complete-gallery loading, a styled portrait removal button, local SVG language flags with an accessible menu, and configurable Persons labels and creation links in the WordPress dashboard. Shared demo mode now has explicit person/page add, edit and remove actions, a read-only settings overview, and a daily reset that restores original samples and removes visitor-created records. Restricted demo screens omit the unused WordPress Command Palette to avoid denied background API requests and JavaScript errors. Existing family records and original media attachments are retained.
 
 ### 1.2.4
 

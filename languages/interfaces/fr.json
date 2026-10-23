@@ -82,7 +82,7 @@
     "photoPosition": "Photographie {current} sur {total}",
     "branchNotice": "Cette vue présente une partie de la famille. Utilisez le bouton de branche d’une personne pour poursuivre l’exploration.",
     "noPeople": "Votre histoire familiale commence ici.",
-    "noPeopleHelp": "Le responsable peut ajouter une personne dans les articles WordPress et sélectionner la catégorie familiale.",
+    "noPeopleHelp": "Le responsable peut ajouter une personne depuis le tableau de bord WordPress et sélectionner la catégorie familiale.",
     "about": "Récit de vie",
     "details": "Informations biographiques",
     "born": "Naissance",

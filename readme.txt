@@ -3,7 +3,7 @@ Tags: family tree, genealogy, family, privacy, shortcode
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.4
+Stable tag: 1.2.5
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -66,13 +66,15 @@ Importing requires confirmation and preserves existing records, pages, media and
 
 On an isolated single-site installation with no real family records, a separately confirmed shared demo mode creates the username demo with password Demo@demo123Editor and front-end password demo. No such account exists by default. An existing demo username is not modified.
 
-The custom Family Tree Demo Editor can change only marked sample stories and selected fields through a constrained editor. It is not a standard WordPress Editor and cannot manage other content, settings, users, plugins or uploads. Contact sending is disabled during shared demo mode. Demo edits are public.
+The custom Family Tree Demo Editor can add, edit and remove demo persons and pages through a constrained dashboard. A read-only Settings overview explains the tree page, appearance, languages, access, contact and performance options. The account cannot manage real content, site settings, users, plugins or uploads. Contact sending is disabled during shared demo mode. Demo edits are public.
+
+Removal requires confirmation. The starting person and tree landing page remain available, and up to 50 visitor-created records are allowed per reset cycle. Persons and Demo pages provide clear Add, Edit, Remove and View actions.
 
 Real family records, including drafts and trashed records, block shared demo mode. If isolation later fails, demo access is locked and shared sessions are revoked. Disabling the mode revokes the shared account and sessions, retains sample content, and restores normal privacy behavior. The normal family password hash is not overwritten.
 
 = Daily demo reset =
 
-While shared demo mode is active, the plugin restores visitor-editable sample titles, stories, dates, locations and occupations to a retained starting copy every 24 hours. It does not restore the whole website or change real family records, relationships, media or normal settings. No backup plugin is required.
+While shared demo mode is active, the plugin restores original demo titles, stories, publication status, dates, locations and occupations to a retained starting copy every 24 hours. Removed original samples return, and records created through the shared demo editor are deleted. The reset checks demo ownership before changing a record and preserves real family records, relationships, media and normal settings. No backup plugin is required.
 
 The task uses WordPress cron, with an overdue check before the next demo access or edit. On a site with no requests, execution can be later than the scheduled time. Demo settings show the next reset and offer a confirmed Reset demo now control. Old editor forms must be reloaded after a reset. The saved starting copy survives disabling and re-enabling demo mode. Active older demos without a saved copy use the original bundled sample fields.
 
@@ -105,7 +107,7 @@ See readme.md for the complete administration, privacy, backup and troubleshooti
 
 == Installation ==
 
-1. Upload the complete my-family-tree-1.2.4.zip through Plugins > Add New Plugin > Upload Plugin, or place the my-family-tree directory in wp-content/plugins.
+1. Upload the complete my-family-tree-1.2.5.zip through Plugins > Add New Plugin > Upload Plugin, or place the my-family-tree directory in wp-content/plugins.
 2. Activate My Family Tree. If migrating from WP My Family Tree, follow the rename instructions below before activation.
 3. Deactivate the older WP Family Tree plugin if it is still active. Keep its existing posts and media.
 4. Open Family Tree settings, select the family category and starting person, and create or select a tree page.
@@ -168,7 +170,7 @@ Shared mode is intentionally blocked when any real family record exists, includi
 
 = Can the public demo account edit my other WordPress pages? =
 
-No. The custom demo role uses a restricted editor for marked sample records only. It has no normal Editor privileges, upload access or settings access. Disable demo mode to revoke the account and its sessions.
+No. The custom demo role can add, edit and remove demo persons and pages through a restricted editor, and inspect a read-only Settings overview. It has no normal Editor privileges, upload access or permission to save site settings. Disable demo mode to revoke the account and its sessions.
 
 = Are the demo names and images real family records? =
 
@@ -199,6 +201,17 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 1. Fictional family records and original illustrated portraits in the interactive oak-inspired tree.
 
 == Changelog ==
+
+= 1.2.5 =
+
+* Fixed gallery additions discarding earlier photographs; new selections append without duplicating existing images.
+* Separated Add photographs and Reorder photographs, with complete-gallery loading and safe cancellation or load failure.
+* Styled the portrait removal button with matching dimensions, a removal icon and keyboard focus.
+* Replaced the outlined language select with local SVG flags, readable names and an accessible touch and keyboard menu.
+* Added Persons, Add person and related dashboard labels, including Latvian translations and a setting to restore ordinary post labels.
+* Added person/page create, edit and remove actions and a read-only settings overview to the shared demo dashboard.
+* Extended the daily demo reset to restore removed original samples and clean up visitor-created demo records.
+* Removed the unused WordPress Command Palette from restricted demo screens to prevent denied background API requests and JavaScript errors.
 
 = 1.2.4 =
 
@@ -263,6 +276,10 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 * Initial interactive tree, person gallery, legacy-data compatibility and private viewing support.
 
 == Upgrade Notice ==
+
+= 1.2.5 =
+
+Fixes gallery retention and improves portrait, language and person controls. Replace the existing My Family Tree plugin with the complete ZIP and clear cached assets. Existing person data and media are retained.
 
 = 1.2.4 =
 

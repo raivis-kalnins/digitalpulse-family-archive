@@ -342,8 +342,57 @@
     font-size:48px
 }
 
-.wpmft-portrait-editor .button-link-delete {
-    margin:8px 0 8px 10px
+.wpmft-portrait-actions,.wpmft-gallery-actions {
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:10px
+}
+
+.wpmft-portrait-actions .button {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    min-height:40px;
+    margin:0;
+    padding:5px 12px;
+    line-height:1.5;
+    white-space:normal;
+    text-align:center
+}
+
+.wpmft-portrait-actions .wpmft-remove-portrait {
+    color:#a02c2c;
+    border-color:#d7b2ae;
+    background:#fff9f8
+}
+
+.wpmft-portrait-actions .wpmft-remove-portrait:hover {
+    color:#802323;
+    border-color:#b65b52;
+    background:#fff0ee
+}
+
+.wpmft-portrait-actions .button:focus-visible {
+    outline:2px solid #2271b1;
+    outline-offset:3px
+}
+
+.wpmft-portrait-actions .wpmft-remove-portrait[hidden] {
+    display:none
+}
+
+.wpmft-portrait-editor .wpmft-portrait-actions .button .dashicons {
+    flex-shrink:0;
+    width:18px;
+    height:18px;
+    font-size:18px;
+    line-height:1
+}
+
+.wpmft-gallery-status:empty {
+    display:none
 }
 
 .wpmft-field-wide {

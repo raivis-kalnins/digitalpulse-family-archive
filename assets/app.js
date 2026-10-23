@@ -29,7 +29,7 @@
             export: 'Save image', print: 'Print', exporting: 'Preparing image…', exported: 'Your family tree image is ready.', exportError: 'The image could not be created. Please try again.', exportPhotoError: 'A photograph could not be loaded, so the image was not saved. Please try again.',
             fullscreen: 'Full screen', exitFullscreen: 'Exit full screen', saveTree: 'Save tree image', printTree: 'Print tree', swipePhoto: 'Swipe left or right to browse photographs', photoPosition: 'Photograph {current} of {total}',
             branchNotice: 'This view shows part of the family. Choose a person’s branch button to explore further.',
-            noPeople: 'Your family story starts here.', noPeopleHelp: 'The administrator can add a person in WordPress Posts and choose the family category.',
+            noPeople: 'Your family story starts here.', noPeopleHelp: 'The administrator can add a person in the WordPress dashboard and choose the family category.',
             about: 'Life story', details: 'Life details', born: 'Born', died: 'Died', birthPlace: 'Birthplace', deathPlace: 'Place of death', location: 'Location', occupation: 'Occupation', maidenName: 'Birth surname',
             memories: 'Photographs & memories', gallery: 'Open photograph gallery', photos: 'photographs', photo: 'Photograph', previousPhoto: 'Previous photograph', nextPhoto: 'Next photograph', zoomPhoto: 'Zoom photograph',
             noBiography: 'There is more to this story. Contact the family administrator to share a memory or photograph.', connections: 'Family connections', noConnections: 'No family connections have been added yet.',
@@ -74,7 +74,7 @@
             export: 'Saglabāt attēlu', print: 'Drukāt', exporting: 'Sagatavo attēlu…', exported: 'Tavs dzimtas koka attēls ir gatavs.', exportError: 'Neizdevās izveidot attēlu. Lūdzu, mēģini vēlreiz.', exportPhotoError: 'Neizdevās ielādēt fotogrāfiju, tādēļ attēls netika saglabāts. Lūdzu, mēģini vēlreiz.',
             fullscreen: 'Pilnekrāna skats', exitFullscreen: 'Iziet no pilnekrāna', saveTree: 'Saglabāt koka attēlu', printTree: 'Drukāt koku', swipePhoto: 'Velc pa kreisi vai pa labi, lai skatītu fotogrāfijas', photoPosition: 'Fotogrāfija {current} no {total}',
             branchNotice: 'Šeit redzama daļa no dzimtas. Izvēlies cilvēka zara pogu, lai izpētītu tālāk.',
-            noPeople: 'Šeit sākas tavas dzimtas stāsts.', noPeopleHelp: 'Administrators var pievienot cilvēku WordPress sadaļā Raksti un izvēlēties dzimtas kategoriju.',
+            noPeople: 'Šeit sākas tavas dzimtas stāsts.', noPeopleHelp: 'Administrators var pievienot cilvēku WordPress vadības panelī un izvēlēties dzimtas kategoriju.',
             about: 'Dzīvesstāsts', details: 'Dzīves dati', born: 'Dzimšanas datums', died: 'Miršanas datums', birthPlace: 'Dzimšanas vieta', deathPlace: 'Miršanas vieta', location: 'Dzīvesvieta', occupation: 'Nodarbošanās', maidenName: 'Dzimtais uzvārds',
             memories: 'Fotogrāfijas un atmiņas', gallery: 'Atvērt fotogaleriju', photos: 'fotogrāfijas', photo: 'Fotogrāfija', previousPhoto: 'Iepriekšējā fotogrāfija', nextPhoto: 'Nākamā fotogrāfija', zoomPhoto: 'Pietuvināt fotogrāfiju',
             noBiography: 'Šim stāstam vēl ir turpinājums. Sazinies ar dzimtas administratoru, lai pievienotu atmiņu vai fotogrāfiju.', connections: 'Ģimenes saites', noConnections: 'Ģimenes saites vēl nav pievienotas.',
@@ -181,6 +181,114 @@
     };
     function Icon({ name, size = 20, ...props }) {
         return h('svg', { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.65, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true, focusable: false, ...props }, h('path', { d: PATHS[name] || PATHS.leaf }));
+    }
+    // Original inline vectors keep language flags consistent without remote assets or emoji fonts.
+    const languageCountries = { en: 'US', es: 'ES', pl: 'PL', fr: 'FR', de: 'DE', lv: 'LV', lt: 'LT', et: 'EE', da: 'DK', sv: 'SE', nb: 'NO', nn: 'NO', fi: 'FI', is: 'IS' };
+    const flagCountries = new Set(Object.values(languageCountries).concat('GB'));
+    function languageCountry(item) {
+        const parts = String(item.locale || item.slug || '').replace(/_/g, '-').split('-');
+        const region = parts.slice(1).find(part => /^[a-z]{2}$/i.test(part));
+        // An explicitly configured region takes priority; an unknown region gets a neutral icon.
+        if (region) return flagCountries.has(region.toUpperCase()) ? region.toUpperCase() : '';
+        return languageCountries[parts[0].toLowerCase()] || '';
+    }
+    function LanguageFlag({ language: item }) {
+        const country = languageCountry(item);
+        if (!country) return h(Icon, { name: 'globe', size: 22, className: 'wpmft-language-fallback' });
+        const rect = (x, y, width, height, fill) => h('rect', { x, y, width, height, fill });
+        const bands = (colors, vertical = false) => colors.map((fill, i) => h('rect', { key: i, x: vertical ? i * 30 / colors.length : 0, y: vertical ? 0 : i * 20 / colors.length, width: vertical ? 30 / colors.length : 30, height: vertical ? 20 : 20 / colors.length, fill }));
+        const cross = (background, outer, inner) => [rect(0, 0, 30, 20, background), rect(8, 0, 6, 20, outer), rect(0, 7, 30, 6, outer), inner && rect(9.5, 0, 3, 20, inner), inner && rect(0, 8.5, 30, 3, inner)];
+        let artwork;
+        switch (country) {
+            case 'US': {
+                const stars = Array.from({ length: 9 }, (_, row) => Array.from({ length: row % 2 ? 5 : 6 }, (_, column) => {
+                    const x = 1 + column * 2 + (row % 2 ? 1 : 0), y = .8 + row * 1.12;
+                    return Array.from({ length: 10 }, (_, point) => {
+                        const angle = Math.PI * point / 5 - Math.PI / 2, radius = point % 2 ? .19 : .47;
+                        return (point ? 'L' : 'M') + (x + Math.cos(angle) * radius).toFixed(2) + ',' + (y + Math.sin(angle) * radius).toFixed(2);
+                    }).join('') + 'Z';
+                }).join('')).join('');
+                artwork = [bands(Array.from({ length: 13 }, (_, i) => i % 2 ? '#fff' : '#b22234')), rect(0, 0, 12, 20 * 7 / 13, '#3c3b6e'), h('path', { d: stars, fill: '#fff' })];
+                break;
+            }
+            case 'GB': artwork = [rect(0, 0, 30, 20, '#012169'), h('path', { d: 'M0 0 30 20M30 0 0 20', stroke: '#fff', strokeWidth: 5 }), h('path', { d: 'M0 0 15 10M30 20 15 10M30 0 15 10M0 20 15 10', stroke: '#c8102e', strokeWidth: 1.8 }), rect(12, 0, 6, 20, '#fff'), rect(0, 7, 30, 6, '#fff'), rect(13.25, 0, 3.5, 20, '#c8102e'), rect(0, 8.25, 30, 3.5, '#c8102e')]; break;
+            case 'ES': artwork = [rect(0, 0, 30, 20, '#aa151b'), rect(0, 5, 30, 10, '#f1bf00'), h('path', { d: 'M7 8h4v4c0 2-4 2-4 0Z', fill: '#f6e4bf', stroke: '#aa151b', strokeWidth: .55 }), h('path', { d: 'M7 8V6.8l1 .4 1-1 1 1 1-.4V8M6 8.5v4.7m6-4.7v4.7M9 8v5M7 10.5h4', fill: 'none', stroke: '#aa151b', strokeWidth: .7 })]; break;
+            case 'PL': artwork = bands(['#fff', '#dc143c']); break;
+            case 'FR': artwork = bands(['#002395', '#fff', '#ed2939'], true); break;
+            case 'DE': artwork = bands(['#000', '#dd0000', '#ffce00']); break;
+            case 'LV': artwork = [rect(0, 0, 30, 20, '#9e1b34'), rect(0, 8, 30, 4, '#fff')]; break;
+            case 'LT': artwork = bands(['#fdb913', '#006a44', '#c1272d']); break;
+            case 'EE': artwork = bands(['#4891d9', '#000', '#fff']); break;
+            case 'DK': artwork = cross('#c8102e', '#fff'); break;
+            case 'SE': artwork = cross('#006aa7', '#fecc02'); break;
+            case 'NO': artwork = cross('#ba0c2f', '#fff', '#00205b'); break;
+            case 'FI': artwork = cross('#fff', '#003580'); break;
+            case 'IS': artwork = cross('#02529c', '#fff', '#dc1e35'); break;
+        }
+        return h('svg', { className: 'wpmft-flag', width: 24, height: 16, viewBox: '0 0 30 20', 'data-country': country, 'aria-hidden': true, focusable: false }, ...artwork);
+    }
+    let languagePickerSequence = 0;
+    function LanguagePicker({ lang, languages, onChange }) {
+        const [open, setOpen] = useState(false), [active, setActive] = useState(0);
+        const [menuId] = useState(() => 'wpmft-language-menu-' + ++languagePickerSequence);
+        const container = useRef(null), trigger = useRef(null), options = useRef([]), typed = useRef({ text: '', time: 0 });
+        const selected = Math.max(0, languages.findIndex(item => item.slug === lang)), current = languages[selected];
+        const name = item => String(item.name || item.slug.toUpperCase());
+        function close(restoreFocus = false) {
+            setOpen(false); typed.current = { text: '', time: 0 };
+            if (restoreFocus) trigger.current?.focus({ preventScroll: true });
+        }
+        function show(index = selected) { setActive(index); setOpen(true); }
+        function choose(item) { close(true); if (item.slug !== lang) onChange(item); }
+        useEffect(() => {
+            if (!open) return;
+            const outside = event => { if (!container.current?.contains(event.target)) setOpen(false); };
+            document.addEventListener('pointerdown', outside);
+            document.addEventListener('focusin', outside);
+            return () => { document.removeEventListener('pointerdown', outside); document.removeEventListener('focusin', outside); };
+        }, [open]);
+        useEffect(() => {
+            if (!open) return;
+            const option = options.current[active];
+            option?.focus({ preventScroll: true });
+            if (option) {
+                const menu = option.parentElement, bounds = option.getBoundingClientRect(), area = menu.getBoundingClientRect();
+                if (bounds.top < area.top + 4) menu.scrollTop -= area.top + 4 - bounds.top;
+                else if (bounds.bottom > area.bottom - 4) menu.scrollTop += bounds.bottom - area.bottom + 4;
+            }
+        }, [open, active]);
+        function onKeyDown(event) {
+            const key = event.key;
+            if (key === 'Escape' && open) { event.preventDefault(); event.stopPropagation(); close(true); return; }
+            if (key === 'Tab') {
+                // Let the browser move focus normally before removing the option it is leaving.
+                setTimeout(() => { if (container.current) setOpen(false); }, 0);
+                return;
+            }
+            if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(key)) {
+                event.preventDefault();
+                const index = key === 'Home' ? 0 : key === 'End' ? languages.length - 1 : !open ? selected : (active + (key === 'ArrowDown' ? 1 : -1) + languages.length) % languages.length;
+                show(index); return;
+            }
+            if (open && key.length === 1 && key !== ' ' && !event.ctrlKey && !event.altKey && !event.metaKey) {
+                event.preventDefault();
+                const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
+                const now = Date.now(), letter = normalize(key), previous = now - typed.current.time < 700 ? typed.current.text : '';
+                const text = previous + letter;
+                typed.current = { text, time: now };
+                const query = Array.from(text).every(char => char === letter) ? letter : text;
+                for (let offset = query.length > 1 ? 0 : 1; offset <= languages.length; offset++) {
+                    const index = (active + offset) % languages.length;
+                    if (normalize(name(languages[index])).startsWith(query)) { setActive(index); break; }
+                }
+            }
+        }
+        return h('div', { className: cls('wpmft-language-picker', open && 'is-open'), ref: container, onKeyDown },
+            h('button', { type: 'button', className: 'wpmft-language-trigger', ref: trigger, 'aria-label': tr(lang, 'language') + ': ' + name(current), 'aria-haspopup': 'listbox', 'aria-expanded': open, 'aria-controls': open ? menuId : undefined, onClick: () => open ? close() : show() },
+                h(LanguageFlag, { language: current }), h('span', { className: 'wpmft-language-name', lang: current.slug.replace(/_/g, '-') }, name(current)), h(Icon, { name: 'right', size: 13, className: 'wpmft-language-chevron' })),
+            open && h('div', { id: menuId, className: 'wpmft-language-menu', role: 'listbox', 'aria-label': tr(lang, 'language') }, languages.map((item, index) =>
+                h('button', { type: 'button', key: item.slug, ref: node => { options.current[index] = node; }, className: cls('wpmft-language-option', item.slug === lang && 'is-selected'), role: 'option', 'aria-selected': item.slug === lang, tabIndex: index === active ? 0 : -1, onFocus: () => setActive(index), onClick: () => choose(item), lang: item.slug.replace(/_/g, '-') },
+                    h(LanguageFlag, { language: item }), h('span', { className: 'wpmft-language-name' }, name(item)), item.slug === lang && h(Icon, { name: 'check', size: 17, className: 'wpmft-language-check' })))));
     }
     function OakMark({ size = 36 }) {
         return h('svg', { width: size, height: size, viewBox: '0 0 100 100', className: 'wpmft-oak-mark', 'aria-hidden': true },
@@ -1112,7 +1220,7 @@
         return h('div', { className: 'wpmft-shell', lang: lang.replace(/_/g, '-'), style: { '--wpmft-accent': /^#[0-9a-f]{6}$/i.test(settings.accent || '') ? settings.accent : '#355b3e', '--wpmft-bg': /^#[0-9a-f]{6}$/i.test(settings.background || '') ? settings.background : '#f7f5ec' } },
             h('a', { className: 'wpmft-skip-link', href: '#wpmft-main' }, tr(lang, 'skip')),
             h('header', { className: 'wpmft-header' }, h('div', { className: 'wpmft-header-inner' }, h('a', { href: '#wpmft-main', className: 'wpmft-brand', onClick: e => { e.preventDefault(); if (authorized) chooseRoot(initialRoot.current); else document.getElementById('wpmft-main')?.focus(); } }, h('span', { className: 'wpmft-brand-mark' }, h(OakMark, { size: 33 })), h('span', null, h('strong', null, title), h('small', null, tr(lang, 'archive')))),
-                h('div', { className: 'wpmft-header-actions' }, enabled(settings.languageSwitch) && languages.length > 1 && h('label', { className: 'wpmft-language-picker' }, h(Icon, { name: 'globe', size: 17 }), h('select', { value: lang, 'aria-label': tr(lang, 'language'), onChange: e => { const choice = languages.find(item => item.slug === e.target.value); if (!choice) return; if (polylang) window.location.assign(languageUrl(choice.url)); else setLang(choice.slug); } }, languages.map(item => h('option', { key: item.slug, value: item.slug, lang: item.slug }, item.name || item.slug.toUpperCase())))),
+                h('div', { className: 'wpmft-header-actions' }, enabled(settings.languageSwitch) && languages.length > 1 && h(LanguagePicker, { lang, languages, onChange: choice => { if (polylang) window.location.assign(languageUrl(choice.url)); else setLang(choice.slug); } }),
                     authorized && boot?.requiresPassword && h('button', { type: 'button', className: 'wpmft-icon-button wpmft-lock', onClick: logout, title: tr(lang, 'lock'), 'aria-label': tr(lang, 'lock') }, h(Icon, { name: 'lock', size: 19 }))))),
             h('main', { id: 'wpmft-main', className: 'wpmft-main', tabIndex: -1 }, h('section', { className: 'wpmft-intro' }, h('div', null, h('span', { className: 'wpmft-kicker' }, tr(lang, 'roots')), h('h1', null, title), h('p', null, subtitle)), authorized && boot.stats?.people > 0 && h('div', { className: 'wpmft-stat' }, h('strong', null, new Intl.NumberFormat(localeFor(lang)).format(boot.stats.people)), h('span', null, tr(lang, 'people')), h(OakMark, { size: 42 }))),
                 settings.demo?.active && h('aside', { className: 'wpmft-demo-notice', 'aria-label': settings.demo.label || 'Demo' }, h(Icon, { name: 'info', size: 20 }), h('div', null, h('strong', null, settings.demo.label || 'Demo'), settings.demo.notice && h('p', null, tr(lang, 'demoNotice')))),

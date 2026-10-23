@@ -82,7 +82,7 @@
     "photoPosition": "Fotogrāfija {current} no {total}",
     "branchNotice": "Šeit redzama daļa no dzimtas. Izvēlies cilvēka zara pogu, lai izpētītu tālāk.",
     "noPeople": "Šeit sākas tavas dzimtas stāsts.",
-    "noPeopleHelp": "Administrators var pievienot cilvēku WordPress sadaļā Raksti un izvēlēties dzimtas kategoriju.",
+    "noPeopleHelp": "Administrators var pievienot cilvēku WordPress vadības panelī un izvēlēties dzimtas kategoriju.",
     "about": "Dzīvesstāsts",
     "details": "Dzīves dati",
     "born": "Dzimšanas datums",

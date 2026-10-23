@@ -1,6 +1,6 @@
 {
   "name": "my-family-tree",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "private": true,
   "license": "GPL-3.0-or-later",
   "description": "Reproducible static-asset build for My Family Tree.",

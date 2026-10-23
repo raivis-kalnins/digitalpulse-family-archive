@@ -82,7 +82,7 @@
     "photoPosition": "Foto {current}/{total}",
     "branchNotice": "See vaade näitab osa suguvõsast. Edasi uurimiseks vali inimese haru nupp.",
     "noPeople": "Sinu suguvõsa lugu algab siit.",
-    "noPeopleHelp": "Haldaja saab lisada inimese WordPressi postituste all ja valida suguvõsa kategooria.",
+    "noPeopleHelp": "Haldaja saab lisada inimese WordPressi halduspaneelil ja valida suguvõsa kategooria.",
     "about": "Elulugu",
     "details": "Eluloolised andmed",
     "born": "Sündinud",

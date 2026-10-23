@@ -82,7 +82,7 @@
     "photoPosition": "Photograph {current} of {total}",
     "branchNotice": "This view shows part of the family. Choose a person’s branch button to explore further.",
     "noPeople": "Your family story starts here.",
-    "noPeopleHelp": "The administrator can add a person in WordPress Posts and choose the family category.",
+    "noPeopleHelp": "The administrator can add a person in the WordPress dashboard and choose the family category.",
     "about": "Life story",
     "details": "Life details",
     "born": "Born",

@@ -15,6 +15,11 @@ final class WPMFT_Admin {
 		add_filter( 'use_block_editor_for_post', array( __CLASS__, 'block_editor' ), 100, 2 );
 		add_filter( 'wp_insert_post_data', array( __CLASS__, 'preserve_biography' ), 99, 2 );
 		add_filter( 'enter_title_here', array( __CLASS__, 'title_placeholder' ), 10, 2 );
+		add_action( 'init', array( __CLASS__, 'register_person_labels' ), 21 );
+		add_filter( 'post_updated_messages', array( __CLASS__, 'person_updated_messages' ) );
+		add_filter( 'bulk_post_updated_messages', array( __CLASS__, 'person_bulk_messages' ) );
+		add_filter( 'admin_url', array( __CLASS__, 'person_admin_url' ), 10, 2 );
+		add_filter( 'submenu_file', array( __CLASS__, 'person_submenu_file' ), 10, 2 );
 		add_action( 'edit_form_after_title', array( __CLASS__, 'person_panel' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'assets' ) );
@@ -90,6 +95,111 @@ final class WPMFT_Admin {
 		return self::person_context( $post ) ? __( 'Person’s full name', 'my-family-tree' ) : $title;
 	}
 
+	/** Core registers posts early; translate after this plugin and optional Polylang initialize. */
+	public static function register_person_labels() {
+		add_filter( 'post_type_labels_post', array( __CLASS__, 'person_post_labels' ) );
+		$type = get_post_type_object( 'post' );
+		if ( $type ) {
+			$type->labels = self::person_post_labels( $type->labels );
+			$type->label = $type->labels->name;
+		}
+	}
+
+	/** Only presentation changes: people remain ordinary posts with their existing data and URLs. */
+	public static function person_post_labels( $labels ) {
+		if ( ! did_action( 'init' ) || empty( wpmft_settings()['person_admin_labels'] ) || ( ! is_admin() && ! is_user_logged_in() ) ) { return $labels; }
+		$person_labels = array(
+			'name' => __( 'Persons', 'my-family-tree' ),
+			'singular_name' => __( 'Person', 'my-family-tree' ),
+			'menu_name' => __( 'Persons', 'my-family-tree' ),
+			'name_admin_bar' => __( 'Person', 'my-family-tree' ),
+			'add_new' => __( 'Add person', 'my-family-tree' ),
+			'add_new_item' => __( 'Add person', 'my-family-tree' ),
+			'edit_item' => __( 'Edit person', 'my-family-tree' ),
+			'new_item' => __( 'New person', 'my-family-tree' ),
+			'view_item' => __( 'View person', 'my-family-tree' ),
+			'view_items' => __( 'View persons', 'my-family-tree' ),
+			'search_items' => __( 'Search persons', 'my-family-tree' ),
+			'not_found' => __( 'No persons found.', 'my-family-tree' ),
+			'not_found_in_trash' => __( 'No persons found in Trash.', 'my-family-tree' ),
+			'all_items' => __( 'All persons', 'my-family-tree' ),
+			'archives' => __( 'Person archives', 'my-family-tree' ),
+			'attributes' => __( 'Person attributes', 'my-family-tree' ),
+			'insert_into_item' => __( 'Insert into person', 'my-family-tree' ),
+			'uploaded_to_this_item' => __( 'Uploaded to this person', 'my-family-tree' ),
+			'featured_image' => __( 'Portrait', 'my-family-tree' ),
+			'set_featured_image' => __( 'Set portrait', 'my-family-tree' ),
+			'remove_featured_image' => __( 'Remove portrait', 'my-family-tree' ),
+			'use_featured_image' => __( 'Use as portrait', 'my-family-tree' ),
+			'filter_items_list' => __( 'Filter persons list', 'my-family-tree' ),
+			'items_list_navigation' => __( 'Persons list navigation', 'my-family-tree' ),
+			'items_list' => __( 'Persons list', 'my-family-tree' ),
+			'item_published' => __( 'Person published.', 'my-family-tree' ),
+			'item_published_privately' => __( 'Person published privately.', 'my-family-tree' ),
+			'item_reverted_to_draft' => __( 'Person reverted to draft.', 'my-family-tree' ),
+			'item_trashed' => __( 'Person moved to Trash.', 'my-family-tree' ),
+			'item_scheduled' => __( 'Person scheduled.', 'my-family-tree' ),
+			'item_updated' => __( 'Person updated.', 'my-family-tree' ),
+			'item_link' => __( 'Person link', 'my-family-tree' ),
+			'item_link_description' => __( 'A link to a person.', 'my-family-tree' ),
+			'template_name' => __( 'Single person', 'my-family-tree' ),
+		);
+		foreach ( $person_labels as $key => $value ) { $labels->$key = $value; }
+		return $labels;
+	}
+
+	/** Core list, editor and toolbar Add links must open the person form too. */
+	public static function person_admin_url( $url, $path ) {
+		if ( empty( wpmft_settings()['person_admin_labels'] ) || ! is_string( $path ) ) { return $url; }
+		$parts = wp_parse_url( $path );
+		if ( ! is_array( $parts ) || 'post-new.php' !== ltrim( $parts['path'] ?? '', '/' ) ) { return $url; }
+		parse_str( $parts['query'] ?? '', $query );
+		if ( isset( $query['wpmft_person'] ) || ( isset( $query['post_type'] ) && 'post' !== $query['post_type'] ) ) { return $url; }
+		return add_query_arg( 'wpmft_person', '1', $url );
+	}
+
+	public static function person_submenu_file( $file, $parent ) {
+		return ! empty( wpmft_settings()['person_admin_labels'] ) && 'edit.php' === $parent && 'post-new.php' === $file ? 'post-new.php?wpmft_person=1' : $file;
+	}
+
+	/** Classic-editor notices are separate from WordPress post-type labels. */
+	public static function person_updated_messages( $messages ) {
+		$post = get_post();
+		if ( empty( wpmft_settings()['person_admin_labels'] ) || ! $post instanceof WP_Post || 'post' !== $post->post_type ) { return $messages; }
+		$view = ' <a href="' . esc_url( get_permalink( $post ) ) . '">' . esc_html__( 'View person', 'my-family-tree' ) . '</a>';
+		$preview = ' <a target="_blank" rel="noopener" href="' . esc_url( get_preview_post_link( $post ) ) . '">' . esc_html__( 'Preview person', 'my-family-tree' ) . '</a>';
+		$messages['post'][1] = esc_html__( 'Person updated.', 'my-family-tree' ) . $view;
+		$messages['post'][4] = esc_html__( 'Person updated.', 'my-family-tree' );
+		if ( isset( $_GET['revision'] ) && is_scalar( $_GET['revision'] ) ) {
+			/* translators: %s: Date and time of the revision. */
+			$messages['post'][5] = sprintf( esc_html__( 'Person restored to revision from %s.', 'my-family-tree' ), esc_html( wp_post_revision_title( absint( $_GET['revision'] ), false ) ) );
+		}
+		$messages['post'][6] = esc_html__( 'Person published.', 'my-family-tree' ) . $view;
+		$messages['post'][7] = esc_html__( 'Person saved.', 'my-family-tree' );
+		$messages['post'][8] = esc_html__( 'Person submitted.', 'my-family-tree' ) . $preview;
+		/* translators: %s: Scheduled publication date and time. */
+		$messages['post'][9] = sprintf( esc_html__( 'Person scheduled for: %s.', 'my-family-tree' ), esc_html( get_the_date( '', $post ) . ' ' . get_the_time( '', $post ) ) ) . $preview;
+		$messages['post'][10] = esc_html__( 'Person draft updated.', 'my-family-tree' ) . $preview;
+		return $messages;
+	}
+
+	public static function person_bulk_messages( $messages ) {
+		if ( empty( wpmft_settings()['person_admin_labels'] ) ) { return $messages; }
+		$messages['post'] = array(
+			/* translators: %s: Number of persons. */
+			'updated' => __( 'Persons updated: %s.', 'my-family-tree' ),
+			/* translators: %s: Number of persons. */
+			'locked' => __( 'Persons not updated because someone is editing them: %s.', 'my-family-tree' ),
+			/* translators: %s: Number of persons. */
+			'deleted' => __( 'Persons permanently deleted: %s.', 'my-family-tree' ),
+			/* translators: %s: Number of persons. */
+			'trashed' => __( 'Persons moved to Trash: %s.', 'my-family-tree' ),
+			/* translators: %s: Number of persons. */
+			'untrashed' => __( 'Persons restored from Trash: %s.', 'my-family-tree' ),
+		);
+		return $messages;
+	}
+
 	public static function person_panel( $post ) {
 		if ( ! self::classic_person_screen( $post ) ) { return; }
 		echo '<section class="wpmft-person-panel" aria-labelledby="wpmft-person-heading"><h2 id="wpmft-person-heading">' . esc_html__( 'Family tree — person details', 'my-family-tree' ) . '</h2>';
@@ -108,6 +218,10 @@ final class WPMFT_Admin {
 	}
 
 	public static function menu() {
+		global $submenu;
+		if ( ! empty( wpmft_settings()['person_admin_labels'] ) && isset( $submenu['edit.php'][10][2] ) && 'post-new.php' === $submenu['edit.php'][10][2] ) {
+			$submenu['edit.php'][10][2] = 'post-new.php?wpmft_person=1';
+		}
 		add_menu_page( __( 'My Family Tree', 'my-family-tree' ), __( 'Family Tree', 'my-family-tree' ), 'manage_options', 'wpmft', array( __CLASS__, 'settings_page' ), 'dashicons-networking', 26 );
 		add_submenu_page( 'wpmft', __( 'Settings', 'my-family-tree' ), __( 'Settings & help', 'my-family-tree' ), 'manage_options', 'wpmft', array( __CLASS__, 'settings_page' ) );
 	}
@@ -137,6 +251,11 @@ final class WPMFT_Admin {
 			'strings' => array(
 				'chooseImages' => __( 'Choose family photographs', 'my-family-tree' ),
 				'useImages' => __( 'Use selected photographs', 'my-family-tree' ),
+				'addImages' => __( 'Add photographs', 'my-family-tree' ),
+				'reorderImages' => __( 'Reorder photographs', 'my-family-tree' ),
+				'loadingImages' => __( 'Loading photographs…', 'my-family-tree' ),
+				'galleryLoadError' => __( 'Could not load all photographs. Your gallery has not changed. Please try again.', 'my-family-tree' ),
+				'removeImage' => __( 'Remove photograph from gallery', 'my-family-tree' ),
 				'remove' => __( 'Remove', 'my-family-tree' ),
 				'noResults' => __( 'No family members found.', 'my-family-tree' ),
 				'searchError' => __( 'Search could not load. Please try again.', 'my-family-tree' ),
@@ -237,11 +356,14 @@ final class WPMFT_Admin {
 				<input type="hidden" name="wpmft[v110_present]" value="1">
 				<input type="hidden" name="wpmft[v112_present]" value="1">
 				<input type="hidden" name="wpmft[v120_present]" value="1">
+				<input type="hidden" name="wpmft[v125_present]" value="1">
 				<input type="hidden" name="wpmft_section" value="general">
 				<?php wp_nonce_field( 'wpmft_save_settings' ); ?>
 				<?php self::language_control(); ?>
 				<section id="wpmft-general" class="wpmft-settings-section"><h2><?php esc_html_e( 'General', 'my-family-tree' ); ?></h2>
 					<?php self::checkbox( 'enabled', __( 'Enable the family tree', 'my-family-tree' ), $s ); ?>
+					<?php self::checkbox( 'person_admin_labels', __( 'Use Persons labels for the WordPress Posts section', 'my-family-tree' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'Turn this off if this site also uses posts for news or a blog. Existing content and URLs are unchanged.', 'my-family-tree' ); ?></p>
 					<?php self::checkbox( 'person_block_editor', __( 'Enable the WordPress block editor for family people', 'my-family-tree' ), $s ); ?>
 					<p class="description"><?php esc_html_e( 'By default, people open with their details form above the biography editor. Other posts and pages keep their usual editor. Existing biographies are preserved when only person details change.', 'my-family-tree' ); ?></p>
 					<label class="wpmft-field"><span><?php esc_html_e( 'Family member category', 'my-family-tree' ); ?></span><?php wp_dropdown_categories( array( 'name' => 'wpmft[category_id]', 'selected' => absint( $s['category_id'] ), 'hide_empty' => false, 'show_option_none' => esc_html__( 'Select a category', 'my-family-tree' ), 'option_none_value' => 0, 'hierarchical' => true ) ); ?><small><?php esc_html_e( 'Existing WP Family Tree posts remain ordinary WordPress posts in this category.', 'my-family-tree' ); ?></small></label>
@@ -380,6 +502,9 @@ final class WPMFT_Admin {
 			$s[ $key ] = empty( $input[ $key ] ) ? 0 : 1;
 		}
 		// Older forms left open during an upgrade must not reset settings they never displayed.
+		if ( isset( $input['v125_present'] ) && '1' === $input['v125_present'] ) {
+			$s['person_admin_labels'] = isset( $input['person_admin_labels'] ) && '1' === $input['person_admin_labels'] ? 1 : 0;
+		}
 		if ( isset( $input['v112_present'] ) && '1' === $input['v112_present'] ) {
 			foreach ( array( 'performance_cache', 'disable_comments', 'disable_emojis', 'clean_head', 'minify_assets', 'minify_html', 'lean_standalone' ) as $key ) { $s[$key] = isset( $input[$key] ) && '1' === $input[$key] ? 1 : 0; }
 			$ttl = isset( $input['cache_ttl'] ) && is_scalar( $input['cache_ttl'] ) ? (int) $input['cache_ttl'] : 15;
@@ -572,7 +697,13 @@ final class WPMFT_Admin {
 			<div class="wpmft-portrait-editor">
 				<input type="hidden" id="wpmft-portrait-id" name="wpmft_person[_thumbnail_id]" value="<?php echo absint( $portrait ); ?>">
 				<div id="wpmft-portrait-preview" class="wpmft-portrait-preview"><?php if ( $portrait ) { echo wp_get_attachment_image( $portrait, 'medium' ); } else { echo '<span class="dashicons dashicons-admin-users" aria-hidden="true"></span>'; } ?></div>
-				<div><h3><?php esc_html_e( 'Portrait', 'my-family-tree' ); ?></h3><p class="description"><?php esc_html_e( 'The portrait is the post’s featured image. Faces stay at the top of photo frames.', 'my-family-tree' ); ?></p><button type="button" class="button" id="wpmft-choose-portrait"><?php esc_html_e( 'Choose a portrait', 'my-family-tree' ); ?></button> <button type="button" class="button-link-delete" id="wpmft-remove-portrait" <?php echo $portrait ? '' : 'hidden'; ?>><?php esc_html_e( 'Remove portrait', 'my-family-tree' ); ?></button><p id="wpmft-portrait-status" class="screen-reader-text" role="status"></p></div>
+				<div><h3><?php esc_html_e( 'Portrait', 'my-family-tree' ); ?></h3><p class="description"><?php esc_html_e( 'The portrait is the post’s featured image. Faces stay at the top of photo frames.', 'my-family-tree' ); ?></p>
+					<div class="wpmft-portrait-actions">
+						<button type="button" class="button" id="wpmft-choose-portrait"><?php esc_html_e( 'Choose a portrait', 'my-family-tree' ); ?></button>
+						<button type="button" class="button wpmft-remove-portrait" id="wpmft-remove-portrait" <?php echo $portrait ? '' : 'hidden'; ?>><span class="dashicons dashicons-no-alt" aria-hidden="true"></span><?php esc_html_e( 'Remove portrait', 'my-family-tree' ); ?></button>
+					</div>
+					<p id="wpmft-portrait-status" class="screen-reader-text" role="status"></p>
+				</div>
 			</div>
 			<?php endif; ?>
 			<h3><?php esc_html_e( 'Personal details', 'my-family-tree' ); ?></h3>
@@ -612,7 +743,11 @@ final class WPMFT_Admin {
 			<div id="wpmft-gallery-preview" class="wpmft-gallery-preview">
 				<?php foreach ( $gallery as $image_id ) : ?><figure data-id="<?php echo absint( $image_id ); ?>"><?php echo wp_get_attachment_image( $image_id, 'thumbnail' ); ?><button type="button" class="wpmft-remove-image" aria-label="<?php esc_attr_e( 'Remove photograph from gallery', 'my-family-tree' ); ?>">×</button></figure><?php endforeach; ?>
 			</div>
-			<button type="button" class="button" id="wpmft-edit-gallery"><?php esc_html_e( 'Choose / reorder photographs', 'my-family-tree' ); ?></button>
+			<div class="wpmft-gallery-actions">
+				<button type="button" class="button" id="wpmft-add-gallery"><?php esc_html_e( 'Add photographs', 'my-family-tree' ); ?></button>
+				<button type="button" class="button" id="wpmft-edit-gallery" <?php disabled( empty( $gallery ) ); ?>><?php esc_html_e( 'Reorder photographs', 'my-family-tree' ); ?></button>
+			</div>
+			<p id="wpmft-gallery-status" class="wpmft-gallery-status" role="status" aria-live="polite"></p>
 			<p class="description"><?php esc_html_e( 'Removing a photograph here only removes it from this gallery. It does not delete the original media file.', 'my-family-tree' ); ?></p>
 		</div>
 		<?php

@@ -82,7 +82,7 @@
     "photoPosition": "Foto {current} von {total}",
     "branchNotice": "Diese Ansicht zeigt einen Teil der Familie. Mit der Zweig-Schaltfläche einer Person können Sie weitere Verbindungen erkunden.",
     "noPeople": "Hier beginnt Ihre Familiengeschichte.",
-    "noPeopleHelp": "Die Verwaltung kann in den WordPress-Beiträgen eine Person hinzufügen und die Familienkategorie auswählen.",
+    "noPeopleHelp": "Die Verwaltung kann im WordPress-Dashboard eine Person hinzufügen und die Familienkategorie auswählen.",
     "about": "Lebensgeschichte",
     "details": "Lebensdaten",
     "born": "Geboren",

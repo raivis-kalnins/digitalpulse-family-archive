@@ -82,7 +82,7 @@
     "photoPosition": "Nuotrauka {current} iš {total}",
     "branchNotice": "Šiame rodinyje matoma dalis šeimos. Norėdami tyrinėti toliau, pasirinkite asmens giminės šakos mygtuką.",
     "noPeople": "Jūsų šeimos istorija prasideda čia.",
-    "noPeopleHelp": "Administratorius gali pridėti asmenį WordPress skiltyje „Įrašai“ ir pasirinkti šeimos kategoriją.",
+    "noPeopleHelp": "Administratorius gali pridėti asmenį WordPress valdymo skydelyje ir pasirinkti šeimos kategoriją.",
     "about": "Gyvenimo istorija",
     "details": "Gyvenimo duomenys",
     "born": "Gimė",

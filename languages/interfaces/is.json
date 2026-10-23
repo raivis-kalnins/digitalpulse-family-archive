@@ -82,7 +82,7 @@
     "photoPosition": "Ljósmynd {current} af {total}",
     "branchNotice": "Þessi sýn sýnir hluta fjölskyldunnar. Veldu greinahnapp hjá einstaklingi til að skoða meira.",
     "noPeople": "Fjölskyldusagan þín byrjar hér.",
-    "noPeopleHelp": "Umsjónarmaður getur bætt við einstaklingi undir Færslur í WordPress og valið fjölskylduflokkinn.",
+    "noPeopleHelp": "Umsjónarmaður getur bætt við einstaklingi í stjórnborði WordPress og valið fjölskylduflokkinn.",
     "about": "Ævisaga",
     "details": "Æviupplýsingar",
     "born": "Fæðing",

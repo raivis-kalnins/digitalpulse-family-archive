@@ -404,19 +404,31 @@
             });
         });
 
+        var galleryAddButton = document.getElementById('wpmft-add-gallery');
         var galleryButton = document.getElementById('wpmft-edit-gallery');
         var galleryInput = document.getElementById('wpmft-gallery-ids');
         var galleryPreview = document.getElementById('wpmft-gallery-preview');
-        if (galleryButton && galleryInput && galleryPreview) {
+        var galleryStatus = document.getElementById('wpmft-gallery-status');
+        if (galleryAddButton && galleryButton && galleryInput && galleryPreview && galleryStatus) {
+            var galleryFrame;
             function ids() {
-                return galleryInput.value.split(',').map(Number).filter(function (id) { return Number.isInteger(id) && id > 0; });
+                return Array.from(new Set(galleryInput.value.split(',').map(Number).filter(function (id) { return Number.isInteger(id) && id > 0; })));
             }
-            function renderImages(attachments) {
-                galleryPreview.replaceChildren();
-                galleryInput.value = attachments.map(function (item) { return item.id; }).join(',');
+            function setGalleryBusy(busy) {
+                galleryAddButton.disabled = busy;
+                galleryButton.disabled = busy || !ids().length;
+                galleryPreview.setAttribute('aria-busy', String(busy));
+                galleryPreview.querySelectorAll('.wpmft-remove-image').forEach(function (button) { button.disabled = busy; });
+            }
+            function renderImages(attachments, append) {
+                var nextIds = append ? ids() : [];
+                if (!append) galleryPreview.replaceChildren();
                 attachments.forEach(function (item) {
+                    var id = Number(item.id);
+                    if (!Number.isInteger(id) || id < 1 || item.type !== 'image' || nextIds.includes(id)) return;
+                    nextIds.push(id);
                     var figure = document.createElement('figure');
-                    figure.dataset.id = String(item.id);
+                    figure.dataset.id = String(id);
                     var image = document.createElement('img');
                     image.src = item.sizes && item.sizes.thumbnail ? item.sizes.thumbnail.url : item.url;
                     image.alt = item.alt || '';
@@ -424,33 +436,66 @@
                     remove.type = 'button';
                     remove.className = 'wpmft-remove-image';
                     remove.textContent = '×';
-                    remove.setAttribute('aria-label', strings.remove || 'Remove');
+                    remove.setAttribute('aria-label', strings.removeImage || strings.remove || 'Remove');
                     figure.append(image, remove);
                     galleryPreview.append(figure);
                 });
+                galleryInput.value = nextIds.join(',');
+                galleryStatus.textContent = '';
+                setGalleryBusy(false);
             }
-            galleryButton.addEventListener('click', function () {
+            galleryAddButton.addEventListener('click', function () {
                 if (!window.wp || !wp.media) return;
-                var selectedIds = ids();
-                // The native gallery editor supports reordering and retains attachment IDs.
-                var selection = new wp.media.model.Selection(selectedIds.map(function (id) { return wp.media.attachment(id); }), {multiple: true});
-                selection.each(function (attachment) { attachment.fetch(); });
-                var frame = wp.media({
-                    frame: 'post', state: 'gallery-edit', title: strings.chooseImages,
-                    editing: true, multiple: true, selection: selection,
-                    library: {type: 'image'}
+                if (galleryFrame) galleryFrame.dispose();
+                var frame = galleryFrame = wp.media({
+                    title: strings.addImages, button: {text: strings.addImages},
+                    library: {type: 'image'}, multiple: 'add'
                 });
-                frame.on('update', function (library) {
-                    renderImages(library.toJSON().filter(function (item) { return item.type === 'image'; }));
-                });
+                // Adding is deliberately separate from replacing the ordered gallery.
+                frame.on('select', function () { renderImages(frame.state().get('selection').toJSON(), true); });
                 frame.open();
+            });
+            galleryButton.addEventListener('click', function () {
+                if (!window.wp || !wp.media || galleryButton.disabled) return;
+                var selectedIds = ids();
+                setGalleryBusy(true);
+                galleryStatus.textContent = strings.loadingImages;
+                // GalleryEdit filters out models without image metadata when it opens.
+                // Load all existing images first; one query also avoids a request per image.
+                var existing = wp.media.model.Query.get({type: 'image', post__in: selectedIds, orderby: 'post__in', perPage: -1});
+                // Query.fetch forwards failures; the Attachments.more wrapper does not.
+                Promise.resolve(existing.fetch({reset: true})).then(function () {
+                    var models = selectedIds.map(function (id) { return existing.get(id); });
+                    if (models.some(function (model) { return !model || model.get('type') !== 'image'; })) throw new Error('Incomplete gallery');
+                    var selection = new wp.media.model.Selection(models, {multiple: true});
+                    if (galleryFrame) galleryFrame.dispose();
+                    var frame = galleryFrame = wp.media({
+                        frame: 'post', state: 'gallery-edit', title: strings.reorderImages,
+                        editing: true, multiple: true, selection: selection,
+                        library: {type: 'image'}
+                    });
+                    frame.state('gallery-edit').on('update', function (library) {
+                        renderImages(library.toJSON(), false);
+                    });
+                    galleryStatus.textContent = '';
+                    setGalleryBusy(false);
+                    frame.open();
+                }).catch(function () {
+                    // Never replace stored IDs with a partial response or failed load.
+                    galleryStatus.textContent = strings.galleryLoadError;
+                    setGalleryBusy(false);
+                    galleryButton.focus();
+                });
             });
             galleryPreview.addEventListener('click', function (event) {
                 var remove = event.target.closest('.wpmft-remove-image');
-                if (!remove) return;
+                if (!remove || remove.disabled || !galleryPreview.contains(remove)) return;
                 remove.closest('figure').remove();
                 galleryInput.value = Array.from(galleryPreview.querySelectorAll('figure')).map(function (figure) { return figure.dataset.id; }).join(',');
+                galleryStatus.textContent = '';
+                setGalleryBusy(false);
             });
+            setGalleryBusy(false);
         }
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready);

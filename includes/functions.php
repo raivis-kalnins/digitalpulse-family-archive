@@ -13,7 +13,7 @@ function wpmft_settings() {
 		'contact_upload_formats' => array( 'jpg', 'jpeg', 'png', 'webp' ),
 		'password_protection' => 1, 'password_hash' => '', 'session_version' => '', 'remember_days' => 30,
 		'hide_living_dates' => 0, 'private_media' => 1, 'language' => 'en', 'language_switch' => 1,
-		'person_block_editor' => 0, 'app_install' => 1, 'app_icons' => 1,
+		'person_block_editor' => 0, 'person_admin_labels' => 1, 'app_install' => 1, 'app_icons' => 1,
 		'performance_cache' => 1, 'cache_ttl' => 15, 'cache_backend' => 'auto', 'disable_comments' => 1, 'disable_emojis' => 1, 'clean_head' => 1,
 		'minify_html' => 1, 'minify_assets' => 1, 'lean_standalone' => 0,
 		'accent' => '#315a42', 'background' => '#f5f4ed', 'tree_height' => 760,

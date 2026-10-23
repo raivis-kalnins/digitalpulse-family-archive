@@ -82,7 +82,7 @@
     "photoPosition": "Bilde {current} av {total}",
     "branchNotice": "Denne visningen viser en del av familien. Velg en persons grenknapp for å utforske videre.",
     "noPeople": "Familiehistorien din begynner her.",
-    "noPeopleHelp": "Administratoren kan legge til en person under Innlegg i WordPress og velge familiekategorien.",
+    "noPeopleHelp": "Administratoren kan legge til en person i kontrollpanelet i WordPress og velge familiekategorien.",
     "about": "Livshistorie",
     "details": "Livsopplysninger",
     "born": "Født",

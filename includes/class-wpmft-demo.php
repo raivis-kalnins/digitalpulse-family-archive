@@ -18,6 +18,7 @@ final class WPMFT_Demo {
 	const WRITE_LOCK = 'wpmft_demo_write_lock';
 	const ROLE = 'wpmft_demo_editor';
 	const CAP = 'wpmft_demo_edit';
+	const MAX_VISITOR_ITEMS = 50;
 	private static $quarantining = false;
 	private static $request_scope = false;
 	private static $resetting = false;
@@ -35,6 +36,8 @@ final class WPMFT_Demo {
 		add_action( 'admin_post_wpmft_demo_reset', array( __CLASS__, 'handle_reset' ) );
 		add_action( 'admin_post_wpmft_demo_baseline', array( __CLASS__, 'handle_baseline' ) );
 		add_action( 'admin_post_wpmft_demo_save', array( __CLASS__, 'handle_save' ) );
+		add_action( 'admin_post_wpmft_demo_create', array( __CLASS__, 'handle_create' ) );
+		add_action( 'admin_post_wpmft_demo_remove', array( __CLASS__, 'handle_remove' ) );
 		add_action( self::RESET_HOOK, array( __CLASS__, 'scheduled_reset' ) );
 		add_action( 'init', array( __CLASS__, 'prepare_reset' ), 30 );
 		add_action( 'admin_init', array( __CLASS__, 'guard_admin' ), 0 );
@@ -82,6 +85,15 @@ final class WPMFT_Demo {
 		return 1 === $changed;
 	}
 
+	/** Visitor reservations and deletion journals cannot overwrite a concurrent manifest change. */
+	private static function replace_manifest( $before, $after ) {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Compare-and-swap for the exclusively owned demo manifest.
+		$changed = $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->options} SET option_value=%s WHERE option_name=%s AND option_value=%s", maybe_serialize( $after ), self::MANIFEST_OPTION, maybe_serialize( $before ) ) );
+		wp_cache_delete( self::MANIFEST_OPTION, 'options' );
+		return 1 === $changed;
+	}
+
 	/** A unique option serializes resets, baseline capture and public editor saves. */
 	private static function acquire_write_lock() {
 		$old = self::fresh_option( self::WRITE_LOCK, '' );
@@ -117,17 +129,17 @@ final class WPMFT_Demo {
 		if ( ! is_array( $manifest ) || empty( $manifest['token'] ) || empty( $manifest['items']['marty'] ) ) { return self::reset_error(); }
 		$people = self::people();
 		$pages = self::pages( $manifest );
-		$baseline = array( 'version' => 1, 'token' => $manifest['token'] ?? '', 'created' => time(), 'source' => $original ? 'bundled' : 'administrator', 'items' => array() );
+		$baseline = array( 'version' => 2, 'token' => $manifest['token'] ?? '', 'created' => time(), 'source' => $original ? 'bundled' : 'administrator', 'items' => array() );
 		global $wpdb;
 		foreach ( array_merge( $people, $pages ) as $key => $seed ) {
 			$id = absint( $manifest['items'][$key] ?? 0 );
 			$type = isset( $people[$key] ) ? 'post' : 'page';
 			if ( ! $id || ! self::validate_owned_ids( array( $id => $type ) ) ) { return self::reset_error(); }
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Capture the current authoritative demo fields, not a stale object.
-			$post = $wpdb->get_row( $wpdb->prepare( "SELECT post_title,post_content FROM {$wpdb->posts} WHERE ID=%d AND post_type=%s", $id, $type ), ARRAY_A );
+			$post = $wpdb->get_row( $wpdb->prepare( "SELECT post_title,post_content,post_status FROM {$wpdb->posts} WHERE ID=%d AND post_type=%s", $id, $type ), ARRAY_A );
 			$revisions = $original ? array() : self::revision_ids( $id );
 			if ( ! is_array( $post ) || false === $revisions ) { return self::reset_error(); }
-			$row = array( 'id' => $id, 'type' => $type, 'title' => $post['post_title'], 'story' => $post['post_content'], 'meta' => array(), 'revisions' => $revisions );
+			$row = array( 'id' => $id, 'type' => $type, 'title' => $post['post_title'], 'story' => $post['post_content'], 'status' => $original ? 'publish' : $post['post_status'], 'meta' => array(), 'revisions' => $revisions );
 			if ( $original ) { $row['title'] = 'post' === $type ? $seed['name'] : $seed['title']; $row['story'] = 'post' === $type ? self::person_content( $seed ) : $seed['content']; }
 			if ( 'post' === $type ) {
 				wp_cache_delete( $id, 'post_meta' );
@@ -142,19 +154,136 @@ final class WPMFT_Demo {
 
 	private static function valid_baseline( $baseline ) {
 		$manifest = self::fresh_option( self::MANIFEST_OPTION );
-		if ( ! is_array( $baseline ) || 1 !== ( $baseline['version'] ?? 0 ) || empty( $baseline['token'] ) || empty( $manifest['token'] ) || ! hash_equals( (string) $manifest['token'], (string) $baseline['token'] ) ) { return false; }
+		if ( ! is_array( $baseline ) || ! in_array( $baseline['version'] ?? 0, array( 1, 2 ), true ) || empty( $baseline['token'] ) || empty( $manifest['token'] ) || ! hash_equals( (string) $manifest['token'], (string) $baseline['token'] ) ) { return false; }
 		$types = array_fill_keys( array_keys( self::people() ), 'post' ) + array( 'tree-page' => 'page', 'about-page' => 'page' );
 		if ( ! isset( $baseline['items'] ) || ! is_array( $baseline['items'] ) || array_diff_key( $types, $baseline['items'] ) || array_diff_key( $baseline['items'], $types ) ) { return false; }
 		$expected = array();
 		foreach ( $types as $key => $type ) {
 			$row = $baseline['items'][$key];
 			if ( ! is_array( $row ) || ! isset( $row['id'], $row['type'], $row['title'], $row['story'], $row['meta'], $row['revisions'] ) || absint( $row['id'] ) !== absint( $manifest['items'][$key] ?? 0 ) || $row['type'] !== $type || ! is_string( $row['title'] ) || ! is_string( $row['story'] ) || ! is_array( $row['meta'] ) || ! is_array( $row['revisions'] ) || isset( $expected[(int) $row['id']] ) ) { return false; }
+			if ( 2 === $baseline['version'] && ! in_array( $row['status'] ?? '', array( 'publish', 'draft', 'pending', 'private', 'future', 'trash' ), true ) ) { return false; }
 			$allowed = 'post' === $type ? array( 'born', '_wpmft_location', '_wpmft_occupation' ) : array();
 			if ( array_diff( array_keys( $row['meta'] ), $allowed ) || array_diff( $allowed, array_keys( $row['meta'] ) ) ) { return false; }
 			foreach ( $row['meta'] as $value ) { if ( null !== $value && ! is_string( $value ) ) { return false; } }
 			$expected[(int) $row['id']] = $type;
 		}
 		return self::validate_owned_ids( $expected );
+	}
+
+	/** Upgrade old baselines before removal without recapturing visitor-edited stories or metadata. */
+	private static function upgrade_baseline( $baseline, $lock, $state ) {
+		if ( ! self::valid_baseline( $baseline ) ) { return self::reset_error(); }
+		if ( 2 === $baseline['version'] ) { return $baseline; }
+		$updated = $baseline;
+		$updated['version'] = 2;
+		global $wpdb;
+		foreach ( $updated['items'] as &$row ) {
+			if ( ! self::owns_write_lock( $lock ) || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::validate_owned_ids( array( $row['id'] => $row['type'] ) ) ) { return self::reset_error(); }
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Capture only the original record's authoritative pre-removal publication status.
+			$status = $wpdb->get_var( $wpdb->prepare( "SELECT post_status FROM {$wpdb->posts} WHERE ID=%d AND post_type=%s", $row['id'], $row['type'] ) );
+			if ( $wpdb->last_error || ! in_array( $status, array( 'publish', 'draft', 'pending', 'private', 'future', 'trash' ), true ) ) { return self::reset_error(); }
+			$row['status'] = $status;
+		}
+		unset( $row );
+		if ( ! self::valid_baseline( $updated ) || ! self::owns_write_lock( $lock ) || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || self::fresh_option( self::BASELINE_OPTION ) !== $baseline ) { return self::reset_error(); }
+		update_option( self::BASELINE_OPTION, $updated, false );
+		return self::fresh_option( self::BASELINE_OPTION ) === $updated ? $updated : self::reset_error();
+	}
+
+	/** A bounded, server-created ledger is separate from the immutable imported baseline. */
+	private static function valid_visitor_ledger( $manifest ) {
+		if ( ! is_array( $manifest ) || empty( $manifest['token'] ) || ! is_string( $manifest['token'] ) || ! isset( $manifest['items'] ) || ! is_array( $manifest['items'] ) ) { return false; }
+		$visitors = $manifest['visitors'] ?? array();
+		if ( ! is_array( $visitors ) || count( $visitors ) > self::MAX_VISITOR_ITEMS ) { return false; }
+		$counts = array_count_values( array_map( 'absint', array_values( $manifest['items'] ) ) );
+		foreach ( $visitors as $key => $row ) {
+			if ( ! is_string( $key ) || ! preg_match( '/^visitor-[a-f0-9-]{36}$/D', $key ) || ! is_array( $row ) || ! isset( $row['id'], $row['type'], $row['cycle'], $row['phase'] ) || ! is_int( $row['id'] ) || $row['id'] < 0 || ! in_array( $row['type'], array( 'post', 'page' ), true ) || ! is_string( $row['cycle'] ) || '' === $row['cycle'] || strlen( $row['cycle'] ) > 128 || ! in_array( $row['phase'], array( 'creating', 'active', 'deleting' ), true ) ) { return false; }
+			if ( 'creating' === $row['phase'] ) {
+				if ( 0 !== $row['id'] || isset( $manifest['items'][$key] ) ) { return false; }
+			} elseif ( $row['id'] < 1 || absint( $manifest['items'][$key] ?? 0 ) !== $row['id'] || 1 !== ( $counts[$row['id']] ?? 0 ) ) { return false; }
+		}
+		foreach ( $manifest['items'] as $key => $id ) {
+			if ( 0 === strpos( (string) $key, 'visitor-' ) && ! isset( $visitors[$key] ) ) { return false; }
+		}
+		return true;
+	}
+
+	/** Verify all three immutable creation markers without using a cached metadata value. */
+	private static function visitor_markers_match( $manifest, $key, $entry, $id ) {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Deletion/recovery requires fresh, exact ownership markers.
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key,meta_value FROM {$wpdb->postmeta} WHERE post_id=%d AND meta_key IN ('_wpmft_demo','_wpmft_demo_key','_wpmft_demo_created_cycle')", $id ), ARRAY_A );
+		if ( $wpdb->last_error || ! is_array( $rows ) || 3 !== count( $rows ) ) { return false; }
+		$expected = array( '_wpmft_demo' => $manifest['token'], '_wpmft_demo_key' => $key, '_wpmft_demo_created_cycle' => $entry['cycle'] );
+		foreach ( $rows as $row ) {
+			if ( ! isset( $expected[$row['meta_key']] ) || ! hash_equals( (string) $expected[$row['meta_key']], (string) $row['meta_value'] ) ) { return false; }
+			unset( $expected[$row['meta_key']] );
+		}
+		return ! $expected;
+	}
+
+	/** WordPress deletion must not reparent an unrelated page/media item or alter site assignments. */
+	private static function visitor_deletion_safe( $id ) {
+		if ( in_array( (int) $id, array( absint( get_option( 'page_on_front' ) ), absint( get_option( 'page_for_posts' ) ) ), true ) || in_array( (int) $id, array_map( 'absint', (array) get_option( 'sticky_posts', array() ) ), true ) ) { return false; }
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- A visitor cannot attach children; unexpected children require administrator review.
+		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_parent=%d AND post_type<>'revision'", $id ) );
+		return ! $wpdb->last_error && '0' === (string) $count;
+	}
+
+	/** Retry-safe cleanup never guesses an ID from a title or removes an unregistered record. */
+	private static function cleanup_visitor_items( $state, $lock ) {
+		$manifest = self::fresh_option( self::MANIFEST_OPTION );
+		if ( ! self::valid_visitor_ledger( $manifest ) ) { return false; }
+		global $wpdb;
+		foreach ( array_keys( $manifest['visitors'] ?? array() ) as $key ) {
+			if ( ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::owns_write_lock( $lock ) || self::real_family_count() ) { return false; }
+			$manifest = self::fresh_option( self::MANIFEST_OPTION );
+			if ( ! self::valid_visitor_ledger( $manifest ) || ! isset( $manifest['visitors'][$key] ) ) { return false; }
+			$entry = $manifest['visitors'][$key];
+			if ( 'creating' === $entry['phase'] ) {
+				// Only a previously reserved, unguessable key can recover a crash before ID registration.
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Resolve an interrupted auto-draft creation from its prior manifest reservation.
+				$rows = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT p.ID,p.post_type,p.post_status FROM {$wpdb->posts} p INNER JOIN {$wpdb->postmeta} k ON k.post_id=p.ID WHERE k.meta_key='_wpmft_demo_key' AND k.meta_value=%s", $key ), ARRAY_A );
+				if ( $wpdb->last_error || ! is_array( $rows ) || count( $rows ) > 1 ) { return false; }
+				if ( ! $rows ) {
+					$updated = $manifest; unset( $updated['visitors'][$key] );
+					if ( ! self::owns_write_lock( $lock ) || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::replace_manifest( $manifest, $updated ) ) { return false; }
+					continue;
+				}
+				$id = absint( $rows[0]['ID'] );
+				if ( $rows[0]['post_type'] !== $entry['type'] || 'auto-draft' !== $rows[0]['post_status'] || ! self::visitor_markers_match( $manifest, $key, $entry, $id ) || in_array( $id, array_map( 'absint', array_values( $manifest['items'] ) ), true ) ) { return false; }
+				$updated = $manifest;
+				$updated['items'][$key] = $id;
+				$updated['visitors'][$key]['id'] = $id;
+				$updated['visitors'][$key]['phase'] = 'active';
+				if ( ! self::owns_write_lock( $lock ) || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::replace_manifest( $manifest, $updated ) ) { return false; }
+				$manifest = $updated; $entry = $updated['visitors'][$key];
+			}
+			$id = $entry['id'];
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Distinguish a completed journaled deletion from a missing/repurposed record.
+			$post = $wpdb->get_row( $wpdb->prepare( "SELECT ID,post_type FROM {$wpdb->posts} WHERE ID=%d", $id ), ARRAY_A );
+			if ( $wpdb->last_error ) { return false; }
+			if ( null === $post ) {
+				if ( 'deleting' !== $entry['phase'] ) { return false; }
+			} else {
+				if ( $post['post_type'] !== $entry['type'] || ! self::validate_owned_ids( array( $id => $entry['type'] ) ) || ! self::visitor_markers_match( $manifest, $key, $entry, $id ) || ! self::visitor_deletion_safe( $id ) ) { return false; }
+				if ( 'deleting' !== $entry['phase'] ) {
+					$updated = $manifest; $updated['visitors'][$key]['phase'] = 'deleting';
+					if ( ! self::owns_write_lock( $lock ) || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::replace_manifest( $manifest, $updated ) ) { return false; }
+					$manifest = $updated;
+				}
+				if ( ! self::owns_write_lock( $lock ) || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::validate_owned_ids( array( $id => $entry['type'] ) ) || ! self::visitor_markers_match( $manifest, $key, $entry, $id ) || ! self::visitor_deletion_safe( $id ) ) { return false; }
+				if ( ! wp_delete_post( $id, true ) ) { return false; }
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Do not prune ownership until deletion is confirmed.
+				$remaining = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE ID=%d", $id ) );
+				if ( $wpdb->last_error || null !== $remaining ) { return false; }
+			}
+			$updated = $manifest;
+			unset( $updated['items'][$key], $updated['visitors'][$key] );
+			if ( ! self::owns_write_lock( $lock ) || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::replace_manifest( $manifest, $updated ) ) { return false; }
+		}
+		return true;
 	}
 
 	/** Replacing a known baseline is an explicit administrator action while sharing is off. */
@@ -199,7 +328,7 @@ final class WPMFT_Demo {
 		$baseline = self::fresh_option( self::BASELINE_OPTION );
 		if ( false === $baseline ) { return self::reset_error(); }
 		$due = empty( $state['next_reset_at'] ) || empty( $state['reset_cycle'] ) || ! empty( $state['reset_pending'] ) || (int) $state['next_reset_at'] <= time();
-		if ( ! $force && $baseline && ! $due ) { self::schedule_reset( $state['next_reset_at'] ); return true; }
+		if ( ! $force && is_array( $baseline ) && 2 === ( $baseline['version'] ?? 0 ) && ! $due ) { self::schedule_reset( $state['next_reset_at'] ); return true; }
 		$lock = self::acquire_write_lock();
 		if ( ! $lock ) { return self::reset_error(); }
 		self::$resetting = true;
@@ -217,7 +346,8 @@ final class WPMFT_Demo {
 				update_option( self::BASELINE_OPTION, $baseline, false );
 				if ( self::fresh_option( self::BASELINE_OPTION ) !== $baseline ) { return self::reset_error(); }
 			}
-			if ( ! self::valid_baseline( $baseline ) ) { self::quarantine(); return self::reset_error(); }
+			$baseline = self::upgrade_baseline( $baseline, $lock, $state );
+			if ( is_wp_error( $baseline ) || ! self::valid_baseline( $baseline ) ) { self::quarantine(); return self::reset_error(); }
 			if ( empty( $state['next_reset_at'] ) || empty( $state['reset_cycle'] ) ) {
 				$updated = $state;
 				$updated['next_reset_at'] = max( 1, (int) ( $state['enabled_at'] ?? time() ) ) + DAY_IN_SECONDS;
@@ -232,17 +362,22 @@ final class WPMFT_Demo {
 			$pending['reset_cycle'] = wp_generate_uuid4();
 			if ( ! self::replace_state( $state, $pending ) ) { return self::reset_error(); }
 			$state = $pending;
+			if ( ! self::cleanup_visitor_items( $state, $lock ) ) { self::$reset_failed = true; return self::reset_error(); }
 			foreach ( $baseline['items'] as $row ) {
 				$current = self::fresh_option( self::STATE_OPTION );
 				if ( ! self::same_demo_session( $state, $current ) || ! self::owns_write_lock( $lock ) || self::real_family_count() || ! self::validate_owned_ids( array( $row['id'] => $row['type'] ) ) ) { self::$reset_failed = true; return self::reset_error(); }
 				self::$mutating_post = (int) $row['id'];
-				$result = wp_update_post( wp_slash( array( 'ID' => $row['id'], 'post_title' => $row['title'], 'post_content' => $row['story'] ) ), true );
+				$result = wp_update_post( wp_slash( array( 'ID' => $row['id'], 'post_title' => $row['title'], 'post_content' => $row['story'], 'post_status' => $row['status'] ) ), true );
 				self::$mutating_post = 0;
 				if ( is_wp_error( $result ) || ! $result ) { self::$reset_failed = true; return self::reset_error(); }
 				global $wpdb;
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Verify authoritative stored fields before declaring a reset complete.
-				$stored = $wpdb->get_row( $wpdb->prepare( "SELECT post_title,post_content FROM {$wpdb->posts} WHERE ID=%d", $row['id'] ), ARRAY_A );
-				if ( ! is_array( $stored ) || $stored['post_title'] !== $row['title'] || $stored['post_content'] !== $row['story'] ) { self::$reset_failed = true; return self::reset_error(); }
+				$stored = $wpdb->get_row( $wpdb->prepare( "SELECT post_title,post_content,post_status FROM {$wpdb->posts} WHERE ID=%d", $row['id'] ), ARRAY_A );
+				if ( ! is_array( $stored ) || $stored['post_title'] !== $row['title'] || $stored['post_content'] !== $row['story'] || $stored['post_status'] !== $row['status'] ) { self::$reset_failed = true; return self::reset_error(); }
+				if ( ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::owns_write_lock( $lock ) || ! self::validate_owned_ids( array( $row['id'] => $row['type'] ) ) ) { self::$reset_failed = true; return self::reset_error(); }
+				delete_post_meta( $row['id'], '_wpmft_demo_removed_cycle' );
+				wp_cache_delete( $row['id'], 'post_meta' );
+				if ( metadata_exists( 'post', $row['id'], '_wpmft_demo_removed_cycle' ) ) { self::$reset_failed = true; return self::reset_error(); }
 				foreach ( $row['meta'] as $key => $value ) {
 					if ( ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::owns_write_lock( $lock ) || ! self::validate_owned_ids( array( $row['id'] => $row['type'] ) ) ) { self::$reset_failed = true; return self::reset_error(); }
 					if ( null === $value ) { delete_post_meta( $row['id'], $key ); } else { update_post_meta( $row['id'], $key, wp_slash( $value ) ); }
@@ -297,6 +432,17 @@ final class WPMFT_Demo {
 		$manifest = self::manifest();
 		$ids = array_map( 'absint', array_values( $manifest['items'] ?? array() ) );
 		return ! empty( $manifest['token'] ) && in_array( absint( $id ), $ids, true ) && hash_equals( (string) $manifest['token'], (string) get_post_meta( $id, '_wpmft_demo', true ) );
+	}
+
+	/** Removal is a private draft, independent of WordPress Trash retention settings. */
+	public static function is_removed( $id ) {
+		return self::is_demo_post( $id ) && '' !== (string) get_post_meta( $id, '_wpmft_demo_removed_cycle', true );
+	}
+
+	/** Keep the canonical demo route and its starting person available throughout each cycle. */
+	public static function removal_protected( $id ) {
+		$manifest = self::manifest();
+		return in_array( absint( $id ), array( absint( $manifest['items']['marty'] ?? 0 ), absint( $manifest['items']['tree-page'] ?? 0 ) ), true );
 	}
 
 	/** These ownership checks intentionally ignore mode: callers capture their demo scope before work. */
@@ -381,6 +527,8 @@ final class WPMFT_Demo {
 	public static function active() {
 		$state = self::state();
 		if ( empty( $state['enabled'] ) || ! empty( $state['quarantined'] ) ) { return false; }
+		// Other requests stay closed while a journaled reset removes visitor metadata and posts.
+		if ( ! empty( $state['reset_pending'] ) && ! self::$resetting ) { return ! is_wp_error( self::reset_if_due() ); }
 		$manifest = self::manifest();
 		$root = absint( $manifest['items']['marty'] ?? 0 );
 		if ( ! $root || ! self::is_demo_post( $root ) || 'publish' !== get_post_status( $root ) || self::real_family_count() ) {
@@ -648,7 +796,7 @@ final class WPMFT_Demo {
 		<?php endif; ?>
 		<hr>
 		<h3><?php esc_html_e( 'Optional shared demo mode', 'my-family-tree' ); ?></h3>
-		<p><?php esc_html_e( 'Use this on a separate demonstration site containing only demo family records. A restricted Family Tree Demo Editor can change marked sample names, dates and biographies, but cannot manage settings, other content, users, plugins or uploads. Contact sending is disabled during demo mode. Visitor edits are public and reset every 24 hours.', 'my-family-tree' ); ?></p>
+		<p><?php esc_html_e( 'Use this on a separate demonstration site containing only demo family records. The restricted Family Tree Demo Editor can add, edit and remove demo persons and pages, and view a read-only settings overview. Contact sending is disabled during demo mode. Visitor edits are public and reset every 24 hours.', 'my-family-tree' ); ?></p>
 		<?php if ( $active ) : ?>
 		<p><strong><?php esc_html_e( 'Demo mode is active.', 'my-family-tree' ); ?></strong></p>
 		<dl><dt><?php esc_html_e( 'WordPress demo login', 'my-family-tree' ); ?></dt><dd><code>demo</code></dd><dt><?php esc_html_e( 'WordPress demo password', 'my-family-tree' ); ?></dt><dd><code>Demo@demo123Editor</code></dd><dt><?php esc_html_e( 'Front-end demo password', 'my-family-tree' ); ?></dt><dd><code>demo</code></dd></dl>
@@ -664,15 +812,15 @@ final class WPMFT_Demo {
 		<?php endif; ?>
 		<hr>
 		<h3><?php esc_html_e( 'Automatic demo reset', 'my-family-tree' ); ?></h3>
-		<p><?php esc_html_e( 'The plugin restores demo titles, stories, birth dates, locations and occupations to a saved starting state every 24 hours. Settings, relationships, media and unrelated content are kept. No backup plugin is required.', 'my-family-tree' ); ?></p>
+		<p><?php esc_html_e( 'Every 24 hours the plugin restores original demo titles, stories, publication status, birth dates, locations and occupations. Removed original samples return, and visitor-created records are deleted. Settings, relationships, media and unrelated content are kept. No backup plugin is required.', 'my-family-tree' ); ?></p>
 		<p class="description"><?php esc_html_e( 'WordPress runs scheduled tasks when the site receives a request. An overdue reset also runs before the next demo visit or save. An editor opened before a reset must be reloaded before saving.', 'my-family-tree' ); ?></p>
 		<?php if ( $active ) : $reset_state = self::state(); ?>
 		<p><strong><?php esc_html_e( 'Next reset:', 'my-family-tree' ); ?></strong> <?php echo esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $reset_state['next_reset_at'] ) ); ?></p>
 		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-reset" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Restore the saved demo starting state now and discard current visitor edits.', 'my-family-tree' ); ?></span></label>
 		<p><button type="submit" form="wpmft-demo-reset" class="button"><?php esc_html_e( 'Reset demo now', 'my-family-tree' ); ?></button></p>
 		<?php elseif ( ! $guarded && ! empty( $manifest['items']['marty'] ) ) : ?>
-		<p><?php esc_html_e( 'The first activation saves the current demo as its starting state. That baseline is retained when sharing is disabled and enabled again. To deliberately change it, finish your demo edits while sharing is off, then save a new baseline below.', 'my-family-tree' ); ?></p>
-		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-baseline" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Use the current demo titles, stories, dates, locations and occupations for future resets, replacing the previous baseline.', 'my-family-tree' ); ?></span></label>
+		<p><?php esc_html_e( 'The first activation saves the imported demo samples as their starting state. That baseline is retained when sharing is disabled and enabled again. To change it, edit those original samples as an administrator while sharing is off, then save a new baseline below.', 'my-family-tree' ); ?></p>
+		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-baseline" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Use the current original demo samples, including their publication status, for future resets. Visitor-created records are still removed at reset.', 'my-family-tree' ); ?></span></label>
 		<p><button type="submit" form="wpmft-demo-baseline" class="button"><?php esc_html_e( 'Save current demo as reset baseline', 'my-family-tree' ); ?></button></p>
 		<?php endif; ?>
 		<?php
@@ -688,14 +836,20 @@ final class WPMFT_Demo {
 
 	public static function admin_assets( $hook ) {
 		if ( ! in_array( $hook, array( 'toplevel_page_wpmft', 'toplevel_page_wpmft-demo-editor' ), true ) ) { return; }
+		if ( 'toplevel_page_wpmft-demo-editor' === $hook && self::is_demo_user() ) {
+			// The core command palette loads REST-backed preferences, unavailable to this restricted account.
+			wp_dequeue_script( 'wp-core-commands' );
+			wp_dequeue_script( 'wp-commands' );
+			wp_dequeue_style( 'wp-commands' );
+		}
 		wp_enqueue_script( 'wpmft-demo-admin', wpmft_asset_url( 'demo-admin.js' ), array(), wpmft_asset_version(), true );
 		wp_enqueue_style( 'wpmft-demo-admin', wpmft_asset_url( 'demo-admin.css' ), array(), wpmft_asset_version() );
 		wp_localize_script( 'wpmft-demo-admin', 'WPMFT_DEMO_ADMIN', array(
 			'import' => __( 'Add fictional demo people, gallery illustrations and English pages? Existing content will be kept. Importing does not enable shared demo access.', 'my-family-tree' ),
-			'enable' => __( 'Enable a public shared demo login? Anyone given its published credentials can edit the marked sample stories. This requires an isolated demo tree.', 'my-family-tree' ),
+			'enable' => __( 'Enable a public shared demo login? Anyone given its published credentials can add, edit and remove demo persons and pages. Changes reset every 24 hours. This requires an isolated demo tree.', 'my-family-tree' ),
 			'disable' => __( 'Revoke the shared account and all demo sessions? Demo content will be kept and the normal Privacy settings will apply again.', 'my-family-tree' ),
 			'reset' => __( 'Discard current visitor edits and restore the saved demo starting state? Other site content and settings will be kept.', 'my-family-tree' ),
-			'baseline' => __( 'Replace the saved demo starting state with the current sample content? Future daily resets will restore these values.', 'my-family-tree' ),
+			'baseline' => __( 'Replace the saved starting state with the current original demo samples? Daily resets will restore these values and remove visitor-created records.', 'my-family-tree' ),
 		) );
 	}
 
@@ -704,14 +858,15 @@ final class WPMFT_Demo {
 		if ( ! self::is_demo_user( $user_id ) ) { return $caps; }
 		if ( in_array( $cap, array( 'edit_post', 'read_post', 'delete_post', 'edit_page', 'read_page', 'delete_page' ), true ) ) {
 			$id = absint( $args[0] ?? 0 );
-			return self::active() && self::is_demo_post( $id ) && in_array( $cap, array( 'edit_post', 'read_post', 'edit_page', 'read_page' ), true ) && ( 'read_post' === $cap || 'read_page' === $cap || in_array( get_post_type( $id ), array( 'post', 'page' ), true ) ) ? array( self::CAP ) : array( 'do_not_allow' );
+			$visible = 'attachment' === get_post_type( $id ) || ( 'publish' === get_post_status( $id ) && ! self::is_removed( $id ) );
+			return self::active() && self::is_demo_post( $id ) && $visible && in_array( $cap, array( 'edit_post', 'read_post', 'edit_page', 'read_page' ), true ) && ( 'read_post' === $cap || 'read_page' === $cap || in_array( get_post_type( $id ), array( 'post', 'page' ), true ) ) ? array( self::CAP ) : array( 'do_not_allow' );
 		}
 		if ( in_array( $cap, array( 'edit_post_meta', 'add_post_meta', 'delete_post_meta', 'edit_user', 'delete_user', 'promote_user', 'remove_user', 'create_users', 'edit_users' ), true ) ) { return array( 'do_not_allow' ); }
 		return $caps;
 	}
 
 	public static function edit_link( $link, $id, $context ) {
-		return self::is_demo_user() && self::active() && self::is_demo_post( $id ) ? add_query_arg( array( 'page' => 'wpmft-demo-editor', 'person' => absint( $id ) ), admin_url( 'admin.php' ) ) : $link;
+		return self::is_demo_user() && self::active() && self::is_demo_post( $id ) && ! self::is_removed( $id ) && 'publish' === get_post_status( $id ) ? add_query_arg( array( 'page' => 'wpmft-demo-editor', 'person' => absint( $id ) ), admin_url( 'admin.php' ) ) : $link;
 	}
 
 	public static function login_redirect( $redirect, $requested, $user ) {
@@ -733,7 +888,7 @@ final class WPMFT_Demo {
 		global $wpdb;
 		$manifest = self::manifest();
 		$ids = array_map( 'absint', array_values( $manifest['items'] ?? array() ) );
-		return $where . ( self::active() && $ids ? " AND {$wpdb->posts}.ID IN (" . implode( ',', $ids ) . ')' : ' AND 1=0' );
+		return $where . ( self::active() && $ids ? " AND {$wpdb->posts}.ID IN (" . implode( ',', $ids ) . ") AND ({$wpdb->posts}.post_type='attachment' OR {$wpdb->posts}.post_status='publish')" : ' AND 1=0' );
 	}
 
 	public static function guard_admin() {
@@ -745,7 +900,7 @@ final class WPMFT_Demo {
 			if ( in_array( $action, array( 'wpmft_api', 'wpmft_media' ), true ) ) { return; }
 			wp_send_json_error( array( 'message' => __( 'This action is not available to the demo editor.', 'my-family-tree' ) ), 403 );
 		}
-		if ( 'admin-post.php' === ( $GLOBALS['pagenow'] ?? '' ) && 'wpmft_demo_save' === $action ) { return; }
+		if ( 'admin-post.php' === ( $GLOBALS['pagenow'] ?? '' ) && in_array( $action, array( 'wpmft_demo_save', 'wpmft_demo_create', 'wpmft_demo_remove' ), true ) ) { return; }
 		$page = isset( $_GET['page'] ) && is_string( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 		if ( 'admin.php' === ( $GLOBALS['pagenow'] ?? '' ) && 'wpmft-demo-editor' === $page ) { return; }
 		wp_safe_redirect( admin_url( 'admin.php?page=wpmft-demo-editor' ) );
@@ -756,38 +911,317 @@ final class WPMFT_Demo {
 		if ( ! self::is_demo_user() ) { return; }
 		global $menu;
 		$menu = array();
-		add_menu_page( __( 'Family Tree Demo', 'my-family-tree' ), __( 'Family Tree Demo', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor', array( __CLASS__, 'editor_page' ), 'dashicons-networking', 2 );
+		add_menu_page( __( 'Family Tree Demo', 'my-family-tree' ), __( 'Persons', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor', array( __CLASS__, 'editor_page' ), 'dashicons-groups', 2 );
+		add_submenu_page( 'wpmft-demo-editor', __( 'Persons', 'my-family-tree' ), __( 'All persons', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor', array( __CLASS__, 'editor_page' ) );
 	}
 
 	public static function editor_page() {
 		if ( ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { return; }
 		$manifest = self::manifest();
 		$id = isset( $_GET['person'] ) && is_scalar( $_GET['person'] ) ? absint( $_GET['person'] ) : 0;
+		$remove_id = isset( $_GET['remove'] ) && is_scalar( $_GET['remove'] ) ? absint( $_GET['remove'] ) : 0;
+		if ( $remove_id ) { $id = $remove_id; }
 		$post = $id && self::is_demo_post( $id ) ? get_post( $id ) : null;
-		echo '<div class="wrap wpmft-demo-editor"><h1>' . esc_html__( 'Cinema Family Demo Editor', 'my-family-tree' ) . '</h1><p>' . esc_html__( 'You can edit marked demonstration stories only. Visitor edits are public and reset every 24 hours. Do not enter personal or confidential information.', 'my-family-tree' ) . '</p>';
-		echo '<p><a class="button" href="' . esc_url( get_permalink( $manifest['items']['tree-page'] ) ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Open demo tree', 'my-family-tree' ) . '</a> <a class="button" href="' . esc_url( wp_logout_url( home_url( '/' ) ) ) . '">' . esc_html__( 'Log out', 'my-family-tree' ) . '</a></p>';
-		if ( isset( $_GET['saved'] ) ) { echo '<div class="notice notice-success"><p>' . esc_html__( 'Demo story saved.', 'my-family-tree' ) . '</p></div>'; }
-		if ( $post && in_array( $post->post_type, array( 'post', 'page' ), true ) ) {
-			echo '<form action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" method="post"><input type="hidden" name="action" value="wpmft_demo_save"><input type="hidden" name="person" value="' . absint( $id ) . '">';
-			wp_nonce_field( 'wpmft_demo_save_' . $id );
+		if ( $post && ( ! in_array( $post->post_type, array( 'post', 'page' ), true ) || 'publish' !== $post->post_status || self::is_removed( $id ) ) ) { $post = null; }
+		$create_type = ! $post && isset( $_GET['create'] ) && in_array( $_GET['create'], array( 'post', 'page' ), true ) ? $_GET['create'] : '';
+		$removing = $post && $remove_id && ! self::removal_protected( $id );
+		$show_pages = $post ? 'page' === $post->post_type : ( $create_type ? 'page' === $create_type : ( isset( $_GET['view'] ) && 'pages' === $_GET['view'] ) );
+		$show_settings = ! $post && ! $create_type && isset( $_GET['view'] ) && 'settings' === $_GET['view'];
+		$list_url = admin_url( 'admin.php?page=wpmft-demo-editor' );
+		$pages_url = add_query_arg( 'view', 'pages', $list_url );
+		$settings_url = add_query_arg( 'view', 'settings', $list_url );
+		$tree_id = absint( $manifest['items']['tree-page'] ?? 0 );
+		$tree_url = $tree_id && self::is_demo_post( $tree_id ) ? get_permalink( $tree_id ) : '';
+		$next_reset = (int) ( self::state()['next_reset_at'] ?? 0 );
+		$heading = $post ? ( $show_pages ? __( 'Edit demo page', 'my-family-tree' ) : __( 'Edit person', 'my-family-tree' ) ) : ( $show_settings ? __( 'Settings overview', 'my-family-tree' ) : ( $show_pages ? __( 'Demo pages', 'my-family-tree' ) : __( 'Persons', 'my-family-tree' ) ) );
+		if ( $create_type ) { $heading = $show_pages ? __( 'Add page', 'my-family-tree' ) : __( 'Add person', 'my-family-tree' ); }
+		if ( $removing ) { $heading = $show_pages ? __( 'Remove page', 'my-family-tree' ) : __( 'Remove person', 'my-family-tree' ); }
+		?>
+		<div class="wrap wpmft-demo-editor">
+			<header class="wpmft-demo-header">
+				<p class="wpmft-demo-eyebrow"><?php esc_html_e( 'Family Tree Demo', 'my-family-tree' ); ?></p>
+				<h1><?php echo esc_html( $heading ); ?></h1>
+				<?php if ( $post ) : ?><p class="wpmft-demo-selected-name"><?php echo esc_html( $post->post_title ); ?></p><?php endif; ?>
+				<nav class="wpmft-demo-nav" aria-label="<?php esc_attr_e( 'Demo navigation', 'my-family-tree' ); ?>">
+					<a class="button" href="<?php echo esc_url( $list_url ); ?>" <?php echo ! $post && ! $create_type && ! $show_pages && ! $show_settings ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'All persons', 'my-family-tree' ); ?></a>
+					<a class="button" href="<?php echo esc_url( $pages_url ); ?>" <?php echo ! $post && ! $create_type && $show_pages ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'Demo pages', 'my-family-tree' ); ?></a>
+					<a class="button" href="<?php echo esc_url( $settings_url ); ?>" <?php echo $show_settings ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'Settings overview', 'my-family-tree' ); ?></a>
+					<?php if ( $tree_url ) : ?><a class="button" href="<?php echo esc_url( $tree_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'View tree', 'my-family-tree' ); ?></a><?php endif; ?>
+					<a class="button wpmft-demo-logout" href="<?php echo esc_url( wp_logout_url( home_url( '/' ) ) ); ?>"><?php esc_html_e( 'Log out', 'my-family-tree' ); ?></a>
+				</nav>
+			</header>
+			<div class="wpmft-demo-reset-note">
+				<p><?php esc_html_e( 'You can add, edit and remove demo persons and pages. Changes are public. Every 24 hours the original demo returns and visitor-created items are removed. Do not enter personal or confidential information.', 'my-family-tree' ); ?></p>
+				<?php if ( $next_reset ) : ?><p class="wpmft-demo-reset-time"><?php
+					/* translators: %s: The next automatic reset date and time in the site timezone. */
+					echo esc_html( sprintf( __( 'Next reset: %s.', 'my-family-tree' ), wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) . ' T', $next_reset ) ) );
+				?></p><?php endif; ?>
+			</div>
+			<?php
+		if ( $post && isset( $_GET['saved'] ) ) { echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Demo changes saved.', 'my-family-tree' ) . '</p></div>'; }
+		if ( $post && isset( $_GET['created'] ) ) { echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Demo item added. It will be removed at the next daily reset.', 'my-family-tree' ) . '</p></div>'; }
+		if ( isset( $_GET['removed'] ) ) { echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Demo item removed. The original demo will return at the next daily reset.', 'my-family-tree' ) . '</p></div>'; }
+		if ( $post && $remove_id && ! $removing ) { echo '<div class="notice notice-info inline"><p>' . esc_html__( 'The starting person and tree page are kept so visitors can always open the demo.', 'my-family-tree' ) . '</p></div>'; }
+		if ( $removing ) {
+			echo '<form class="wpmft-demo-remove-form" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" method="post"><input type="hidden" name="action" value="wpmft_demo_remove"><input type="hidden" name="person" value="' . absint( $id ) . '">';
+			wp_nonce_field( 'wpmft_demo_remove_' . $id );
 			echo '<input type="hidden" name="wpmft_demo_reset_cycle" value="' . esc_attr( self::state()['reset_cycle'] ?? '' ) . '">';
-			echo '<table class="form-table"><tr><th><label for="wpmft-demo-title">' . esc_html__( 'Name / title', 'my-family-tree' ) . '</label></th><td><input class="large-text" id="wpmft-demo-title" name="demo_title" value="' . esc_attr( $post->post_title ) . '" maxlength="160" required></td></tr>';
-			if ( 'post' === $post->post_type ) {
+			echo '<p>' . esc_html__( 'This item will disappear from the public demo. The original demo is restored every 24 hours.', 'my-family-tree' ) . '</p><label class="wpmft-demo-setting-check"><input type="checkbox" name="wpmft_demo_confirm" value="1" required><span>' . esc_html__( 'I confirm removal of this demo item.', 'my-family-tree' ) . '</span></label><div class="wpmft-demo-form-actions"><button type="submit" class="button wpmft-demo-remove-button">' . esc_html( $heading ) . '</button><a class="button" href="' . esc_url( $show_pages ? $pages_url : $list_url ) . '">' . esc_html__( 'Cancel', 'my-family-tree' ) . '</a></div></form>';
+		} elseif ( $post || $create_type ) {
+			echo '<form class="wpmft-demo-person-form" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" method="post"><input type="hidden" name="action" value="' . ( $create_type ? 'wpmft_demo_create' : 'wpmft_demo_save' ) . '">';
+			if ( $create_type ) { echo '<input type="hidden" name="demo_type" value="' . esc_attr( $create_type ) . '">'; }
+			else { echo '<input type="hidden" name="person" value="' . absint( $id ) . '">'; }
+			wp_nonce_field( $create_type ? 'wpmft_demo_create_' . $create_type : 'wpmft_demo_save_' . $id );
+			echo '<input type="hidden" name="wpmft_demo_reset_cycle" value="' . esc_attr( self::state()['reset_cycle'] ?? '' ) . '">';
+			echo '<table class="form-table"><tr><th><label for="wpmft-demo-title">' . esc_html( $show_pages ? __( 'Name / title', 'my-family-tree' ) : __( 'Person’s full name', 'my-family-tree' ) ) . '</label></th><td><input class="large-text" id="wpmft-demo-title" name="demo_title" value="' . esc_attr( $post ? $post->post_title : '' ) . '" maxlength="160" required></td></tr>';
+			if ( ! $show_pages ) {
 				foreach ( array( 'born' => __( 'Birth date (YYYY, YYYY-MM or YYYY-MM-DD)', 'my-family-tree' ), '_wpmft_location' => __( 'Location', 'my-family-tree' ), '_wpmft_occupation' => __( 'Occupation', 'my-family-tree' ) ) as $key => $label ) {
-					echo '<tr><th><label for="demo-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label></th><td><input class="regular-text" id="demo-' . esc_attr( $key ) . '" name="demo_meta[' . esc_attr( $key ) . ']" value="' . esc_attr( get_post_meta( $id, $key, true ) ) . '" maxlength="160"></td></tr>';
+					echo '<tr><th><label for="demo-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label></th><td><input class="regular-text" id="demo-' . esc_attr( $key ) . '" name="demo_meta[' . esc_attr( $key ) . ']" value="' . esc_attr( $post ? get_post_meta( $id, $key, true ) : '' ) . '" maxlength="160"></td></tr>';
 				}
 			}
-			echo '<tr><th><label for="wpmft-demo-story">' . esc_html__( 'Story (basic HTML allowed)', 'my-family-tree' ) . '</label></th><td><textarea class="large-text" rows="16" id="wpmft-demo-story" name="demo_story" maxlength="12000">' . esc_textarea( $post->post_content ) . '</textarea></td></tr></table>';
-			submit_button( __( 'Save demo story', 'my-family-tree' ) );
-			echo '</form>';
+			echo '<tr><th><label for="wpmft-demo-story">' . esc_html__( 'Story (basic HTML allowed)', 'my-family-tree' ) . '</label></th><td><textarea class="large-text" rows="' . ( $id === $tree_id ? '3' : '16' ) . '" id="wpmft-demo-story" name="demo_story" maxlength="12000" ' . ( $id === $tree_id ? 'readonly' : '' ) . '>' . esc_textarea( $post ? $post->post_content : '' ) . '</textarea>';
+			if ( $id === $tree_id ) { echo '<p class="description">' . esc_html__( 'This page displays the demo family tree. Its shortcode is preserved; you can edit the page title.', 'my-family-tree' ) . '</p>'; }
+			echo '</td></tr></table>';
+			echo '<div class="wpmft-demo-form-actions">';
+			submit_button( $create_type ? $heading : ( $show_pages ? __( 'Save demo page', 'my-family-tree' ) : __( 'Save person', 'my-family-tree' ) ), 'primary', 'submit', false );
+			echo '<a class="button" href="' . esc_url( $show_pages ? $pages_url : $list_url ) . '">' . esc_html__( 'Cancel', 'my-family-tree' ) . '</a></div></form>';
+			if ( $post && ! self::removal_protected( $id ) ) { echo '<p><a class="wpmft-demo-remove-link" href="' . esc_url( add_query_arg( 'remove', $id, $list_url ) ) . '">' . esc_html( $show_pages ? __( 'Remove page', 'my-family-tree' ) : __( 'Remove person', 'my-family-tree' ) ) . '</a></p>'; }
+		} elseif ( $show_settings ) {
+			self::editor_settings_overview( $manifest, $tree_url, $list_url );
+		} else {
+			echo '<p class="wpmft-demo-content-actions"><a class="button button-primary" href="' . esc_url( add_query_arg( 'create', $show_pages ? 'page' : 'post', $list_url ) ) . '">' . esc_html( $show_pages ? __( 'Add page', 'my-family-tree' ) : __( 'Add person', 'my-family-tree' ) ) . '</a></p>';
+			if ( ! $show_pages ) {
+				echo '<p class="wpmft-demo-intro">' . esc_html__( 'Choose Edit person to change a name, biography, birth date, location or occupation. Use View person to see the public profile.', 'my-family-tree' ) . '</p>';
+				echo '<div class="wpmft-demo-search"><label for="wpmft-demo-search">' . esc_html__( 'Search persons', 'my-family-tree' ) . '</label><input type="search" id="wpmft-demo-search" aria-controls="wpmft-demo-person-list" autocomplete="off"></div>';
+			}
+			echo '<ul class="wpmft-demo-cards" id="wpmft-demo-person-list">';
+			foreach ( $manifest['items'] ?? array() as $item ) {
+				$sample = get_post( $item );
+				if ( ! $sample || ! self::is_demo_post( $item ) || self::is_removed( $item ) || 'publish' !== $sample->post_status || ( $show_pages ? 'page' : 'post' ) !== $sample->post_type ) { continue; }
+				$edit_url = add_query_arg( 'person', absint( $item ), $list_url );
+				$view_url = $show_pages ? get_permalink( $item ) : ( $tree_url ? add_query_arg( 'person', absint( $item ), $tree_url ) : '' );
+				$portrait = $show_pages ? 0 : get_post_thumbnail_id( $item );
+				echo '<li class="wpmft-demo-card" data-wpmft-demo-name="' . esc_attr( $sample->post_title ) . '"><div class="wpmft-demo-card-summary">';
+				if ( $portrait && self::is_demo_post( $portrait ) ) { echo wp_get_attachment_image( $portrait, 'thumbnail', false, array( 'class' => 'wpmft-demo-card-portrait', 'alt' => '', 'loading' => 'lazy' ) ); }
+				echo '<div><h2>' . esc_html( $sample->post_title ) . '</h2>';
+				if ( ! $show_pages ) { echo '<p>' . esc_html( get_post_meta( $item, '_wpmft_occupation', true ) ) . '</p>'; }
+				echo '</div></div><div class="wpmft-demo-card-actions"><a class="button button-primary" href="' . esc_url( $edit_url ) . '">' . esc_html( $show_pages ? __( 'Edit demo page', 'my-family-tree' ) : __( 'Edit person', 'my-family-tree' ) ) . '<span class="screen-reader-text">: ' . esc_html( $sample->post_title ) . '</span></a>';
+				if ( $view_url ) { echo '<a class="button" href="' . esc_url( $view_url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $show_pages ? __( 'View page', 'my-family-tree' ) : __( 'View person', 'my-family-tree' ) ) . '<span class="screen-reader-text">: ' . esc_html( $sample->post_title ) . '</span></a>'; }
+				echo '</div>';
+				if ( ! self::removal_protected( $item ) ) { echo '<a class="wpmft-demo-remove-link" href="' . esc_url( add_query_arg( 'remove', absint( $item ), $list_url ) ) . '">' . esc_html( $show_pages ? __( 'Remove page', 'my-family-tree' ) : __( 'Remove person', 'my-family-tree' ) ) . '<span class="screen-reader-text">: ' . esc_html( $sample->post_title ) . '</span></a>'; }
+				else { echo '<small class="wpmft-demo-protected-note">' . esc_html__( 'Required for the demo tree.', 'my-family-tree' ) . '</small>'; }
+				echo '</li>';
+			}
+			echo '</ul><p id="wpmft-demo-empty" role="status" hidden>' . esc_html__( 'No persons found.', 'my-family-tree' ) . '</p>';
 		}
-		echo '<h2>' . esc_html__( 'Sample people & pages', 'my-family-tree' ) . '</h2><ul>';
-		foreach ( $manifest['items'] ?? array() as $item ) {
-			$sample = get_post( $item );
-			if ( ! $sample || ! self::is_demo_post( $item ) || ! in_array( $sample->post_type, array( 'post', 'page' ), true ) ) { continue; }
-			echo '<li><a href="' . esc_url( add_query_arg( array( 'page' => 'wpmft-demo-editor', 'person' => absint( $item ) ), admin_url( 'admin.php' ) ) ) . '">' . esc_html( $sample->post_title ) . '</a></li>';
+		echo '</div>';
+	}
+
+	/** A read-only allowlist. Private credentials and contact recipients never enter this markup. */
+	private static function editor_settings_overview( $manifest, $tree_url, $list_url ) {
+		$s = wpmft_settings();
+		$requested_cache = in_array( $s['cache_backend'], array( 'auto', 'object', 'transient' ), true ) ? $s['cache_backend'] : 'auto';
+		// Display configuration only; inspecting the graph cache can create its generation option.
+		$cache = array(
+			'enabled' => ! empty( $s['performance_cache'] ),
+			'ttl' => max( 1, min( 60, absint( $s['cache_ttl'] ) ) ),
+			'backend' => 'transient' !== $requested_cache && wp_using_ext_object_cache() ? 'object' : 'transient',
+		);
+		$languages = wpmft_language_config();
+		$registry = WPMFT_Languages::registry();
+		$language_names = array_column( $languages['languages'], 'name', 'slug' );
+		$default_language = is_string( $s['language'] ) ? $s['language'] : 'en';
+		if ( 'polylang' === $languages['provider'] && function_exists( 'pll_default_language' ) ) {
+			$polylang_default = pll_default_language( 'slug' );
+			if ( is_string( $polylang_default ) && isset( $language_names[$polylang_default] ) ) { $default_language = $polylang_default; }
 		}
-		echo '</ul></div>';
+		$default_language_name = $language_names[$default_language] ?? $registry[$default_language]['name'] ?? 'English';
+		$root_id = absint( $manifest['items']['marty'] ?? 0 );
+		$root = $root_id && self::allows_person( $root_id ) ? get_post( $root_id ) : null;
+		$tree_id = absint( $manifest['items']['tree-page'] ?? 0 );
+		$accent = sanitize_hex_color( $s['accent'] ) ?: '#315a42';
+		$background = sanitize_hex_color( $s['background'] ) ?: '#f5f4ed';
+		?>
+		<p class="wpmft-demo-intro" id="wpmft-demo-settings-help"><?php esc_html_e( 'These settings explain how My Family Tree works. Only the site administrator can change them.', 'my-family-tree' ); ?></p>
+		<div class="wpmft-demo-settings-grid" aria-describedby="wpmft-demo-settings-help">
+			<section class="wpmft-demo-settings-group">
+				<h2><?php esc_html_e( 'General', 'my-family-tree' ); ?></h2>
+				<dl>
+					<dt><?php esc_html_e( 'Tree page', 'my-family-tree' ); ?></dt><dd><?php if ( $tree_url ) : ?><a href="<?php echo esc_url( $tree_url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( get_the_title( $tree_id ) ); ?></a><?php endif; ?></dd>
+					<dt><?php esc_html_e( 'Starting person', 'my-family-tree' ); ?></dt><dd><?php if ( $root ) : ?><a href="<?php echo esc_url( add_query_arg( 'person', $root_id, $list_url ) ); ?>"><?php echo esc_html( $root->post_title ); ?></a><?php endif; ?></dd>
+				</dl>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Shortcodes', 'my-family-tree' ); ?></span><input type="text" readonly value="[wp_my_family_tree]"></label>
+			</section>
+			<section class="wpmft-demo-settings-group">
+				<h2><?php esc_html_e( 'Appearance', 'my-family-tree' ); ?></h2>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['standalone'] ) ); ?>><span><?php esc_html_e( 'Use the full-window layout without the theme header and footer', 'my-family-tree' ); ?></span></label>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Accent colour', 'my-family-tree' ); ?></span><input type="text" readonly value="<?php echo esc_attr( $accent ); ?>"></label>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Background colour', 'my-family-tree' ); ?></span><input type="text" readonly value="<?php echo esc_attr( $background ); ?>"></label>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Tree canvas height on large screens (px)', 'my-family-tree' ); ?></span><input type="number" readonly value="<?php echo absint( $s['tree_height'] ); ?>"></label>
+			</section>
+			<section class="wpmft-demo-settings-group">
+				<h2><?php esc_html_e( 'Languages', 'my-family-tree' ); ?></h2>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Default interface language', 'my-family-tree' ); ?></span><input type="text" readonly value="<?php echo esc_attr( $default_language_name ); ?>"></label>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['language_switch'] ) ); ?>><span><?php esc_html_e( 'Show the language switch', 'my-family-tree' ); ?></span></label>
+				<ul class="wpmft-demo-language-list"><?php foreach ( $languages['languages'] as $language ) : ?><li><?php echo esc_html( $language['name'] ); ?></li><?php endforeach; ?></ul>
+				<p><?php echo esc_html( 'polylang' === $languages['provider'] ? __( 'Polylang is active. Its configured languages and translated page links control the public language menu. These presets supply interface labels.', 'my-family-tree' ) : __( 'Polylang is optional and free to install. The tree and its interface languages work without it. Installing it does not automatically translate your content.', 'my-family-tree' ) ); ?></p>
+			</section>
+			<section class="wpmft-demo-settings-group">
+				<h2><?php esc_html_e( 'Privacy & access', 'my-family-tree' ); ?></h2>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled checked><span><?php esc_html_e( 'Optional shared demo mode', 'my-family-tree' ); ?></span></label>
+				<p><?php esc_html_e( 'Demo access is separate from the private-family password. The shared account can manage demo persons and pages only. Original content returns and new items are removed every 24 hours.', 'my-family-tree' ); ?></p>
+			</section>
+			<section class="wpmft-demo-settings-group">
+				<h2><?php esc_html_e( 'Contact form', 'my-family-tree' ); ?></h2>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled><span><?php esc_html_e( 'Contact messages', 'my-family-tree' ); ?></span></label>
+				<p><?php esc_html_e( 'Family visitors can send a message, a relative’s description and an optional photograph to the administrator. Sending is disabled during shared demo mode.', 'my-family-tree' ); ?></p>
+			</section>
+			<section class="wpmft-demo-settings-group">
+				<h2><?php esc_html_e( 'Performance & cache', 'my-family-tree' ); ?></h2>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( $cache['enabled'] ); ?>><span><?php esc_html_e( 'Cache the internal relationship index', 'my-family-tree' ); ?></span></label>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Cache storage', 'my-family-tree' ); ?></span><input type="text" readonly value="<?php echo esc_attr( 'object' === $cache['backend'] ? __( 'Persistent WordPress object cache', 'my-family-tree' ) : __( 'WordPress database transients', 'my-family-tree' ) ); ?>"></label>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Cache lifetime (minutes)', 'my-family-tree' ); ?></span><input type="number" readonly value="<?php echo absint( $cache['ttl'] ); ?>"></label>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['minify_assets'] ) ); ?>><span><?php esc_html_e( 'Use minified plugin JavaScript and CSS', 'my-family-tree' ); ?></span></label>
+				<p><?php esc_html_e( 'A persistent object cache requires support from the host. Private family responses remain uncached.', 'my-family-tree' ); ?></p>
+			</section>
+		</div>
+		<?php
+	}
+
+	/** Every public mutation rechecks its deadline and cycle while holding the same write lock. */
+	private static function mutation_state( $cycle, $lock ) {
+		$state = self::fresh_option( self::STATE_OPTION );
+		if ( ! is_array( $state ) || empty( $state['enabled'] ) || ! empty( $state['quarantined'] ) || ! empty( $state['reset_pending'] ) || (int) ( $state['next_reset_at'] ?? 0 ) <= time() || get_current_user_id() !== absint( $state['user_id'] ?? 0 ) || ! self::owns_write_lock( $lock ) || self::real_family_count() ) { return self::reset_error(); }
+		if ( ! is_string( $cycle ) || empty( $state['reset_cycle'] ) || ! hash_equals( (string) $state['reset_cycle'], $cycle ) ) { return new WP_Error( 'demo_stale', __( 'The demo has reset since this page was opened. Reload it before making changes.', 'my-family-tree' ) ); }
+		$baseline = self::fresh_option( self::BASELINE_OPTION );
+		if ( ! is_array( $baseline ) || 2 !== ( $baseline['version'] ?? 0 ) || ! self::valid_baseline( $baseline ) || ! self::valid_visitor_ledger( self::fresh_option( self::MANIFEST_OPTION ) ) ) { return self::reset_error(); }
+		return $state;
+	}
+
+	private static function editable_demo_post( $id ) {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Removed/nonpublic records must not be writable through an old editor form.
+		$post = $wpdb->get_row( $wpdb->prepare( "SELECT ID,post_type,post_status FROM {$wpdb->posts} WHERE ID=%d AND NOT EXISTS (SELECT 1 FROM {$wpdb->postmeta} r WHERE r.post_id=%d AND r.meta_key='_wpmft_demo_removed_cycle')", $id, $id ), ARRAY_A );
+		return ! $wpdb->last_error && is_array( $post ) && in_array( $post['post_type'], array( 'post', 'page' ), true ) && 'publish' === $post['post_status'] && self::validate_owned_ids( array( $id => $post['post_type'] ) ) ? $post : false;
+	}
+
+	/** Shared create/save inputs expose only static stories and the existing three person fields. */
+	private static function editor_values() {
+		$title = isset( $_POST['demo_title'] ) && is_string( $_POST['demo_title'] ) ? sanitize_text_field( wp_unslash( $_POST['demo_title'] ) ) : '';
+		$story = isset( $_POST['demo_story'] ) && is_string( $_POST['demo_story'] ) ? wp_unslash( $_POST['demo_story'] ) : '';
+		if ( '' === $title || strlen( $title ) > 640 || strlen( $story ) > 48000 ) { return new WP_Error( 'demo_fields', __( 'Enter a title and a story within the displayed length limits.', 'my-family-tree' ) ); }
+		$story = preg_replace( '/<!--.*?-->/s', '', $story );
+		$story = preg_replace( '/\[[^\]]*\]/', '', $story );
+		$story = wp_kses_post( $story );
+		$submitted = isset( $_POST['demo_meta'] ) && is_array( $_POST['demo_meta'] ) ? wp_unslash( $_POST['demo_meta'] ) : array();
+		$meta = array();
+		foreach ( array( 'born', '_wpmft_location', '_wpmft_occupation' ) as $key ) {
+			if ( ! isset( $submitted[$key] ) || ! is_string( $submitted[$key] ) || strlen( $submitted[$key] ) > 640 ) { continue; }
+			$value = sanitize_text_field( $submitted[$key] );
+			if ( 'born' !== $key || self::valid_date( $value ) ) { $meta[$key] = $value; }
+		}
+		$cycle = isset( $_POST['wpmft_demo_reset_cycle'] ) && is_string( $_POST['wpmft_demo_reset_cycle'] ) ? sanitize_text_field( wp_unslash( $_POST['wpmft_demo_reset_cycle'] ) ) : '';
+		return array( 'title' => $title, 'story' => $story, 'meta' => $meta, 'cycle' => $cycle );
+	}
+
+	public static function handle_create() {
+		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
+		$type = isset( $_POST['demo_type'] ) && is_string( $_POST['demo_type'] ) ? wp_unslash( $_POST['demo_type'] ) : '';
+		if ( ! in_array( $type, array( 'post', 'page' ), true ) ) { wp_die( esc_html__( 'Choose a person or a demo page.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
+		check_admin_referer( 'wpmft_demo_create_' . $type );
+		$values = self::editor_values();
+		if ( is_wp_error( $values ) ) { wp_die( esc_html( $values->get_error_message() ), '', array( 'response' => 400 ) ); }
+		$result = self::create_item( $type, $values['title'], $values['story'], $values['meta'], $values['cycle'] );
+		if ( is_wp_error( $result ) ) { wp_die( esc_html( $result->get_error_message() ), '', array( 'response' => 409 ) ); }
+		wp_safe_redirect( add_query_arg( array( 'page' => 'wpmft-demo-editor', 'person' => $result, 'created' => 1 ), admin_url( 'admin.php' ) ) );
+		exit;
+	}
+
+	private static function create_item( $type, $title, $story, $meta, $cycle ) {
+		if ( ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) || ! in_array( $type, array( 'post', 'page' ), true ) ) { return self::reset_error(); }
+		$lock = self::acquire_write_lock();
+		if ( ! $lock ) { return self::reset_error(); }
+		try {
+			$state = self::mutation_state( $cycle, $lock );
+			if ( is_wp_error( $state ) ) { return $state; }
+			$manifest = self::fresh_option( self::MANIFEST_OPTION );
+			if ( count( $manifest['visitors'] ?? array() ) >= self::MAX_VISITOR_ITEMS ) {
+				/* translators: %d: Maximum number of visitor-created persons and pages before the next demo reset. */
+				return new WP_Error( 'demo_limit', sprintf( __( 'The shared demo allows up to %d new persons and pages before the next reset.', 'my-family-tree' ), self::MAX_VISITOR_ITEMS ) );
+			}
+			$owner = absint( $state['owner_id'] ?? 0 );
+			if ( ! $owner || ! get_userdata( $owner ) ) { return self::reset_error(); }
+			$key = 'visitor-' . wp_generate_uuid4();
+			$entry = array( 'id' => 0, 'type' => $type, 'cycle' => $cycle, 'phase' => 'creating' );
+			$reserved = $manifest; $reserved['visitors'][$key] = $entry;
+			if ( ! self::valid_visitor_ledger( $reserved ) || ! self::owns_write_lock( $lock ) || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::replace_manifest( $manifest, $reserved ) ) { return self::reset_error(); }
+			// Auto-drafts are excluded from real-family detection until exact ownership is registered.
+			$id = wp_insert_post( array( 'post_type' => $type, 'post_status' => 'auto-draft', 'post_author' => $owner, 'post_title' => $title, 'post_content' => '', 'post_parent' => 0, 'comment_status' => 'closed', 'ping_status' => 'closed', 'meta_input' => array( '_wpmft_demo' => $manifest['token'], '_wpmft_demo_key' => $key, '_wpmft_demo_created_cycle' => $cycle ) ), true );
+			if ( is_wp_error( $id ) || ! $id ) { return self::reset_error(); }
+			$registered = $reserved;
+			$registered['items'][$key] = (int) $id;
+			$registered['visitors'][$key]['id'] = (int) $id;
+			$registered['visitors'][$key]['phase'] = 'active';
+			if ( ! self::visitor_markers_match( $reserved, $key, $entry, $id ) || ! self::valid_visitor_ledger( $registered ) || ! self::owns_write_lock( $lock ) || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::replace_manifest( $reserved, $registered ) ) { return self::reset_error(); }
+			if ( is_wp_error( self::mutation_state( $cycle, $lock ) ) || ! self::validate_owned_ids( array( $id => $type ) ) ) { return self::reset_error(); }
+			if ( 'post' === $type ) {
+				update_post_meta( $id, '_wpmft_person', '1' );
+				foreach ( array( 'born', '_wpmft_location', '_wpmft_occupation' ) as $field ) { if ( isset( $meta[$field] ) ) { update_post_meta( $id, $field, wp_slash( $meta[$field] ) ); } }
+			}
+			if ( function_exists( 'pll_set_post_language' ) && function_exists( 'pll_languages_list' ) ) {
+				$source = absint( $manifest['items']['post' === $type ? 'marty' : 'tree-page'] ?? 0 );
+				$language = $source && self::validate_owned_ids( array( $source => $type ) ) && function_exists( 'pll_get_post_language' ) ? pll_get_post_language( $source, 'slug' ) : '';
+				$available = (array) pll_languages_list( array( 'fields' => 'slug' ) );
+				if ( ! is_string( $language ) || ! in_array( $language, $available, true ) ) { $language = function_exists( 'pll_default_language' ) ? pll_default_language( 'slug' ) : ''; }
+				if ( is_string( $language ) && WPMFT_Languages::valid_slug( $language ) && in_array( $language, $available, true ) ) { pll_set_post_language( $id, $language ); }
+			}
+			if ( is_wp_error( self::mutation_state( $cycle, $lock ) ) || ! self::validate_owned_ids( array( $id => $type ) ) || ! self::visitor_markers_match( $registered, $key, $entry, $id ) ) { return self::reset_error(); }
+			self::$mutating_post = (int) $id;
+			$result = wp_update_post( wp_slash( array( 'ID' => $id, 'post_status' => 'publish', 'post_title' => $title, 'post_content' => $story, 'post_name' => 'demo-' . substr( $key, 8 ), 'comment_status' => 'closed', 'ping_status' => 'closed' ) ), true );
+			self::$mutating_post = 0;
+			if ( is_wp_error( $result ) || ! $result || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::owns_write_lock( $lock ) || ! self::editable_demo_post( $id ) || ! self::visitor_markers_match( $registered, $key, $entry, $id ) ) { return self::reset_error(); }
+			WPMFT_Data::reset_cache();
+			return (int) $id;
+		} finally { self::$mutating_post = 0; self::release_write_lock( $lock ); }
+	}
+
+	public static function handle_remove() {
+		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
+		$id = isset( $_POST['person'] ) && is_scalar( $_POST['person'] ) ? absint( $_POST['person'] ) : 0;
+		check_admin_referer( 'wpmft_demo_remove_' . $id );
+		if ( ! isset( $_POST['wpmft_demo_confirm'] ) || '1' !== $_POST['wpmft_demo_confirm'] ) { wp_die( esc_html__( 'Confirm removal before continuing.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
+		$cycle = isset( $_POST['wpmft_demo_reset_cycle'] ) && is_string( $_POST['wpmft_demo_reset_cycle'] ) ? sanitize_text_field( wp_unslash( $_POST['wpmft_demo_reset_cycle'] ) ) : '';
+		$result = self::remove_item( $id, $cycle );
+		if ( is_wp_error( $result ) ) { wp_die( esc_html( $result->get_error_message() ), '', array( 'response' => 409 ) ); }
+		$query = array( 'page' => 'wpmft-demo-editor', 'removed' => 1 );
+		if ( 'page' === $result ) { $query['view'] = 'pages'; }
+		wp_safe_redirect( add_query_arg( $query, admin_url( 'admin.php' ) ) );
+		exit;
+	}
+
+	private static function remove_item( $id, $cycle ) {
+		if ( ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { return self::reset_error(); }
+		$lock = self::acquire_write_lock();
+		if ( ! $lock ) { return self::reset_error(); }
+		try {
+			$state = self::mutation_state( $cycle, $lock );
+			if ( is_wp_error( $state ) ) { return $state; }
+			$manifest = self::fresh_option( self::MANIFEST_OPTION );
+			if ( in_array( (int) $id, array( absint( $manifest['items']['marty'] ?? 0 ), absint( $manifest['items']['tree-page'] ?? 0 ) ), true ) ) { return new WP_Error( 'demo_protected', __( 'The demo starting person and tree page stay available and cannot be removed.', 'my-family-tree' ) ); }
+			$post = self::editable_demo_post( $id );
+			if ( ! $post ) { return new WP_Error( 'demo_content', __( 'This is not editable demo content.', 'my-family-tree' ) ); }
+			// Never call wp_trash_post(): EMPTY_TRASH_DAYS=0 would permanently delete an original ID.
+			self::$mutating_post = (int) $id;
+			$result = wp_update_post( array( 'ID' => $id, 'post_status' => 'draft' ), true );
+			self::$mutating_post = 0;
+			if ( is_wp_error( $result ) || ! $result || ! self::owns_write_lock( $lock ) || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::validate_owned_ids( array( $id => $post['post_type'] ) ) ) { return self::reset_error(); }
+			update_post_meta( $id, '_wpmft_demo_removed_cycle', $cycle );
+			wp_cache_delete( $id, 'post_meta' );
+			clean_post_cache( $id );
+			if ( 'draft' !== get_post_status( $id ) || (string) get_post_meta( $id, '_wpmft_demo_removed_cycle', true ) !== $cycle ) { return self::reset_error(); }
+			WPMFT_Data::reset_cache();
+			return $post['post_type'];
+		} finally { self::$mutating_post = 0; self::release_write_lock( $lock ); }
 	}
 
 	public static function handle_save() {
@@ -795,18 +1229,11 @@ final class WPMFT_Demo {
 		$id = isset( $_POST['person'] ) && is_scalar( $_POST['person'] ) ? absint( $_POST['person'] ) : 0;
 		check_admin_referer( 'wpmft_demo_save_' . $id );
 		if ( ! self::is_demo_post( $id ) || ! in_array( get_post_type( $id ), array( 'post', 'page' ), true ) ) { wp_die( esc_html__( 'This is not editable demo content.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
-		$title = isset( $_POST['demo_title'] ) && is_string( $_POST['demo_title'] ) ? sanitize_text_field( wp_unslash( $_POST['demo_title'] ) ) : '';
-		$story = isset( $_POST['demo_story'] ) && is_string( $_POST['demo_story'] ) ? wp_unslash( $_POST['demo_story'] ) : '';
-		if ( '' === $title || strlen( $title ) > 640 || strlen( $story ) > 48000 ) { wp_die( esc_html__( 'Enter a title and a story within the displayed length limits.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
-		// Shortcodes and dynamic blocks are deliberately unavailable to shared demo editors.
-		$story = preg_replace( '/<!--.*?-->/s', '', $story );
-		$story = preg_replace( '/\[[^\]]*\]/', '', $story );
-		$story = wp_kses_post( $story );
+		$values = self::editor_values();
+		if ( is_wp_error( $values ) ) { wp_die( esc_html( $values->get_error_message() ), '', array( 'response' => 400 ) ); }
 		$manifest = self::manifest();
-		if ( $id === absint( $manifest['items']['tree-page'] ?? 0 ) ) { $story = '[wp_my_family_tree root="' . absint( $manifest['items']['marty'] ?? 0 ) . '"]'; }
-		$meta = isset( $_POST['demo_meta'] ) && is_array( $_POST['demo_meta'] ) ? wp_unslash( $_POST['demo_meta'] ) : array();
-		$cycle = isset( $_POST['wpmft_demo_reset_cycle'] ) && is_string( $_POST['wpmft_demo_reset_cycle'] ) ? sanitize_text_field( wp_unslash( $_POST['wpmft_demo_reset_cycle'] ) ) : '';
-		$result = self::save_changes( $id, $title, $story, $meta, $cycle );
+		if ( $id === absint( $manifest['items']['tree-page'] ?? 0 ) ) { $values['story'] = '[wp_my_family_tree root="' . absint( $manifest['items']['marty'] ?? 0 ) . '"]'; }
+		$result = self::save_changes( $id, $values['title'], $values['story'], $values['meta'], $values['cycle'] );
 		if ( is_wp_error( $result ) ) { wp_die( esc_html( $result->get_error_message() ), '', array( 'response' => 409 ) ); }
 		wp_safe_redirect( add_query_arg( array( 'page' => 'wpmft-demo-editor', 'person' => $id, 'saved' => 1 ), admin_url( 'admin.php' ) ) );
 		exit;
@@ -818,10 +1245,11 @@ final class WPMFT_Demo {
 		$lock = self::acquire_write_lock();
 		if ( ! $lock ) { return self::reset_error(); }
 		try {
-			$state = self::fresh_option( self::STATE_OPTION );
-			$type = get_post_type( $id );
-			if ( empty( $state['enabled'] ) || ! empty( $state['quarantined'] ) || ! empty( $state['reset_pending'] ) || (int) ( $state['next_reset_at'] ?? 0 ) <= time() || ! self::owns_write_lock( $lock ) || ! in_array( $type, array( 'post', 'page' ), true ) || self::real_family_count() || ! self::validate_owned_ids( array( $id => $type ) ) ) { return self::reset_error(); }
-			if ( ! is_string( $cycle ) || empty( $state['reset_cycle'] ) || ! hash_equals( (string) $state['reset_cycle'], $cycle ) ) { return new WP_Error( 'demo_stale', __( 'The demo has reset since this editor was opened. Reload the editor before saving again.', 'my-family-tree' ) ); }
+			$state = self::mutation_state( $cycle, $lock );
+			if ( is_wp_error( $state ) ) { return $state; }
+			$post = self::editable_demo_post( $id );
+			if ( ! $post ) { return new WP_Error( 'demo_content', __( 'This is not editable demo content.', 'my-family-tree' ) ); }
+			$type = $post['post_type'];
 			self::$mutating_post = (int) $id;
 			$result = wp_update_post( wp_slash( array( 'ID' => $id, 'post_title' => $title, 'post_content' => $story ) ), true );
 			self::$mutating_post = 0;

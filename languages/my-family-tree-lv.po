@@ -3,41 +3,49 @@
 # Licensed under GPL-3.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: My Family Tree 1.2.4\n"
+"Project-Id-Version: My Family Tree 1.2.5\n"
 "Report-Msgid-Bugs-To: https://digitalpulse.click/\n"
-"POT-Creation-Date: 2026-10-23 11:13+0000\n"
-"PO-Revision-Date: 2026-10-23 11:13+0000\n"
+"POT-Creation-Date: 2026-10-23 13:13+0000\n"
+"PO-Revision-Date: 2026-10-23 13:13+0000\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n!=0 ? 1 : 2);\n"
 
-#: includes/class-wpmft-admin.php:158 includes/class-wpmft-admin.php:360 includes/class-wpmft-admin.php:473 includes/class-wpmft-toolbar.php:59 includes/class-wpmft-demo.php:607 includes/class-wpmft-security.php:49 includes/class-wpmft-api.php:52 includes/class-wpmft-languages.php:167
+#: includes/class-wpmft-toolbar.php:59 includes/class-wpmft-admin.php:277 includes/class-wpmft-admin.php:482 includes/class-wpmft-admin.php:598 includes/class-wpmft-api.php:52 includes/class-wpmft-security.php:49 includes/class-wpmft-languages.php:167 includes/class-wpmft-demo.php:755
 msgid "A POST request is required."
 msgstr "Nepieciešams POST pieprasījums."
 
-#: includes/class-wpmft-admin.php:212
+#: includes/class-wpmft-admin.php:331
 msgid "A batch of family photographs has been protected. Continue until no photographs remain."
 msgstr "Dzimtas fotogrāfiju grupa ir aizsargāta. Turpiniet, līdz vairs nav atlikušu fotogrāfiju."
 
-#: includes/class-wpmft-demo.php:526
+#: includes/class-wpmft-demo.php:674
 msgid "A bundled demo illustration could not be read."
 msgstr "Neizdevās nolasīt iekļauto demonstrācijas ilustrāciju."
 
-#: includes/class-wpmft-admin.php:720
+#: includes/class-wpmft-admin.php:855
 msgid "A contact field was not saved. Use a valid email address and complete http:// or https:// links. The previous value has been retained."
 msgstr "Kontaktinformācijas lauks netika saglabāts. Izmantojiet derīgu e-pasta adresi un pilnas http:// vai https:// saites. Iepriekšējā vērtība ir saglabāta."
 
-#: includes/class-wpmft-admin.php:750
+#: includes/class-wpmft-admin.php:885
 msgid "A date was not saved. Use YYYY, YYYY-MM or a valid YYYY-MM-DD. The previous value has been retained."
 msgstr "Datums netika saglabāts. Izmantojiet GGGG, GGGG-MM vai derīgu GGGG-MM-DD. Iepriekšējā vērtība ir saglabāta."
 
-#: includes/class-wpmft-admin.php:759
+#: includes/class-wpmft-admin.php:144
+msgid "A link to a person."
+msgstr "Saite uz personu."
+
+#: includes/class-wpmft-admin.php:894
 msgid "A parent relationship was not saved because it would make a person their own ancestor."
 msgstr "Vecāka saite netika saglabāta, jo tā padarītu personu par savu priekšteci."
 
-#: includes/class-wpmft-admin.php:329
+#: includes/class-wpmft-demo.php:1085
+msgid "A persistent object cache requires support from the host. Private family responses remain uncached."
+msgstr "Pastāvīgai objektu kešatmiņai nepieciešams mitināšanas pakalpojuma atbalsts. Privātā dzimtas arhīva atbildes netiek saglabātas kešatmiņā."
+
+#: includes/class-wpmft-admin.php:451
 msgid "A persistent object cache was requested but is not available. WordPress transients are being used safely until a host object cache is active."
 msgstr "Ir izvēlēta pastāvīgā objektu kešatmiņa, taču tā nav pieejama. Līdz hostinga objektu kešatmiņas aktivizēšanai droši tiek izmantota WordPress pagaidu kešatmiņa."
 
@@ -53,7 +61,7 @@ msgstr "Fotogrāfiju nevarēja aizsargāt, jo jums nav atļaujas to rediģēt. L
 msgid "A photograph could not be read."
 msgstr "Fotogrāfiju neizdevās nolasīt."
 
-#: includes/class-wpmft-demo.php:468
+#: includes/class-wpmft-demo.php:616
 msgid "A previous demo record was repurposed. The importer stopped without changing it; restore its demo marker or use a separate demo site."
 msgstr "Iepriekšējs demonstrācijas ieraksts ir pārveidots citam nolūkam. Importēšana apturēta, to nemainot; atjaunojiet tā demonstrācijas atzīmi vai izmantojiet atsevišķu demonstrācijas vietni."
 
@@ -61,11 +69,11 @@ msgstr "Iepriekšējs demonstrācijas ieraksts ir pārveidots citam nolūkam. Im
 msgid "A source photograph is missing. Restore the matching uploads backup."
 msgstr "Trūkst sākotnējās fotogrāfijas. Atjaunojiet atbilstošo uploads rezerves kopiju."
 
-#: includes/class-wpmft-admin.php:270
+#: includes/class-wpmft-admin.php:392 includes/class-wpmft-demo.php:1058
 msgid "Accent colour"
 msgstr "Akcenta krāsa"
 
-#: includes/class-wpmft-admin.php:474 includes/class-wpmft-admin.php:623 includes/class-wpmft-demo.php:162 includes/class-wpmft-demo.php:276 includes/class-wpmft-demo.php:608 includes/class-wpmft-demo.php:794
+#: includes/class-wpmft-admin.php:599 includes/class-wpmft-admin.php:758 includes/class-wpmft-demo.php:291 includes/class-wpmft-demo.php:411 includes/class-wpmft-demo.php:756 includes/class-wpmft-demo.php:1128 includes/class-wpmft-demo.php:1189 includes/class-wpmft-demo.php:1228
 msgid "Access denied."
 msgstr "Piekļuve liegta."
 
@@ -73,31 +81,43 @@ msgstr "Piekļuve liegta."
 msgid "Add a language"
 msgstr "Pievienot valodu"
 
-#: includes/class-wpmft-admin.php:226
+#: includes/class-wpmft-admin.php:345
 msgid "Add a person"
 msgstr "Pievienot personu"
 
-#: includes/class-wpmft-demo.php:642
+#: includes/class-wpmft-demo.php:790
 msgid "Add eight fictional cinema characters, original gallery illustrations and two English pages. The importer adds marked sample content and preserves existing records, pages and settings. Repeating it keeps edits to existing demo items."
 msgstr "Pievienojiet astoņus izdomātus kino tēlus, oriģinālas galerijas ilustrācijas un divas lapas angļu valodā. Importētājs pievieno marķētu parauga saturu un saglabā esošos ierakstus, lapas un iestatījumus. Atkārtota importēšana saglabā esošo demonstrācijas vienumu labojumus."
 
-#: includes/class-wpmft-demo.php:694
+#: includes/class-wpmft-demo.php:848
 msgid "Add fictional demo people, gallery illustrations and English pages? Existing content will be kept. Importing does not enable shared demo access."
 msgstr "Vai pievienot izdomātas demonstrācijas personas, galerijas ilustrācijas un lapas angļu valodā? Esošais saturs tiks saglabāts. Importēšana neieslēdz koplietojamu demonstrācijas piekļuvi."
 
-#: includes/class-wpmft-admin.php:148
+#: includes/class-wpmft-admin.php:267
 msgid "Add no more than 50 partner relationships for one person."
 msgstr "Vienai personai var pievienot ne vairāk kā 50 partnerattiecību ierakstus."
 
-#: includes/class-wpmft-admin.php:554
+#: includes/class-wpmft-demo.php:937 includes/class-wpmft-demo.php:992
+msgid "Add page"
+msgstr "Pievienot lapu"
+
+#: includes/class-wpmft-admin.php:679
 msgid "Add partner relationship"
 msgstr "Pievienot partnerattiecības"
 
-#: includes/class-wpmft-admin.php:802
+#: includes/class-wpmft-admin.php:937
 msgid "Add people as WordPress posts."
 msgstr "Pievienojiet personas kā WordPress ierakstus."
 
-#: includes/class-wpmft-admin.php:220
+#: includes/class-wpmft-admin.php:116 includes/class-wpmft-admin.php:117 includes/class-wpmft-demo.php:937 includes/class-wpmft-demo.php:992
+msgid "Add person"
+msgstr "Pievienot personu"
+
+#: includes/class-wpmft-admin.php:254 includes/class-wpmft-admin.php:747
+msgid "Add photographs"
+msgstr "Pievienot fotogrāfijas"
+
+#: includes/class-wpmft-admin.php:339
 msgid "Add the Family Tree block or this shortcode to a page:"
 msgstr "Pievienojiet lapai Dzimtas koka bloku vai šo īskodu:"
 
@@ -105,23 +125,27 @@ msgstr "Pievienojiet lapai Dzimtas koka bloku vai šo īskodu:"
 msgid "Admin and server messages (JSON)"
 msgstr "Administrācijas un servera paziņojumi (JSON)"
 
-#: includes/class-wpmft-demo.php:643
+#: includes/class-wpmft-demo.php:791
 msgid "All family connections and dates are invented. Character names are illustrative references; no movie stills, celebrity photographs or official character social accounts are included."
 msgstr "Visas radniecības saites un datumi ir izdomāti. Tēlu vārdi izmantoti kā ilustratīvas atsauces; filmu kadri, slavenību fotogrāfijas un oficiālie tēlu sociālo tīklu konti nav iekļauti."
 
-#: includes/class-wpmft-admin.php:207
+#: includes/class-wpmft-admin.php:125 includes/class-wpmft-demo.php:915 includes/class-wpmft-demo.php:946
+msgid "All persons"
+msgstr "Visas personas"
+
+#: includes/class-wpmft-admin.php:326
 msgid "All remembered family sessions have been revoked."
 msgstr "Visas atcerētās dzimtas piekļuves sesijas ir atsauktas."
 
-#: includes/class-wpmft-admin.php:284
+#: includes/class-wpmft-admin.php:406
 msgid "Allow one photograph with a contact message"
 msgstr "Atļaut ziņai pievienot vienu fotogrāfiju"
 
-#: includes/class-wpmft-admin.php:272
+#: includes/class-wpmft-admin.php:394
 msgid "Allow signed-in family visitors to save a tree image and print"
 msgstr "Atļaut dzimtas apmeklētājiem ar piekļuvi saglabāt koka attēlu un drukāt"
 
-#: includes/class-wpmft-admin.php:287
+#: includes/class-wpmft-admin.php:409
 msgid "Allowed photograph formats"
 msgstr "Atļautie fotogrāfiju formāti"
 
@@ -129,7 +153,7 @@ msgstr "Atļautie fotogrāfiju formāti"
 msgid "An attachment has no source file."
 msgstr "Pielikumam nav sākotnējā faila."
 
-#: includes/class-wpmft-admin.php:799
+#: includes/class-wpmft-admin.php:934
 msgid "An existing WP Family Tree category is detected during setup. Keep it selected to reuse your people and relationships."
 msgstr "Iestatīšanas laikā tiek noteikta esošā WP Family Tree kategorija. Saglabājiet tās izvēli, lai izmantotu esošās personas un radniecības saites."
 
@@ -141,7 +165,7 @@ msgstr "Interaktīvs dzimtas koks ozola veidolā ar personu dialoglogiem un iesp
 msgid "An original photograph could not be removed. Check file permissions before sharing the site."
 msgstr "Neizdevās noņemt sākotnējo fotogrāfiju. Pirms vietnes kopīgošanas pārbaudiet failu piekļuves atļaujas."
 
-#: includes/class-wpmft-demo.php:456
+#: includes/class-wpmft-demo.php:604
 msgid "Another demo import is running. Please try again shortly."
 msgstr "Jau notiek cits demonstrācijas imports. Pēc brīža mēģiniet vēlreiz."
 
@@ -149,11 +173,11 @@ msgstr "Jau notiek cits demonstrācijas imports. Pēc brīža mēģiniet vēlrei
 msgid "Another family tree plugin is active"
 msgstr "Jau ir ieslēgts cits dzimtas koka spraudnis"
 
-#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:265
+#: includes/class-wpmft-admin.php:350 includes/class-wpmft-admin.php:387 includes/class-wpmft-demo.php:1056
 msgid "Appearance"
 msgstr "Izskats"
 
-#: includes/class-wpmft-admin.php:258
+#: includes/class-wpmft-admin.php:380
 msgid "At least 12 characters. Leave blank to keep the current password. The password is stored as a one-way hash."
 msgstr "Vismaz 12 rakstzīmes. Atstājiet tukšu, lai saglabātu pašreizējo paroli. Parole tiek glabāta kā vienvirziena jaucējvērtība."
 
@@ -166,47 +190,47 @@ msgstr "Pievienojiet tikai vienu fotogrāfiju."
 msgid "Attachment %1$d: %2$s"
 msgstr "Pielikums %1$d: %2$s"
 
-#: includes/class-wpmft-admin.php:327
+#: includes/class-wpmft-admin.php:449
 msgid "Automatic"
 msgstr "Automātiski"
 
-#: includes/class-wpmft-demo.php:666
+#: includes/class-wpmft-demo.php:814
 msgid "Automatic demo reset"
 msgstr "Automātiska demonstrācijas atiestatīšana"
 
-#: includes/class-wpmft-admin.php:328
+#: includes/class-wpmft-admin.php:450
 msgid "Automatic uses the host’s persistent object cache when available. Redis or Memcached must be configured separately by your host; otherwise this plugin uses WordPress transients. No global cache flush is performed."
 msgstr "Automātiskais režīms izmanto hostinga pastāvīgo objektu kešatmiņu, ja tā ir pieejama. Redis vai Memcached atsevišķi jāiestata hostinga pakalpojuma sniedzējam; citādi spraudnis izmanto WordPress pagaidu kešatmiņu. Visas vietnes kešatmiņa netiek iztīrīta."
 
-#: includes/class-wpmft-admin.php:261
+#: includes/class-wpmft-admin.php:383
 msgid "Automatically encrypt family photograph files when people are saved"
 msgstr "Automātiski šifrēt dzimtas fotogrāfiju failus, saglabājot personas"
 
-#: includes/class-wpmft-admin.php:270
+#: includes/class-wpmft-admin.php:392 includes/class-wpmft-demo.php:1059
 msgid "Background colour"
 msgstr "Fona krāsa"
 
-#: includes/class-wpmft-admin.php:97
+#: includes/class-wpmft-admin.php:207
 msgid "Biography"
 msgstr "Biogrāfija"
 
-#: includes/class-wpmft-admin.php:583
+#: includes/class-wpmft-admin.php:714
 msgid "Birth / maiden name"
 msgstr "Dzimtais / meitas uzvārds"
 
-#: includes/class-wpmft-demo.php:776
+#: includes/class-wpmft-demo.php:978
 msgid "Birth date (YYYY, YYYY-MM or YYYY-MM-DD)"
 msgstr "Dzimšanas datums (YYYY, YYYY-MM vai YYYY-MM-DD)"
 
-#: includes/class-wpmft-admin.php:583
+#: includes/class-wpmft-admin.php:714
 msgid "Birthplace"
 msgstr "Dzimšanas vieta"
 
-#: includes/class-wpmft-admin.php:348
+#: includes/class-wpmft-admin.php:470
 msgid "Builds on the next tree request"
 msgstr "Tiks izveidota nākamajā koka pieprasījumā"
 
-#: includes/class-wpmft-admin.php:246
+#: includes/class-wpmft-admin.php:368
 msgid "By default, people open with their details form above the biography editor. Other posts and pages keep their usual editor. Existing biographies are preserved when only person details change."
 msgstr "Pēc noklusējuma personas datu veidlapa atrodas virs biogrāfijas redaktora. Citi ieraksti un lapas saglabā ierasto redaktoru. Mainot tikai personas datus, esošā biogrāfija tiek saglabāta nemainīta."
 
@@ -214,43 +238,51 @@ msgstr "Pēc noklusējuma personas datu veidlapa atrodas virs biogrāfijas redak
 msgid "Cache cleared"
 msgstr "Kešatmiņa iztīrīta"
 
-#: includes/class-wpmft-admin.php:324
+#: includes/class-wpmft-admin.php:446 includes/class-wpmft-demo.php:1083
 msgid "Cache lifetime (minutes)"
 msgstr "Kešatmiņas derīguma laiks (minūtēs)"
 
-#: includes/class-wpmft-admin.php:326
+#: includes/class-wpmft-admin.php:448 includes/class-wpmft-demo.php:1082
 msgid "Cache storage"
 msgstr "Kešatmiņas glabāšana"
 
-#: includes/class-wpmft-admin.php:323
+#: includes/class-wpmft-admin.php:445 includes/class-wpmft-demo.php:1081
 msgid "Cache the internal relationship index"
 msgstr "Saglabāt iekšējo radniecības indeksu kešatmiņā"
 
-#: includes/class-wpmft-admin.php:346
+#: includes/class-wpmft-admin.php:468
 msgid "Cache tools"
 msgstr "Kešatmiņas rīki"
 
-#: includes/class-wpmft-admin.php:803
+#: includes/class-wpmft-demo.php:969 includes/class-wpmft-demo.php:987
+msgid "Cancel"
+msgstr "Atcelt"
+
+#: includes/class-wpmft-admin.php:938
 msgid "Check privacy while signed out."
 msgstr "Pārbaudiet privātumu bez pieteikšanās."
 
-#: includes/class-wpmft-admin.php:615
-msgid "Choose / reorder photographs"
-msgstr "Izvēlēties / pārkārtot fotogrāfijas"
-
-#: includes/class-wpmft-admin.php:802
+#: includes/class-wpmft-admin.php:937
 msgid "Choose Add a person, enter the full name as the title, then add a portrait, dates, parents, partners, contact details and photographs in the form at the top. Write the biography below. Children and siblings come from parent links."
 msgstr "Izvēlieties “Pievienot personu”, virsrakstā ievadiet vārdu un uzvārdu, pēc tam augšējā veidlapā pievienojiet portretu, datumus, vecākus, partnerus, kontaktinformāciju un fotogrāfijas. Biogrāfiju rakstiet zemāk. Bērni, brāļi un māsas tiek noteikti pēc vecāku saitēm."
 
-#: includes/class-wpmft-admin.php:548
+#: includes/class-wpmft-demo.php:994
+msgid "Choose Edit person to change a name, biography, birth date, location or occupation. Use View person to see the public profile."
+msgstr "Izvēlieties Rediģēt personu, lai mainītu vārdu, biogrāfiju, dzimšanas datumu, dzīvesvietu vai nodarbošanos. Izvēlieties Skatīt personu, lai atvērtu publisko profilu."
+
+#: includes/class-wpmft-admin.php:673
 msgid "Choose Together for a current partner and rings in the tree. Shared children alone never imply a current relationship."
 msgstr "Pašreizējam partnerim izvēlieties statusu Kopā; kokā būs redzami gredzeni. Kopīgi bērni paši par sevi nenozīmē pašreizējas attiecības."
 
-#: includes/class-wpmft-admin.php:248
+#: includes/class-wpmft-admin.php:370
 msgid "Choose a page"
 msgstr "Izvēlieties lapu"
 
-#: includes/class-wpmft-admin.php:149 includes/class-wpmft-admin.php:575
+#: includes/class-wpmft-demo.php:1130
+msgid "Choose a person or a demo page."
+msgstr "Izvēlieties personu vai demonstrācijas lapu."
+
+#: includes/class-wpmft-admin.php:268 includes/class-wpmft-admin.php:702
 msgid "Choose a portrait"
 msgstr "Izvēlēties portretu"
 
@@ -258,23 +290,19 @@ msgstr "Izvēlēties portretu"
 msgid "Choose available interface languages, edit labels or add any number of languages. English is the fallback. Names and biographies are translated separately with optional Polylang."
 msgstr "Izvēlieties pieejamās saskarnes valodas, rediģējiet tekstus vai pievienojiet neierobežotu skaitu valodu. Rezerves valoda ir angļu. Personu vārdus un dzīvesstāstus tulko atsevišķi ar izvēles spraudni Polylang."
 
-#: includes/class-wpmft-admin.php:138
+#: includes/class-wpmft-admin.php:252
 msgid "Choose family photographs"
 msgstr "Izvēlieties dzimtas fotogrāfijas"
 
-#: includes/class-wpmft-admin.php:799
+#: includes/class-wpmft-admin.php:934
 msgid "Choose your family category."
 msgstr "Izvēlieties dzimtas kategoriju."
 
-#: includes/class-wpmft-demo.php:767
-msgid "Cinema Family Demo Editor"
-msgstr "Kino dzimtas demonstrācijas redaktors"
-
-#: includes/class-wpmft-demo.php:443
+#: includes/class-wpmft-demo.php:591
 msgid "Cinema family demo"
 msgstr "Kino dzimtas demonstrācija"
 
-#: includes/class-wpmft-admin.php:352 includes/class-wpmft-toolbar.php:28 includes/class-wpmft-toolbar.php:48
+#: includes/class-wpmft-toolbar.php:28 includes/class-wpmft-toolbar.php:48 includes/class-wpmft-admin.php:474
 msgid "Clear Family Tree cache"
 msgstr "Iztīrīt dzimtas koka kešatmiņu"
 
@@ -282,7 +310,7 @@ msgstr "Iztīrīt dzimtas koka kešatmiņu"
 msgid "Clearing cache…"
 msgstr "Tīra kešatmiņu…"
 
-#: includes/class-wpmft-admin.php:353
+#: includes/class-wpmft-admin.php:475
 msgid "Clears this plugin’s index and refreshes its static asset URLs. Passwords, remembered access, anti-spam limits and protected media are retained. Host, CDN and other plugins’ caches are managed separately."
 msgstr "Iztīra šī spraudņa indeksu un atjaunina skriptu un stilu failu URL. Paroles, atcerētā piekļuve, pretsurogātpasta ierobežojumi un aizsargātie multivides faili tiek saglabāti. Servera, CDN un citu spraudņu kešatmiņas tiek pārvaldītas atsevišķi."
 
@@ -290,23 +318,35 @@ msgstr "Iztīra šī spraudņa indeksu un atjaunina skriptu un stilu failu URL. 
 msgid "Comments are disabled for posts, pages and media."
 msgstr "Komentāri ziņām, lapām un multivides failiem ir atspējoti."
 
-#: includes/class-wpmft-admin.php:341
+#: includes/class-wpmft-admin.php:463
 msgid "Compact the full-window page HTML"
 msgstr "Samazināt pilna loga lapas HTML apjomu"
 
-#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:277
+#: includes/class-wpmft-demo.php:1192
+msgid "Confirm removal before continuing."
+msgstr "Pirms turpināšanas apstipriniet noņemšanu."
+
+#: includes/class-wpmft-admin.php:350 includes/class-wpmft-admin.php:399
 msgid "Contact & hCaptcha"
 msgstr "Kontakti un hCaptcha"
 
-#: includes/class-wpmft-admin.php:593
+#: includes/class-wpmft-admin.php:724
 msgid "Contact details"
 msgstr "Kontaktinformācija"
 
-#: includes/class-wpmft-admin.php:282
+#: includes/class-wpmft-demo.php:1075
+msgid "Contact form"
+msgstr "Kontaktforma"
+
+#: includes/class-wpmft-demo.php:1076
+msgid "Contact messages"
+msgstr "Kontaktformas ziņas"
+
+#: includes/class-wpmft-admin.php:404
 msgid "Contact messages use WordPress mail delivery. The form does not save message contents to the family tree database. Your mail provider may retain delivered messages."
 msgstr "Saziņas ziņojumi izmanto WordPress pasta sūtīšanu. Forma nesaglabā ziņojumu saturu dzimtas koka datubāzē. Jūsu pasta pakalpojuma sniedzējs var saglabāt piegādātos ziņojumus."
 
-#: includes/class-wpmft-admin.php:283
+#: includes/class-wpmft-admin.php:405
 msgid "Contact photo uploads"
 msgstr "Kontaktformas fotogrāfijas"
 
@@ -318,23 +358,27 @@ msgstr "Saturs nav atrasts."
 msgid "Copy the labels you want to change into a language’s Front-end labels JSON field. Keep placeholders unchanged, for example {name}, {count} and {days}."
 msgstr "Iekopējiet maināmos tekstus attiecīgās valodas laukā “Publiskās saskarnes teksti (JSON)”. Atstājiet vietturus nemainītus, piemēram, {name}, {count} un {days}."
 
-#: includes/class-wpmft-admin.php:307
+#: includes/class-wpmft-admin.php:257
+msgid "Could not load all photographs. Your gallery has not changed. Please try again."
+msgstr "Neizdevās ielādēt visas fotogrāfijas. Jūsu galerija nav mainīta. Lūdzu, mēģiniet vēlreiz."
+
+#: includes/class-wpmft-admin.php:429
 msgid "Create a tree page"
 msgstr "Izveidot koka lapu"
 
-#: includes/class-wpmft-admin.php:800
+#: includes/class-wpmft-admin.php:935
 msgid "Create or edit the tree page."
 msgstr "Izveidojiet vai rediģējiet koka lapu."
 
-#: includes/class-wpmft-admin.php:583
+#: includes/class-wpmft-admin.php:714
 msgid "Date of birth"
 msgstr "Dzimšanas datums"
 
-#: includes/class-wpmft-admin.php:583
+#: includes/class-wpmft-admin.php:714
 msgid "Date of death (leave blank if living)"
 msgstr "Miršanas datums (dzīvai personai atstājiet tukšu)"
 
-#: includes/class-wpmft-admin.php:587
+#: includes/class-wpmft-admin.php:718
 msgid "Dates accept YYYY, YYYY-MM or YYYY-MM-DD. Older date text is retained unless you change it."
 msgstr "Datumiem izmantojiet GGGG, GGGG-MM vai GGGG-MM-DD. Iepriekšējais datuma teksts tiek saglabāts, ja to nemaināt."
 
@@ -342,99 +386,119 @@ msgstr "Datumiem izmantojiet GGGG, GGGG-MM vai GGGG-MM-DD. Iepriekšējais datum
 msgid "Deactivate the older WP My Family Tree plugin or any duplicate copy before activating My Family Tree. Your family posts, photographs and saved settings will be retained."
 msgstr "Izslēdziet iepriekšējo WP My Family Tree spraudni vai tā dublikātu, pirms ieslēdzat My Family Tree. Jūsu dzimtas ieraksti, fotoattēli un saglabātie iestatījumi tiks saglabāti."
 
-#: includes/class-wpmft-admin.php:194
+#: includes/class-wpmft-admin.php:313
 msgid "Deactivate the original WP Family Tree plugin. Its older public routes can bypass the privacy settings of this replacement. Your posts and photographs are retained."
 msgstr "Deaktivizējiet sākotnējo WP Family Tree spraudni. Tā vecākie publiskie piekļuves ceļi var apiet šī aizstājēja privātuma iestatījumus. Jūsu ieraksti un fotogrāfijas tiks saglabāti."
 
-#: includes/class-wpmft-admin.php:252 includes/class-wpmft-languages.php:199
+#: includes/class-wpmft-admin.php:374 includes/class-wpmft-languages.php:199 includes/class-wpmft-demo.php:1064
 msgid "Default interface language"
 msgstr "Noklusējuma saskarnes valoda"
 
-#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:300
+#: includes/class-wpmft-admin.php:350 includes/class-wpmft-admin.php:422
 msgid "Demo"
 msgstr "Demonstrācija"
 
-#: includes/class-wpmft-demo.php:641
+#: includes/class-wpmft-demo.php:1072
+msgid "Demo access is separate from the private-family password. The shared account can manage demo persons and pages only. Original content returns and new items are removed every 24 hours."
+msgstr "Demonstrācijas piekļuve ir nodalīta no privātās dzimtas paroles. Koplietotais konts var pārvaldīt tikai demonstrācijas personas un lapas. Ik pēc 24 stundām sākotnējais saturs tiek atjaunots un jaunie ieraksti tiek noņemti."
+
+#: includes/class-wpmft-demo.php:961
+msgid "Demo changes saved."
+msgstr "Demonstrācijas izmaiņas saglabātas."
+
+#: includes/class-wpmft-demo.php:789
 msgid "Demo content & sharing"
 msgstr "Demonstrācijas saturs un koplietošana"
 
-#: includes/class-wpmft-demo.php:619
+#: includes/class-wpmft-demo.php:767
 msgid "Demo content is ready. Existing content and settings were preserved. Sharing remains off until you explicitly enable it."
 msgstr "Demonstrācijas saturs ir gatavs. Esošais saturs un iestatījumi ir saglabāti. Koplietošana paliek izslēgta, līdz to apzināti ieslēdzat."
 
-#: includes/class-wpmft-demo.php:653
+#: includes/class-wpmft-demo.php:962
+msgid "Demo item added. It will be removed at the next daily reset."
+msgstr "Demonstrācijas ieraksts ir pievienots. Tas tiks noņemts nākamajā ikdienas atiestatīšanā."
+
+#: includes/class-wpmft-demo.php:963
+msgid "Demo item removed. The original demo will return at the next daily reset."
+msgstr "Demonstrācijas ieraksts ir noņemts. Sākotnējā demonstrācija tiks atjaunota nākamajā ikdienas atiestatīšanā."
+
+#: includes/class-wpmft-demo.php:801
 msgid "Demo mode is active."
 msgstr "Demonstrācijas režīms ir ieslēgts."
 
-#: includes/class-wpmft-demo.php:620
+#: includes/class-wpmft-demo.php:945
+msgid "Demo navigation"
+msgstr "Demonstrācijas navigācija"
+
+#: includes/class-wpmft-demo.php:936 includes/class-wpmft-demo.php:947
+msgid "Demo pages"
+msgstr "Demonstrācijas lapas"
+
+#: includes/class-wpmft-demo.php:768
 msgid "Demo sharing is active. The shared editor can edit demo content only."
 msgstr "Koplietojamā demonstrācija ir ieslēgta. Koplietojamais redaktors var mainīt tikai demonstrācijas saturu."
 
-#: includes/class-wpmft-demo.php:549
+#: includes/class-wpmft-demo.php:697
 msgid "Demo sharing is blocked because real family records exist, including unpublished or trashed records. Use a separate demo site."
 msgstr "Koplietojamā demonstrācija ir bloķēta, jo vietnē ir īsti dzimtas ieraksti, tostarp nepublicēti vai atkritnē ievietoti ieraksti. Izmantojiet atsevišķu demonstrācijas vietni."
 
-#: includes/class-wpmft-demo.php:656
+#: includes/class-wpmft-demo.php:804
 msgid "Demo sharing is locked. Its isolation check failed; shared sessions have been revoked."
 msgstr "Koplietojamā demonstrācija ir bloķēta. Neizdevās tās satura nošķirtības pārbaude; koplietojamās sesijas ir atsauktas."
 
-#: includes/class-wpmft-demo.php:722 includes/class-wpmft-demo.php:742
+#: includes/class-wpmft-demo.php:877 includes/class-wpmft-demo.php:897
 msgid "Demo sharing is not active."
 msgstr "Koplietojamā demonstrācija nav ieslēgta."
 
-#: includes/class-wpmft-demo.php:621
+#: includes/class-wpmft-demo.php:769
 msgid "Demo sharing is off. Its sessions and managed account have been revoked. Demo content is retained."
 msgstr "Koplietojamā demonstrācija ir izslēgta. Tās sesijas un pārvaldītais konts ir atsaukti. Demonstrācijas saturs ir saglabāts."
 
-#: includes/class-wpmft-demo.php:420
+#: includes/class-wpmft-demo.php:568
 msgid "Demo sharing is unavailable. Please contact the site administrator."
 msgstr "Koplietojamā demonstrācija nav pieejama. Sazinieties ar vietnes administratoru."
 
-#: includes/class-wpmft-demo.php:769
-msgid "Demo story saved."
-msgstr "Demonstrācijas stāsts ir saglabāts."
-
-#: includes/class-wpmft-demo.php:622
+#: includes/class-wpmft-demo.php:770
 msgid "Demo visitor edits have been reset. The next reset is due in 24 hours."
 msgstr "Demonstrācijas apmeklētāju labojumi ir atiestatīti. Nākamā atiestatīšana paredzēta pēc 24 stundām."
 
-#: includes/class-wpmft-admin.php:815
+#: includes/class-wpmft-admin.php:950
 msgid "Developer"
 msgstr "Izstrādātājs"
 
-#: includes/class-wpmft-admin.php:332
+#: includes/class-wpmft-admin.php:454
 msgid "Disable comments and pingbacks on posts, pages and media"
 msgstr "Atspējot komentārus un atpakaļsaites ziņām, lapām un multivides failiem"
 
-#: includes/class-wpmft-demo.php:663
+#: includes/class-wpmft-demo.php:811
 msgid "Disable demo mode"
 msgstr "Izslēgt demonstrācijas režīmu"
 
-#: includes/class-wpmft-demo.php:168
+#: includes/class-wpmft-demo.php:297
 msgid "Disable demo sharing before saving a new reset baseline."
 msgstr "Pirms jauna sākotnējā stāvokļa saglabāšanas izslēdziet demonstrācijas koplietošanu."
 
-#: includes/class-wpmft-demo.php:550
+#: includes/class-wpmft-demo.php:698
 msgid "Disable the existing demo session before enabling it again."
 msgstr "Pirms atkārtotas ieslēgšanas izslēdziet pašreizējo demonstrācijas sesiju."
 
-#: includes/class-wpmft-admin.php:348
+#: includes/class-wpmft-admin.php:470
 msgid "Disabled"
 msgstr "Atspējota"
 
-#: includes/class-wpmft-demo.php:697
+#: includes/class-wpmft-demo.php:851
 msgid "Discard current visitor edits and restore the saved demo starting state? Other site content and settings will be kept."
 msgstr "Vai atmest pašreizējos apmeklētāju labojumus un atjaunot saglabāto demonstrācijas sākotnējo stāvokli? Pārējais vietnes saturs un iestatījumi tiks saglabāti."
 
-#: includes/class-wpmft-admin.php:281
+#: includes/class-wpmft-admin.php:403
 msgid "Display the contact email button in the footer"
 msgstr "Rādīt kontaktpersonas e-pasta pogu kājenē"
 
-#: includes/class-wpmft-admin.php:507
+#: includes/class-wpmft-admin.php:632
 msgid "Divorced"
 msgstr "Šķīrušies"
 
-#: includes/class-wpmft-admin.php:549
+#: includes/class-wpmft-admin.php:674
 msgid "Divorced, separated and former partners are hidden from each other’s own tree. Both recorded parents remain visible when their child is selected."
 msgstr "Šķīrušies, šķirti dzīvojoši un bijušie partneri netiek rādīti viens otra kokā. Atlasot viņu bērnu, abi ierakstītie vecāki paliek redzami."
 
@@ -442,11 +506,19 @@ msgstr "Šķīrušies, šķirti dzīvojoši un bijušie partneri netiek rādīti
 msgid "Each language needs a unique code such as en, pt-br or zh-hant."
 msgstr "Katrai valodai nepieciešams unikāls kods, piemēram, en, pt-br vai zh-hant."
 
-#: includes/class-wpmft-admin.php:521
+#: includes/class-wpmft-demo.php:936 includes/class-wpmft-demo.php:1008
+msgid "Edit demo page"
+msgstr "Rediģēt demonstrācijas lapu"
+
+#: includes/class-wpmft-admin.php:118 includes/class-wpmft-demo.php:936 includes/class-wpmft-demo.php:1008
+msgid "Edit person"
+msgstr "Rediģēt personu"
+
+#: includes/class-wpmft-admin.php:646
 msgid "Edit the other person’s record"
 msgstr "Rediģēt otras personas ierakstu"
 
-#: includes/class-wpmft-admin.php:224
+#: includes/class-wpmft-admin.php:343
 msgid "Edit tree page"
 msgstr "Rediģēt koka lapu"
 
@@ -454,15 +526,15 @@ msgstr "Rediģēt koka lapu"
 msgid "Email"
 msgstr "E-pasts"
 
-#: includes/class-wpmft-admin.php:596
+#: includes/class-wpmft-admin.php:727
 msgid "Email address"
 msgstr "E-pasta adrese"
 
-#: includes/class-wpmft-demo.php:695
-msgid "Enable a public shared demo login? Anyone given its published credentials can edit the marked sample stories. This requires an isolated demo tree."
-msgstr "Vai ieslēgt publisku koplietojamu demonstrācijas kontu? Ikviens, kam pieejami tā publiskie piekļuves dati, varēs mainīt marķētos parauga stāstus. Tam nepieciešams nošķirts demonstrācijas dzimtas koks."
+#: includes/class-wpmft-demo.php:849
+msgid "Enable a public shared demo login? Anyone given its published credentials can add, edit and remove demo persons and pages. Changes reset every 24 hours. This requires an isolated demo tree."
+msgstr "Ieslēgt publisku koplietotu demonstrācijas kontu? Ikviens, kuram ir tā publiskie piekļuves dati, varēs pievienot, rediģēt un noņemt demonstrācijas personas un lapas. Izmaiņas tiek atiestatītas ik pēc 24 stundām. Tam nepieciešams atsevišķs demonstrācijas koks."
 
-#: includes/class-wpmft-admin.php:291
+#: includes/class-wpmft-admin.php:413
 msgid "Enable hCaptcha (external anti-spam service)"
 msgstr "Ieslēgt hCaptcha (ārējs aizsardzības pakalpojums pret surogātpastu)"
 
@@ -470,19 +542,19 @@ msgstr "Ieslēgt hCaptcha (ārējs aizsardzības pakalpojums pret surogātpastu)
 msgid "Enable language"
 msgstr "Ieslēgt valodu"
 
-#: includes/class-wpmft-demo.php:659
+#: includes/class-wpmft-demo.php:807
 msgid "Enable shared demo mode"
 msgstr "Ieslēgt koplietojamās demonstrācijas režīmu"
 
-#: includes/class-wpmft-admin.php:278
+#: includes/class-wpmft-admin.php:400
 msgid "Enable the Contact Us form"
 msgstr "Ieslēgt saziņas formu"
 
-#: includes/class-wpmft-admin.php:245
+#: includes/class-wpmft-admin.php:367
 msgid "Enable the WordPress block editor for family people"
 msgstr "Iespējot WordPress bloku redaktoru dzimtas personu ierakstiem"
 
-#: includes/class-wpmft-admin.php:244
+#: includes/class-wpmft-admin.php:364
 msgid "Enable the family tree"
 msgstr "Ieslēgt dzimtas koku"
 
@@ -490,7 +562,7 @@ msgstr "Ieslēgt dzimtas koku"
 msgid "Enable the selected default language before saving."
 msgstr "Pirms saglabāšanas ieslēdziet izvēlēto noklusējuma valodu."
 
-#: includes/class-wpmft-admin.php:262
+#: includes/class-wpmft-admin.php:384
 msgid "Encrypted photographs are served through the family access check. This switch controls protection of new files; disabling it does not make already encrypted photographs public. Use “Protect existing family photos” below to process older files."
 msgstr "Šifrētās fotogrāfijas tiek izsniegtas pēc dzimtas piekļuves pārbaudes. Šis slēdzis vada jaunu failu aizsardzību; izslēdzot to, jau šifrētās fotogrāfijas nekļūst publiskas. Vecākiem failiem izmantojiet pogu “Aizsargāt esošās dzimtas fotogrāfijas”."
 
@@ -502,7 +574,7 @@ msgstr "Publiskās saskarnes tekstu paraugs angļu valodā"
 msgid "Enter a language name and a valid locale, such as English and en_US."
 msgstr "Ievadiet valodas nosaukumu un derīgu lokāli, piemēram, English un en_US."
 
-#: includes/class-wpmft-demo.php:800
+#: includes/class-wpmft-demo.php:1112
 msgid "Enter a title and a story within the displayed length limits."
 msgstr "Ievadiet nosaukumu un stāstu, ievērojot norādītos garuma ierobežojumus."
 
@@ -510,23 +582,27 @@ msgstr "Ievadiet nosaukumu un stāstu, ievērojot norādītos garuma ierobežoju
 msgid "Enter your full name, a valid email address, and a message of 10–10,000 characters."
 msgstr "Ievadiet vārdu un uzvārdu, derīgu e-pasta adresi un ziņu ar 10–10 000 rakstzīmēm."
 
-#: includes/class-wpmft-admin.php:247
+#: includes/class-wpmft-demo.php:815
+msgid "Every 24 hours the plugin restores original demo titles, stories, publication status, birth dates, locations and occupations. Removed original samples return, and visitor-created records are deleted. Settings, relationships, media and unrelated content are kept. No backup plugin is required."
+msgstr "Ik pēc 24 stundām spraudnis atjauno sākotnējos demonstrācijas nosaukumus, aprakstus, publicēšanas statusu, dzimšanas datumus, atrašanās vietas un nodarbošanos. Noņemtie sākotnējie paraugi tiek atjaunoti, bet apmeklētāju izveidotie ieraksti tiek dzēsti. Iestatījumi, radniecības saites, multivide un nesaistītais saturs tiek saglabāti. Rezerves kopiju spraudnis nav nepieciešams."
+
+#: includes/class-wpmft-admin.php:369
 msgid "Existing WP Family Tree posts remain ordinary WordPress posts in this category."
 msgstr "Esošie WP Family Tree ieraksti paliek parastie WordPress ieraksti šajā kategorijā."
 
-#: includes/class-wpmft-admin.php:333
+#: includes/class-wpmft-admin.php:455
 msgid "Existing comments are retained for administrators. Custom post type reviews and order notes are unaffected."
 msgstr "Esošie komentāri tiek saglabāti un paliek pieejami administratoriem. Atsauksmes un pasūtījumu piezīmes pielāgotajos ierakstu tipos netiek ietekmētas."
 
-#: includes/class-wpmft-admin.php:111 block.json
+#: includes/class-wpmft-admin.php:225 block.json
 msgid "Family Tree"
 msgstr "Dzimtas koks"
 
-#: includes/class-wpmft-demo.php:759 includes/class-wpmft-demo.php:759
+#: includes/class-wpmft-demo.php:914 includes/class-wpmft-demo.php:942
 msgid "Family Tree Demo"
 msgstr "Dzimtas koka demonstrācija"
 
-#: includes/class-wpmft-demo.php:565
+#: includes/class-wpmft-demo.php:713
 msgid "Family Tree Demo Editor"
 msgstr "Dzimtas koka demonstrācijas redaktors"
 
@@ -534,7 +610,7 @@ msgstr "Dzimtas koka demonstrācijas redaktors"
 msgid "Family Tree cache"
 msgstr "Dzimtas koka kešatmiņa"
 
-#: includes/class-wpmft-admin.php:213
+#: includes/class-wpmft-admin.php:332
 msgid "Family Tree cache cleared. Static asset URLs have been refreshed."
 msgstr "Dzimtas koka kešatmiņa ir iztīrīta. Skriptu un stilu failu URL ir atjaunināti."
 
@@ -542,27 +618,27 @@ msgstr "Dzimtas koka kešatmiņa ir iztīrīta. Skriptu un stilu failu URL ir at
 msgid "Family Tree cache cleared. The relationship index rebuilds on the next tree request."
 msgstr "Dzimtas koka kešatmiņa ir iztīrīta. Radniecības indekss tiks izveidots no jauna nākamajā dzimtas koka pieprasījumā."
 
-#: includes/class-wpmft-demo.php:632
+#: includes/class-wpmft-demo.php:780
 msgid "Family Tree demo sharing was locked because its content is no longer isolated. Shared access has been revoked. Disable demo mode in Family Tree settings before configuring normal family access."
 msgstr "Dzimtas koka koplietojamā demonstrācija ir bloķēta, jo tās saturs vairs nav nodalīts. Koplietojamā piekļuve ir atsaukta. Pirms parastās dzimtas piekļuves iestatīšanas izslēdziet demonstrācijas režīmu dzimtas koka iestatījumos."
 
-#: includes/class-wpmft-admin.php:280
+#: includes/class-wpmft-admin.php:402
 msgid "Family administrator email"
 msgstr "Dzimtas administratora e-pasts"
 
-#: includes/class-wpmft-admin.php:279
+#: includes/class-wpmft-admin.php:401
 msgid "Family administrator name"
 msgstr "Dzimtas administratora vārds"
 
-#: includes/class-wpmft-admin.php:247
+#: includes/class-wpmft-admin.php:369
 msgid "Family member category"
 msgstr "Dzimtas personu kategorija"
 
-#: includes/class-wpmft-admin.php:812
+#: includes/class-wpmft-admin.php:947
 msgid "Family people use a details-first classic editor by default. Enable the block editor in General if you prefer it. This setting does not change other posts, pages or saved biography content."
 msgstr "Dzimtas personām pēc noklusējuma tiek izmantots klasiskais redaktors ar datu veidlapu augšpusē. Ja vēlaties, sadaļā “Vispārīgi” iespējojiet bloku redaktoru. Šis iestatījums nemaina citus ierakstus, lapas vai saglabāto biogrāfiju saturu."
 
-#: includes/class-wpmft-admin.php:145
+#: includes/class-wpmft-admin.php:264
 msgid "Family photograph protection is complete."
 msgstr "Dzimtas fotogrāfiju aizsardzība ir pabeigta."
 
@@ -574,35 +650,43 @@ msgstr "Dzimtas koks"
 msgid "Family tree contact"
 msgstr "Dzimtas koka kontaktforma"
 
-#: includes/class-wpmft-admin.php:230
+#: includes/class-wpmft-admin.php:349
 msgid "Family tree settings"
 msgstr "Dzimtas koka iestatījumi"
 
-#: includes/class-wpmft-admin.php:95 includes/class-wpmft-admin.php:490
+#: includes/class-wpmft-admin.php:205 includes/class-wpmft-admin.php:615
 msgid "Family tree — person details"
 msgstr "Dzimtas koks — personas informācija"
 
-#: includes/class-wpmft-admin.php:589
+#: includes/class-wpmft-demo.php:1077
+msgid "Family visitors can send a message, a relative’s description and an optional photograph to the administrator. Sending is disabled during shared demo mode."
+msgstr "Dzimtas arhīva apmeklētāji var nosūtīt administratoram ziņu, radinieka aprakstu un pēc izvēles arī fotogrāfiju. Koplietotajā demonstrācijas režīmā nosūtīšana ir izslēgta."
+
+#: includes/class-wpmft-admin.php:720
 msgid "Father / parent 1"
 msgstr "Tēvs / 1. vecāks"
 
-#: includes/class-wpmft-admin.php:581
+#: includes/class-wpmft-admin.php:712
 msgid "Female"
 msgstr "Sieviete"
 
-#: includes/class-wpmft-demo.php:444
+#: includes/class-wpmft-demo.php:592
 msgid "Fictional crossover characters and invented relationships. Visitor edits are public and reset every 24 hours."
 msgstr "Izdomāti dažādu filmu tēli un radniecības saites. Apmeklētāju labojumi ir publiski un tiek atiestatīti ik pēc 24 stundām."
 
-#: includes/class-wpmft-admin.php:509
+#: includes/class-wpmft-admin.php:134
+msgid "Filter persons list"
+msgstr "Filtrēt personu sarakstu"
+
+#: includes/class-wpmft-admin.php:634
 msgid "Former partners"
 msgstr "Bijušie partneri"
 
-#: includes/class-wpmft-admin.php:809
+#: includes/class-wpmft-admin.php:944
 msgid "Fourteen front-end language presets are included. Add more languages and translation overrides in the Languages tab. Names and biographies are never automatically translated. With optional Polylang, configure your content languages and link translated pages and people."
 msgstr "Iekļauti četrpadsmit publiskās saskarnes valodu sākumiestatījumi. Citas valodas un pielāgotus tulkojumus pievienojiet cilnē “Valodas”. Personu vārdi un dzīvesstāsti nekad netiek tulkoti automātiski. Ar izvēles spraudni Polylang varat iestatīt satura valodas un sasaistīt tulkotās lapas un personas."
 
-#: includes/class-wpmft-demo.php:654
+#: includes/class-wpmft-demo.php:802
 msgid "Front-end demo password"
 msgstr "Publiskās daļas demonstrācijas parole"
 
@@ -614,63 +698,71 @@ msgstr "Publiskās saskarnes teksti (JSON)"
 msgid "Full name"
 msgstr "Vārds Uzvārds"
 
-#: includes/class-wpmft-admin.php:580
+#: includes/class-wpmft-admin.php:711
 msgid "Gender"
 msgstr "Dzimums"
 
-#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:243
+#: includes/class-wpmft-admin.php:350 includes/class-wpmft-admin.php:363 includes/class-wpmft-demo.php:1048
 msgid "General"
 msgstr "Vispārīgi"
 
-#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:301
+#: includes/class-wpmft-admin.php:350 includes/class-wpmft-admin.php:423
 msgid "Getting started"
 msgstr "Darba sākšana"
 
-#: includes/class-wpmft-admin.php:260
+#: includes/class-wpmft-admin.php:382
 msgid "Hide the birth dates of living people in the tree and person dialogs"
 msgstr "Paslēpt dzīvo personu dzimšanas datumus kokā un personu dialoglogos"
 
-#: includes/class-wpmft-demo.php:644
+#: includes/class-wpmft-demo.php:969
+msgid "I confirm removal of this demo item."
+msgstr "Apstiprinu šī demonstrācijas ieraksta noņemšanu."
+
+#: includes/class-wpmft-demo.php:792
 msgid "I understand that demo people will be added alongside existing content. This does not enable public demo access."
 msgstr "Es saprotu, ka demonstrācijas personas tiks pievienotas līdzās esošajam saturam. Tas neieslēdz publisku demonstrācijas piekļuvi."
 
-#: includes/class-wpmft-demo.php:658
+#: includes/class-wpmft-demo.php:806
 msgid "I understand that this creates a shared public demo account with a published password, on an isolated demo tree only."
 msgstr "Es saprotu, ka tiks izveidots koplietojams publisks demonstrācijas konts ar publiski norādītu paroli tikai nošķirtam demonstrācijas dzimtas kokam."
 
-#: includes/class-wpmft-demo.php:645
+#: includes/class-wpmft-demo.php:793
 msgid "Import demo content"
 msgstr "Importēt demonstrācijas saturu"
 
-#: includes/class-wpmft-demo.php:548
+#: includes/class-wpmft-demo.php:696
 msgid "Import the demo first and keep its starting person published."
 msgstr "Vispirms importējiet demonstrāciju un atstājiet tās sākuma personu publicētu."
 
-#: includes/class-wpmft-admin.php:810
+#: includes/class-wpmft-admin.php:945
 msgid "In the default person editor, plugin labels follow the selected Polylang language without reloading or discarding unsaved edits. Other plugin screens start in your WordPress profile language when available and include an extensible interface language switch. With the optional block editor, Polylang may save and reload when its content language changes."
 msgstr "Noklusējuma personu redaktorā spraudņa saskarnes teksti seko izvēlētajai Polylang valodai bez pārlādes un nesaglabāto izmaiņu zuduma. Citi spraudņa skati sākotnēji izmanto jūsu WordPress profila valodu, ja tā ir pieejama, un piedāvā papildināmu saskarnes valodu pārslēdzēju. Ja izmantojat izvēles bloku redaktoru, Polylang pēc satura valodas maiņas var saglabāt un pārlādēt lapu."
 
-#: includes/class-wpmft-admin.php:569
+#: includes/class-wpmft-admin.php:694
 msgid "Include this post as a person in the family tree"
 msgstr "Iekļaut šo ierakstu kā personu dzimtas kokā"
 
-#: includes/class-wpmft-admin.php:348
+#: includes/class-wpmft-admin.php:470
 msgid "Index cache"
 msgstr "Indeksa kešatmiņa"
 
-#: includes/class-wpmft-admin.php:800
+#: includes/class-wpmft-admin.php:128
+msgid "Insert into person"
+msgstr "Ievietot personas ierakstā"
+
+#: includes/class-wpmft-admin.php:935
 msgid "Insert the Family Tree block, or a Shortcode block containing [wp_my_family_tree]. Choose a starting person in General."
 msgstr "Ievietojiet Dzimtas koka bloku vai Īskoda bloku ar [wp_my_family_tree]. Sadaļā Vispārīgi izvēlieties sākuma personu."
 
-#: includes/class-wpmft-admin.php:268
+#: includes/class-wpmft-admin.php:390
 msgid "Introduction (English)"
 msgstr "Ievadteksts (angļu valodā)"
 
-#: includes/class-wpmft-admin.php:269
+#: includes/class-wpmft-admin.php:391
 msgid "Introduction (Latvian)"
 msgstr "Ievadteksts (latviešu valodā)"
 
-#: includes/class-wpmft-admin.php:290
+#: includes/class-wpmft-admin.php:412
 msgid "JPG, JPEG, PNG and WebP are selected by default. GIF and AVIF are optional when the server supports them. At least one format is required; selecting none restores the defaults."
 msgstr "Pēc noklusējuma ir izvēlēti JPG, JPEG, PNG un WebP. Ja serveris atbalsta GIF un AVIF, tos var pievienot. Jāizvēlas vismaz viens formāts; ja neviens nav izvēlēts, tiek atjaunoti noklusējuma formāti."
 
@@ -678,7 +770,7 @@ msgstr "Pēc noklusējuma ir izvēlēti JPG, JPEG, PNG un WebP. Ja serveris atba
 msgid "Keep English enabled as the fallback language."
 msgstr "Atstājiet angļu valodu ieslēgtu kā rezerves valodu."
 
-#: includes/class-wpmft-admin.php:263
+#: includes/class-wpmft-admin.php:385
 msgid "Keep a full backup before protecting files. Protection replaces public family image files with an encrypted vault. The database encryption key and encrypted uploads must be backed up together. Older cached or externally copied photographs cannot be recalled."
 msgstr "Pirms failu aizsardzības saglabājiet pilnu rezerves kopiju. Aizsardzība aizstāj publiskos dzimtas attēlu failus ar šifrētu glabātuvi. Datubāzes šifrēšanas atslēga un šifrētie uploads faili jādublē kopā. Iepriekš kešatmiņā saglabātās vai citur nokopētās fotogrāfijas nevar atsaukt."
 
@@ -687,7 +779,7 @@ msgstr "Pirms failu aizsardzības saglabājiet pilnu rezerves kopiju. Aizsardzī
 msgid "Keep every translation placeholder unchanged, including {name}, {count} and %s."
 msgstr "Atstājiet visus tulkojuma vietturus nemainītus, tostarp {name}, {count} un %s."
 
-#: includes/class-wpmft-admin.php:217
+#: includes/class-wpmft-admin.php:336
 msgid "Keep the stories. Connect the generations."
 msgstr "Saglabājiet stāstus. Savienojiet paaudzes."
 
@@ -699,11 +791,11 @@ msgstr "Valodas kods"
 msgid "Language settings saved."
 msgstr "Valodu iestatījumi ir saglabāti."
 
-#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:299 includes/class-wpmft-admin.php:808
+#: includes/class-wpmft-admin.php:350 includes/class-wpmft-admin.php:421 includes/class-wpmft-admin.php:943 includes/class-wpmft-demo.php:1063
 msgid "Languages"
 msgstr "Valodas"
 
-#: includes/class-wpmft-admin.php:350
+#: includes/class-wpmft-admin.php:472
 msgid "Last manual clear"
 msgstr "Pēdējā manuālā tīrīšana"
 
@@ -711,9 +803,13 @@ msgstr "Pēdējā manuālā tīrīšana"
 msgid "Leave 0 to use the starting person from Family Tree settings."
 msgstr "Atstājiet 0, lai izmantotu dzimtas koka iestatījumos izvēlēto sākuma personu."
 
-#: includes/class-wpmft-admin.php:293
+#: includes/class-wpmft-admin.php:415
 msgid "Leave blank to keep the stored secret. It is never included in the public page."
 msgstr "Atstājiet tukšu, lai saglabātu esošo slepeno atslēgu. Tā nekad netiek iekļauta publiskajā lapā."
+
+#: includes/class-wpmft-admin.php:256
+msgid "Loading photographs…"
+msgstr "Ielādē fotogrāfijas…"
 
 #: includes/bootstrap.php:78
 msgid "Loading the family tree…"
@@ -723,39 +819,39 @@ msgstr "Ielādē dzimtas koku…"
 msgid "Locale"
 msgstr "Lokāle"
 
-#: includes/class-wpmft-admin.php:583 includes/class-wpmft-demo.php:776
+#: includes/class-wpmft-admin.php:714 includes/class-wpmft-demo.php:978
 msgid "Location"
 msgstr "Atrašanās vieta"
 
-#: includes/class-wpmft-demo.php:768
+#: includes/class-wpmft-demo.php:950
 msgid "Log out"
 msgstr "Izrakstīties"
 
-#: includes/class-wpmft-admin.php:581
+#: includes/class-wpmft-admin.php:712
 msgid "Male"
 msgstr "Vīrietis"
 
-#: includes/class-wpmft-admin.php:227
+#: includes/class-wpmft-admin.php:346
 msgid "Manage family posts"
 msgstr "Pārvaldīt dzimtas ierakstus"
 
-#: includes/class-wpmft-admin.php:285
+#: includes/class-wpmft-admin.php:407
 msgid "Maximum photograph size (MB)"
 msgstr "Maksimālais fotogrāfijas lielums (MB)"
 
-#: includes/class-wpmft-admin.php:259
+#: includes/class-wpmft-admin.php:381
 msgid "Maximum remembered access (days)"
 msgstr "Maksimālais piekļuves atcerēšanās laiks (dienas)"
 
-#: includes/class-wpmft-admin.php:596
+#: includes/class-wpmft-admin.php:727
 msgid "Mobile phone"
 msgstr "Mobilais tālrunis"
 
-#: includes/class-wpmft-admin.php:589
+#: includes/class-wpmft-admin.php:720
 msgid "Mother / parent 2"
 msgstr "Māte / 2. vecāks"
 
-#: includes/class-wpmft-admin.php:111 includes/class-wpmft-admin.php:217
+#: includes/class-wpmft-admin.php:225 includes/class-wpmft-admin.php:336
 msgid "My Family Tree"
 msgstr "My Family Tree"
 
@@ -763,11 +859,11 @@ msgstr "My Family Tree"
 msgid "My Family Tree is not running because another copy is active. Deactivate the older WP My Family Tree plugin or duplicate copy, then activate My Family Tree."
 msgstr "My Family Tree nedarbojas, jo ir ieslēgta cita kopija. Izslēdziet iepriekšējo WP My Family Tree spraudni vai dublikātu un pēc tam ieslēdziet My Family Tree."
 
-#: includes/class-wpmft-demo.php:774
+#: includes/class-wpmft-demo.php:976
 msgid "Name / title"
 msgstr "Vārds / nosaukums"
 
-#: includes/class-wpmft-admin.php:335
+#: includes/class-wpmft-admin.php:457
 msgid "Native device emoji still work. WordPress fallback detection, styles and external emoji hints are removed."
 msgstr "Ierīces emocijzīmes turpina darboties. Tiek noņemta WordPress emocijzīmju atbalsta pārbaude, stili un ārējo emocijzīmju resursu norādes."
 
@@ -779,39 +875,56 @@ msgstr "Valodas nosaukums attiecīgajā valodā"
 msgid "New language"
 msgstr "Jauna valoda"
 
-#: includes/class-wpmft-demo.php:670
+#: includes/class-wpmft-admin.php:119
+msgid "New person"
+msgstr "Jauna persona"
+
+#: includes/class-wpmft-demo.php:818
 msgid "Next reset:"
 msgstr "Nākamā atiestatīšana:"
 
-#: includes/class-wpmft-admin.php:141
+#: includes/class-wpmft-demo.php:957
+#, php-format
+msgid "Next reset: %s."
+msgstr "Nākamā atiestatīšana: %s."
+
+#: includes/class-wpmft-admin.php:260
 msgid "No family members found."
 msgstr "Dzimtas personas nav atrastas."
 
-#: includes/class-wpmft-admin.php:151
+#: includes/class-wpmft-admin.php:124
+msgid "No persons found in Trash."
+msgstr "Atkritnē nav atrasta neviena persona."
+
+#: includes/class-wpmft-admin.php:123 includes/class-wpmft-demo.php:1015
+msgid "No persons found."
+msgstr "Nav atrasta neviena persona."
+
+#: includes/class-wpmft-admin.php:270
 msgid "No portrait selected"
 msgstr "Portrets nav izvēlēts"
 
-#: includes/class-wpmft-admin.php:350
+#: includes/class-wpmft-admin.php:472
 msgid "Not cleared yet"
 msgstr "Vēl nav tīrīta"
 
-#: includes/class-wpmft-admin.php:505 includes/class-wpmft-admin.php:581
+#: includes/class-wpmft-admin.php:630 includes/class-wpmft-admin.php:712
 msgid "Not specified"
 msgstr "Nav norādīts"
 
-#: includes/class-wpmft-admin.php:583 includes/class-wpmft-demo.php:776
+#: includes/class-wpmft-admin.php:714 includes/class-wpmft-demo.php:978
 msgid "Occupation"
 msgstr "Nodarbošanās"
 
-#: includes/class-wpmft-admin.php:594
+#: includes/class-wpmft-admin.php:725
 msgid "Only add details this person is comfortable sharing with everyone who can access the family tree."
 msgstr "Pievienojiet tikai tādu informāciju, kuru persona vēlas kopīgot ar visiem, kam ir piekļuve dzimtas kokam."
 
-#: includes/class-wpmft-demo.php:540
+#: includes/class-wpmft-demo.php:688
 msgid "Only an administrator can enable demo sharing."
 msgstr "Koplietojamo demonstrāciju var ieslēgt tikai administrators."
 
-#: includes/class-wpmft-demo.php:453
+#: includes/class-wpmft-demo.php:601
 msgid "Only an administrator can import demo content."
 msgstr "Demonstrācijas saturu var importēt tikai administrators."
 
@@ -819,23 +932,19 @@ msgstr "Demonstrācijas saturu var importēt tikai administrators."
 msgid "Only overrides belong here. For admin labels, use the full English sentence as the key. Blank title fields keep the existing title or its Polylang translation."
 msgstr "Šeit ievadiet tikai pielāgotos tulkojumus. Administrācijas tekstiem kā atslēgu izmantojiet pilnu teikumu angļu valodā. Tukši nosaukuma lauki saglabā esošo nosaukumu vai tā Polylang tulkojumu."
 
-#: includes/class-wpmft-admin.php:556
+#: includes/class-wpmft-admin.php:681
 msgid "Only this person’s record is saved. To change a status stored on both records, update both people. Choosing Not specified removes this record’s status without removing a partner or parent selected above."
 msgstr "Tiek saglabāts tikai šīs personas ieraksts. Lai mainītu abos ierakstos saglabātu statusu, atjauniniet abas personas. Izvēloties Nav norādīts, tiek noņemts šī ieraksta statuss, nenoņemot iepriekš atlasīto partneri vai vecāku."
 
-#: includes/class-wpmft-admin.php:803
+#: includes/class-wpmft-admin.php:938
 msgid "Open a private window. Test the tree, a person’s old URL, a feed and an old direct photograph URL. Clear previous caches. The original plugin should be inactive."
 msgstr "Atveriet privātu pārlūka logu. Pārbaudiet koku, personas veco adresi, plūsmu un veco tiešo fotogrāfijas adresi. Iztīriet iepriekšējās kešatmiņas. Sākotnējam spraudnim jābūt deaktivizētam."
 
-#: includes/class-wpmft-demo.php:768
-msgid "Open demo tree"
-msgstr "Atvērt demonstrācijas dzimtas koku"
-
-#: includes/class-wpmft-demo.php:647
+#: includes/class-wpmft-demo.php:795
 msgid "Open demo tree page"
 msgstr "Atvērt demonstrācijas dzimtas koka lapu"
 
-#: includes/class-wpmft-admin.php:254
+#: includes/class-wpmft-admin.php:376
 msgid "Open the Languages tab to enable preset languages, add languages or review optional Polylang for translated people and pages."
 msgstr "Atveriet cilni “Valodas”, lai ieslēgtu sagatavotās valodas, pievienotu jaunas valodas vai apskatītu izvēles spraudni Polylang personu un lapu tulkošanai."
 
@@ -843,23 +952,23 @@ msgstr "Atveriet cilni “Valodas”, lai ieslēgtu sagatavotās valodas, pievie
 msgid "OpenSSL is required to protect photographs."
 msgstr "Fotogrāfiju aizsardzībai nepieciešams OpenSSL."
 
-#: includes/class-wpmft-demo.php:650
+#: includes/class-wpmft-demo.php:798 includes/class-wpmft-demo.php:1071
 msgid "Optional shared demo mode"
 msgstr "Izvēles koplietojamās demonstrācijas režīms"
 
-#: includes/class-wpmft-admin.php:344
+#: includes/class-wpmft-admin.php:466
 msgid "Optional: omit theme styles, global presets and theme fonts. Keep this off when biographies or other page content use theme-styled blocks. Core block styles remain available; embedded pages retain their theme styling."
 msgstr "Pēc izvēles: neielādēt motīva stilus, globālos sākumiestatījumus un motīva fontus. Atstājiet izslēgtu, ja dzīvesstāstos vai citā lapas saturā tiek izmantoti motīva stilizēti bloki. WordPress pamata bloku stili paliek pieejami; iegultās lapas saglabā motīva stilus."
 
-#: includes/class-wpmft-demo.php:529
+#: includes/class-wpmft-demo.php:677
 msgid "Original illustration for the fictional cinema family demo."
 msgstr "Oriģināla ilustrācija izdomātās kino dzimtas demonstrācijai."
 
-#: includes/class-wpmft-admin.php:581
+#: includes/class-wpmft-admin.php:712
 msgid "Other"
 msgstr "Cits"
 
-#: includes/class-wpmft-admin.php:590
+#: includes/class-wpmft-admin.php:721
 msgid "Other spouses / partners"
 msgstr "Citi laulātie / partneri"
 
@@ -867,19 +976,19 @@ msgstr "Citi laulātie / partneri"
 msgid "Our family tree"
 msgstr "Mūsu dzimtas koks"
 
-#: includes/class-wpmft-admin.php:338
+#: includes/class-wpmft-admin.php:460
 msgid "Page source and assets"
 msgstr "Lapas pirmkods un resursi"
 
-#: includes/class-wpmft-admin.php:516
+#: includes/class-wpmft-admin.php:641
 msgid "Partner / co-parent"
 msgstr "Partneris / kopīgā bērna vecāks"
 
-#: includes/class-wpmft-admin.php:547
+#: includes/class-wpmft-admin.php:672
 msgid "Partner relationships"
 msgstr "Partnerattiecības"
 
-#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:298
+#: includes/class-wpmft-admin.php:350 includes/class-wpmft-admin.php:420 includes/class-wpmft-demo.php:1080
 msgid "Performance & cache"
 msgstr "Veiktspēja un kešatmiņa"
 
@@ -887,27 +996,126 @@ msgstr "Veiktspēja un kešatmiņa"
 msgid "Performance & cache settings"
 msgstr "Veiktspējas un kešatmiņas iestatījumi"
 
-#: includes/class-wpmft-admin.php:349
+#: includes/class-wpmft-admin.php:471 includes/class-wpmft-demo.php:1082
 msgid "Persistent WordPress object cache"
 msgstr "Pastāvīgā WordPress objektu kešatmiņa"
 
-#: includes/class-wpmft-admin.php:327
+#: includes/class-wpmft-admin.php:449
 msgid "Persistent object cache"
 msgstr "Pastāvīgā objektu kešatmiņa"
 
-#: includes/class-wpmft-admin.php:811
+#: includes/class-wpmft-admin.php:113 includes/class-wpmft-admin.php:115
+msgid "Person"
+msgstr "Persona"
+
+#: includes/class-wpmft-admin.php:126
+msgid "Person archives"
+msgstr "Personu arhīvi"
+
+#: includes/class-wpmft-admin.php:127
+msgid "Person attributes"
+msgstr "Personas atribūti"
+
+#: includes/class-wpmft-admin.php:182
+msgid "Person draft updated."
+msgstr "Personas ieraksta melnraksts atjaunināts."
+
+#: includes/class-wpmft-admin.php:946
 msgid "Person editor"
 msgstr "Personu redaktors"
 
-#: includes/class-wpmft-admin.php:64
+#: includes/class-wpmft-admin.php:69
 msgid "Person labels follow the Polylang language. This switch changes plugin labels only; names, biographies and the WordPress dashboard are unchanged."
 msgstr "Personas veidlapas teksts atbilst Polylang valodai. Šis slēdzis maina tikai spraudņa saskarnes tekstu; vārdi, biogrāfijas un WordPress administrācijas panelis nemainās."
 
-#: includes/class-wpmft-admin.php:578
+#: includes/class-wpmft-admin.php:143
+msgid "Person link"
+msgstr "Personas saite"
+
+#: includes/class-wpmft-admin.php:140
+msgid "Person moved to Trash."
+msgstr "Personas ieraksts pārvietots uz atkritni."
+
+#: includes/class-wpmft-admin.php:138
+msgid "Person published privately."
+msgstr "Personas ieraksts publicēts privāti."
+
+#: includes/class-wpmft-admin.php:137 includes/class-wpmft-admin.php:177
+msgid "Person published."
+msgstr "Personas ieraksts publicēts."
+
+#: includes/class-wpmft-admin.php:175
+#, php-format
+msgid "Person restored to revision from %s."
+msgstr "Atjaunota personas ieraksta redakcija no %s."
+
+#: includes/class-wpmft-admin.php:139
+msgid "Person reverted to draft."
+msgstr "Personas ieraksts atjaunots kā melnraksts."
+
+#: includes/class-wpmft-admin.php:178
+msgid "Person saved."
+msgstr "Personas ieraksts saglabāts."
+
+#: includes/class-wpmft-admin.php:181
+#, php-format
+msgid "Person scheduled for: %s."
+msgstr "Personas ieraksta publicēšana ieplānota: %s."
+
+#: includes/class-wpmft-admin.php:141
+msgid "Person scheduled."
+msgstr "Personas ieraksta publicēšana ieplānota."
+
+#: includes/class-wpmft-admin.php:179
+msgid "Person submitted."
+msgstr "Personas ieraksts iesniegts pārskatīšanai."
+
+#: includes/class-wpmft-admin.php:142 includes/class-wpmft-admin.php:171 includes/class-wpmft-admin.php:172
+msgid "Person updated."
+msgstr "Personas ieraksts atjaunināts."
+
+#: includes/class-wpmft-admin.php:709
 msgid "Personal details"
 msgstr "Personas dati"
 
-#: includes/class-wpmft-admin.php:90
+#: includes/class-wpmft-admin.php:112 includes/class-wpmft-admin.php:114 includes/class-wpmft-demo.php:914 includes/class-wpmft-demo.php:915 includes/class-wpmft-demo.php:936
+msgid "Persons"
+msgstr "Personas"
+
+#: includes/class-wpmft-admin.php:136
+msgid "Persons list"
+msgstr "Personu saraksts"
+
+#: includes/class-wpmft-admin.php:135
+msgid "Persons list navigation"
+msgstr "Personu saraksta navigācija"
+
+#: includes/class-wpmft-admin.php:196
+#, php-format
+msgid "Persons moved to Trash: %s."
+msgstr "Uz atkritni pārvietotās personas: %s."
+
+#: includes/class-wpmft-admin.php:192
+#, php-format
+msgid "Persons not updated because someone is editing them: %s."
+msgstr "Personas, kuras netika atjauninātas, jo kāds tās rediģē: %s."
+
+#: includes/class-wpmft-admin.php:194
+#, php-format
+msgid "Persons permanently deleted: %s."
+msgstr "Neatgriezeniski dzēstās personas: %s."
+
+#: includes/class-wpmft-admin.php:198
+#, php-format
+msgid "Persons restored from Trash: %s."
+msgstr "No atkritnes atjaunotās personas: %s."
+
+#: includes/class-wpmft-admin.php:190
+#, php-format
+msgid "Persons updated: %s."
+msgstr "Atjauninātās personas: %s."
+
+#: includes/class-wpmft-admin.php:95 includes/class-wpmft-demo.php:976
 msgid "Person’s full name"
 msgstr "Personas vārds un uzvārds"
 
@@ -915,15 +1123,15 @@ msgstr "Personas vārds un uzvārds"
 msgid "Photo attachments are not available. Remove the photo and send your message again."
 msgstr "Fotogrāfiju pielikumi nav pieejami. Noņemiet fotogrāfiju un nosūtiet ziņu vēlreiz."
 
-#: includes/class-wpmft-admin.php:609
+#: includes/class-wpmft-admin.php:740
 msgid "Photo gallery"
 msgstr "Fotogalerija"
 
-#: includes/class-wpmft-admin.php:146
+#: includes/class-wpmft-admin.php:265
 msgid "Photographs remaining:"
 msgstr "Atlikušās fotogrāfijas:"
 
-#: includes/class-wpmft-admin.php:583
+#: includes/class-wpmft-admin.php:714
 msgid "Place of death"
 msgstr "Miršanas vieta"
 
@@ -947,23 +1155,23 @@ msgstr "Lūdzu, uzgaidiet dažas sekundes un iesniedziet formu vēlreiz."
 msgid "Please wait a moment before trying again."
 msgstr "Lūdzu, nedaudz uzgaidiet, pirms mēģināt vēlreiz."
 
-#: includes/class-wpmft-admin.php:62
+#: includes/class-wpmft-admin.php:67
 msgid "Plugin interface language"
 msgstr "Spraudņa saskarnes valoda"
 
-#: includes/class-wpmft-languages.php:192
+#: includes/class-wpmft-languages.php:192 includes/class-wpmft-demo.php:1067
 msgid "Polylang is active. Its configured languages and translated page links control the public language menu. These presets supply interface labels."
 msgstr "Polylang ir ieslēgts. Tā iestatītās valodas un tulkoto lapu saites nosaka publiskās valodu izvēlnes darbību. Šie sākumiestatījumi nodrošina saskarnes tekstus."
 
-#: includes/class-wpmft-languages.php:195
+#: includes/class-wpmft-languages.php:195 includes/class-wpmft-demo.php:1067
 msgid "Polylang is optional and free to install. The tree and its interface languages work without it. Installing it does not automatically translate your content."
 msgstr "Polylang ir izvēles spraudnis, ko var uzstādīt bez maksas. Dzimtas koks un tā saskarnes valodas darbojas arī bez tā. Tā uzstādīšana automātiski netulko jūsu saturu."
 
-#: includes/class-wpmft-admin.php:575
+#: includes/class-wpmft-admin.php:130 includes/class-wpmft-admin.php:700
 msgid "Portrait"
 msgstr "Portrets"
 
-#: includes/class-wpmft-admin.php:599
+#: includes/class-wpmft-admin.php:730
 msgid "Postal address"
 msgstr "Pasta adrese"
 
@@ -971,19 +1179,23 @@ msgstr "Pasta adrese"
 msgid "Presets include translated front-end labels. Missing labels fall back to English. Custom translations are saved in the database and survive plugin updates."
 msgstr "Sākumiestatījumi ietver tulkotus publiskās saskarnes tekstus. Trūkstošie teksti tiek rādīti angliski. Pielāgotie tulkojumi tiek saglabāti datubāzē un netiek zaudēti pēc spraudņa atjaunināšanas."
 
-#: includes/class-wpmft-admin.php:589
+#: includes/class-wpmft-admin.php:170
+msgid "Preview person"
+msgstr "Priekšskatīt personu"
+
+#: includes/class-wpmft-admin.php:720
 msgid "Primary spouse / partner"
 msgstr "Galvenais laulātais / partneris"
 
-#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:256
+#: includes/class-wpmft-admin.php:350 includes/class-wpmft-admin.php:378 includes/class-wpmft-demo.php:1070
 msgid "Privacy & access"
 msgstr "Privātums un piekļuve"
 
-#: includes/class-wpmft-admin.php:296
+#: includes/class-wpmft-admin.php:418
 msgid "Privacy policy"
 msgstr "Privātuma politika"
 
-#: includes/class-wpmft-admin.php:801
+#: includes/class-wpmft-admin.php:936
 msgid "Private access starts locked until you set a password. Set the family administrator email and optionally enable hCaptcha."
 msgstr "Privātā piekļuve ir bloķēta, līdz iestatāt paroli. Norādiet dzimtas administratora e-pastu un, ja vēlaties, ieslēdziet hCaptcha."
 
@@ -991,95 +1203,111 @@ msgstr "Privātā piekļuve ir bloķēta, līdz iestatāt paroli. Norādiet dzim
 msgid "Private family record"
 msgstr "Privāts dzimtas ieraksts"
 
-#: includes/class-wpmft-admin.php:263
+#: includes/class-wpmft-admin.php:385
 msgid "Private pages and family API responses use no-store headers. Exclude the tree page, admin-ajax.php and protected media from host/CDN page caching. Purge older public caches after migration."
 msgstr "Privātajām lapām un dzimtas API atbildēm tiek nosūtītas no-store galvenes. Izslēdziet koka lapu, admin-ajax.php un aizsargātos attēlus no servera/CDN lapu kešatmiņas. Pēc migrācijas iztīriet iepriekšējās publiskās kešatmiņas."
 
-#: includes/class-wpmft-admin.php:309
+#: includes/class-wpmft-admin.php:431
 msgid "Protect existing family photos"
 msgstr "Aizsargāt esošās dzimtas fotogrāfijas"
 
-#: includes/class-wpmft-admin.php:144
+#: includes/class-wpmft-admin.php:263
 msgid "Protecting family photographs…"
 msgstr "Aizsargā dzimtas fotogrāfijas…"
 
-#: includes/class-wpmft-demo.php:610
+#: includes/class-wpmft-demo.php:758
 msgid "Read and confirm the demo notice before continuing."
 msgstr "Pirms turpināšanas izlasiet un apstipriniet demonstrācijas paziņojumu."
 
-#: includes/class-wpmft-admin.php:340
+#: includes/class-wpmft-admin.php:462
 msgid "Readable source files remain included. SCRIPT_DEBUG uses the readable files automatically."
 msgstr "Lasāmie pirmkoda faili joprojām ir iekļauti. Ja ir ieslēgts SCRIPT_DEBUG, lasāmie faili tiek izmantoti automātiski."
 
-#: includes/class-wpmft-admin.php:348
+#: includes/class-wpmft-admin.php:470
 msgid "Ready"
 msgstr "Gatava"
 
-#: includes/class-wpmft-admin.php:342
+#: includes/class-wpmft-admin.php:464
 msgid "Reduces whitespace between tags while preserving inline spacing, scripts, styles and preformatted content. Admin pages and API responses are excluded."
 msgstr "Samazina atstarpes starp atzīmēm, saglabājot atstarpes teksta rindās, skriptus, stilus un iepriekš formatētu saturu. Administrācijas lapas un API atbildes netiek apstrādātas."
 
-#: includes/class-wpmft-admin.php:517
+#: includes/class-wpmft-admin.php:642
 msgid "Relationship status"
 msgstr "Attiecību statuss"
 
-#: includes/class-wpmft-admin.php:140
+#: includes/class-wpmft-admin.php:259
 msgid "Remove"
 msgstr "Noņemt"
 
-#: includes/class-wpmft-admin.php:334
+#: includes/class-wpmft-admin.php:456
 msgid "Remove WordPress emoji scripts and styles"
 msgstr "Noņemt WordPress emocijzīmju skriptus un stilus"
 
-#: includes/class-wpmft-admin.php:613
+#: includes/class-wpmft-demo.php:938 includes/class-wpmft-demo.php:988 includes/class-wpmft-demo.php:1011
+msgid "Remove page"
+msgstr "Noņemt lapu"
+
+#: includes/class-wpmft-demo.php:938 includes/class-wpmft-demo.php:988 includes/class-wpmft-demo.php:1011
+msgid "Remove person"
+msgstr "Noņemt personu"
+
+#: includes/class-wpmft-admin.php:258 includes/class-wpmft-admin.php:744
 msgid "Remove photograph from gallery"
 msgstr "Noņemt fotogrāfiju no galerijas"
 
-#: includes/class-wpmft-admin.php:575
+#: includes/class-wpmft-admin.php:132 includes/class-wpmft-admin.php:703
 msgid "Remove portrait"
 msgstr "Noņemt portretu"
 
-#: includes/class-wpmft-admin.php:519
+#: includes/class-wpmft-admin.php:644
 msgid "Remove relationship row"
 msgstr "Noņemt attiecību rindu"
 
-#: includes/class-wpmft-admin.php:498
+#: includes/class-wpmft-admin.php:623
 msgid "Remove selected person"
 msgstr "Noņemt izvēlēto personu"
 
-#: includes/class-wpmft-admin.php:336
+#: includes/class-wpmft-admin.php:458
 msgid "Remove unnecessary WordPress head tags"
 msgstr "Noņemt nevajadzīgās WordPress dokumenta galvenes atzīmes"
 
-#: includes/class-wpmft-admin.php:337
+#: includes/class-wpmft-admin.php:459
 msgid "Removes generator, RSD, Windows Live Writer and shortlink tags. Full-window family pages also omit feed and embed discovery links. Canonical URLs, language links and privacy directives are kept."
 msgstr "Noņem ģeneratora, RSD, Windows Live Writer un īssaišu atzīmes. Pilna loga dzimtas koka lapās noņem arī plūsmu un iegulšanas pakalpojumu atklāšanas saites. Kanoniskie URL, valodu saites un privātuma norādes tiek saglabātas."
 
-#: includes/class-wpmft-admin.php:616
+#: includes/class-wpmft-admin.php:751
 msgid "Removing a photograph here only removes it from this gallery. It does not delete the original media file."
 msgstr "Fotogrāfijas noņemšana šeit to noņem tikai no šīs galerijas. Sākotnējais multivides fails netiek dzēsts."
 
-#: includes/class-wpmft-demo.php:698
-msgid "Replace the saved demo starting state with the current sample content? Future daily resets will restore these values."
-msgstr "Vai aizstāt saglabāto demonstrācijas sākotnējo stāvokli ar pašreizējo paraugu saturu? Turpmākās ikdienas atiestatīšanas atjaunos šīs vērtības."
+#: includes/class-wpmft-admin.php:255 includes/class-wpmft-admin.php:748
+msgid "Reorder photographs"
+msgstr "Pārkārtot fotogrāfijas"
 
-#: includes/class-wpmft-admin.php:257
+#: includes/class-wpmft-demo.php:852
+msgid "Replace the saved starting state with the current original demo samples? Daily resets will restore these values and remove visitor-created records."
+msgstr "Aizstāt saglabāto sākotnējo stāvokli ar pašreizējiem sākotnējiem demonstrācijas paraugiem? Ikdienas atiestatīšana atjaunos šīs vērtības un noņems apmeklētāju izveidotos ierakstus."
+
+#: includes/class-wpmft-admin.php:379
 msgid "Require a family password"
 msgstr "Pieprasīt dzimtas paroli"
 
-#: includes/class-wpmft-demo.php:672
+#: includes/class-wpmft-demo.php:1012
+msgid "Required for the demo tree."
+msgstr "Nepieciešams demonstrācijas kokam."
+
+#: includes/class-wpmft-demo.php:820
 msgid "Reset demo now"
 msgstr "Atiestatīt demonstrāciju tagad"
 
-#: includes/class-wpmft-admin.php:814
+#: includes/class-wpmft-admin.php:949
 msgid "Restore a matching UpdraftPlus set on staging first. Preserve every filename exactly, including its date, site name, 12-character identifier and -db.gz / -plugins.zip / -themes.zip / -uploads.zip suffix. A standalone plugin ZIP is installed using Plugins → Add New → Upload Plugin, not the Updraft restore screen."
 msgstr "Vispirms atjaunojiet vienu pilnu UpdraftPlus kopu testa vietnē. Precīzi saglabājiet katru faila nosaukumu, tostarp datumu, vietnes nosaukumu, 12 rakstzīmju identifikatoru un -db.gz / -plugins.zip / -themes.zip / -uploads.zip galotni. Atsevišķu spraudņa ZIP uzstāda sadaļā Spraudņi → Pievienot jaunu → Augšupielādēt spraudni, nevis Updraft atjaunošanas logā."
 
-#: includes/class-wpmft-admin.php:813
+#: includes/class-wpmft-admin.php:948
 msgid "Restore backups safely"
 msgstr "Droši atjaunojiet rezerves kopijas"
 
-#: includes/class-wpmft-demo.php:671
+#: includes/class-wpmft-demo.php:819
 msgid "Restore the saved demo starting state now and discard current visitor edits."
 msgstr "Tagad atjaunot saglabāto demonstrācijas sākotnējo stāvokli un atmest pašreizējos apmeklētāju labojumus."
 
@@ -1091,131 +1319,147 @@ msgstr "Apskatīt / uzstādīt izvēles spraudni Polylang"
 msgid "Review active plugins"
 msgstr "Apskatīt ieslēgtos spraudņus"
 
-#: includes/class-wpmft-admin.php:308
+#: includes/class-wpmft-admin.php:430
 msgid "Revoke all remembered access"
 msgstr "Atsaukt visu atcerēto piekļuvi"
 
-#: includes/class-wpmft-demo.php:696
+#: includes/class-wpmft-demo.php:850
 msgid "Revoke the shared account and all demo sessions? Demo content will be kept and the normal Privacy settings will apply again."
 msgstr "Vai atsaukt koplietojamo kontu un visas demonstrācijas sesijas? Demonstrācijas saturs tiks saglabāts, un atkal tiks piemēroti parastie privātuma iestatījumi."
 
-#: includes/class-wpmft-demo.php:662
+#: includes/class-wpmft-demo.php:810
 msgid "Revoke the shared account and demo sessions, keep demo content, and restore the normal Privacy settings."
 msgstr "Atsaukt koplietojamo kontu un demonstrācijas sesijas, saglabāt demonstrācijas saturu un atjaunot parastos privātuma iestatījumus."
 
-#: includes/class-wpmft-demo.php:784
-msgid "Sample people & pages"
-msgstr "Parauga personas un lapas"
-
-#: includes/class-wpmft-admin.php:354
+#: includes/class-wpmft-admin.php:476
 msgid "Save changed settings before using the cache tool. Private family pages and API responses continue to use no-store headers."
 msgstr "Pirms kešatmiņas rīka izmantošanas saglabājiet mainītos iestatījumus. Privātās dzimtas koka lapas un API atbildes turpina izmantot no-store galvenes."
 
-#: includes/class-wpmft-demo.php:676
+#: includes/class-wpmft-demo.php:824
 msgid "Save current demo as reset baseline"
 msgstr "Saglabāt pašreizējo demonstrāciju kā sākotnējo stāvokli"
 
-#: includes/class-wpmft-demo.php:781
-msgid "Save demo story"
-msgstr "Saglabāt demonstrācijas stāstu"
+#: includes/class-wpmft-demo.php:986
+msgid "Save demo page"
+msgstr "Saglabāt demonstrācijas lapu"
 
 #: includes/class-wpmft-languages.php:205
 msgid "Save language settings"
 msgstr "Saglabāt valodu iestatījumus"
 
-#: includes/class-wpmft-admin.php:302
+#: includes/class-wpmft-demo.php:986
+msgid "Save person"
+msgstr "Saglabāt personu"
+
+#: includes/class-wpmft-admin.php:424
 msgid "Save settings"
 msgstr "Saglabāt iestatījumus"
 
-#: includes/class-wpmft-admin.php:500
+#: includes/class-wpmft-admin.php:625
 msgid "Search by name…"
 msgstr "Meklēt pēc vārda…"
 
-#: includes/class-wpmft-admin.php:142
+#: includes/class-wpmft-admin.php:261
 msgid "Search could not load. Please try again."
 msgstr "Meklēšanu neizdevās ielādēt. Lūdzu, mēģiniet vēlreiz."
 
-#: includes/class-wpmft-admin.php:143
+#: includes/class-wpmft-admin.php:122 includes/class-wpmft-demo.php:995
+msgid "Search persons"
+msgstr "Meklēt personas"
+
+#: includes/class-wpmft-admin.php:262
 msgid "Searching…"
 msgstr "Meklē…"
 
-#: includes/class-wpmft-admin.php:247
+#: includes/class-wpmft-admin.php:369
 msgid "Select a category"
 msgstr "Izvēlieties kategoriju"
 
-#: includes/class-wpmft-admin.php:508
+#: includes/class-wpmft-admin.php:633
 msgid "Separated"
 msgstr "Dzīvo šķirti"
 
-#: includes/class-wpmft-admin.php:258
+#: includes/class-wpmft-admin.php:380
 msgid "Set a new family password"
 msgstr "Iestatīt jaunu dzimtas paroli"
 
-#: includes/class-wpmft-admin.php:801
+#: includes/class-wpmft-admin.php:936
 msgid "Set access and contact details."
 msgstr "Iestatiet piekļuvi un kontaktinformāciju."
+
+#: includes/class-wpmft-admin.php:131
+msgid "Set portrait"
+msgstr "Iestatīt portretu"
 
 #: assets/editor.js:30
 msgid "Set the family category, password, languages, colours and contact details in Family Tree → Settings & help."
 msgstr "Norādiet dzimtas kategoriju, paroli, valodas, krāsas un kontaktinformāciju sadaļā Dzimtas koks → Iestatījumi un palīdzība."
 
-#: includes/class-wpmft-admin.php:112 includes/class-wpmft-admin.php:116
+#: includes/class-wpmft-admin.php:226 includes/class-wpmft-admin.php:230
 msgid "Settings"
 msgstr "Iestatījumi"
 
-#: includes/class-wpmft-admin.php:112
+#: includes/class-wpmft-admin.php:226
 msgid "Settings & help"
 msgstr "Iestatījumi un palīdzība"
 
-#: includes/class-wpmft-admin.php:302
+#: includes/class-wpmft-admin.php:424
 msgid "Settings belong to the plugin and work independently of your theme."
 msgstr "Iestatījumi pieder spraudnim un darbojas neatkarīgi no tēmas."
 
-#: includes/class-wpmft-admin.php:205
+#: includes/class-wpmft-demo.php:936 includes/class-wpmft-demo.php:948
+msgid "Settings overview"
+msgstr "Iestatījumu pārskats"
+
+#: includes/class-wpmft-admin.php:324
 msgid "Settings saved."
 msgstr "Iestatījumi saglabāti."
 
-#: includes/class-wpmft-admin.php:209
+#: includes/class-wpmft-admin.php:328
 msgid "Settings were not saved. Add both hCaptcha keys before enabling it."
 msgstr "Iestatījumi netika saglabāti. Pirms hCaptcha ieslēgšanas pievienojiet abas atslēgas."
 
-#: includes/class-wpmft-admin.php:211
+#: includes/class-wpmft-admin.php:330
 msgid "Settings were not saved. Enter a valid family administrator email address."
 msgstr "Iestatījumi netika saglabāti. Ievadiet derīgu dzimtas administratora e-pasta adresi."
 
-#: includes/class-wpmft-admin.php:208
+#: includes/class-wpmft-admin.php:327
 msgid "Settings were not saved. Use a family password with at least 12 characters."
 msgstr "Iestatījumi netika saglabāti. Dzimtas parolei izmantojiet vismaz 12 rakstzīmes."
 
-#: includes/class-wpmft-demo.php:546
+#: includes/class-wpmft-demo.php:694
 msgid "Shared demo accounts are available on single-site installations only. Demo content can still be imported on this network."
 msgstr "Koplietojami demonstrācijas konti ir pieejami tikai atsevišķās WordPress vietnēs. Šajā vairāku vietņu tīklā joprojām var importēt demonstrācijas saturu."
 
-#: includes/class-wpmft-admin.php:805
+#: includes/class-wpmft-admin.php:940 includes/class-wpmft-demo.php:1053
 msgid "Shortcodes"
 msgstr "Īskodi"
 
-#: includes/class-wpmft-admin.php:274
+#: includes/class-wpmft-admin.php:396
 msgid "Show Android and Apple installation options in the footer"
 msgstr "Rādīt Android un Apple instalēšanas iespējas kājenē"
 
-#: includes/class-wpmft-admin.php:273
+#: includes/class-wpmft-admin.php:395
 msgid "Show an optional “Built by DigitalPulse” footer link"
 msgstr "Rādīt izvēles kājenes saiti “Izstrādāja DigitalPulse”"
 
-#: includes/class-wpmft-admin.php:253
+#: includes/class-wpmft-admin.php:375 includes/class-wpmft-demo.php:1065
 msgid "Show the language switch"
 msgstr "Rādīt valodu pārslēdzēju"
 
-#: includes/class-wpmft-admin.php:601
+#: includes/class-wpmft-admin.php:145
+msgid "Single person"
+msgstr "Atsevišķa persona"
+
+#: includes/class-wpmft-admin.php:732
 msgid "Social profiles"
 msgstr "Sociālo tīklu profili"
 
-#: includes/class-wpmft-admin.php:147
+#: includes/class-wpmft-admin.php:266
 msgid "Some photographs could not be protected. Keep the original backup and review the error before publishing."
 msgstr "Dažas fotogrāfijas neizdevās aizsargāt. Saglabājiet sākotnējo rezerves kopiju un pirms publicēšanas pārbaudiet kļūdu."
 
-#: includes/class-wpmft-admin.php:249
+#: includes/class-wpmft-admin.php:371 includes/class-wpmft-demo.php:1051
 msgid "Starting person"
 msgstr "Sākuma persona"
 
@@ -1223,19 +1467,19 @@ msgstr "Sākuma persona"
 msgid "Starting person — post ID"
 msgstr "Sākuma persona — ieraksta ID"
 
-#: includes/class-wpmft-admin.php:349
+#: includes/class-wpmft-admin.php:471
 msgid "Storage"
 msgstr "Glabāšana"
 
-#: includes/class-wpmft-demo.php:780
+#: includes/class-wpmft-demo.php:982
 msgid "Story (basic HTML allowed)"
 msgstr "Stāsts (atļautas pamata HTML atzīmes)"
 
-#: includes/class-wpmft-admin.php:596
+#: includes/class-wpmft-admin.php:727
 msgid "Telephone"
 msgstr "Tālrunis"
 
-#: includes/class-wpmft-admin.php:296
+#: includes/class-wpmft-admin.php:418
 msgid "Terms"
 msgstr "Noteikumi"
 
@@ -1251,29 +1495,33 @@ msgstr "Neizdevās iztīrīt kešatmiņu. Pārlādējiet lapu un mēģiniet vēl
 msgid "The contact form is not available."
 msgstr "Kontaktforma nav pieejama."
 
-#: includes/class-wpmft-demo.php:623
+#: includes/class-wpmft-demo.php:771
 msgid "The current demo titles, stories, dates, locations and occupations are saved as the reset baseline."
 msgstr "Pašreizējie demonstrācijas nosaukumi, stāsti, datumi, vietas un nodarbošanās ir saglabāti kā sākotnējais stāvoklis turpmākajām atiestatīšanām."
 
-#: includes/class-wpmft-admin.php:286
+#: includes/class-wpmft-admin.php:408
 msgid "The default is 10 MB. Choose 1–100 MB; a lower server upload limit still applies. Photographs are emailed to the administrator and are not added to the public media library."
 msgstr "Noklusējums ir 10 MB. Izvēlieties 1–100 MB; ja servera augšupielādes ierobežojums ir zemāks, tiek piemērots tas. Fotogrāfijas tiek nosūtītas administratoram pa e-pastu un netiek pievienotas publiskajai multivides bibliotēkai."
 
-#: includes/class-wpmft-admin.php:330
+#: includes/class-wpmft-admin.php:452
 msgid "The default is 15 minutes. Person and relationship edits refresh the index automatically. Only numeric relationships are stored on the server; personal profiles, photographs and access tokens are not cached by this feature."
 msgstr "Noklusējuma vērtība ir 15 minūtes. Izmaiņas personu un radniecības datos automātiski atjaunina indeksu. Serverī tiek saglabātas tikai radniecības saites ar skaitliskiem identifikatoriem; šī funkcija nesaglabā kešatmiņā personu profilus, fotogrāfijas vai piekļuves pilnvaras."
 
-#: includes/class-wpmft-demo.php:824
-msgid "The demo has reset since this editor was opened. Reload the editor before saving again."
-msgstr "Kopš šī redaktora atvēršanas demonstrācija ir atiestatīta. Pirms atkārtotas saglabāšanas pārlādējiet redaktoru."
+#: includes/class-wpmft-demo.php:1095
+msgid "The demo has reset since this page was opened. Reload it before making changes."
+msgstr "Kopš šīs lapas atvēršanas demonstrācija ir atiestatīta. Pirms izmaiņu veikšanas ielādējiet lapu atkārtoti."
 
-#: includes/class-wpmft-demo.php:105
+#: includes/class-wpmft-demo.php:117
 msgid "The demo is resetting or its reset could not finish. Please try again shortly."
 msgstr "Demonstrācija tiek atiestatīta, vai atiestatīšanu neizdevās pabeigt. Lūdzu, pēc brīža mēģiniet vēlreiz."
 
-#: includes/class-wpmft-demo.php:422
+#: includes/class-wpmft-demo.php:570
 msgid "The demo password is incorrect."
 msgstr "Demonstrācijas parole nav pareiza."
+
+#: includes/class-wpmft-demo.php:1210
+msgid "The demo starting person and tree page stay available and cannot be removed."
+msgstr "Demonstrācijas sākuma persona un koka lapa paliek pieejamas, un tās nevar noņemt."
 
 #: includes/class-wpmft-media.php:169
 msgid "The encrypted photograph could not be verified."
@@ -1283,9 +1531,9 @@ msgstr "Šifrēto fotogrāfiju neizdevās pārbaudīt."
 msgid "The family tree is currently unavailable."
 msgstr "Dzimtas koks pašlaik nav pieejams."
 
-#: includes/class-wpmft-demo.php:674
-msgid "The first activation saves the current demo as its starting state. That baseline is retained when sharing is disabled and enabled again. To deliberately change it, finish your demo edits while sharing is off, then save a new baseline below."
-msgstr "Pirmā ieslēgšana saglabā pašreizējo demonstrāciju kā sākotnējo stāvokli. Tas tiek saglabāts arī tad, ja koplietošanu izslēdz un ieslēdz vēlreiz. Lai to apzināti mainītu, pabeidziet demonstrācijas labojumus, kamēr koplietošana ir izslēgta, un pēc tam tālāk saglabājiet jaunu sākotnējo stāvokli."
+#: includes/class-wpmft-demo.php:822
+msgid "The first activation saves the imported demo samples as their starting state. That baseline is retained when sharing is disabled and enabled again. To change it, edit those original samples as an administrator while sharing is off, then save a new baseline below."
+msgstr "Pirmoreiz aktivizējot režīmu, importētie demonstrācijas paraugi tiek saglabāti kā sākotnējais stāvoklis. Tas tiek saglabāts arī tad, ja koplietošanu izslēdz un atkal ieslēdz. Lai to mainītu, rediģējiet šos sākotnējos paraugus kā administrators, kamēr koplietošana ir izslēgta, un pēc tam zemāk saglabājiet jaunu sākotnējo stāvokli."
 
 #: includes/class-wpmft-languages.php:130
 msgid "The language settings could not be read."
@@ -1299,7 +1547,7 @@ msgstr "Ziņojumu neizdevās nosūtīt. Lūdzu, vēlāk mēģiniet vēlreiz vai 
 msgid "The older WP Family Tree plugin can still fail on missing parent records or invalid birth dates. Check your tree with My Family Tree, then deactivate the older WP Family Tree plugin. Your existing family posts and relationships are retained."
 msgstr "Vecākais spraudnis WP Family Tree joprojām var izraisīt kļūdas, ja trūkst vecāku ierakstu vai dzimšanas datumi nav derīgi. Pārbaudiet savu dzimtas koku ar My Family Tree, pēc tam izslēdziet vecāko WP Family Tree spraudni. Jūsu esošie dzimtas ieraksti un radniecības saites tiek saglabāti."
 
-#: includes/class-wpmft-admin.php:210
+#: includes/class-wpmft-admin.php:329
 msgid "The page could not be created. Please try again."
 msgstr "Lapu neizdevās izveidot. Lūdzu, mēģiniet vēlreiz."
 
@@ -1332,15 +1580,11 @@ msgstr "Fotogrāfija ir pārāk liela. Maksimālais faila lielums ir %s."
 msgid "The photo upload was interrupted. Please choose the photo again."
 msgstr "Fotogrāfijas augšupielāde tika pārtraukta. Izvēlieties fotogrāfiju vēlreiz."
 
-#: includes/class-wpmft-admin.php:251
+#: includes/class-wpmft-admin.php:373
 msgid "The plugin provides its own title, header and contact footer. This applies to pages containing the tree shortcode or block."
 msgstr "Spraudnis nodrošina savu virsrakstu, galveni un kontaktu kājeni. Tas attiecas uz lapām, kurās ir dzimtas koka īskods vai bloks."
 
-#: includes/class-wpmft-demo.php:667
-msgid "The plugin restores demo titles, stories, birth dates, locations and occupations to a saved starting state every 24 hours. Settings, relationships, media and unrelated content are kept. No backup plugin is required."
-msgstr "Spraudnis ik pēc 24 stundām atjauno demonstrācijas nosaukumus, stāstus, dzimšanas datumus, vietas un nodarbošanos no saglabātā sākotnējā stāvokļa. Iestatījumi, radniecības saites, multivide un pārējais saturs tiek saglabāti. Rezerves kopiju spraudnis nav vajadzīgs."
-
-#: includes/class-wpmft-admin.php:575
+#: includes/class-wpmft-admin.php:700
 msgid "The portrait is the post’s featured image. Faces stay at the top of photo frames."
 msgstr "Portrets ir ieraksta galvenais attēls. Attēlu rāmjos fotogrāfijas tiek līdzinātas augšpusē, lai saglabātu redzamas sejas."
 
@@ -1356,7 +1600,7 @@ msgstr "Neizdevās izveidot privāto attēlu mapi."
 msgid "The private media key could not be created."
 msgstr "Neizdevās izveidot privāto attēlu atslēgu."
 
-#: includes/class-wpmft-admin.php:476
+#: includes/class-wpmft-admin.php:601
 msgid "The protected media service is not available."
 msgstr "Aizsargāto attēlu pakalpojums nav pieejams."
 
@@ -1364,11 +1608,11 @@ msgstr "Aizsargāto attēlu pakalpojums nav pieejams."
 msgid "The request origin could not be verified."
 msgstr "Neizdevās pārbaudīt pieprasījuma izcelsmi."
 
-#: includes/class-wpmft-admin.php:807
+#: includes/class-wpmft-admin.php:942
 msgid "The root is a WordPress post ID. Legacy [family-tree] and [family-members] shortcodes are supported for migration."
 msgstr "Sākuma persona ir norādīta ar WordPress ieraksta ID. Migrācijai tiek atbalstīti vecie [family-tree] un [family-members] īskodi."
 
-#: includes/class-wpmft-demo.php:561
+#: includes/class-wpmft-demo.php:709
 msgid "The saved demo baseline no longer matches the marked samples. Review the demo content and save a new baseline before sharing."
 msgstr "Saglabātais demonstrācijas sākotnējais stāvoklis vairs neatbilst atzīmētajiem paraugiem. Pirms koplietošanas pārbaudiet demonstrācijas saturu un saglabājiet jaunu sākotnējo stāvokli."
 
@@ -1388,11 +1632,20 @@ msgstr "Drošības pārbaude nav iestatīta. Lūdzu, sazinieties ar vietnes admi
 msgid "The server truncated the language form. No languages were changed. Please enable JavaScript and try again."
 msgstr "Serveris saīsināja valodu formas datus. Neviena valoda netika mainīta. Ieslēdziet JavaScript un mēģiniet vēlreiz."
 
-#: includes/class-wpmft-admin.php:541
+#: includes/class-wpmft-demo.php:1150
+#, php-format
+msgid "The shared demo allows up to %d new persons and pages before the next reset."
+msgstr "Koplietotajā demonstrācijā līdz nākamajai atiestatīšanai var izveidot ne vairāk kā %d jaunas personas un lapas kopā."
+
+#: includes/class-wpmft-demo.php:964
+msgid "The starting person and tree page are kept so visitors can always open the demo."
+msgstr "Sākuma persona un koka lapa tiek saglabātas, lai apmeklētāji vienmēr varētu atvērt demonstrāciju."
+
+#: includes/class-wpmft-admin.php:666
 msgid "The two records have different statuses. A former relationship takes priority; update both records to resolve the difference."
 msgstr "Abos ierakstos norādīti atšķirīgi statusi. Bijušo attiecību statusam ir priekšroka; lai novērstu atšķirību, atjauniniet abus ierakstus."
 
-#: includes/class-wpmft-demo.php:551
+#: includes/class-wpmft-demo.php:699
 msgid "The username demo already exists. No existing account has been changed. Use a separate demo site or rename that account yourself."
 msgstr "Lietotājvārds demo jau pastāv. Esošie konti nav mainīti. Izmantojiet atsevišķu demonstrācijas vietni vai pats pārdēvējiet šo kontu."
 
@@ -1400,7 +1653,11 @@ msgstr "Lietotājvārds demo jau pastāv. Esošie konti nav mainīti. Izmantojie
 msgid "There are no photograph files to protect."
 msgstr "Nav fotogrāfiju failu, ko aizsargāt."
 
-#: includes/class-wpmft-demo.php:746
+#: includes/class-wpmft-demo.php:1045
+msgid "These settings explain how My Family Tree works. Only the site administrator can change them."
+msgstr "Šie iestatījumi palīdz izprast My Family Tree darbību. Tos var mainīt tikai vietnes administrators."
+
+#: includes/class-wpmft-demo.php:901
 msgid "This action is not available to the demo editor."
 msgstr "Šī darbība demonstrācijas redaktoram nav pieejama."
 
@@ -1408,9 +1665,17 @@ msgstr "Šī darbība demonstrācijas redaktoram nav pieejama."
 msgid "This action is not available."
 msgstr "Šī darbība nav pieejama."
 
-#: includes/class-wpmft-demo.php:797
+#: includes/class-wpmft-demo.php:1212 includes/class-wpmft-demo.php:1231 includes/class-wpmft-demo.php:1251
 msgid "This is not editable demo content."
 msgstr "Šis nav rediģējams demonstrācijas saturs."
+
+#: includes/class-wpmft-demo.php:969
+msgid "This item will disappear from the public demo. The original demo is restored every 24 hours."
+msgstr "Šis ieraksts vairs nebūs redzams publiskajā demonstrācijā. Sākotnējā demonstrācija tiek atjaunota ik pēc 24 stundām."
+
+#: includes/class-wpmft-demo.php:983
+msgid "This page displays the demo family tree. Its shortcode is preserved; you can edit the page title."
+msgstr "Šajā lapā tiek rādīts demonstrācijas dzimtas koks. Tā īskods tiek saglabāts; varat rediģēt lapas virsrakstu."
 
 #: includes/class-wpmft-data.php:263 includes/class-wpmft-data.php:265
 msgid "This person could not be found."
@@ -1424,23 +1689,23 @@ msgstr "Šis fotogrāfijas formāts nav atļauts. Izvēlieties kādu no norādī
 msgid "This photograph is encrypted. Download it from the family gallery, edit it on your device, and upload the revised photograph."
 msgstr "Šī fotogrāfija ir šifrēta. Lejupielādējiet to no dzimtas galerijas, rediģējiet savā ierīcē un augšupielādējiet laboto fotogrāfiju."
 
-#: includes/class-wpmft-admin.php:539
+#: includes/class-wpmft-admin.php:664
 msgid "This status comes from the other person’s record. Removing this row does not change their record."
 msgstr "Šis statuss ir norādīts otras personas ierakstā. Noņemot šo rindu, otras personas ieraksts netiek mainīts."
 
-#: includes/class-wpmft-admin.php:266
+#: includes/class-wpmft-admin.php:388
 msgid "Title (English)"
 msgstr "Virsraksts (angļu valodā)"
 
-#: includes/class-wpmft-admin.php:267
+#: includes/class-wpmft-admin.php:389
 msgid "Title (Latvian)"
 msgstr "Virsraksts (latviešu valodā)"
 
-#: includes/class-wpmft-admin.php:506
+#: includes/class-wpmft-admin.php:631
 msgid "Together / current partners"
 msgstr "Kopā / pašreizējie partneri"
 
-#: includes/class-wpmft-demo.php:421 includes/class-wpmft-security.php:84 includes/class-wpmft-api.php:58
+#: includes/class-wpmft-api.php:58 includes/class-wpmft-security.php:84 includes/class-wpmft-demo.php:569
 msgid "Too many attempts. Please try again in 15 minutes."
 msgstr "Pārāk daudz mēģinājumu. Lūdzu, mēģiniet vēlreiz pēc 15 minūtēm."
 
@@ -1456,7 +1721,7 @@ msgstr "Tulkojumu vērtībām jābūt vienkāršam tekstam bez HTML. Atstājiet 
 msgid "Translations must be a JSON object with text keys and text values. No settings were changed."
 msgstr "Tulkojumiem jābūt JSON objektam ar teksta atslēgām un teksta vērtībām. Neviens iestatījums netika mainīts."
 
-#: includes/class-wpmft-admin.php:271
+#: includes/class-wpmft-admin.php:393 includes/class-wpmft-demo.php:1060
 msgid "Tree canvas height on large screens (px)"
 msgstr "Koka laukuma augstums lielos ekrānos (px)"
 
@@ -1464,7 +1729,7 @@ msgstr "Koka laukuma augstums lielos ekrānos (px)"
 msgid "Tree introduction translation"
 msgstr "Dzimtas koka ievada tulkojums"
 
-#: includes/class-wpmft-admin.php:248
+#: includes/class-wpmft-admin.php:370 includes/class-wpmft-demo.php:1050
 msgid "Tree page"
 msgstr "Koka lapa"
 
@@ -1472,95 +1737,123 @@ msgstr "Koka lapa"
 msgid "Tree title translation"
 msgstr "Dzimtas koka nosaukuma tulkojums"
 
+#: includes/class-wpmft-admin.php:366
+msgid "Turn this off if this site also uses posts for news or a blog. Existing content and URLs are unchanged."
+msgstr "Izslēdziet šo iespēju, ja vietnē raksti tiek izmantoti arī ziņām vai emuāram. Esošais saturs un saites paliek nemainītas."
+
 #: includes/class-wpmft-compatibility.php:35
 msgid "Two family tree plugins are active"
 msgstr "Ieslēgti divi dzimtas koka spraudņi"
 
-#: includes/class-wpmft-admin.php:607
+#: includes/class-wpmft-admin.php:129
+msgid "Uploaded to this person"
+msgstr "Augšupielādēts šīs personas ierakstam"
+
+#: includes/class-wpmft-admin.php:365
+msgid "Use Persons labels for the WordPress Posts section"
+msgstr "WordPress sadaļu Ziņas pārdēvēt par Personas"
+
+#: includes/class-wpmft-admin.php:738
 msgid "Use a complete public profile URL beginning with https:// or http://."
 msgstr "Norādiet pilnu publiskā profila saiti, kas sākas ar https:// vai http://."
 
-#: includes/class-wpmft-admin.php:295
+#: includes/class-wpmft-admin.php:133
+msgid "Use as portrait"
+msgstr "Izmantot kā portretu"
+
+#: includes/class-wpmft-admin.php:417
 msgid "Use hCaptcha on the contact form"
 msgstr "Izmantot hCaptcha saziņas formā"
 
-#: includes/class-wpmft-admin.php:294
+#: includes/class-wpmft-admin.php:416
 msgid "Use hCaptcha on the family password form"
 msgstr "Izmantot hCaptcha dzimtas paroles formā"
 
-#: includes/class-wpmft-admin.php:343
+#: includes/class-wpmft-admin.php:465
 msgid "Use lean styles on full-window tree pages"
 msgstr "Izmantot samazinātu stilu kopu pilna loga koka lapās"
 
-#: includes/class-wpmft-admin.php:339
+#: includes/class-wpmft-admin.php:461 includes/class-wpmft-demo.php:1084
 msgid "Use minified plugin JavaScript and CSS"
 msgstr "Izmantot samazinātus spraudņa JavaScript un CSS failus"
 
-#: includes/class-wpmft-admin.php:139
+#: includes/class-wpmft-admin.php:253
 msgid "Use selected photographs"
 msgstr "Izmantot izvēlētās fotogrāfijas"
 
-#: includes/class-wpmft-demo.php:675
-msgid "Use the current demo titles, stories, dates, locations and occupations for future resets, replacing the previous baseline."
-msgstr "Turpmākajām atiestatīšanām izmantot pašreizējos demonstrācijas nosaukumus, stāstus, datumus, vietas un nodarbošanos, aizstājot iepriekš saglabāto sākotnējo stāvokli."
+#: includes/class-wpmft-demo.php:823
+msgid "Use the current original demo samples, including their publication status, for future resets. Visitor-created records are still removed at reset."
+msgstr "Turpmākai atiestatīšanai izmantot pašreizējos sākotnējos demonstrācijas paraugus, tostarp to publicēšanas statusu. Apmeklētāju izveidotie ieraksti atiestatīšanas laikā joprojām tiks dzēsti."
 
-#: includes/class-wpmft-admin.php:250
+#: includes/class-wpmft-admin.php:372 includes/class-wpmft-demo.php:1057
 msgid "Use the full-window layout without the theme header and footer"
 msgstr "Izmantot pilna loga izkārtojumu bez tēmas galvenes un kājenes"
 
-#: includes/class-wpmft-admin.php:275
+#: includes/class-wpmft-admin.php:397
 msgid "Use the included oak leaf favicon and touch icons on the tree page"
 msgstr "Dzimtas koka lapā izmantot iekļauto ozollapas vietnes ikonu un mobilo ierīču ikonas"
 
-#: includes/class-wpmft-admin.php:570
+#: includes/class-wpmft-admin.php:695
 msgid "Use the post title for the person’s full name and the biography editor for their story. Parent, partner and date fields reuse your existing WP Family Tree data."
 msgstr "Ieraksta virsrakstā norādiet personas vārdu un uzvārdu, bet biogrāfijas redaktorā — dzīvesstāstu. Vecāku, partneru un datumu lauki izmanto esošos WP Family Tree datus."
 
-#: includes/class-wpmft-demo.php:729
+#: includes/class-wpmft-demo.php:884
 msgid "Use the restricted demo editor for sample content."
 msgstr "Parauga saturam izmantojiet ierobežoto demonstrācijas redaktoru."
 
-#: includes/class-wpmft-demo.php:651
-msgid "Use this on a separate demonstration site containing only demo family records. A restricted Family Tree Demo Editor can change marked sample names, dates and biographies, but cannot manage settings, other content, users, plugins or uploads. Contact sending is disabled during demo mode. Visitor edits are public and reset every 24 hours."
-msgstr "Izmantojiet šo režīmu atsevišķā demonstrācijas vietnē, kurā ir tikai dzimtas ierakstu paraugi. Ierobežots dzimtas koka demonstrācijas redaktors var mainīt atzīmēto paraugu vārdus, datumus un biogrāfijas, bet nevar pārvaldīt iestatījumus, citu saturu, lietotājus, spraudņus vai augšupielādes. Demonstrācijas režīmā saziņas nosūtīšana ir izslēgta. Apmeklētāju labojumi ir publiski un tiek atiestatīti ik pēc 24 stundām."
+#: includes/class-wpmft-demo.php:799
+msgid "Use this on a separate demonstration site containing only demo family records. The restricted Family Tree Demo Editor can add, edit and remove demo persons and pages, and view a read-only settings overview. Contact sending is disabled during demo mode. Visitor edits are public and reset every 24 hours."
+msgstr "Izmantojiet šo režīmu atsevišķā demonstrācijas vietnē, kurā ir tikai dzimtas demonstrācijas ieraksti. Ierobežotais dzimtas koka demonstrācijas redaktors var pievienot, rediģēt un noņemt demonstrācijas personas un lapas, kā arī skatīt iestatījumu pārskatu tikai lasīšanas režīmā. Demonstrācijas režīmā ziņojumu sūtīšana ir atspējota. Apmeklētāju izmaiņas ir publiskas un tiek atiestatītas ik pēc 24 stundām."
 
-#: includes/class-wpmft-admin.php:150
+#: includes/class-wpmft-admin.php:269
 msgid "Use this portrait"
 msgstr "Izmantot šo portretu"
 
-#: includes/class-wpmft-admin.php:223
+#: includes/class-wpmft-demo.php:1009
+msgid "View page"
+msgstr "Skatīt lapu"
+
+#: includes/class-wpmft-admin.php:120 includes/class-wpmft-admin.php:169 includes/class-wpmft-demo.php:1009
+msgid "View person"
+msgstr "Skatīt personu"
+
+#: includes/class-wpmft-admin.php:121
+msgid "View persons"
+msgstr "Skatīt personas"
+
+#: includes/class-wpmft-admin.php:342 includes/class-wpmft-demo.php:949
 msgid "View tree"
 msgstr "Skatīt koku"
 
-#: includes/class-wpmft-admin.php:596
+#: includes/class-wpmft-admin.php:727
 msgid "Website"
 msgstr "Tīmekļvietne"
 
-#: includes/class-wpmft-admin.php:296
+#: includes/class-wpmft-admin.php:418
 msgid "When enabled, hCaptcha receives technical browser information and verifies form tokens. Review its service terms and add it to your privacy notice."
 msgstr "Ja hCaptcha ir ieslēgts, tas saņem pārlūkprogrammas tehnisko informāciju un pārbauda formu apliecinājumus. Iepazīstieties ar tā pakalpojuma noteikumiem un pievienojiet informāciju savam privātuma paziņojumam."
 
-#: includes/class-wpmft-admin.php:331
+#: includes/class-wpmft-admin.php:453
 msgid "WordPress cleanup"
 msgstr "WordPress sakopšana"
 
-#: includes/class-wpmft-admin.php:349
+#: includes/class-wpmft-admin.php:471 includes/class-wpmft-demo.php:1082
 msgid "WordPress database transients"
 msgstr "WordPress datubāzes pārejošā kešatmiņa"
 
-#: includes/class-wpmft-demo.php:654
+#: includes/class-wpmft-demo.php:802
 msgid "WordPress demo login"
 msgstr "WordPress demonstrācijas lietotājvārds"
 
-#: includes/class-wpmft-demo.php:654
+#: includes/class-wpmft-demo.php:802
 msgid "WordPress demo password"
 msgstr "WordPress demonstrācijas parole"
 
-#: includes/class-wpmft-demo.php:668
+#: includes/class-wpmft-demo.php:816
 msgid "WordPress runs scheduled tasks when the site receives a request. An overdue reset also runs before the next demo visit or save. An editor opened before a reset must be reloaded before saving."
 msgstr "WordPress izpilda ieplānotos uzdevumus, kad vietne saņem pieprasījumu. Nokavēta atiestatīšana tiek veikta arī pirms nākamā demonstrācijas apmeklējuma vai labojumu saglabāšanas. Ja redaktors atvērts pirms atiestatīšanas, tas pirms saglabāšanas ir jāpārlādē."
 
-#: includes/class-wpmft-admin.php:327
+#: includes/class-wpmft-admin.php:449
 msgid "WordPress transients"
 msgstr "WordPress pagaidu kešatmiņa"
 
@@ -1568,11 +1861,11 @@ msgstr "WordPress pagaidu kešatmiņa"
 msgid "Would you like to translate people and pages too?"
 msgstr "Vai vēlaties tulkot arī personas un lapas?"
 
-#: includes/class-wpmft-demo.php:767
-msgid "You can edit marked demonstration stories only. Visitor edits are public and reset every 24 hours. Do not enter personal or confidential information."
-msgstr "Jūs varat labot tikai atzīmētos demonstrācijas stāstus. Apmeklētāju labojumi ir publiski un tiek atiestatīti ik pēc 24 stundām. Neievadiet personisku vai konfidenciālu informāciju."
+#: includes/class-wpmft-demo.php:954
+msgid "You can add, edit and remove demo persons and pages. Changes are public. Every 24 hours the original demo returns and visitor-created items are removed. Do not enter personal or confidential information."
+msgstr "Varat pievienot, rediģēt un noņemt demonstrācijas personas un lapas. Izmaiņas ir publiskas. Ik pēc 24 stundām tiek atjaunota sākotnējā demonstrācija un noņemti apmeklētāju izveidotie ieraksti. Neievadiet personas datus vai konfidenciālu informāciju."
 
-#: includes/class-wpmft-admin.php:161 includes/class-wpmft-languages.php:166
+#: includes/class-wpmft-admin.php:280 includes/class-wpmft-languages.php:166
 msgid "You do not have permission to change family tree settings."
 msgstr "Jums nav atļaujas mainīt dzimtas koka iestatījumus."
 
@@ -1584,11 +1877,11 @@ msgstr "Jums nav tiesību tīrīt šo kešatmiņu."
 msgid "Your family session has ended. Please unlock the tree again."
 msgstr "Jūsu dzimtas piekļuves sesija ir beigusies. Lūdzu, atbloķējiet koku vēlreiz."
 
-#: includes/class-wpmft-admin.php:191
+#: includes/class-wpmft-admin.php:310
 msgid "Your family tree is locked for visitors. Set a family password in Privacy to allow access, or explicitly turn password protection off for a public tree."
 msgstr "Apmeklētājiem jūsu dzimtas koks ir bloķēts. Iestatiet dzimtas paroli sadaļā Privātums, lai atļautu piekļuvi, vai izslēdziet paroles aizsardzību, ja koks būs publisks."
 
-#: includes/class-wpmft-admin.php:206
+#: includes/class-wpmft-admin.php:325
 msgid "Your family tree page is ready."
 msgstr "Jūsu dzimtas koka lapa ir gatava."
 
@@ -1600,7 +1893,7 @@ msgstr "Šeit lapā būs redzams interaktīvais ozols. Personu informācija atve
 msgid "Your session has expired. Please reload and try again."
 msgstr "Jūsu sesija ir beigusies. Pārlādējiet lapu un mēģiniet vēlreiz."
 
-#: includes/class-wpmft-admin.php:220
+#: includes/class-wpmft-admin.php:339
 msgid "Your tree, in any theme"
 msgstr "Jūsu koks jebkurā tēmā"
 
@@ -1612,11 +1905,11 @@ msgstr "dzimta"
 msgid "genealogy"
 msgstr "ģenealoģija"
 
-#: includes/class-wpmft-admin.php:293
+#: includes/class-wpmft-admin.php:415
 msgid "hCaptcha secret key"
 msgstr "hCaptcha slepenā atslēga"
 
-#: includes/class-wpmft-admin.php:292
+#: includes/class-wpmft-admin.php:414
 msgid "hCaptcha site key"
 msgstr "hCaptcha vietnes atslēga"
 
