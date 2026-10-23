@@ -242,7 +242,27 @@ final class WPMFT_Data {
 		return array( 'root' => $root, 'nodes' => array_values( $nodes ), 'edges' => $edges, 'total' => count( $index ), 'truncated' => $truncated );
 	}
 
+	/** The saved selection controls the visible gallery, including an intentionally empty gallery. */
 	public static function gallery_ids( $id, $with_children = true ) {
+		$id = absint( $id );
+		if ( ! metadata_exists( 'post', $id, '_wpmft_gallery' ) ) {
+			$canonical = self::canonical( $id );
+			if ( $canonical !== $id && metadata_exists( 'post', $canonical, '_wpmft_gallery' ) ) {
+				$id = $canonical;
+			} else {
+				// Keep imported galleries until the editor saves an explicit selection. Show this same list in the editor.
+				$ids = self::referenced_image_ids( $canonical, $with_children );
+				if ( $canonical !== $id ) { $ids = array_merge( $ids, self::referenced_image_ids( $id, $with_children ) ); }
+				return array_values( array_unique( $ids ) );
+			}
+		}
+		$gallery = get_post_meta( $id, '_wpmft_gallery', true );
+		$ids = is_array( $gallery ) ? self::relation_ids( $gallery ) : array();
+		return array_values( array_filter( $ids, function ( $attachment ) { return wp_attachment_is_image( $attachment ); } ) );
+	}
+
+	/** All image references stay protected even when they are not selected for the visible gallery. */
+	public static function referenced_image_ids( $id, $with_children = true ) {
 		$ids = array( get_post_thumbnail_id( $id ) );
 		$gallery = get_post_meta( $id, '_wpmft_gallery', true );
 		if ( is_array( $gallery ) ) { $ids = array_merge( $ids, $gallery ); }
@@ -295,7 +315,7 @@ final class WPMFT_Data {
 		$content = preg_replace( '/<a\b[^>]*>\s*<\/a>/i', '', $content );
 		$result['bio'] = WPMFT_Media::rewrite_html( wp_kses_post( wpautop( $content ) ) );
 		$result['gallery'] = array();
-		foreach ( array_unique( array_merge( self::gallery_ids( $id ), self::gallery_ids( $display ) ) ) as $photo ) {
+		foreach ( self::gallery_ids( $display ) as $photo ) {
 			$a = get_post( $photo );
 			$result['gallery'][] = array( 'id' => $photo, 'url' => WPMFT_Media::url( $photo, 'full' ), 'thumb' => WPMFT_Media::url( $photo, 'medium' ), 'alt' => (string) get_post_meta( $photo, '_wp_attachment_image_alt', true ), 'caption' => $a ? wp_strip_all_tags( $a->post_excerpt ) : '' );
 		}

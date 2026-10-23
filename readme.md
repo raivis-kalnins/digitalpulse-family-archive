@@ -2,7 +2,7 @@
 
 A free, open-source WordPress plugin for the stories, photographs and people that connect generations. Explore relatives in a responsive oak-inspired family tree, open a person in a detailed modal, and manage the archive through familiar WordPress posts.
 
-**Version 1.2.5** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
+**Version 1.2.6** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
 Developed by **Raivis Kalnins**, web developer at [DigitalPulse](https://digitalpulse.click/).  
 Project: [github.com/raivis-kalnins/wp-my-family-tree](https://github.com/raivis-kalnins/wp-my-family-tree)
 
@@ -14,7 +14,14 @@ The package is prepared for free distribution through the [WordPress.org Plugin 
 
 *The screenshot contains fictional demonstration records and illustrated portraits. No private family records or photographs are included in this plugin.*
 
-## What is new in 1.2.5
+## What is new in 1.2.6
+
+- **The saved gallery matches the frontend.** Only the selected photographs appear, in their saved order. Removing every photograph keeps the gallery empty; old attachments do not reappear.
+- **A separate profile portrait.** The portrait stays in the profile header and is included in a saved gallery only when selected there.
+- **Editable inherited and legacy galleries.** The person editor shows the same effective photo list as the frontend. Saving a translated person's selection respects that selection without merging photographs back from another language.
+- **Private photographs remain protected.** Media detection, viewing permissions and encryption still cover portraits and other referenced or attached images outside the visible gallery.
+
+## Version 1.2.5 improvements
 
 - **Gallery additions keep existing photographs.** Use **Add photographs** to append images without replacing the current selection. **Reorder photographs** loads the complete gallery before opening the ordering dialog; cancellation or a loading failure leaves the gallery unchanged.
 - **A clearer portrait removal button.** The secondary red button has matching spacing, a removal icon, a visible keyboard focus state and a mobile-friendly size. Removing a portrait keeps its original media attachment.
@@ -77,7 +84,7 @@ The existing private-media, contact-photo, relationship-status, mobile tree-gest
 
 ### Update My Family Tree 1.2.3 or later
 
-Back up the site, upload the complete `my-family-tree-1.2.5.zip` through **Plugins → Add New Plugin → Upload Plugin**, and choose **Replace current with uploaded**. Keep the `my-family-tree/` folder name, then verify the tree page, photographs and contact form. Existing data and settings are retained.
+Back up the site, upload the complete `my-family-tree-1.2.6.zip` through **Plugins → Add New Plugin → Upload Plugin**, and choose **Replace current with uploaded**. Keep the `my-family-tree/` folder name, then verify the tree page, photographs and contact form. Existing data and settings are retained.
 
 ### Migrate from WP My Family Tree 1.2.2 or earlier
 
@@ -85,7 +92,7 @@ The package now uses `my-family-tree/`. WordPress treats this folder as a separa
 
 1. Back up the site's database and uploads together. If the archive contains private published content, enable independent site access protection for the switch because deactivating the old plugin stops its access checks.
 2. Open **Plugins** and deactivate **WP My Family Tree**. If it is network-active, deactivate it in Network Admin first.
-3. Open **Plugins → Add New Plugin → Upload Plugin**, select the complete `my-family-tree-1.2.5.zip`, and click **Install Now**.
+3. Open **Plugins → Add New Plugin → Upload Plugin**, select the complete `my-family-tree-1.2.6.zip`, and click **Install Now**.
 4. Activate **My Family Tree**. Keep the old copy inactive; the new entry point blocks activation while the previous copy is active.
 5. Open the tree page and verify the privacy gate, photographs, person editor and **Contact us / Pieteikties** form. Review **Family Tree → Settings & help**, then clear the Family Tree cache and any applicable page cache.
 6. After verifying the new version, delete the inactive **WP My Family Tree** copy from the Plugins screen. Its bundled code has no uninstall data-deletion routine. Leave **My Family Tree** active.
@@ -157,6 +164,8 @@ Use full `https://` or `http://` URLs for websites and social profiles. Contact 
 Portraits and gallery previews align to the top of the available photograph. The lightbox shows the full image. If the original file was already cropped, upload an uncropped source to restore the missing area. Removing a photograph from a gallery removes its gallery reference; it does not delete the original media file.
 
 **Add photographs** appends selected images to the existing gallery and ignores duplicates. Use **Reorder photographs** to change the order or remove items in the gallery dialog, or use the remove button on a preview. Cancelling a dialog keeps the current gallery. Save or update the person after making changes.
+
+The saved selection controls the frontend gallery, including an empty selection. The profile portrait is separate unless selected in the gallery. If an older person has never had an explicit gallery saved, the editor displays the imported or inherited photographs currently used by the frontend; remove unwanted previews and update the person to save the desired list. A translated person's saved selection takes precedence over an inherited gallery. Removing gallery entries retains the media files and their existing privacy protection.
 
 ### Current and former partners
 
@@ -384,7 +393,7 @@ Errors naming `wp-family-tree/family-tree.php`, `class.node.php` or `class.tree.
 
 ## Īsā pamācība latviski
 
-1. Pirms atjaunināšanas dublējiet datubāzi un augšupielādes. Privātai vietnei pārejas laikā nodrošiniet atsevišķu piekļuves aizsardzību. Deaktivizējiet **WP My Family Tree**, pēc tam sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni** instalējiet pilno `my-family-tree-1.2.5.zip` pakotni un aktivizējiet **My Family Tree**. Jaunās mapes dēļ WordPress to uzskata par atsevišķu spraudni; abas versijas reizē neaktivizējiet. Pārbaudiet koku, piekļuvi, fotogrāfijas un kontaktformu, tad veco neaktīvo spraudni var izdzēst. Esošie dati un iestatījumi paliek; datubāzes imports un motīva nomaiņa nav vajadzīga. Demonstrācijas koplietojamo režīmu pēc šīs pārejas ieslēdziet atkārtoti tikai tad, ja tas nepieciešams.
+1. Pirms atjaunināšanas dublējiet datubāzi un augšupielādes. Privātai vietnei pārejas laikā nodrošiniet atsevišķu piekļuves aizsardzību. Deaktivizējiet **WP My Family Tree**, pēc tam sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni** instalējiet pilno `my-family-tree-1.2.6.zip` pakotni un aktivizējiet **My Family Tree**. Jaunās mapes dēļ WordPress to uzskata par atsevišķu spraudni; abas versijas reizē neaktivizējiet. Pārbaudiet koku, piekļuvi, fotogrāfijas un kontaktformu, tad veco neaktīvo spraudni var izdzēst. Esošie dati un iestatījumi paliek; datubāzes imports un motīva nomaiņa nav vajadzīga. Demonstrācijas koplietojamo režīmu pēc šīs pārejas ieslēdziet atkārtoti tikai tad, ja tas nepieciešams.
 2. Spraudņa iestatījumos izvēlieties dzimtas ierakstu kategoriju, sākuma personu un koka lapu. Lapā ievietojiet bloku **Family Tree** vai īskodu `[wp_my_family_tree]`.
 3. Personas rediģēšanā detalizētā forma atrodas uzreiz zem virsraksta. Virsrakstā norādiet personas pilnu vārdu, izvēlieties portretu, vecākus, partnerus, datumus un galeriju. Dzīvesstāsta redaktors atrodas zem formas. Bloku redaktoru personām pēc vajadzības var ieslēgt spraudņa iestatījumos.
 4. Pievienojiet e-pastu, tālruni, mobilo tālruni, adresi, mājaslapu un sociālo tīklu saites tikai tad, ja persona piekrīt tās kopīgot ar koka apmeklētājiem.
@@ -440,6 +449,10 @@ Keep databases, real family media, Updraft backup sets, passwords, keys, test cr
 Copyright © 2026 **Raivis Kalnins / DigitalPulse**. Licensed under the [GNU General Public License, version 3 or later](LICENSE). Icon artwork is included under the same license. Legacy-data compatibility refers to WP Family Tree by Arvind Shah; this is a separate plugin using compatible existing data.
 
 ## Changelog
+
+### 1.2.6
+
+Fixed extra frontend photographs that were absent from the person editor. A saved gallery now defines the exact displayed list and order, including an empty list. The portrait remains in the profile header without being automatically inserted into that saved gallery. The editor exposes inherited and legacy galleries for removal and reordering, and translated selections are respected without merging images back from another language. Private-media discovery, authorization, ownership recording and encryption continue to cover all referenced images. No database restore or deletion of media is required.
 
 ### 1.2.5
 

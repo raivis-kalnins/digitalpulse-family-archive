@@ -30,9 +30,9 @@ final class WPMFT_Media {
 			$children = $wpdb->get_col( $sql );
 			$ids = array_merge( $ids, array_map( 'intval', $children ) );
 		}
-		// Attachment checks inside gallery_ids() should hit one primed cache, not a query per photograph.
+		// Attachment checks inside referenced_image_ids() should hit one primed cache, not a query per photograph.
 		if ( $ids ) { _prime_post_caches( array_unique( $ids ), false, true ); }
-		foreach ( $people as $person ) { $ids = array_merge( $ids, WPMFT_Data::gallery_ids( $person, false ) ); }
+		foreach ( $people as $person ) { $ids = array_merge( $ids, WPMFT_Data::referenced_image_ids( $person, false ) ); }
 		if ( $ids ) { _prime_post_caches( $ids, false, true ); }
 		self::$private_ids = array_values( array_unique( $ids ) );
 		return self::$private_ids;
@@ -118,11 +118,11 @@ final class WPMFT_Media {
 		if ( $parent && 'publish' === get_post_status( $parent ) && wpmft_is_person( $parent ) ) { return true; }
 		$owners = get_post_meta( $id, '_wpmft_media_people', true );
 		foreach ( is_array( $owners ) ? $owners : array() as $person ) {
-			if ( 'publish' === get_post_status( $person ) && wpmft_is_person( $person ) && in_array( (int) $id, WPMFT_Data::gallery_ids( $person, false ), true ) ) { return true; }
+			if ( 'publish' === get_post_status( $person ) && wpmft_is_person( $person ) && in_array( (int) $id, WPMFT_Data::referenced_image_ids( $person, false ), true ) ) { return true; }
 		}
 		// Legacy, not-yet-encrypted imports: check stored references, never a visitor-supplied owner ID.
 		if ( ! self::manifest( $id ) ) {
-			foreach ( WPMFT_Data::ids() as $person ) { if ( in_array( (int) $id, WPMFT_Data::gallery_ids( $person, false ), true ) ) { return true; } }
+			foreach ( WPMFT_Data::ids() as $person ) { if ( in_array( (int) $id, WPMFT_Data::referenced_image_ids( $person, false ), true ) ) { return true; } }
 		}
 		return false;
 	}
@@ -198,7 +198,7 @@ final class WPMFT_Media {
 	public static function protect_person( $id ) {
 		if ( ! wpmft_settings()['private_media'] || ! wpmft_is_person( $id ) ) { return; }
 		$errors = array();
-		foreach ( WPMFT_Data::gallery_ids( $id ) as $photo ) {
+		foreach ( WPMFT_Data::referenced_image_ids( $id ) as $photo ) {
 			if ( ! current_user_can( 'edit_post', $photo ) ) { $errors[] = __( 'A photograph could not be protected because you do not have permission to edit it. Ask an administrator to protect it or upload your own copy.', 'my-family-tree' ); continue; }
 			self::record_owner( $photo, $id );
 			if ( ! self::needs_protection( $photo ) ) { continue; }
@@ -208,7 +208,7 @@ final class WPMFT_Media {
 	}
 	public static function thumbnail_changed( $meta_id, $id, $key, $value ) { if ( in_array( $key, array( '_thumbnail_id', '_wpmft_gallery' ), true ) && wpmft_is_person( $id ) ) { self::protect_person( $id ); } }
 	public static function protect_batch( $limit = 10 ) {
-		foreach ( WPMFT_Data::ids( false ) as $person ) { foreach ( WPMFT_Data::gallery_ids( $person ) as $photo ) { self::record_owner( $photo, $person ); } }
+		foreach ( WPMFT_Data::ids( false ) as $person ) { foreach ( WPMFT_Data::referenced_image_ids( $person ) as $photo ) { self::record_owner( $photo, $person ); } }
 		$pending = array_filter( self::private_ids(), function ( $id ) { return self::needs_protection( $id ); } );
 		$processed = 0; $errors = array();
 		foreach ( array_slice( $pending, 0, max( 1, min( 20, $limit ) ) ) as $id ) {

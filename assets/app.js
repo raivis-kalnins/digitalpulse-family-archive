@@ -668,9 +668,7 @@
         }, [id, lang, retry, api]);
         const gallery = useMemo(() => {
             if (!person) return [];
-            const photos = (person.gallery || []).filter(p => validPhoto(p.url));
-            if (validPhoto(person.photo) && !photos.some(p => mediaIdentity(p.url) === mediaIdentity(person.photo) || mediaIdentity(p.thumb) === mediaIdentity(person.photo))) photos.unshift({ id: 'portrait', url: person.photo, thumb: person.photo, alt: person.name, caption: '' });
-            return photos;
+            return (person.gallery || []).filter(p => validPhoto(p.url));
         }, [person]);
         const biographyClick = event => {
             const img = event.target.closest('img'); if (!img) return;

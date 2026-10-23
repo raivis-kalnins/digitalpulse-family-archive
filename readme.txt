@@ -3,7 +3,7 @@ Tags: family tree, genealogy, family, privacy, shortcode
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.5
+Stable tag: 1.2.6
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -107,7 +107,7 @@ See readme.md for the complete administration, privacy, backup and troubleshooti
 
 == Installation ==
 
-1. Upload the complete my-family-tree-1.2.5.zip through Plugins > Add New Plugin > Upload Plugin, or place the my-family-tree directory in wp-content/plugins.
+1. Upload the complete my-family-tree-1.2.6.zip through Plugins > Add New Plugin > Upload Plugin, or place the my-family-tree directory in wp-content/plugins.
 2. Activate My Family Tree. If migrating from WP My Family Tree, follow the rename instructions below before activation.
 3. Deactivate the older WP Family Tree plugin if it is still active. Keep its existing posts and media.
 4. Open Family Tree settings, select the family category and starting person, and create or select a tree page.
@@ -202,6 +202,14 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 
 == Changelog ==
 
+= 1.2.6 =
+
+* Made each saved gallery selection control the frontend exactly, including its order and an intentionally empty gallery.
+* Stopped automatically adding the portrait or old attached images to a saved gallery; the profile portrait remains separate.
+* Showed inherited and legacy gallery photographs in the person editor so they can be retained, reordered or removed.
+* Respected explicit translated galleries without merging images back from another language.
+* Preserved private-media detection, authorization and encryption for portraits, content images and attached files outside the visible gallery.
+
 = 1.2.5 =
 
 * Fixed gallery additions discarding earlier photographs; new selections append without duplicating existing images.
@@ -276,6 +284,10 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 * Initial interactive tree, person gallery, legacy-data compatibility and private viewing support.
 
 == Upgrade Notice ==
+
+= 1.2.6 =
+
+Fixes extra frontend gallery photos absent from the editor. Saved selections, including an empty gallery, now control the display. Replace with the complete ZIP and clear cached assets. Person data and media are retained.
 
 = 1.2.5 =
 

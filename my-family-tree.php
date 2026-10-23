@@ -3,7 +3,7 @@
  * Plugin Name: My Family Tree
  * Plugin URI: https://github.com/raivis-kalnins/wp-my-family-tree
  * Description: Free, open-source family trees with biographies, photo galleries, multilingual labels, private access and demo tools.
- * Version: 1.2.5
+ * Version: 1.2.6
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Author: Raivis Kalnins — DigitalPulse
@@ -46,7 +46,7 @@ defined( 'ABSPATH' ) || exit;
 		return;
 	}
 
-	define( 'WPMFT_VERSION', '1.2.5' );
+	define( 'WPMFT_VERSION', '1.2.6' );
 	define( 'WPMFT_FILE', $plugin_file );
 	define( 'WPMFT_DIR', plugin_dir_path( $plugin_file ) );
 	define( 'WPMFT_URL', plugin_dir_url( $plugin_file ) );

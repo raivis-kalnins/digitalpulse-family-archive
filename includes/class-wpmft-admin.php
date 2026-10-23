@@ -738,7 +738,7 @@ final class WPMFT_Admin {
 				<p class="description"><?php esc_html_e( 'Use a complete public profile URL beginning with https:// or http://.', 'my-family-tree' ); ?></p>
 			</section>
 			<h3><?php esc_html_e( 'Photo gallery', 'my-family-tree' ); ?></h3>
-			<?php $gallery = array_filter( array_map( 'absint', (array) get_post_meta( $post->ID, '_wpmft_gallery', true ) ) ); ?>
+			<?php $gallery = WPMFT_Data::gallery_ids( $post->ID ); ?>
 			<input type="hidden" id="wpmft-gallery-ids" name="wpmft_person[_wpmft_gallery]" value="<?php echo esc_attr( implode( ',', $gallery ) ); ?>">
 			<div id="wpmft-gallery-preview" class="wpmft-gallery-preview">
 				<?php foreach ( $gallery as $image_id ) : ?><figure data-id="<?php echo absint( $image_id ); ?>"><?php echo wp_get_attachment_image( $image_id, 'thumbnail' ); ?><button type="button" class="wpmft-remove-image" aria-label="<?php esc_attr_e( 'Remove photograph from gallery', 'my-family-tree' ); ?>">×</button></figure><?php endforeach; ?>
@@ -871,6 +871,8 @@ final class WPMFT_Admin {
 			if ( $categories ) { wp_remove_object_terms( $post_id, $categories, 'category' ); }
 			return;
 		}
+		// Keep already-visible legacy images eligible even when this save replaces their portrait reference.
+		$existing_gallery = WPMFT_Data::gallery_ids( $post_id );
 		self::save_contact_details( $post_id, $input );
 		if ( isset( $input['_thumbnail_id'] ) && is_scalar( $input['_thumbnail_id'] ) && preg_match( '/^\d+$/D', (string) $input['_thumbnail_id'] ) ) {
 			$portrait = absint( $input['_thumbnail_id'] );
@@ -918,7 +920,6 @@ final class WPMFT_Admin {
 			update_post_meta( $post_id, '_wpmft_partner_status', $partners );
 		}
 		$gallery = array();
-		$existing_gallery = self::relation_ids( get_post_meta( $post_id, '_wpmft_gallery', true ) );
 		foreach ( isset( $input['_wpmft_gallery'] ) && is_string( $input['_wpmft_gallery'] ) ? explode( ',', $input['_wpmft_gallery'] ) : array() as $id ) {
 			$id = absint( $id );
 			// A new association may trigger encryption; only select files this editor owns or can edit.
