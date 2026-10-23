@@ -13,6 +13,8 @@
             tree: 'Family tree', list: 'People', people: 'family members', families: 'families', search: 'Find someone in your family…', searchLabel: 'Search family members',
             searchHint: 'Type at least 2 characters to search.', noResults: 'No family members found.', close: 'Close', contact: 'Contact us', admin: 'Family administrator',
             roots: 'Connected by our roots', footer: 'Together, we keep our family story growing.', credit: 'Created by', language: 'Language',
+            signIn: 'Sign in', dashboard: 'Dashboard', demoNotice: 'Fictional crossover characters and invented relationships. Visitor edits are public and reset every 24 hours.',
+            parentChild: 'Parent–child', connectionsFor: 'Connections: {name}',
             loading: 'Loading your family…', loadingPerson: 'Opening this life story…', loadingMore: 'Loading more…', loadMore: 'Load more people',
             retry: 'Try again', networkError: 'We could not connect. Please try again.', expired: 'Your session has ended. Please unlock the family archive again.',
             welcome: 'A place for our family', private: 'Our stories belong together.', privateIntro: 'Enter the family password to explore the people, photographs and memories that connect us.',
@@ -25,6 +27,7 @@
             parents: 'Parents', children: 'Children', spouses: 'Partners', siblings: 'Siblings', grandparent: 'Grandparent', grandchild: 'Grandchild', self: 'Selected person', relative: 'Family member',
             explore: 'Explore this family', moreBranch: 'Explore {name}’s family', openPerson: 'Read about {name}', familyOf: 'Family of',
             export: 'Save image', print: 'Print', exporting: 'Preparing image…', exported: 'Your family tree image is ready.', exportError: 'The image could not be created. Please try again.', exportPhotoError: 'A photograph could not be loaded, so the image was not saved. Please try again.',
+            fullscreen: 'Full screen', exitFullscreen: 'Exit full screen', saveTree: 'Save tree image', printTree: 'Print tree', swipePhoto: 'Swipe left or right to browse photographs', photoPosition: 'Photograph {current} of {total}',
             branchNotice: 'This view shows part of the family. Choose a person’s branch button to explore further.',
             noPeople: 'Your family story starts here.', noPeopleHelp: 'The administrator can add a person in WordPress Posts and choose the family category.',
             about: 'Life story', details: 'Life details', born: 'Born', died: 'Died', birthPlace: 'Birthplace', deathPlace: 'Place of death', location: 'Location', occupation: 'Occupation', maidenName: 'Birth surname',
@@ -53,8 +56,10 @@
         lv: {
             archive: 'Dzīvs dzimtas arhīvs', title: 'Mūsu dzimtas koks', subtitle: 'Katra dzīve ir lapa. Katrs stāsts ir daļa no mūsu saknēm.',
             tree: 'Dzimtas koks', list: 'Cilvēki', people: 'dzimtas locekļi', families: 'ģimenes', search: 'Atrodi kādu savā dzimtā…', searchLabel: 'Meklēt dzimtas locekļus',
-            searchHint: 'Lai meklētu, ievadi vismaz 2 rakstzīmes.', noResults: 'Neviens dzimtas loceklis nav atrasts.', close: 'Aizvērt', contact: 'Sazināties', admin: 'Dzimtas administrators',
+            searchHint: 'Lai meklētu, ievadi vismaz 2 rakstzīmes.', noResults: 'Neviens dzimtas loceklis nav atrasts.', close: 'Aizvērt', contact: 'Pieteikties', admin: 'Dzimtas administrators',
             roots: 'Mūs vieno saknes', footer: 'Kopā turpinām mūsu dzimtas stāstu.', credit: 'Izstrādāja', language: 'Valoda',
+            signIn: 'Pieteikties', dashboard: 'Vadības panelis', demoNotice: 'Izdomāti dažādu filmu tēli un radniecības saites. Apmeklētāju veiktās izmaiņas ir publiskas un tiek atiestatītas ik pēc 24 stundām.',
+            parentChild: 'Vecāks–bērns', connectionsFor: 'Saiknes: {name}',
             loading: 'Ielādē dzimtas koku…', loadingPerson: 'Atver dzīvesstāstu…', loadingMore: 'Ielādē…', loadMore: 'Ielādēt vairāk cilvēku',
             retry: 'Mēģināt vēlreiz', networkError: 'Neizdevās izveidot savienojumu. Lūdzu, mēģini vēlreiz.', expired: 'Tava sesija ir beigusies. Lūdzu, atver dzimtas arhīvu vēlreiz.',
             welcome: 'Vieta mūsu dzimtai', private: 'Mūsu stāsti pieder kopā.', privateIntro: 'Ievadi dzimtas paroli, lai iepazītu cilvēkus, fotogrāfijas un atmiņas, kas mūs vieno.',
@@ -67,13 +72,14 @@
             parents: 'Vecāki', children: 'Bērni', spouses: 'Partneri', siblings: 'Brāļi un māsas', grandparent: 'Vecvecāks', grandchild: 'Mazbērns', self: 'Izvēlētais cilvēks', relative: 'Dzimtas loceklis',
             explore: 'Izpētīt šo ģimeni', moreBranch: 'Izpētīt {name} ģimeni', openPerson: 'Lasīt par {name}', familyOf: 'Ģimenes skats',
             export: 'Saglabāt attēlu', print: 'Drukāt', exporting: 'Sagatavo attēlu…', exported: 'Tavs dzimtas koka attēls ir gatavs.', exportError: 'Neizdevās izveidot attēlu. Lūdzu, mēģini vēlreiz.', exportPhotoError: 'Neizdevās ielādēt fotogrāfiju, tādēļ attēls netika saglabāts. Lūdzu, mēģini vēlreiz.',
+            fullscreen: 'Pilnekrāna skats', exitFullscreen: 'Iziet no pilnekrāna', saveTree: 'Saglabāt koka attēlu', printTree: 'Drukāt koku', swipePhoto: 'Velc pa kreisi vai pa labi, lai skatītu fotogrāfijas', photoPosition: 'Fotogrāfija {current} no {total}',
             branchNotice: 'Šeit redzama daļa no dzimtas. Izvēlies cilvēka zara pogu, lai izpētītu tālāk.',
             noPeople: 'Šeit sākas tavas dzimtas stāsts.', noPeopleHelp: 'Administrators var pievienot cilvēku WordPress sadaļā Raksti un izvēlēties dzimtas kategoriju.',
             about: 'Dzīvesstāsts', details: 'Dzīves dati', born: 'Dzimšanas datums', died: 'Miršanas datums', birthPlace: 'Dzimšanas vieta', deathPlace: 'Miršanas vieta', location: 'Dzīvesvieta', occupation: 'Nodarbošanās', maidenName: 'Dzimtais uzvārds',
             memories: 'Fotogrāfijas un atmiņas', gallery: 'Atvērt fotogaleriju', photos: 'fotogrāfijas', photo: 'Fotogrāfija', previousPhoto: 'Iepriekšējā fotogrāfija', nextPhoto: 'Nākamā fotogrāfija', zoomPhoto: 'Pietuvināt fotogrāfiju',
             noBiography: 'Šim stāstam vēl ir turpinājums. Sazinies ar dzimtas administratoru, lai pievienotu atmiņu vai fotogrāfiju.', connections: 'Ģimenes saites', noConnections: 'Ģimenes saites vēl nav pievienotas.',
-            contactHeading: 'Turpināsim dzimtas stāstu', contactIntro: 'Vēlies dalīties ar atmiņu, fotogrāfiju vai precizējumu? Nosūti ziņu dzimtas administratoram.',
-            name: 'Vārds Uzvārds', email: 'E-pasta adrese', message: 'Tava ziņa', messagePlaceholder: 'Pastāsti, ar ko vēlies dalīties…', send: 'Nosūtīt ziņu', sending: 'Nosūta…',
+            contactHeading: 'Pieteikties', contactIntro: 'Sazinies ar dzimtas administratoru: nosūti foto un aprakstu par radinieku, atmiņu vai precizējumu.',
+            name: 'Vārds Uzvārds', email: 'E-pasta adrese', message: 'Apraksts par radinieku vai ziņa', messagePlaceholder: 'Ieraksti radinieka vārdu, saistību ar dzimtu un informāciju, kuru vēlies papildināt…', send: 'Nosūtīt ziņu', sending: 'Nosūta…',
             sentTitle: 'Paldies par tavu ziņu!', sent: 'Tava ziņa ir nosūtīta dzimtas administratoram.', contactNote: 'Tavi dati tiks izmantoti tikai atbildes sniegšanai.',
             attachPhoto: 'Pievienot fotogrāfiju', optional: 'Neobligāti', choosePhoto: 'Izvēlēties fotogrāfiju', replacePhoto: 'Izvēlēties citu fotogrāfiju', dropPhoto: 'vai ievelc to šeit',
             photoLimits: '{formats} · Līdz {size}', removePhoto: 'Noņemt fotogrāfiju', skipPhoto: 'Turpināt bez fotogrāfijas', selectedPhoto: 'Izvēlētā fotogrāfija: {name}', photoOne: 'Lūdzu, izvēlies vienu fotogrāfiju.',
@@ -98,8 +104,10 @@
         leaf: 'M20 3C10 2 3 6 4 13c1 7 10 8 14 2 2-3 2-8 2-12ZM4 21 16 9M9 16v-5M9 16h5',
         search: 'm21 21-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z',
         close: 'm6 6 12 12M6 18 18 6', plus: 'M12 5v14M5 12h14', minus: 'M5 12h14',
-        fit: 'M9 3H3v6M15 3h6v6M3 15v6h6M21 15v6h-6', home: 'm3 10 9-7 9 7M5 9v12h14V9M9 21v-8h6v8',
+        fit: 'M9 3H3v6M15 3h6v6M3 15v6h6M21 15v6h-6', fullscreen: 'M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5', home: 'm3 10 9-7 9 7M5 9v12h14V9M9 21v-8h6v8',
         lock: 'M7 10V7a5 5 0 0 1 10 0v3M5 10h14v11H5zM12 14v3',
+        signIn: 'M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3',
+        dashboard: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z',
         mail: 'M3 5h18v14H3zM3 6l9 7 9-7', download: 'M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5',
         print: 'M6 8V3h12v5M6 17H3V9h18v8h-3M6 14h12v7H6zM17 11h1',
         people: 'M9 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM2 21v-2a7 7 0 0 1 14 0v2M17 4a4 4 0 0 1 0 8M18 15a5 5 0 0 1 4 5v1',
@@ -121,7 +129,15 @@
         apple: 'M16 2c0 2-1 4-4 4 0-2 1-4 4-4ZM12 8c-3-2-7-2-8 3-1 4 2 10 5 11l3-1 3 1c2-1 4-4 5-7-3-1-4-5-1-7-2-2-4-2-7 0Z'
     };
     const leafPath = 'M48 2C40 10 38 3 32 9C26 16 20 7 16 15C12 23 6 18 6 28C7 35 1 37 5 45C10 52 5 57 14 62C20 66 14 72 25 75C33 77 31 87 42 87C48 87 47 96 50 98C53 90 59 90 62 84C67 80 74 85 76 75C79 69 87 71 88 62C89 54 97 53 94 44C92 36 99 32 91 25C86 20 89 14 80 14C72 14 75 6 66 7C57 9 56 0 48 2Z';
-    const tr = (lang, key, vars) => (WORDS[lang] || WORDS.en)[key]?.replace(/\{(\w+)\}/g, (_, v) => String(vars?.[v] ?? '')) || key;
+    const tr = (lang, key, vars) => {
+        const text = CONFIG.translations?.[lang]?.[key] || WORDS[lang]?.[key] || WORDS.en[key] || key;
+        return String(text).replace(/\{(\w+)\}/g, (_, v) => String(vars?.[v] ?? ''));
+    };
+    const localeFor = lang => {
+        const configured = (CONFIG.i18n?.languages || []).find(item => item.slug === lang)?.locale;
+        try { return Intl.getCanonicalLocales(String(configured || (lang === 'en' ? 'en-GB' : lang) || 'en-GB').replace(/_/g, '-'))[0]; }
+        catch (_) { return 'en-GB'; }
+    };
     const initial = name => (String(name || '').trim().split(/\s+/).slice(0, 2).map(n => Array.from(n)[0]).join('') || '·').toUpperCase();
     const year = v => (String(v || '').match(/\b\d{4}\b/) || [])[0] || '';
     const years = p => [year(p.born), year(p.died)].filter(Boolean).join(' – ');
@@ -129,7 +145,7 @@
         if (!value) return '';
         if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
             const d = new Date(value + 'T12:00:00Z');
-            if (!Number.isNaN(d.getTime())) return new Intl.DateTimeFormat(lang === 'lv' ? 'lv-LV' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(d);
+            if (!Number.isNaN(d.getTime())) return new Intl.DateTimeFormat(localeFor(lang), { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(d);
         }
         return String(value);
     };
@@ -143,7 +159,7 @@
         if (typeof url !== 'string' || !url.trim()) return '';
         try { const u = new URL(url, location.href); return /^https?:$/.test(u.protocol) && !u.username && !u.password ? u.href : ''; } catch (_) { return ''; }
     };
-    const fileSize = (bytes, lang) => new Intl.NumberFormat(lang === 'lv' ? 'lv-LV' : 'en-GB', { maximumFractionDigits: 1 }).format(bytes / (bytes >= 1048576 ? 1048576 : 1024)) + (bytes >= 1048576 ? ' MB' : ' KB');
+    const fileSize = (bytes, lang) => new Intl.NumberFormat(localeFor(lang), { maximumFractionDigits: 1 }).format(bytes / (bytes >= 1048576 ? 1048576 : 1024)) + (bytes >= 1048576 ? ' MB' : ' KB');
     const photoConfig = upload => {
         const safeFormats = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
         const formats = Array.isArray(upload?.extensions) ? upload.extensions.map(ext => String(ext).toLowerCase().replace(/^\./, '')).filter(ext => safeFormats.includes(ext)) : safeFormats.slice(0, 4);
@@ -169,17 +185,6 @@
     function OakMark({ size = 36 }) {
         return h('svg', { width: size, height: size, viewBox: '0 0 100 100', className: 'wpmft-oak-mark', 'aria-hidden': true },
             h('path', { d: leafPath, fill: 'currentColor' }), h('path', { d: 'M49 89 50 20M49 66 26 50M50 52 73 34M50 37 35 26', fill: 'none', stroke: '#f8f6eb', strokeWidth: 3, strokeLinecap: 'round', opacity: .75 }));
-    }
-    function Flag({ lang }) {
-        return h('svg', { width: 19, height: 13, viewBox: '0 0 30 20', 'aria-hidden': true, className: 'wpmft-flag' }, lang === 'lv' ? [
-            h('rect', { key: 'base', width: 30, height: 20, fill: '#8c2735' }), h('rect', { key: 'stripe', y: 8, width: 30, height: 4, fill: '#fff' })
-        ] : [
-            h('rect', { key: 'base', width: 30, height: 20, fill: '#243e70' }),
-            h('path', { key: 'cross1', d: 'M0 0 30 20M30 0 0 20', stroke: '#fff', strokeWidth: 4 }),
-            h('path', { key: 'cross2', d: 'M0 0 30 20M30 0 0 20', stroke: '#bd3e46', strokeWidth: 1.6 }),
-            h('path', { key: 'cross3', d: 'M15 0v20M0 10h30', stroke: '#fff', strokeWidth: 7 }),
-            h('path', { key: 'cross4', d: 'M15 0v20M0 10h30', stroke: '#bd3e46', strokeWidth: 4 })
-        ]);
     }
     function Loader({ label, small = false }) {
         return h('div', { className: cls('wpmft-loading', small && 'is-small'), role: 'status' }, h('span', { className: 'wpmft-spinner', 'aria-hidden': true }), label && h('span', null, label));
@@ -220,9 +225,16 @@
     }
     function layoutTree(data) {
         const nodes = Array.isArray(data?.nodes) ? data.nodes.filter(n => n && Number.isFinite(Number(n.id))) : [];
-        const grouped = new Map(), current = new Map();
+        const grouped = new Map(), current = new Map(), parents = new Map(), children = new Map();
+        const ids = new Set(nodes.map(n => String(n.id)));
+        const inputEdges = (Array.isArray(data?.edges) ? data.edges : []).filter(e => e && ids.has(String(e.from)) && ids.has(String(e.to)));
         nodes.forEach(n => { const g = Math.max(-8, Math.min(8, Number(n.generation) || 0)); if (!grouped.has(g)) grouped.set(g, []); grouped.get(g).push(n); });
-        (data?.edges || []).filter(e => e.type === 'spouse' && e.status === 'together').forEach(e => {
+        inputEdges.filter(e => e.type === 'parent').forEach(e => {
+            const from = String(e.from), to = String(e.to);
+            if (!parents.has(to)) parents.set(to, new Set()); parents.get(to).add(from);
+            if (!children.has(from)) children.set(from, new Set()); children.get(from).add(to);
+        });
+        inputEdges.filter(e => e.type === 'spouse' && e.status === 'together').forEach(e => {
             for (const [from, to] of [[e.from, e.to], [e.to, e.from]]) {
                 const id = String(from); if (!current.has(id)) current.set(id, []); current.get(id).push(String(to));
             }
@@ -241,8 +253,8 @@
             return blocks;
         }
         const levels = [...grouped.keys()].sort((a, b) => a - b), widest = Math.max(1, ...[...grouped.values()].map(v => v.length));
-        const width = Math.max(1260, widest * 218 + 140), height = Math.max(780, levels.length * 190 + 120), points = new Map();
-        levels.forEach((g, index) => {
+        const width = Math.max(1260, widest * 230 + 140), points = new Map(), rows = new Map();
+        levels.forEach(g => {
             let row = grouped.get(g).slice();
             const root = g === 0 ? row.find(n => Number(n.id) === Number(data.root)) : null;
             if (root) {
@@ -252,23 +264,113 @@
                 const paired = [...partners.slice(1).reverse(), root, ...partners.slice(0, 1)];
                 row = [...blocks.slice(0, split).flat(), ...paired, ...blocks.slice(split).flat()];
             } else row = rowBlocks(row).flat();
-            const gap = Math.min(230, (width - 140) / row.length), y = 80 + (height - 180 - levels.length * 160) / 2 + index * 190 + 80;
-            row.forEach((node, i) => points.set(String(node.id), { ...node, x: width / 2 + (i - (row.length - 1) / 2) * gap, y }));
+            rows.set(g, row);
         });
-        const edges = (data?.edges || []).filter(e => points.has(String(e.from)) && points.has(String(e.to)));
+        // Put a family branch close to its recorded relatives, keeping current partner blocks intact.
+        // The selected generation remains stable; no relationship is inferred from visual proximity.
+        function orderRow(g, links) {
+            const positions = new Map();
+            rows.forEach(row => row.forEach((node, i) => positions.set(String(node.id), i - (row.length - 1) / 2)));
+            const blocks = rowBlocks(rows.get(g)).map((block, index) => {
+                const relatives = [...new Set(block.flatMap(node => [...(links.get(String(node.id)) || [])]))].filter(id => positions.has(id));
+                const score = relatives.length ? relatives.reduce((sum, id) => sum + positions.get(id), 0) / relatives.length : positions.get(String(block[0].id));
+                return { block, index, score };
+            });
+            blocks.sort((a, b) => a.score - b.score || a.index - b.index);
+            rows.set(g, blocks.flatMap(entry => entry.block));
+        }
+        levels.filter(g => g > 0).forEach(g => orderRow(g, parents));
+        levels.filter(g => g < 0).reverse().forEach(g => orderRow(g, children));
+        rows.forEach((row, g) => row.forEach((node, i) => points.set(String(node.id), { ...node, x: width / 2 + (i - (row.length - 1) / 2) * 230, y: 0, level: levels.indexOf(g) })));
+
+        // A shared rail represents exactly the parent edges recorded for those children in this view.
+        // Partner/spouse edges never add a parent, and different parent sets never share a rail.
+        const families = new Map(), familyForChild = new Map(), tracks = new Map(), partnerTracks = new Map(), partnerLanes = new Map();
+        inputEdges.forEach((edge, index) => {
+            const a = points.get(String(edge.from)), b = points.get(String(edge.to));
+            if (edge.type !== 'spouse' || a.level !== b.level || Math.abs(a.x - b.x) <= 250) return;
+            const lane = partnerTracks.get(a.level) || 0; partnerLanes.set(index, lane); partnerTracks.set(a.level, lane + 1);
+        });
+        parents.forEach((set, childId) => {
+            const child = points.get(childId), parentIds = [...set].sort((a, b) => Number(a) - Number(b));
+            if (!child || !parentIds.every(id => points.get(id).level === child.level - 1)) return;
+            const key = child.level + ':' + parentIds.join(',');
+            if (!families.has(key)) families.set(key, { key, level: child.level, parentIds, childIds: [] });
+            families.get(key).childIds.push(childId); familyForChild.set(childId, key);
+        });
+        const familyList = [...families.values()];
+        familyList.forEach(family => {
+            const xs = [...family.parentIds, ...family.childIds].map(id => points.get(id).x);
+            family.minX = Math.min(...xs); family.maxX = Math.max(...xs);
+        });
+        // Overlapping families get separate tracks; disjoint branches can reuse one compact track.
+        familyList.sort((a, b) => (a.maxX - a.minX) - (b.maxX - b.minX) || a.minX - b.minX);
+        familyList.forEach(family => {
+            if (!tracks.has(family.level)) tracks.set(family.level, []);
+            const lanes = tracks.get(family.level);
+            let lane = lanes.findIndex(items => items.every(item => family.minX > item.maxX + 22 || family.maxX < item.minX - 22));
+            if (lane < 0) { lane = lanes.length; lanes.push([]); }
+            lanes[lane].push(family); family.lane = lane;
+        });
+        const levelY = []; let nextY = 120 + (partnerTracks.get(0) || 0) * 14;
+        levels.forEach((g, index) => {
+            if (index) nextY += 162 + 40 + (Math.max(1, tracks.get(index)?.length || 0) + (partnerTracks.get(index) || 0)) * 14;
+            levelY.push(nextY);
+            rows.get(g).forEach(node => { points.get(String(node.id)).y = nextY; });
+        });
+        const height = Math.max(780, nextY + 130), connectors = [];
+        familyList.forEach(family => {
+            family.y = levelY[family.level - 1] + 81 + 20 + family.lane * 14;
+            const parentDrops = family.parentIds.map(id => { const p = points.get(id); return 'M' + p.x + ',' + (p.y + 81) + 'V' + family.y; });
+            const childDrops = family.childIds.map(id => { const p = points.get(id); return 'M' + p.x + ',' + family.y + 'V' + (p.y - 81); });
+            const junctions = [...new Set([...family.parentIds, ...family.childIds].map(id => points.get(id).x))].filter(x => x > family.minX && x < family.maxX).map(x => ({ x, y: family.y }));
+            connectors.push({ key: family.key, type: 'parent', parentIds: family.parentIds, childIds: family.childIds, junctions, path: [...parentDrops, 'M' + family.minX + ',' + family.y + 'H' + family.maxX, ...childDrops].join(' ') });
+        });
+        const edges = inputEdges.map((edge, index) => {
+            const a = points.get(String(edge.from)), b = points.get(String(edge.to));
+            let path, marker;
+            if (edge.type === 'parent') {
+                const family = families.get(familyForChild.get(String(edge.to)));
+                if (family) path = 'M' + a.x + ',' + (a.y + 81) + 'V' + family.y + 'H' + b.x + 'V' + (b.y - 81);
+                else {
+                    // Unusual/cross-generation records stay explicit, outside intervening person cards.
+                    const direction = b.y > a.y ? 1 : -1;
+                    if (a.y === b.y) path = 'M' + a.x + ',' + (a.y - 81) + 'V' + (a.y - 103) + 'H' + b.x + 'V' + (b.y - 81);
+                    else path = 'M' + a.x + ',' + (a.y + direction * 81) + 'V' + (a.y + direction * 101) + 'H' + (width - 30 - (index % 4) * 8) + 'V' + (b.y - direction * 101) + 'H' + b.x + 'V' + (b.y - direction * 81);
+                    connectors.push({ key: 'edge-' + index, type: 'parent', parentIds: [String(edge.from)], childIds: [String(edge.to)], junctions: [], path });
+                }
+            } else {
+                if (partnerLanes.has(index)) {
+                    const direction = b.x > a.x ? 1 : -1, y = a.y - 99 - partnerLanes.get(index) * 14;
+                    path = 'M' + (a.x + direction * 90) + ',' + (a.y - 18) + 'H' + (a.x + direction * 108) + 'V' + y + 'H' + (b.x - direction * 108) + 'V' + (b.y - 18) + 'H' + (b.x - direction * 90);
+                    marker = { x: (a.x + b.x) / 2, y };
+                } else path = edgePath(edge, points);
+                connectors.push({ ...edge, key: 'edge-' + index, junctions: [], path });
+            }
+            return { ...edge, path, marker };
+        });
         const partners = edges.filter(e => e.type === 'spouse' && e.status === 'together').map(edge => {
             const a = points.get(String(edge.from)), b = points.get(String(edge.to));
             // Quadratic connector position at t=.5, matching edgePath below.
-            return { ...edge, x: (a.x + b.x) / 2, y: .75 * a.y + .25 * b.y + 6, first: a.name, second: b.name };
+            return { ...edge, x: edge.marker?.x ?? (a.x + b.x) / 2, y: edge.marker?.y ?? .75 * a.y + .25 * b.y + 6, first: a.name, second: b.name };
         });
-        return { width, height, points, nodes: [...points.values()], edges, partners };
+        return { width, height, points, nodes: [...points.values()], edges, connectors, partners };
     }
     function edgePath(edge, points) {
+        if (edge.path) return edge.path;
         const a = points.get(String(edge.from)), b = points.get(String(edge.to));
         if (!a || !b) return '';
         if (edge.type === 'spouse' || Math.abs(a.y - b.y) < 10) return 'M' + a.x + ',' + (a.y - 18) + ' Q' + ((a.x + b.x) / 2) + ',' + (a.y + 30) + ' ' + b.x + ',' + (b.y - 18);
         const sy = a.y + 50, ey = b.y - 51, mid = (sy + ey) / 2;
         return 'M' + a.x + ',' + sy + ' C' + a.x + ',' + mid + ' ' + b.x + ',' + mid + ' ' + b.x + ',' + ey;
+    }
+    const relationshipClass = edge => edge.type === 'spouse' ? (edge.status === 'co_parent' ? 'is-co-parent' : 'is-spouse') : 'is-parent';
+    function RelationshipLines({ layout, tracedEdges }) {
+        const line = (edge, index, active) => h('g', { key: (active ? 'active-' : 'base-') + index, className: cls('wpmft-relation', active && 'is-active'), 'data-from': active ? edge.from : undefined, 'data-to': active ? edge.to : undefined, 'data-type': edge.type },
+            h('path', { d: edgePath(edge, layout.points), className: 'wpmft-line-halo' }),
+            h('path', { d: edgePath(edge, layout.points), className: relationshipClass(edge) }),
+            (edge.junctions || []).map((point, i) => h('circle', { key: i, cx: point.x, cy: point.y, r: 2.7, className: 'wpmft-line-junction' })));
+        return h('svg', { className: 'wpmft-relationship-lines', width: layout.width, height: layout.height, 'aria-hidden': true }, layout.connectors.map((edge, i) => line(edge, i, false)), tracedEdges.map((edge, i) => line(edge, i, true)));
     }
 
     let captchaPromise;
@@ -302,13 +404,20 @@
         return h('div', { className: 'wpmft-captcha' }, h('div', { ref: node }), error && h(Message, null, error));
     }
 
-    let modalCount = 0, previousOverflow = '';
+    let scrollLocks = 0, previousOverflow = '';
+    function lockPageScroll() {
+        if (!scrollLocks++) { previousOverflow = document.body.style.overflow; document.body.style.overflow = 'hidden'; }
+        let released = false;
+        return () => { if (!released) { released = true; if (--scrollLocks === 0) document.body.style.overflow = previousOverflow; } };
+    }
     function Modal({ children, title, onClose, wide = false, className = '', labelId }) {
         const node = useRef(null), close = useRef(onClose), lastFocus = useRef(null);
+        // A browser fullscreen element hides portals elsewhere in the document.
+        const [portalHost] = useState(() => document.fullscreenElement?.matches('.wpmft-tree-panel') ? document.fullscreenElement : document.body);
         close.current = onClose;
         useEffect(() => {
             lastFocus.current = document.activeElement;
-            if (!modalCount++) { previousOverflow = document.body.style.overflow; document.body.style.overflow = 'hidden'; }
+            const releaseScroll = lockPageScroll();
             const dialog = node.current;
             const timer = setTimeout(() => { (dialog?.querySelector('[autofocus], button, input, [tabindex="0"]') || dialog)?.focus(); }, 0);
             function keydown(e) {
@@ -324,10 +433,10 @@
                 else if (!e.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
             }
             document.addEventListener('keydown', keydown);
-            return () => { clearTimeout(timer); document.removeEventListener('keydown', keydown); if (--modalCount === 0) document.body.style.overflow = previousOverflow; if (lastFocus.current?.isConnected) lastFocus.current.focus(); };
+            return () => { clearTimeout(timer); document.removeEventListener('keydown', keydown); releaseScroll(); if (lastFocus.current?.isConnected) lastFocus.current.focus(); };
         }, []);
         return createPortal(h('div', { className: cls('wpmft-overlay', className), onMouseDown: e => e.target === e.currentTarget && onClose() },
-            h('section', { ref: node, className: cls('wpmft-dialog', wide && 'is-wide'), role: 'dialog', 'aria-modal': true, 'aria-labelledby': labelId, 'aria-label': labelId ? undefined : title, tabIndex: -1 }, children)), document.body);
+            h('section', { ref: node, className: cls('wpmft-dialog', wide && 'is-wide'), role: 'dialog', 'aria-modal': true, 'aria-labelledby': labelId, 'aria-label': labelId ? undefined : title, tabIndex: -1 }, children)), portalHost);
     }
     function CloseButton({ lang, onClick, dark = false }) {
         return h('button', { type: 'button', className: cls('wpmft-icon-button', 'wpmft-modal-close', dark && 'is-dark'), 'aria-label': tr(lang, 'close'), onClick }, h(Icon, { name: 'close', size: 23 }));
@@ -360,7 +469,7 @@
         const steps = platform === 'Apple' ? [1, 2, 3, 4] : [1, 2, 3];
         return h('div', { className: 'wpmft-install' },
             installed ? h('p', { className: 'wpmft-installed', role: 'status' }, h(Icon, { name: 'check', size: 16 }), tr(lang, 'installInstalled')) :
-                h('div', { className: 'wpmft-install-controls' }, h('span', { className: 'wpmft-install-label' }, tr(lang, 'install')),
+                h('div', { className: 'wpmft-install-controls', role: 'group', 'aria-label': tr(lang, 'install') },
                     h('div', { className: 'wpmft-install-buttons' },
                         h('button', { type: 'button', className: 'wpmft-install-button', disabled: busy, 'aria-label': tr(lang, 'installAndroidLabel'), onClick: android }, busy ? h('span', { className: 'wpmft-spinner' }) : h(Icon, { name: 'android', size: 18 }), tr(lang, 'installAndroid')),
                         h('button', { type: 'button', className: 'wpmft-install-button', 'aria-label': tr(lang, 'installAppleLabel'), onClick: () => setPlatform('Apple') }, h(Icon, { name: 'apple', size: 18 }), tr(lang, 'installApple'))),
@@ -399,20 +508,47 @@
     }
 
     function Lightbox({ gallery, start, lang, onClose }) {
-        const [index, setIndex] = useState(start || 0), [zoom, setZoom] = useState(false);
-        const current = gallery[index], next = useCallback(delta => { setIndex(i => (i + delta + gallery.length) % gallery.length); setZoom(false); }, [gallery.length]);
+        const [index, setIndex] = useState(start || 0), [zoom, setZoom] = useState(false), [offset, setOffset] = useState(0);
+        const swipe = useRef(null), suppressTap = useRef(false);
+        const current = gallery[index], next = useCallback(delta => { setIndex(i => (i + delta + gallery.length) % gallery.length); setZoom(false); setOffset(0); }, [gallery.length]);
         useEffect(() => {
             const listener = e => { if (e.key === 'ArrowLeft') { e.preventDefault(); next(-1); } if (e.key === 'ArrowRight') { e.preventDefault(); next(1); } };
             document.addEventListener('keydown', listener); return () => document.removeEventListener('keydown', listener);
         }, [next]);
+        function swipeStart(e) {
+            if (!e.isPrimary) { swipe.current = null; setOffset(0); return; }
+            suppressTap.current = false;
+            if (zoom || gallery.length < 2 || (e.pointerType === 'mouse' && e.button !== 0)) return;
+            swipe.current = { id: e.pointerId, x: e.clientX, y: e.clientY, dx: 0, dy: 0, active: false, cancelled: false, width: e.currentTarget.clientWidth };
+            try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+        function swipeMove(e) {
+            const currentSwipe = swipe.current;
+            if (!currentSwipe || currentSwipe.id !== e.pointerId || currentSwipe.cancelled) return;
+            currentSwipe.dx = e.clientX - currentSwipe.x; currentSwipe.dy = e.clientY - currentSwipe.y;
+            const x = Math.abs(currentSwipe.dx), y = Math.abs(currentSwipe.dy);
+            if (!currentSwipe.active && y > 12 && y > x) { currentSwipe.cancelled = true; return; }
+            if (!currentSwipe.active && x < 10) return;
+            currentSwipe.active = true; suppressTap.current = true;
+            setOffset(Math.max(-currentSwipe.width * .45, Math.min(currentSwipe.width * .45, currentSwipe.dx)));
+        }
+        function swipeEnd(e) {
+            const currentSwipe = swipe.current;
+            if (!currentSwipe || currentSwipe.id !== e.pointerId) return;
+            swipe.current = null;
+            try { if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId); } catch (_) {}
+            const threshold = Math.max(38, Math.min(90, currentSwipe.width * .12));
+            if (e.type === 'pointerup' && !currentSwipe.cancelled && currentSwipe.active && Math.abs(currentSwipe.dx) >= threshold && Math.abs(currentSwipe.dx) > Math.abs(currentSwipe.dy) * 1.4) next(currentSwipe.dx < 0 ? 1 : -1);
+            else setOffset(0);
+        }
         if (!current) return null;
         return h(Modal, { title: tr(lang, 'gallery'), onClose, wide: true, className: 'wpmft-lightbox' },
-            h('div', { className: 'wpmft-lightbox-top' }, h('span', null, tr(lang, 'photo'), ' ', index + 1, ' / ', gallery.length), h('button', { type: 'button', className: 'wpmft-icon-button is-dark', 'aria-label': tr(lang, 'zoomPhoto'), 'aria-pressed': zoom, onClick: () => setZoom(!zoom) }, h(Icon, { name: zoom ? 'minus' : 'plus' }))),
+            h('div', { className: 'wpmft-lightbox-top' }, h('span', { role: 'status', 'aria-live': 'polite', 'aria-atomic': true }, tr(lang, 'photoPosition', { current: index + 1, total: gallery.length })), h('button', { type: 'button', className: 'wpmft-icon-button is-dark', 'aria-label': tr(lang, 'zoomPhoto'), 'aria-pressed': zoom, onClick: () => { setZoom(!zoom); setOffset(0); swipe.current = null; } }, h(Icon, { name: zoom ? 'minus' : 'plus' }))),
             h(CloseButton, { lang, onClick: onClose, dark: true }),
-            h('div', { className: cls('wpmft-lightbox-image', zoom && 'is-zoomed') }, h('img', { key: current.url, src: validPhoto(current.url), alt: current.alt || current.caption || tr(lang, 'photo'), onDoubleClick: () => setZoom(!zoom), draggable: false })),
+            h('div', { className: cls('wpmft-lightbox-image', zoom && 'is-zoomed', offset !== 0 && 'is-swiping'), onPointerDown: swipeStart, onPointerMove: swipeMove, onPointerUp: swipeEnd, onPointerCancel: swipeEnd, onLostPointerCapture: swipeEnd, onClickCapture: e => { if (suppressTap.current && e.detail !== 0) { e.preventDefault(); e.stopPropagation(); } } }, h('img', { key: current.url, src: validPhoto(current.url), alt: current.alt || current.caption || tr(lang, 'photo'), style: offset ? { transform: 'translateX(' + offset + 'px)' } : undefined, onDoubleClick: () => { if (!suppressTap.current) setZoom(!zoom); }, draggable: false })),
             gallery.length > 1 && h('button', { type: 'button', className: 'wpmft-lightbox-arrow is-previous', onClick: () => next(-1), 'aria-label': tr(lang, 'previousPhoto') }, h(Icon, { name: 'left', size: 30 })),
             gallery.length > 1 && h('button', { type: 'button', className: 'wpmft-lightbox-arrow is-next', onClick: () => next(1), 'aria-label': tr(lang, 'nextPhoto') }, h(Icon, { name: 'right', size: 30 })),
-            h('div', { className: 'wpmft-lightbox-caption' }, current.caption || current.alt || '', gallery.length > 1 && h('div', { className: 'wpmft-lightbox-dots' }, gallery.map((photo, i) => h('button', { type: 'button', key: photo.id || i, className: i === index ? 'is-active' : '', 'aria-label': tr(lang, 'photo') + ' ' + (i + 1), 'aria-current': i === index ? 'true' : undefined, onClick: () => { setIndex(i); setZoom(false); } })))));
+            h('div', { className: 'wpmft-lightbox-caption' }, current.caption || current.alt || '', gallery.length > 1 && h('div', { className: 'wpmft-lightbox-dots' }, gallery.map((photo, i) => h('button', { type: 'button', key: photo.id || i, className: i === index ? 'is-active' : '', 'aria-label': tr(lang, 'photo') + ' ' + (i + 1), 'aria-current': i === index ? 'true' : undefined, onClick: () => { setIndex(i); setZoom(false); setOffset(0); } }))), gallery.length > 1 && !zoom && h('p', { className: 'wpmft-swipe-hint' }, tr(lang, 'swipePhoto'))));
     }
     function PersonDialog({ id, lang, api, onClose, onPerson, onRoot }) {
         const [person, setPerson] = useState(null), [error, setError] = useState(''), [retry, setRetry] = useState(0), [lightbox, setLightbox] = useState(null);
@@ -445,7 +581,7 @@
         ].filter(group => group.people.length);
         return h(Modal, { title: person?.name || tr(lang, 'loadingPerson'), labelId: person ? titleId : undefined, onClose, wide: true, className: 'wpmft-person-overlay' },
             h(CloseButton, { lang, onClick: onClose }),
-            person?.editUrl && validLink(person.editUrl) && h('a', { className: 'wpmft-person-edit', href: validLink(person.editUrl), 'aria-label': tr(lang, 'editPerson'), title: tr(lang, 'editPerson') }, h(Icon, { name: 'edit', size: 15 }), h('span', null, tr(lang, 'edit'))),
+            person?.editUrl && validLink(person.editUrl) && h('a', { className: 'wpmft-person-edit', href: validLink(person.editUrl), target: '_blank', rel: 'noopener noreferrer', 'aria-label': tr(lang, 'newTab', { label: tr(lang, 'editPerson') }), title: tr(lang, 'newTab', { label: tr(lang, 'editPerson') }) }, h(Icon, { name: 'edit', size: 15 }), h('span', null, tr(lang, 'edit'))),
             !person && !error && h('div', { className: 'wpmft-modal-loading' }, h(Loader, { label: tr(lang, 'loadingPerson') })),
             error && h('div', { className: 'wpmft-modal-loading' }, h(Message, null, error), h('button', { className: 'wpmft-button', type: 'button', onClick: () => setRetry(n => n + 1) }, tr(lang, 'retry'))),
             person && h('div', { className: 'wpmft-person' },
@@ -550,6 +686,7 @@
             h('div', { className: 'wpmft-gate-art', 'aria-hidden': true }, h('svg', { viewBox: '0 0 1100 900', dangerouslySetInnerHTML: { __html: oakArt(1100, 900, 'wpmft-gate-oak') } })),
             h('div', { className: 'wpmft-gate-card' }, h('span', { className: 'wpmft-private-badge' }, h(Icon, { name: 'lock', size: 14 }), tr(lang, 'protected')), h(OakMark, { size: 62 }),
                 h('h2', null, tr(lang, 'welcome')), h('p', { className: 'wpmft-gate-lede' }, boot.configured === false ? tr(lang, 'preparing') : tr(lang, 'privateIntro')),
+                boot.settings?.demo?.active && boot.settings.demo.password && h('p', { className: 'wpmft-demo-password' }, tr(lang, 'password'), ': ', h('code', null, boot.settings.demo.password)),
                 h(Message, null, error || outsideError),
                 boot.configured === false ? h('p', { className: 'wpmft-muted' }, tr(lang, 'preparingHelp')) :
                     h('form', { className: 'wpmft-form', onSubmit: submit }, h('label', null, tr(lang, 'password'), h('span', { className: 'wpmft-password-field' },
@@ -588,9 +725,69 @@
                 query.trim().length < 2 ? h('p', null, tr(lang, 'searchHint')) : busy ? h(Loader, { small: true, label: tr(lang, 'loading') }) : error ? h(Message, null, error) : people.length ? people.map((p, i) => h('button', { type: 'button', role: 'option', 'aria-selected': i === selected, id: 'wpmft-search-option-' + i, key: p.id, className: i === selected ? 'is-active' : '', onClick: () => choose(p) }, h(Photo, { person: p, size: 40 }), h('span', null, h('strong', null, p.name), h('small', null, years(p))), h(Icon, { name: 'arrow', size: 16 }))) : h('p', null, tr(lang, 'noResults'))));
     }
 
-    function Tree({ data, lang, busy, onPerson, onRoot, onHome, settings, exportRef }) {
+    function useTreeFullscreen() {
+        const panel = useRef(null), wanted = useRef(false), native = useRef(false), returnFocus = useRef(null);
+        const [fullscreen, setFullscreen] = useState(false);
+        const exitFullscreen = useCallback(() => {
+            wanted.current = false;
+            if (document.fullscreenElement === panel.current && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+            setFullscreen(false);
+        }, []);
+        const toggleFullscreen = useCallback(() => {
+            if (wanted.current) { exitFullscreen(); return; }
+            const element = panel.current; if (!element) return;
+            wanted.current = true; returnFocus.current = document.activeElement; setFullscreen(true);
+            // Browsers without element fullscreen (including some iOS versions) use the same in-page view.
+            if (element.requestFullscreen) {
+                try {
+                    Promise.resolve(element.requestFullscreen({ navigationUI: 'hide' })).then(() => {
+                        if (!wanted.current && document.fullscreenElement === element) document.exitFullscreen().catch(() => {});
+                    }).catch(() => {});
+                } catch (_) {}
+            }
+        }, [exitFullscreen]);
+        useEffect(() => {
+            const changed = () => {
+                if (document.fullscreenElement === panel.current) {
+                    if (!wanted.current) { document.exitFullscreen?.().catch(() => {}); return; }
+                    native.current = true; setFullscreen(true);
+                }
+                else if (native.current) { native.current = false; wanted.current = false; setFullscreen(false); }
+            };
+            document.addEventListener('fullscreenchange', changed);
+            return () => { document.removeEventListener('fullscreenchange', changed); wanted.current = false; if (native.current && document.fullscreenElement === panel.current) document.exitFullscreen?.().catch(() => {}); };
+        }, []);
+        useEffect(() => {
+            if (!fullscreen) return;
+            const element = panel.current, releaseScroll = lockPageScroll();
+            document.body.classList.add('wpmft-fullscreen-active');
+            const timer = setTimeout(() => element?.querySelector('.wpmft-fullscreen-toggle')?.focus({ preventScroll: true }), 0);
+            const keydown = e => {
+                if (document.querySelector('.wpmft-overlay')) return;
+                if (e.key === 'Escape') { e.preventDefault(); exitFullscreen(); return; }
+                if (e.key !== 'Tab') return;
+                const controls = [...element.querySelectorAll('a[href],button,input,select,[tabindex="0"]')].filter(node => !node.disabled && node.getClientRects().length);
+                const first = controls[0], last = controls[controls.length - 1];
+                if (e.shiftKey && (document.activeElement === first || !element.contains(document.activeElement))) { e.preventDefault(); last?.focus(); }
+                else if (!e.shiftKey && (document.activeElement === last || !element.contains(document.activeElement))) { e.preventDefault(); first?.focus(); }
+            };
+            document.addEventListener('keydown', keydown);
+            return () => {
+                clearTimeout(timer); document.removeEventListener('keydown', keydown); releaseScroll(); document.body.classList.remove('wpmft-fullscreen-active');
+                if (returnFocus.current?.isConnected) returnFocus.current.focus({ preventScroll: true });
+            };
+        }, [fullscreen, exitFullscreen]);
+        return { panel, fullscreen, toggleFullscreen };
+    }
+
+    function Tree({ data, lang, busy, onPerson, onRoot, onHome, settings, exportRef, onSnapshot, exporting, notice, error }) {
+        const { panel, fullscreen, toggleFullscreen } = useTreeFullscreen();
         const layout = useMemo(() => layoutTree(data), [data]), viewport = useRef(null), pointers = useRef(new Map()), gesture = useRef(null), dimensions = useRef({ width: 1200, height: 650 }), frame = useRef(null), suppressClick = useRef(false);
         const [view, setView] = useState({ x: 0, y: 0, scale: .75 }), [dragging, setDragging] = useState(false), viewRef = useRef(view);
+        const [hovered, setHovered] = useState(''), [focused, setFocused] = useState('');
+        const traceId = layout.points.has(hovered || focused) ? hovered || focused : String(data?.root), tracePerson = layout.points.get(traceId);
+        const tracedEdges = layout.edges.filter(edge => String(edge.from) === traceId || String(edge.to) === traceId);
+        const connected = new Set(tracedEdges.flatMap(edge => [String(edge.from), String(edge.to)]));
         exportRef.current = layout;
         const updateView = useCallback((next, defer = false) => {
             viewRef.current = typeof next === 'function' ? next(viewRef.current) : next;
@@ -710,21 +907,24 @@
             if (offsets[e.key]) { e.preventDefault(); const a = offsets[e.key]; updateView(v => ({ ...v, x: v.x + a[0], y: v.y + a[1] })); }
         }
         const root = layout.points.get(String(data?.root));
-        return h('section', { className: 'wpmft-tree-panel', 'aria-busy': busy },
-            h('div', { className: 'wpmft-tree-context' }, h('div', null, h('span', { className: 'wpmft-kicker' }, tr(lang, 'familyOf')), h('h2', null, root?.name || tr(lang, 'title'))), h('span', { className: 'wpmft-view-count' }, tr(lang, 'countShown', { count: layout.nodes.length }))),
+        return h('section', { ref: panel, className: cls('wpmft-tree-panel', fullscreen && 'is-fullscreen'), 'aria-busy': busy, role: fullscreen ? 'dialog' : undefined, 'aria-modal': fullscreen ? true : undefined, 'aria-label': tr(lang, 'tree') },
+            h('div', { className: 'wpmft-tree-context' }, h('div', null, h('span', { className: 'wpmft-kicker' }, tr(lang, 'familyOf')), h('h2', null, root?.name || tr(lang, 'title'))), h('div', { className: 'wpmft-tree-actions' }, h('span', { className: 'wpmft-view-count' }, tr(lang, 'countShown', { count: layout.nodes.length })),
+                fullscreen && enabled(settings.allowExport) && h('div', { className: 'wpmft-fullscreen-export' }, h('button', { type: 'button', className: 'wpmft-icon-button', onClick: () => onSnapshot(false), disabled: exporting || busy, 'aria-label': tr(lang, exporting ? 'exporting' : 'saveTree'), title: tr(lang, exporting ? 'exporting' : 'saveTree') }, exporting ? h('span', { className: 'wpmft-spinner' }) : h(Icon, { name: 'download', size: 19 })), h('button', { type: 'button', className: 'wpmft-icon-button', onClick: () => onSnapshot(true), disabled: exporting || busy, 'aria-label': tr(lang, 'printTree'), title: tr(lang, 'printTree') }, h(Icon, { name: 'print', size: 19 }))),
+                h('button', { type: 'button', className: 'wpmft-icon-button wpmft-fullscreen-toggle', onClick: toggleFullscreen, 'aria-label': tr(lang, fullscreen ? 'exitFullscreen' : 'fullscreen'), title: tr(lang, fullscreen ? 'exitFullscreen' : 'fullscreen'), 'aria-pressed': fullscreen }, h(Icon, { name: fullscreen ? 'close' : 'fullscreen', size: 21 })))),
+            fullscreen && (notice || error) && h('div', { className: 'wpmft-fullscreen-status' }, h(Message, { kind: error ? 'error' : 'success' }, error || notice)),
             h('div', { ref: viewport, className: cls('wpmft-tree-viewport', dragging && 'is-dragging'), tabIndex: 0, role: 'region', 'aria-label': tr(lang, 'tree'), 'aria-describedby': 'wpmft-pan-hint', style: { '--tree-height': Math.max(520, Math.min(1100, Number(settings.treeHeight) || 710)) + 'px' }, onPointerDown: pointerDown, onPointerMove: pointerMove, onPointerUp: pointerUp, onPointerCancel: pointerUp, onLostPointerCapture: pointerUp, onClickCapture: clickCapture, onDragStartCapture: e => e.preventDefault(), onKeyDown: keyboard },
                 h('div', { className: 'wpmft-tree-scene', style: { width: layout.width + 'px', height: layout.height + 'px', transform: 'translate(' + view.x + 'px,' + view.y + 'px) scale(' + view.scale + ')' } },
                     h('svg', { className: 'wpmft-oak-art', width: layout.width, height: layout.height, viewBox: '0 0 ' + layout.width + ' ' + layout.height, 'aria-hidden': true, dangerouslySetInnerHTML: { __html: oakArt(layout.width, layout.height, 'wpmft-oak-' + (data?.root || 0)) } }),
-                    h('svg', { className: 'wpmft-relationship-lines', width: layout.width, height: layout.height, 'aria-hidden': true }, layout.edges.map((edge, i) => h('path', { key: i, d: edgePath(edge, layout.points), className: edge.type === 'spouse' ? 'is-spouse' : 'is-parent' }))),
+                    h(RelationshipLines, { layout, tracedEdges }),
                     layout.partners.map((pair, index) => h('span', { key: 'partner-' + index, className: 'wpmft-partner-marker', style: { left: pair.x + 'px', top: pair.y + 'px' }, role: 'img', tabIndex: 0, 'aria-label': tr(lang, 'currentPair', { first: pair.first, second: pair.second }), title: tr(lang, 'currentPartner') }, h(Icon, { name: 'rings', size: 23 }), h('span', { className: 'wpmft-partner-tooltip', 'aria-hidden': true }, tr(lang, 'currentPartner')))),
-                    layout.nodes.map(person => h('div', { key: person.id, className: cls('wpmft-tree-node', Number(person.id) === Number(data.root) && 'is-selected', person.died && 'is-remembered'), style: { left: person.x + 'px', top: person.y + 'px' } },
+                    layout.nodes.map(person => h('div', { key: person.id, className: cls('wpmft-tree-node', Number(person.id) === Number(data.root) && 'is-selected', person.died && 'is-remembered', String(person.id) === traceId && 'is-traced', connected.has(String(person.id)) && 'is-connected'), 'data-person-id': person.id, style: { left: person.x + 'px', top: person.y + 'px' }, onPointerEnter: e => { if (e.pointerType === 'mouse' && !pointers.current.size) setHovered(String(person.id)); }, onPointerLeave: () => setHovered(''), onFocusCapture: () => setFocused(String(person.id)), onBlurCapture: e => { if (!e.currentTarget.contains(e.relatedTarget)) setFocused(''); } },
                         h('button', { className: 'wpmft-node-person', type: 'button', onClick: () => onPerson(person.id), 'aria-label': tr(lang, 'openPerson', { name: person.name }) }, h(Photo, { person, size: 78, leaf: true, lazy: false }), h('strong', null, person.name), h('span', { className: 'wpmft-node-dates' }, years(person) || (person.role && person.role !== 'self' ? tr(lang, person.role === 'parent' ? 'parents' : person.role === 'child' ? 'children' : person.role === 'spouse' ? (person.partnerStatus === 'together' ? 'currentPartner' : person.partnerStatus === 'co_parent' ? 'coParent' : 'partner') : person.role) : tr(lang, 'selected')))),
                         h('button', { type: 'button', className: cls('wpmft-node-branch', person.hasMore && 'has-more'), onClick: () => onRoot(person.id), title: tr(lang, 'moreBranch', { name: person.name }), 'aria-label': tr(lang, 'moreBranch', { name: person.name }) }, h(Icon, { name: 'branch', size: 16 }), person.hasMore && h('span', { className: 'wpmft-branch-dot', 'aria-hidden': true }))))),
                 h('div', { className: 'wpmft-zoom-tools', onPointerDown: e => e.stopPropagation() }, [
                     ['plus', 'zoomIn', () => zoom(1.2)], ['minus', 'zoomOut', () => zoom(1 / 1.2)], ['fit', 'fit', () => fit()], ['home', 'reset', onHome]
                 ].map(([icon, label, action]) => h('button', { type: 'button', key: icon, onClick: action, 'aria-label': tr(lang, label), title: tr(lang, label) }, h(Icon, { name: icon, size: 20 }))), h('span', { 'aria-hidden': true }, Math.round(view.scale * 100) + '%')),
                 busy && h('div', { className: 'wpmft-tree-updating' }, h(Loader, { label: tr(lang, 'loading'), small: true }))),
-            h('div', { className: 'wpmft-tree-bottom' }, h('div', { className: 'wpmft-legend' }, [['ancestors', 'ancestor'], ['selected', 'selected'], ['descendants', 'descendant']].map(([label, type]) => h('span', { key: type }, h('i', { className: 'is-' + type }), tr(lang, label))), layout.partners.length > 0 && h('span', null, h(Icon, { name: 'rings', size: 16 }), tr(lang, 'currentPartner'))), h('p', { id: 'wpmft-pan-hint' }, tr(lang, window.matchMedia?.('(pointer: coarse), (max-width: 650px)').matches ? 'panHintMobile' : 'panHint'))),
+            h('div', { className: 'wpmft-tree-bottom' }, h('div', { className: 'wpmft-legend' }, [['ancestors', 'ancestor'], ['selected', 'selected'], ['descendants', 'descendant']].map(([label, type]) => h('span', { key: type }, h('i', { className: 'is-' + type }), tr(lang, label))), h('span', null, h('i', { className: 'is-parent-link' }), tr(lang, 'parentChild')), layout.edges.some(edge => edge.type === 'spouse' && edge.status !== 'co_parent') && h('span', null, h('i', { className: 'is-partner-link' }), tr(lang, 'partner')), layout.edges.some(edge => edge.status === 'co_parent') && h('span', null, h('i', { className: 'is-coparent-link' }), tr(lang, 'coParents')), layout.partners.length > 0 && h('span', null, h(Icon, { name: 'rings', size: 16 }), tr(lang, 'currentPartner'))), tracePerson && h('p', { className: 'wpmft-trace-note' }, h(Icon, { name: 'branch', size: 14 }), tr(lang, 'connectionsFor', { name: tracePerson.name })), h('p', { id: 'wpmft-pan-hint' }, tr(lang, window.matchMedia?.('(pointer: coarse), (max-width: 650px)').matches ? 'panHintMobile' : 'panHint'))),
             data?.truncated && h('p', { className: 'wpmft-branch-notice' }, h(Icon, { name: 'branch', size: 17 }), tr(lang, 'branchNotice')));
     }
 
@@ -768,30 +968,32 @@
     async function makeSnapshot(layout, options) {
         const photoMap = new Map(), work = layout.nodes.slice();
         await Promise.all(Array.from({ length: Math.min(6, work.length) }, async () => { while (work.length) { const p = work.shift(); photoMap.set(String(p.id), await photoData(p.photo)); } }));
-        const margin = 60, header = 174, footer = 110, width = layout.width + margin * 2, height = layout.height + header + footer;
-        let body = '<rect width="100%" height="100%" fill="#f7f5eb"/><rect width="100%" height="6" fill="#762f3b"/>';
-        body += '<text x="' + margin + '" y="58" fill="#66755c" font-family="Arial,sans-serif" font-size="15" letter-spacing="3">' + xml(tr(options.lang, 'archive').toUpperCase()) + '</text>';
-        body += '<text x="' + margin + '" y="112" fill="#223f31" font-family="Georgia,serif" font-size="44">' + xml(options.title) + '</text>';
-        body += '<text x="' + margin + '" y="148" fill="#677463" font-family="Arial,sans-serif" font-size="18">' + xml(options.subtitle) + '</text>';
-        body += '<line x1="' + margin + '" x2="' + (width - margin) + '" y1="175" y2="175" stroke="#d8decc"/>';
-        body += '<g transform="translate(' + margin + ' ' + header + ')">' + oakArt(layout.width, layout.height, 'export-oak');
-        layout.edges.forEach(e => body += '<path d="' + edgePath(e, layout.points) + '" fill="none" stroke="' + (e.type === 'spouse' ? '#a77d6b' : '#8b9a71') + '" stroke-width="2.4"' + (e.type === 'spouse' ? ' stroke-dasharray="5 5"' : '') + '/>');
+        // Share the selected family branch without page chrome or administrator contact details.
+        const margin = 32, width = layout.width + margin * 2, height = layout.height + margin * 2;
+        let body = '<rect width="100%" height="100%" fill="#f7f5eb"/>';
+        body += '<g transform="translate(' + margin + ' ' + margin + ')"><g opacity=".55">' + oakArt(layout.width, layout.height, 'export-oak') + '</g>';
+        function exportedLine(edge, active = false) {
+            const kind = relationshipClass(edge), color = kind === 'is-parent' ? (active ? '#345b3d' : '#7c936b') : kind === 'is-co-parent' ? (active ? '#596e7c' : '#85919b') : (active ? '#865238' : '#a47762');
+            const geometry = 'd="' + edgePath(edge, layout.points) + '" fill="none" stroke-linecap="round" stroke-linejoin="round"';
+            body += '<path ' + geometry + ' stroke="#f7f5ec" stroke-width="' + (active ? 9 : 7) + '"/>';
+            body += '<path ' + geometry + ' stroke="' + color + '" stroke-width="' + (active ? 3.5 : 2.6) + '"' + (kind === 'is-parent' ? '' : ' stroke-dasharray="' + (kind === 'is-co-parent' ? '2 5' : '6 5') + '"') + '/>';
+            (edge.junctions || []).forEach(point => { body += '<circle cx="' + point.x + '" cy="' + point.y + '" r="2.7" fill="#7c936b"/>'; });
+        }
+        layout.connectors.forEach(edge => exportedLine(edge));
+        layout.edges.filter(edge => Number(edge.from) === Number(options.root) || Number(edge.to) === Number(options.root)).forEach(edge => exportedLine(edge, true));
         layout.partners.forEach(pair => {
             body += '<g transform="translate(' + (pair.x - 14) + ' ' + (pair.y - 12) + ')"><rect width="28" height="24" rx="12" fill="#fffdf5" stroke="#d5ddc6"/><path d="' + PATHS.rings + '" transform="translate(2 0)" fill="none" stroke="#8a744e" stroke-width="1.65" stroke-linecap="round"/></g>';
         });
         layout.nodes.forEach(p => {
             const selected = Number(p.id) === Number(options.root), photo = photoMap.get(String(p.id)), clip = 'photo-' + p.id, x = p.x, y = p.y, lines = wrapName(p.name);
-            body += '<g transform="translate(' + (x - 82) + ' ' + (y - 78) + ')"><rect width="164" height="151" rx="22" fill="' + (selected ? '#edf1df' : '#fffdf5') + '" stroke="' + (selected ? '#748c58' : '#d9dfcd') + '" stroke-width="' + (selected ? 2 : 1) + '"/>';
-            body += '<defs><clipPath id="' + clip + '"><path d="M45 15C48 5 103 2 119 20C139 48 104 87 82 90C54 93 33 58 45 15Z"/></clipPath></defs>';
-            body += '<path d="M45 15C48 5 103 2 119 20C139 48 104 87 82 90C54 93 33 58 45 15Z" fill="#dce4cb"/>';
-            body += photo ? '<image href="' + photo + '" x="38" y="7" width="88" height="88" preserveAspectRatio="xMidYMin slice" clip-path="url(#' + clip + ')"/>' : '<text x="82" y="57" text-anchor="middle" fill="#506b45" font-family="Georgia,serif" font-size="28">' + xml(initial(p.name)) + '</text>';
-            lines.slice(0, 2).forEach((line, i) => body += '<text x="82" y="' + (110 + i * 17) + '" text-anchor="middle" fill="#274331" font-family="Arial,sans-serif" font-weight="600" font-size="13">' + xml(line) + '</text>');
-            body += '<text x="82" y="143" text-anchor="middle" fill="#687260" font-family="Arial,sans-serif" font-size="11">' + xml(years(p)) + '</text></g>';
+            body += '<g transform="translate(' + (x - 90) + ' ' + (y - 81) + ')"><rect width="180" height="162" rx="22" fill="' + (selected ? '#edf1df' : '#fffdf5') + '" stroke="' + (selected ? '#748c58' : '#d9dfcd') + '" stroke-width="' + (selected ? 2 : 1) + '"/>';
+            body += '<defs><clipPath id="' + clip + '"><path transform="translate(8 0)" d="M45 15C48 5 103 2 119 20C139 48 104 87 82 90C54 93 33 58 45 15Z"/></clipPath></defs>';
+            body += '<path transform="translate(8 0)" d="M45 15C48 5 103 2 119 20C139 48 104 87 82 90C54 93 33 58 45 15Z" fill="#dce4cb"/>';
+            body += photo ? '<image href="' + photo + '" x="46" y="7" width="88" height="88" preserveAspectRatio="xMidYMin slice" clip-path="url(#' + clip + ')"/>' : '<text x="90" y="57" text-anchor="middle" fill="#506b45" font-family="Georgia,serif" font-size="28">' + xml(initial(p.name)) + '</text>';
+            lines.slice(0, 2).forEach((line, i) => body += '<text x="90" y="' + (110 + i * 17) + '" text-anchor="middle" fill="#274331" font-family="Arial,sans-serif" font-weight="600" font-size="13">' + xml(line) + '</text>');
+            body += '<text x="90" y="151" text-anchor="middle" fill="#687260" font-family="Arial,sans-serif" font-size="11">' + xml(years(p)) + '</text></g>';
         });
-        body += '</g><line x1="' + margin + '" x2="' + (width - margin) + '" y1="' + (height - 99) + '" y2="' + (height - 99) + '" stroke="#d8decc"/>';
-        body += '<text x="' + margin + '" y="' + (height - 60) + '" fill="#34533b" font-family="Georgia,serif" font-size="21">' + xml(tr(options.lang, 'footer')) + '</text>';
-        body += '<text x="' + margin + '" y="' + (height - 30) + '" fill="#687460" font-family="Arial,sans-serif" font-size="15">' + xml([options.contactName || tr(options.lang, 'admin'), options.contactEmail].filter(Boolean).join(' · ')) + '</text>';
-        body += '<text x="' + (width - margin) + '" y="' + (height - 30) + '" text-anchor="end" fill="#687460" font-family="Arial,sans-serif" font-size="13">' + xml(new Intl.DateTimeFormat(options.lang === 'lv' ? 'lv-LV' : 'en-GB', { dateStyle: 'long' }).format(new Date())) + '</text>';
+        body += '</g>';
         const svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="' + width + '" height="' + height + '" viewBox="0 0 ' + width + ' ' + height + '">' + body + '</svg>';
         const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml;charset=utf-8' }));
         try {
@@ -826,16 +1028,16 @@
     }
     function App({ element }) {
         const polylang = CONFIG.i18n?.provider === 'polylang';
-        const languages = polylang ? (CONFIG.i18n.languages || []).filter(item => ['en', 'lv'].includes(item.slug) && languageUrl(item.url)) : [];
+        const languages = (CONFIG.i18n?.languages || [{ slug: 'en', name: 'English' }, { slug: 'lv', name: 'Latviešu' }]).filter(item => item && typeof item.slug === 'string' && item.slug.length <= 35 && /^[a-z]{2,3}(?:[-_][a-z0-9]{2,8})*$/i.test(item.slug) && (!polylang || languageUrl(item.url)));
         const urlLanguage = new URLSearchParams(location.search).get('wpmft_lang');
-        const [lang, setLang] = useState(!polylang && ['en', 'lv'].includes(urlLanguage) ? urlLanguage : CONFIG.language === 'lv' ? 'lv' : 'en'), [boot, setBoot] = useState(null), [startupError, setStartupError] = useState(''), [reload, setReload] = useState(0), [rootId, setRootId] = useState(Number(element.dataset.root || CONFIG.rootId) || 0), [tree, setTree] = useState(null), [treeBusy, setTreeBusy] = useState(false), [treeError, setTreeError] = useState(''), [view, setView] = useState((element.dataset.view || CONFIG.settings?.defaultView) === 'list' ? 'list' : 'tree'), [personId, setPersonId] = useState(null), [contact, setContact] = useState(false), [exporting, setExporting] = useState(false), [notice, setNotice] = useState('');
+        const [lang, setLang] = useState(!polylang && languages.some(item => item.slug === urlLanguage) ? urlLanguage : CONFIG.i18n?.current || CONFIG.language || 'en'), [boot, setBoot] = useState(null), [startupError, setStartupError] = useState(''), [reload, setReload] = useState(0), [rootId, setRootId] = useState(Number(element.dataset.root || CONFIG.rootId) || 0), [tree, setTree] = useState(null), [treeBusy, setTreeBusy] = useState(false), [treeError, setTreeError] = useState(''), [view, setView] = useState((element.dataset.view || CONFIG.settings?.defaultView) === 'list' ? 'list' : 'tree'), [personId, setPersonId] = useState(null), [contact, setContact] = useState(false), [exporting, setExporting] = useState(false), [notice, setNotice] = useState('');
         const csrf = useRef(''), language = useRef(lang), locked = useRef(null), exportLayout = useRef(null), initialRoot = useRef(rootId), alive = useRef(true), bootstrapSeq = useRef(0), didDeepLink = useRef(false), authorization = useRef(false);
         language.current = lang;
         const settings = { ...(CONFIG.settings || {}), ...(boot?.settings || {}) }, authorized = !!boot?.authorized;
         const contactEnabled = enabled(settings.contactEnabled);
         authorization.current = authorized;
-        const title = (lang === 'lv' && settings.titleLv) || settings.title || tr(lang, 'title');
-        const subtitle = (lang === 'lv' && settings.subtitleLv) || settings.subtitle || tr(lang, 'subtitle');
+        const title = settings.translations?.[lang]?.title || (lang === 'lv' && settings.titleLv) || settings.title || tr(lang, 'title');
+        const subtitle = settings.translations?.[lang]?.subtitle || (lang === 'lv' && settings.subtitleLv) || settings.subtitle || tr(lang, 'subtitle');
         locked.current = () => { setBoot(b => b ? { ...b, authorized: false } : b); setTree(null); setPersonId(null); exportLayout.current = null; setNotice(''); setTreeError(''); setStartupError(tr(language.current, 'expired')); };
         const api = useCallback(async (op, fields = {}, signal) => {
             const multipart = fields instanceof FormData, body = multipart ? new FormData() : new URLSearchParams();
@@ -865,7 +1067,7 @@
             if (polylang) return;
             const url = new URL(location.href); url.searchParams.set('wpmft_lang', lang);
             history.replaceState(history.state, '', url);
-            if (CONFIG.standalone || document.body.classList.contains('wpmft-standalone')) document.documentElement.lang = lang;
+            if (CONFIG.standalone || document.body.classList.contains('wpmft-standalone')) document.documentElement.lang = lang.replace(/_/g, '-');
         }, [lang, polylang]);
         useEffect(() => {
             if (!authorized || didDeepLink.current) return;
@@ -900,29 +1102,30 @@
             if (!exportLayout.current || !authorized) return;
             setExporting(true); setNotice('');
             try {
-                const result = await makeSnapshot(exportLayout.current, { title, subtitle, lang, contactName: settings.contactName, contactEmail: settings.contactEmail, root: tree?.root });
+                const result = await makeSnapshot(exportLayout.current, { root: tree?.root });
                 if (!alive.current || !authorization.current) return;
                 if (print) { printImage(result.data, title); setNotice(tr(lang, 'printReady')); }
                 else { const url = URL.createObjectURL(result.blob), a = document.createElement('a'); a.href = url; a.download = 'family-tree-' + new Date().toISOString().slice(0, 10) + '.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); setNotice(tr(lang, 'exported')); }
             } catch (error) { if (error.code === 'session_expired') locked.current(); else setTreeError(tr(lang, error.code === 'photo_load' ? 'exportPhotoError' : 'exportError')); }
             finally { if (alive.current) setExporting(false); }
         }
-        return h('div', { className: 'wpmft-shell', lang, style: { '--wpmft-accent': /^#[0-9a-f]{6}$/i.test(settings.accent || '') ? settings.accent : '#355b3e', '--wpmft-bg': /^#[0-9a-f]{6}$/i.test(settings.background || '') ? settings.background : '#f7f5ec' } },
+        return h('div', { className: 'wpmft-shell', lang: lang.replace(/_/g, '-'), style: { '--wpmft-accent': /^#[0-9a-f]{6}$/i.test(settings.accent || '') ? settings.accent : '#355b3e', '--wpmft-bg': /^#[0-9a-f]{6}$/i.test(settings.background || '') ? settings.background : '#f7f5ec' } },
             h('a', { className: 'wpmft-skip-link', href: '#wpmft-main' }, tr(lang, 'skip')),
             h('header', { className: 'wpmft-header' }, h('div', { className: 'wpmft-header-inner' }, h('a', { href: '#wpmft-main', className: 'wpmft-brand', onClick: e => { e.preventDefault(); if (authorized) chooseRoot(initialRoot.current); else document.getElementById('wpmft-main')?.focus(); } }, h('span', { className: 'wpmft-brand-mark' }, h(OakMark, { size: 33 })), h('span', null, h('strong', null, title), h('small', null, tr(lang, 'archive')))),
-                h('div', { className: 'wpmft-header-actions' }, enabled(settings.languageSwitch) && (!polylang || languages.length > 1) && h('div', { className: 'wpmft-languages', role: 'group', 'aria-label': tr(lang, 'language') }, polylang ? languages.map(item => h('a', { key: item.slug, href: languageUrl(item.url), lang: item.slug, hrefLang: item.slug, className: cls(lang === item.slug && 'is-active'), 'aria-current': lang === item.slug ? 'page' : undefined, 'aria-label': item.name || (item.slug === 'lv' ? 'Latviešu' : 'English') }, h(Flag, { lang: item.slug }), h('span', null, item.slug.toUpperCase()))) : ['en', 'lv'].map(code => h('button', { type: 'button', key: code, lang: code, className: cls(lang === code && 'is-active'), 'aria-pressed': lang === code, onClick: () => setLang(code), 'aria-label': code === 'lv' ? 'Latviešu' : 'English' }, h(Flag, { lang: code }), h('span', null, code === 'lv' ? 'LV' : 'EN')))),
+                h('div', { className: 'wpmft-header-actions' }, enabled(settings.languageSwitch) && languages.length > 1 && h('label', { className: 'wpmft-language-picker' }, h(Icon, { name: 'globe', size: 17 }), h('select', { value: lang, 'aria-label': tr(lang, 'language'), onChange: e => { const choice = languages.find(item => item.slug === e.target.value); if (!choice) return; if (polylang) window.location.assign(languageUrl(choice.url)); else setLang(choice.slug); } }, languages.map(item => h('option', { key: item.slug, value: item.slug, lang: item.slug }, item.name || item.slug.toUpperCase())))),
                     authorized && boot?.requiresPassword && h('button', { type: 'button', className: 'wpmft-icon-button wpmft-lock', onClick: logout, title: tr(lang, 'lock'), 'aria-label': tr(lang, 'lock') }, h(Icon, { name: 'lock', size: 19 }))))),
-            h('main', { id: 'wpmft-main', className: 'wpmft-main', tabIndex: -1 }, h('section', { className: 'wpmft-intro' }, h('div', null, h('span', { className: 'wpmft-kicker' }, tr(lang, 'roots')), h('h1', null, title), h('p', null, subtitle)), authorized && boot.stats?.people > 0 && h('div', { className: 'wpmft-stat' }, h('strong', null, new Intl.NumberFormat(lang === 'lv' ? 'lv-LV' : 'en-GB').format(boot.stats.people)), h('span', null, tr(lang, 'people')), h(OakMark, { size: 42 }))),
+            h('main', { id: 'wpmft-main', className: 'wpmft-main', tabIndex: -1 }, h('section', { className: 'wpmft-intro' }, h('div', null, h('span', { className: 'wpmft-kicker' }, tr(lang, 'roots')), h('h1', null, title), h('p', null, subtitle)), authorized && boot.stats?.people > 0 && h('div', { className: 'wpmft-stat' }, h('strong', null, new Intl.NumberFormat(localeFor(lang)).format(boot.stats.people)), h('span', null, tr(lang, 'people')), h(OakMark, { size: 42 }))),
+                settings.demo?.active && h('aside', { className: 'wpmft-demo-notice', 'aria-label': settings.demo.label || 'Demo' }, h(Icon, { name: 'info', size: 20 }), h('div', null, h('strong', null, settings.demo.label || 'Demo'), settings.demo.notice && h('p', null, tr(lang, 'demoNotice')))),
                 !boot ? h('div', { className: 'wpmft-starting' }, startupError ? h('div', null, h(Message, null, startupError), h('button', { type: 'button', className: 'wpmft-button', onClick: () => setReload(v => v + 1) }, tr(lang, 'retry'))) : h(Loader, { label: tr(lang, 'loading') })) :
                     !authorized ? h(Unlock, { boot, lang, onUnlock: unlock, onContact: () => setContact(true), contactEnabled, error: startupError }) : h('div', { className: 'wpmft-explorer' },
                         h('div', { className: 'wpmft-toolbar' }, h(Search, { lang, api, onChoose: chooseRoot }), h('div', { className: 'wpmft-view-switch', role: 'group', 'aria-label': tr(lang, 'selectedView') }, [['tree', 'tree'], ['list', 'people']].map(([key, icon]) => h('button', { type: 'button', key, className: key === view ? 'is-active' : '', 'aria-pressed': key === view, onClick: () => setView(key) }, h(Icon, { name: icon, size: 18 }), tr(lang, key)))),
-                            enabled(settings.allowExport) && view === 'tree' && h('div', { className: 'wpmft-export-actions' }, h('button', { type: 'button', className: 'wpmft-button is-small', onClick: () => snapshot(false), disabled: exporting || !tree?.nodes?.length }, h(Icon, { name: 'download', size: 17 }), tr(lang, exporting ? 'exporting' : 'export')), h('button', { type: 'button', className: 'wpmft-icon-button', onClick: () => snapshot(true), disabled: exporting || !tree?.nodes?.length, 'aria-label': tr(lang, 'print'), title: tr(lang, 'print') }, h(Icon, { name: 'print', size: 19 })))),
+                            enabled(settings.allowExport) && view === 'tree' && h('div', { className: 'wpmft-export-actions' }, h('button', { type: 'button', className: 'wpmft-button is-small', onClick: () => snapshot(false), disabled: exporting || !tree?.nodes?.length }, h(Icon, { name: 'download', size: 17 }), tr(lang, exporting ? 'exporting' : 'saveTree')), h('button', { type: 'button', className: 'wpmft-icon-button', onClick: () => snapshot(true), disabled: exporting || !tree?.nodes?.length, 'aria-label': tr(lang, 'printTree'), title: tr(lang, 'printTree') }, h(Icon, { name: 'print', size: 19 })))),
                         h(Message, null, treeError), treeError && h('button', { type: 'button', className: 'wpmft-button is-small wpmft-retry', onClick: () => setReload(v => v + 1) }, tr(lang, 'retry')), notice && h(Message, { kind: 'success' }, notice),
-                        view === 'list' ? h(Directory, { key: lang, lang, api, onPerson: setPersonId, onRoot: chooseRoot }) : tree?.nodes?.length ? h(Tree, { data: tree, lang, busy: treeBusy, onPerson: setPersonId, onRoot: chooseRoot, onHome: () => chooseRoot(initialRoot.current), settings, exportRef: exportLayout }) : treeBusy ? h('div', { className: 'wpmft-starting' }, h(Loader, { label: tr(lang, 'loading') })) : h('section', { className: 'wpmft-empty' }, h(OakMark, { size: 80 }), h('h2', null, tr(lang, 'noPeople')), h('p', null, tr(lang, 'noPeopleHelp'))))),
-            h('footer', { className: 'wpmft-footer' }, h('div', { className: 'wpmft-footer-inner' }, h('div', { className: 'wpmft-footer-story' }, h(OakMark, { size: 28 }), h('p', null, tr(lang, 'footer'))),
-                h('div', { className: 'wpmft-footer-actions' }, h('div', { className: 'wpmft-footer-contact' }, settings.contactEmail && h('span', null, settings.contactEmail), contactEnabled && h('button', { type: 'button', className: 'wpmft-button is-small', onClick: () => setContact(true) }, h(Icon, { name: 'mail', size: 17 }), tr(lang, 'contact'))),
-                    enabled(settings.appInstall, false) && h(InstallControls, { lang }))),
-                enabled(settings.showCredit, false) && h('div', { className: 'wpmft-credit' }, tr(lang, 'credit'), ' ', h('a', { href: 'https://digitalpulse.click/', target: '_blank', rel: 'noopener noreferrer' }, 'DigitalPulse · Raivis Kalnins'))),
+                        view === 'list' ? h(Directory, { key: lang, lang, api, onPerson: setPersonId, onRoot: chooseRoot }) : tree?.nodes?.length ? h(Tree, { data: tree, lang, busy: treeBusy, onPerson: setPersonId, onRoot: chooseRoot, onHome: () => chooseRoot(initialRoot.current), settings, exportRef: exportLayout, onSnapshot: snapshot, exporting, notice, error: treeError }) : treeBusy ? h('div', { className: 'wpmft-starting' }, h(Loader, { label: tr(lang, 'loading') })) : h('section', { className: 'wpmft-empty' }, h(OakMark, { size: 80 }), h('h2', null, tr(lang, 'noPeople')), h('p', null, tr(lang, 'noPeopleHelp'))))),
+            h('footer', { className: 'wpmft-footer' }, h('div', { className: 'wpmft-footer-inner' }, h('div', { className: 'wpmft-footer-story' }, h(OakMark, { size: 28 }), h('div', { className: 'wpmft-footer-copy' }, h('p', null, tr(lang, 'footer')),
+                    enabled(settings.showCredit, false) && h('small', { className: 'wpmft-credit' }, tr(lang, 'credit'), ' ', h('a', { href: 'https://digitalpulse.click/', target: '_blank', rel: 'noopener noreferrer' }, 'DigitalPulse · Raivis Kalnins')))),
+                h('div', { className: 'wpmft-footer-actions' }, h('div', { className: 'wpmft-footer-contact' }, settings.contactEmail && h('a', { className: 'wpmft-button is-small wpmft-footer-email', href: 'mailto:' + encodeURIComponent(settings.contactEmail).replace(/%40/g, '@') }, h(Icon, { name: 'mail', size: 16 }), h('span', null, settings.contactEmail)), contactEnabled && h('button', { type: 'button', className: 'wpmft-button is-small wpmft-footer-form', 'aria-haspopup': 'dialog', onClick: () => setContact(true) }, h(Icon, { name: 'mail', size: 16 }), h('span', null, tr(lang, 'contact')))),
+                    enabled(settings.appInstall, false) && h(InstallControls, { lang })))),
             personId && authorized && h(PersonDialog, { key: lang, id: personId, lang, api, onClose: () => setPersonId(null), onPerson: setPersonId, onRoot: chooseRoot }), contact && boot && contactEnabled && h(ContactDialog, { lang, api, captcha: boot.hcaptcha, upload: settings.contactUpload, onClose: () => setContact(false) }));
     }
     function mount() {

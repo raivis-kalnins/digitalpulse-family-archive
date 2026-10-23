@@ -12,24 +12,34 @@ final class WPMFT_API {
 		if ( ! empty( $_FILES ) ) { WPMFT_Contact_Upload::cleanup(); }
 		wp_send_json_error( array( 'message' => $error->get_error_message(), 'code' => $error->get_error_code() ), $status );
 	}
+	/** A captured demo scope remains restricted even if an administrator changes mode mid-request. */
+	private static function send_family_data( $payload, $kind ) {
+		if ( WPMFT_Demo::scoped_request() && ( ! WPMFT_Demo::active() || ! WPMFT_Demo::validate_payload( $payload, $kind ) ) ) {
+			self::error( new WP_Error( 'unauthorized', __( 'Your family session has ended. Please unlock the tree again.', 'wp-my-family-tree' ) ), 401 );
+		}
+		wp_send_json_success( $payload );
+	}
 	private static function value( $key, $default = '' ) { return isset( $_POST[$key] ) && is_scalar( $_POST[$key] ) ? wp_unslash( $_POST[$key] ) : $default; }
 	public static function bootstrap() {
 		$s = wpmft_settings(); $authorized = WPMFT_Security::authorized();
+		$demo = WPMFT_Demo::public_config();
 		$result = array(
-			'authorized' => $authorized, 'requiresPassword' => (bool) $s['password_protection'],
-			'configured' => ! empty( $s['password_hash'] ), 'csrf' => WPMFT_Security::csrf(),
-			'rememberDays' => max( 1, min( 30, (int) $s['remember_days'] ) ), 'rootId' => (int) $s['root_id'],
+			'authorized' => $authorized, 'requiresPassword' => WPMFT_Security::protected_mode(),
+			'configured' => WPMFT_Demo::guard_required() ? WPMFT_Demo::active() : ! empty( $s['password_hash'] ), 'csrf' => WPMFT_Security::csrf(),
+			'rememberDays' => max( 1, min( 30, (int) $s['remember_days'] ) ), 'rootId' => ! empty( $demo['active'] ) ? (int) $demo['rootId'] : (int) $s['root_id'],
 			'settings' => wpmft_public_settings(),
 			'hcaptcha' => array( 'siteKey' => $s['hcaptcha_enabled'] ? $s['hcaptcha_site_key'] : '', 'login' => (bool) ( $s['hcaptcha_enabled'] && $s['hcaptcha_login'] ), 'contact' => (bool) ( $s['hcaptcha_enabled'] && $s['hcaptcha_contact'] ) ),
 		);
 		if ( $authorized ) {
 			$index = WPMFT_Data::index(); $families = array();
+			if ( WPMFT_Demo::scoped_request() && ! WPMFT_Demo::validate_payload( array( 'people' => array_map( function ( $id ) { return array( 'id' => (int) $id ); }, array_keys( $index ) ) ), 'search' ) ) { $result['authorized'] = false; return $result; }
 			foreach ( $index as $id => $record ) { if ( $record['children'] ) { $families[$id] = true; } }
 			$result['stats'] = array( 'people' => count( $index ), 'families' => count( $families ) );
 		}
 		return $result;
 	}
 	public static function dispatch() {
+		WPMFT_Demo::set_request_scope( WPMFT_Demo::guard_required() && ! wpmft_staff() );
 		WPMFT_Security::no_cache();
 		if ( ! wpmft_settings()['enabled'] ) { self::error( new WP_Error( 'disabled', __( 'The family tree is currently unavailable.', 'wp-my-family-tree' ) ), 503 ); }
 		$op = sanitize_key( self::value( 'op' ) ); $lang = wpmft_language( self::value( 'lang' ) );
@@ -37,6 +47,7 @@ final class WPMFT_API {
 		switch_to_locale( $locale );
 		unload_textdomain( 'wp-my-family-tree', true );
 		if ( $lang === 'lv' ) { load_textdomain( 'wp-my-family-tree', WPMFT_DIR . 'languages/wp-my-family-tree-lv.mo' ); }
+		WPMFT_Languages::set_request_language( $lang );
 		if ( $op === 'bootstrap' ) {
 			if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { self::error( new WP_Error( 'method', __( 'A POST request is required.', 'wp-my-family-tree' ) ), 405 ); }
 			wp_send_json_success( self::bootstrap() );
@@ -54,18 +65,18 @@ final class WPMFT_API {
 		if ( $op === 'contact' ) { self::contact(); }
 		if ( ! WPMFT_Security::authorized() ) { self::error( new WP_Error( 'unauthorized', __( 'Your family session has ended. Please unlock the tree again.', 'wp-my-family-tree' ) ), 401 ); }
 		if ( ! WPMFT_Security::rate_limit( 'browse', 600, MINUTE_IN_SECONDS ) ) { self::error( new WP_Error( 'rate_limit', __( 'Please wait a moment before trying again.', 'wp-my-family-tree' ) ), 429 ); }
-		if ( $op === 'tree' ) { wp_send_json_success( WPMFT_Data::tree( absint( self::value( 'root', wpmft_settings()['root_id'] ) ), absint( self::value( 'depth', 2 ) ), $lang ) ); }
+		if ( $op === 'tree' ) { self::send_family_data( WPMFT_Data::tree( absint( self::value( 'root', wpmft_settings()['root_id'] ) ), absint( self::value( 'depth', 2 ) ), $lang ), 'tree' ); }
 		if ( $op === 'person' ) {
 			$person = WPMFT_Data::person( absint( self::value( 'id' ) ), $lang );
 			if ( is_wp_error( $person ) ) { self::error( $person, 404 ); }
-			wp_send_json_success( $person );
+			self::send_family_data( $person, 'person' );
 		}
-		if ( $op === 'search' ) { wp_send_json_success( WPMFT_Data::search( substr( sanitize_text_field( self::value( 'q' ) ), 0, 200 ), absint( self::value( 'page', 1 ) ), $lang ) ); }
+		if ( $op === 'search' ) { self::send_family_data( WPMFT_Data::search( substr( sanitize_text_field( self::value( 'q' ) ), 0, 200 ), absint( self::value( 'page', 1 ) ), $lang ), 'search' ); }
 		self::error( new WP_Error( 'operation', __( 'This action is not available.', 'wp-my-family-tree' ) ), 404 );
 	}
 	private static function contact() {
 		$s = wpmft_settings();
-		if ( ! $s['contact_enabled'] || ! is_email( $s['contact_email'] ) ) { self::error( new WP_Error( 'contact_disabled', __( 'The contact form is not available.', 'wp-my-family-tree' ) ), 403 ); }
+		if ( WPMFT_Demo::guard_required() || ! $s['contact_enabled'] || ! is_email( $s['contact_email'] ) ) { self::error( new WP_Error( 'contact_disabled', __( 'The contact form is not available.', 'wp-my-family-tree' ) ), 403 ); }
 		if ( ! WPMFT_Security::rate_limit( 'contact', 5, HOUR_IN_SECONDS ) ) { self::error( new WP_Error( 'rate_limit', __( 'Too many messages. Please try again later.', 'wp-my-family-tree' ) ), 429 ); }
 		$started = (int) self::value( 'started' );
 		if ( self::value( 'website' ) !== '' || $started > time() - 3 || $started < time() - DAY_IN_SECONDS ) { self::error( new WP_Error( 'spam', __( 'Please wait a few seconds and submit the form again.', 'wp-my-family-tree' ) ) ); }

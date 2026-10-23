@@ -8,7 +8,6 @@
 defined( 'ABSPATH' ) || exit;
 
 final class WPMFT_Admin {
-	private static $catalog;
 
 	public static function init() {
 		// Override only this plugin's text, never the WordPress dashboard or theme locale.
@@ -35,7 +34,7 @@ final class WPMFT_Admin {
 	/** Explicit UI choice, then the Polylang person language, then the editor's profile. */
 	public static function language() {
 		foreach ( array( $_POST['wpmft_admin_lang'] ?? '', $_GET['wpmft_admin_lang'] ?? '', $_POST['post_lang_choice'] ?? '', $_GET['new_lang'] ?? '' ) as $candidate ) {
-			if ( in_array( $candidate, array( 'en', 'lv' ), true ) ) { return $candidate; }
+			if ( is_string( $candidate ) && isset( WPMFT_Languages::registry()[$candidate] ) ) { return $candidate; }
 		}
 		global $post;
 		$id = $post instanceof WP_Post ? $post->ID : 0;
@@ -44,32 +43,24 @@ final class WPMFT_Admin {
 		}
 		if ( $id && function_exists( 'pll_get_post_language' ) && 'post' === get_post_type( $id ) ) {
 			$lang = pll_get_post_language( $id, 'slug' );
-			if ( in_array( $lang, array( 'en', 'lv' ), true ) ) { return $lang; }
+			if ( isset( WPMFT_Languages::registry()[$lang] ) ) { return $lang; }
 		}
-		return 0 === strpos( get_user_locale(), 'lv' ) ? 'lv' : 'en';
-	}
-
-	private static function catalog() {
-		if ( null === self::$catalog ) {
-			if ( ! class_exists( 'MO' ) ) { require_once ABSPATH . WPINC . '/pomo/mo.php'; }
-			self::$catalog = new MO();
-			self::$catalog->import_from_file( WPMFT_DIR . 'languages/wp-my-family-tree-lv.mo' );
-		}
-		return self::$catalog;
+		return WPMFT_Languages::from_locale( get_user_locale() );
 	}
 
 	public static function translate_admin( $translation, $text, $domain ) {
 		if ( ! is_admin() || ! did_action( 'init' ) ) { return $translation; }
 		// Front-end AJAX has its own request language; do not replace it with a user profile.
 		if ( wp_doing_ajax() && ! in_array( $_REQUEST['action'] ?? '', array( 'wpmft_admin_people', 'wpmft_admin_protect_media' ), true ) ) { return $translation; }
-		return 'lv' === self::language() ? self::catalog()->translate( $text ) : $text;
+		$labels = WPMFT_Languages::labels( self::language(), 'admin' );
+		return $labels[$text] ?? $text;
 	}
 
 	private static function language_control() {
 		?>
 		<div class="wpmft-admin-language-control">
 			<label for="wpmft-admin-language"><?php esc_html_e( 'Plugin interface language', 'wp-my-family-tree' ); ?></label>
-			<select id="wpmft-admin-language" class="wpmft-admin-language" name="wpmft_admin_lang"><option value="en" <?php selected( self::language(), 'en' ); ?>>English</option><option value="lv" <?php selected( self::language(), 'lv' ); ?>>Latviešu</option></select>
+			<select id="wpmft-admin-language" class="wpmft-admin-language" name="wpmft_admin_lang"><?php foreach ( WPMFT_Languages::registry() as $slug => $entry ) : ?><option value="<?php echo esc_attr( $slug ); ?>" <?php selected( self::language(), $slug ); ?>><?php echo esc_html( $entry['name'] ); ?></option><?php endforeach; ?></select>
 			<p class="description"><?php esc_html_e( 'Person labels follow the Polylang language. This switch changes plugin labels only; names, biographies and the WordPress dashboard are unchanged.', 'wp-my-family-tree' ); ?></p>
 		</div>
 		<?php
@@ -137,13 +128,10 @@ final class WPMFT_Admin {
 		if ( $is_post ) {
 			wp_enqueue_media();
 		}
-		$translations = array();
-		foreach ( self::catalog()->entries as $entry ) {
-			if ( ! $entry->context && ! $entry->is_plural && ! empty( $entry->translations[0] ) ) { $translations[ $entry->singular ] = $entry->translations[0]; }
-		}
 		wp_localize_script( 'wpmft-admin', 'WPMFT_ADMIN', array(
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-			'language' => self::language(), 'translations' => $translations,
+			'language' => self::language(), 'catalogs' => WPMFT_Languages::dictionaries( 'admin' ),
+			'languages' => array_keys( WPMFT_Languages::registry() ),
 			'nonce' => wp_create_nonce( 'wpmft_admin_people' ),
 			'mediaNonce' => wp_create_nonce( 'wpmft_protect_media' ),
 			'strings' => array(
@@ -166,6 +154,9 @@ final class WPMFT_Admin {
 	}
 
 	private static function require_admin( $nonce_action ) {
+		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
+			wp_die( esc_html__( 'A POST request is required.', 'wp-my-family-tree' ), '', array( 'response' => 405 ) );
+		}
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( 'You do not have permission to change family tree settings.', 'wp-my-family-tree' ), '', array( 'response' => 403 ) );
 		}
@@ -173,7 +164,7 @@ final class WPMFT_Admin {
 	}
 
 	private static function redirect( $message = 'saved', $section = '' ) {
-		$anchor = in_array( $section, array( 'general', 'privacy', 'appearance', 'contact', 'performance', 'help' ), true ) ? '#wpmft-' . $section : '';
+		$anchor = in_array( $section, array( 'general', 'privacy', 'appearance', 'contact', 'performance', 'languages', 'demo', 'help' ), true ) ? '#wpmft-' . $section : '';
 		wp_safe_redirect( add_query_arg( array( 'wpmft_notice' => $message, 'wpmft_admin_lang' => self::language() ), admin_url( 'admin.php?page=wpmft' ) ) . $anchor );
 		exit;
 	}
@@ -196,7 +187,7 @@ final class WPMFT_Admin {
 			return;
 		}
 		$s = wpmft_settings();
-		if ( ! empty( $s['password_protection'] ) && empty( $s['password_hash'] ) ) {
+		if ( ! WPMFT_Demo::guard_required() && ! empty( $s['password_protection'] ) && empty( $s['password_hash'] ) ) {
 			echo '<div class="notice notice-warning"><p>' . esc_html__( 'Your family tree is locked for visitors. Set a family password in Privacy to allow access, or explicitly turn password protection off for a public tree.', 'wp-my-family-tree' ) . '</p></div>';
 		}
 		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'wp-family-tree/family-tree.php' ) ) {
@@ -237,7 +228,7 @@ final class WPMFT_Admin {
 				</div>
 			</div>
 			<nav class="wpmft-admin-tabs" aria-label="<?php esc_attr_e( 'Family tree settings', 'wp-my-family-tree' ); ?>">
-				<?php foreach ( array( 'general' => __( 'General', 'wp-my-family-tree' ), 'privacy' => __( 'Privacy & access', 'wp-my-family-tree' ), 'appearance' => __( 'Appearance', 'wp-my-family-tree' ), 'contact' => __( 'Contact & hCaptcha', 'wp-my-family-tree' ), 'performance' => __( 'Performance & cache', 'wp-my-family-tree' ), 'help' => __( 'Getting started', 'wp-my-family-tree' ) ) as $key => $label ) : ?>
+				<?php foreach ( array( 'general' => __( 'General', 'wp-my-family-tree' ), 'privacy' => __( 'Privacy & access', 'wp-my-family-tree' ), 'appearance' => __( 'Appearance', 'wp-my-family-tree' ), 'contact' => __( 'Contact & hCaptcha', 'wp-my-family-tree' ), 'performance' => __( 'Performance & cache', 'wp-my-family-tree' ), 'languages' => __( 'Languages', 'wp-my-family-tree' ), 'demo' => __( 'Demo', 'wp-my-family-tree' ), 'help' => __( 'Getting started', 'wp-my-family-tree' ) ) as $key => $label ) : ?>
 				<a href="#wpmft-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></a>
 				<?php endforeach; ?>
 			</nav>
@@ -245,6 +236,7 @@ final class WPMFT_Admin {
 				<input type="hidden" name="action" value="wpmft_save_settings">
 				<input type="hidden" name="wpmft[v110_present]" value="1">
 				<input type="hidden" name="wpmft[v112_present]" value="1">
+				<input type="hidden" name="wpmft[v120_present]" value="1">
 				<input type="hidden" name="wpmft_section" value="general">
 				<?php wp_nonce_field( 'wpmft_save_settings' ); ?>
 				<?php self::language_control(); ?>
@@ -257,9 +249,9 @@ final class WPMFT_Admin {
 					<?php self::person_picker( 'wpmft-root-person', 'wpmft[root_id]', $s['root_id'], __( 'Starting person', 'wp-my-family-tree' ) ); ?>
 					<?php self::checkbox( 'standalone', __( 'Use the full-window layout without the theme header and footer', 'wp-my-family-tree' ), $s ); ?>
 					<p class="description"><?php esc_html_e( 'The plugin provides its own title, header and contact footer. This applies to pages containing the tree shortcode or block.', 'wp-my-family-tree' ); ?></p>
-					<label class="wpmft-field"><span><?php esc_html_e( 'Default interface language', 'wp-my-family-tree' ); ?></span><select name="wpmft[language]"><option value="en" <?php selected( $s['language'], 'en' ); ?>>English</option><option value="lv" <?php selected( $s['language'], 'lv' ); ?>>Latviešu</option></select></label>
-					<?php self::checkbox( 'language_switch', __( 'Show the English / Latvian language switch', 'wp-my-family-tree' ), $s ); ?>
-					<p class="description"><?php esc_html_e( 'Polylang is optional. When installed, it can manage translated pages and biographies; the plugin interface works in English and Latvian without it.', 'wp-my-family-tree' ); ?></p>
+					<label class="wpmft-field"><span><?php esc_html_e( 'Default interface language', 'wp-my-family-tree' ); ?></span><select name="wpmft[language]"><?php foreach ( WPMFT_Languages::registry() as $slug => $entry ) : ?><option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $s['language'], $slug ); ?>><?php echo esc_html( $entry['name'] ); ?></option><?php endforeach; ?></select></label>
+					<?php self::checkbox( 'language_switch', __( 'Show the language switch', 'wp-my-family-tree' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'Open the Languages tab to enable preset languages, add languages or review optional Polylang for translated people and pages.', 'wp-my-family-tree' ); ?></p>
 				</section>
 				<section id="wpmft-privacy" class="wpmft-settings-section"><h2><?php esc_html_e( 'Privacy & access', 'wp-my-family-tree' ); ?></h2>
 					<?php self::checkbox( 'password_protection', __( 'Require a family password', 'wp-my-family-tree' ), $s ); ?>
@@ -286,7 +278,7 @@ final class WPMFT_Admin {
 					<?php self::checkbox( 'contact_enabled', __( 'Enable the Contact Us form', 'wp-my-family-tree' ), $s ); ?>
 					<?php self::field( 'contact_name', __( 'Family administrator name', 'wp-my-family-tree' ), $s ); ?>
 					<?php self::field( 'contact_email', __( 'Family administrator email', 'wp-my-family-tree' ), $s, 'email' ); ?>
-					<?php self::checkbox( 'show_email', __( 'Display the contact email in the footer and exported tree image', 'wp-my-family-tree' ), $s ); ?>
+					<?php self::checkbox( 'show_email', __( 'Display the contact email button in the footer', 'wp-my-family-tree' ), $s ); ?>
 					<p class="description"><?php esc_html_e( 'Contact messages use WordPress mail delivery. The form does not save message contents to the family tree database. Your mail provider may retain delivered messages.', 'wp-my-family-tree' ); ?></p>
 					<h3><?php esc_html_e( 'Contact photo uploads', 'wp-my-family-tree' ); ?></h3>
 					<?php self::checkbox( 'contact_upload_enabled', __( 'Allow one photograph with a contact message', 'wp-my-family-tree' ), $s ); ?>
@@ -304,9 +296,12 @@ final class WPMFT_Admin {
 					<p class="description"><?php esc_html_e( 'When enabled, hCaptcha receives technical browser information and verifies form tokens. Review its service terms and add it to your privacy notice.', 'wp-my-family-tree' ); ?> <a href="https://www.hcaptcha.com/privacy" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Privacy policy', 'wp-my-family-tree' ); ?></a> · <a href="https://www.hcaptcha.com/terms" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Terms', 'wp-my-family-tree' ); ?></a></p>
 				</section>
 				<section id="wpmft-performance" class="wpmft-settings-section"><h2><?php esc_html_e( 'Performance & cache', 'wp-my-family-tree' ); ?></h2><?php self::performance_panel( $s ); ?></section>
+				<section id="wpmft-languages" class="wpmft-settings-section"><h2><?php esc_html_e( 'Languages', 'wp-my-family-tree' ); ?></h2><?php WPMFT_Languages::render_panel(); ?></section>
+				<section id="wpmft-demo" class="wpmft-settings-section"><h2><?php esc_html_e( 'Demo', 'wp-my-family-tree' ); ?></h2><?php WPMFT_Demo::render_panel(); ?></section>
 				<section id="wpmft-help" class="wpmft-settings-section"><h2><?php esc_html_e( 'Getting started', 'wp-my-family-tree' ); ?></h2><?php self::help(); ?></section>
 				<div class="wpmft-save-bar"><?php submit_button( __( 'Save settings', 'wp-my-family-tree' ), 'primary', 'submit', false ); ?><span><?php esc_html_e( 'Settings belong to the plugin and work independently of your theme.', 'wp-my-family-tree' ); ?></span></div>
 			</form>
+			<?php WPMFT_Languages::render_form(); WPMFT_Demo::render_forms(); ?>
 			<form id="wpmft-cache-tool" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"><input type="hidden" name="action" value="wpmft_clear_cache"><?php wp_nonce_field( 'wpmft_clear_cache' ); ?></form>
 			<div class="wpmft-secondary-actions">
 				<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"><input type="hidden" name="action" value="wpmft_create_page"><?php wp_nonce_field( 'wpmft_create_page' ); ?><button class="button" type="submit"><?php esc_html_e( 'Create a tree page', 'wp-my-family-tree' ); ?></button></form>
@@ -328,6 +323,10 @@ final class WPMFT_Admin {
 		self::checkbox( 'performance_cache', __( 'Cache the internal relationship index', 'wp-my-family-tree' ), $s );
 		self::field( 'cache_ttl', __( 'Cache lifetime (minutes)', 'wp-my-family-tree' ), $s, 'number', array( 'min' => 1, 'max' => 60, 'step' => 1 ) );
 		?>
+		<label class="wpmft-field"><span><?php esc_html_e( 'Cache storage', 'wp-my-family-tree' ); ?></span><select name="wpmft[cache_backend]">
+			<?php foreach ( array( 'auto' => __( 'Automatic', 'wp-my-family-tree' ), 'object' => __( 'Persistent object cache', 'wp-my-family-tree' ), 'transient' => __( 'WordPress transients', 'wp-my-family-tree' ) ) as $backend => $label ) : ?><option value="<?php echo esc_attr( $backend ); ?>" <?php selected( $s['cache_backend'], $backend ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?>
+		</select><small><?php esc_html_e( 'Automatic uses the host’s persistent object cache when available. Redis or Memcached must be configured separately by your host; otherwise this plugin uses WordPress transients. No global cache flush is performed.', 'wp-my-family-tree' ); ?></small></label>
+		<?php if ( ! empty( $status['backend_fallback'] ) ) : ?><p class="wpmft-admin-note"><?php esc_html_e( 'A persistent object cache was requested but is not available. WordPress transients are being used safely until a host object cache is active.', 'wp-my-family-tree' ); ?></p><?php endif; ?>
 		<p class="description"><?php esc_html_e( 'The default is 15 minutes. Person and relationship edits refresh the index automatically. Only numeric relationships are stored on the server; personal profiles, photographs and access tokens are not cached by this feature.', 'wp-my-family-tree' ); ?></p>
 		<h3><?php esc_html_e( 'WordPress cleanup', 'wp-my-family-tree' ); ?></h3>
 		<?php self::checkbox( 'disable_comments', __( 'Disable comments and pingbacks on posts, pages and media', 'wp-my-family-tree' ), $s ); ?>
@@ -360,9 +359,7 @@ final class WPMFT_Admin {
 	public static function clear_cache() {
 		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_die( esc_html__( 'A POST request is required.', 'wp-my-family-tree' ), '', array( 'response' => 405 ) ); }
 		self::require_admin( 'wpmft_clear_cache' );
-		WPMFT_Cache::clear();
-		update_option( 'wpmft_asset_revision', str_replace( '-', '', wp_generate_uuid4() ), false );
-		update_option( 'wpmft_cache_cleared_at', time(), false );
+		WPMFT_Cache::purge();
 		self::redirect( 'cache', 'performance' );
 	}
 
@@ -406,7 +403,8 @@ final class WPMFT_Admin {
 		$s['contact_email'] = sanitize_email( $raw_email );
 		$s['remember_days'] = max( 1, min( 30, isset( $input['remember_days'] ) ? absint( $input['remember_days'] ) : 30 ) );
 		$s['tree_height'] = max( 480, min( 1400, isset( $input['tree_height'] ) ? absint( $input['tree_height'] ) : 760 ) );
-		$s['language'] = isset( $input['language'] ) && 'lv' === $input['language'] ? 'lv' : 'en';
+		$s['language'] = isset( $input['language'] ) && is_string( $input['language'] ) && isset( WPMFT_Languages::registry()[$input['language']] ) ? $input['language'] : 'en';
+		if ( isset( $input['v120_present'] ) && '1' === $input['v120_present'] ) { $s['cache_backend'] = isset( $input['cache_backend'] ) && in_array( $input['cache_backend'], array( 'auto', 'transient', 'object' ), true ) ? $input['cache_backend'] : 'auto'; }
 		foreach ( array( 'accent', 'background' ) as $key ) {
 			$value = isset( $input[ $key ] ) && is_string( $input[ $key ] ) ? sanitize_hex_color( $input[ $key ] ) : '';
 			$s[ $key ] = $value ? $value : $old[ $key ];
@@ -472,6 +470,7 @@ final class WPMFT_Admin {
 	}
 
 	public static function protect_media_ajax() {
+		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_send_json_error( array( 'message' => __( 'A POST request is required.', 'wp-my-family-tree' ) ), 405 ); }
 		if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( array( 'message' => __( 'Access denied.', 'wp-my-family-tree' ) ), 403 ); }
 		check_ajax_referer( 'wpmft_protect_media', 'nonce' );
 		if ( ! class_exists( 'WPMFT_Media' ) ) { wp_send_json_error( array( 'message' => __( 'The protected media service is not available.', 'wp-my-family-tree' ) ), 500 ); }
@@ -807,8 +806,8 @@ final class WPMFT_Admin {
 		<p><code>[wp_my_family_tree]</code><br><code>[wp_my_family_tree root="123"]</code></p>
 		<p><?php esc_html_e( 'The root is a WordPress post ID. Legacy [family-tree] and [family-members] shortcodes are supported for migration.', 'wp-my-family-tree' ); ?></p>
 		<h3><?php esc_html_e( 'Languages', 'wp-my-family-tree' ); ?></h3>
-		<p><?php esc_html_e( 'English and Latvian interface text is included. Names and biographies are never automatically translated. With Polylang, add English and Latvian under Languages and create linked page/post translations as needed.', 'wp-my-family-tree' ); ?></p>
-		<p><?php esc_html_e( 'In the default person editor, plugin labels follow the selected Polylang language without reloading or discarding unsaved edits. Other plugin screens start in your WordPress profile language and include an English / Latvian label switch. With the optional block editor, Polylang may save and reload when its content language changes.', 'wp-my-family-tree' ); ?></p>
+		<p><?php esc_html_e( 'Fourteen front-end language presets are included. Add more languages and translation overrides in the Languages tab. Names and biographies are never automatically translated. With optional Polylang, configure your content languages and link translated pages and people.', 'wp-my-family-tree' ); ?></p>
+		<p><?php esc_html_e( 'In the default person editor, plugin labels follow the selected Polylang language without reloading or discarding unsaved edits. Other plugin screens start in your WordPress profile language when available and include an extensible interface language switch. With the optional block editor, Polylang may save and reload when its content language changes.', 'wp-my-family-tree' ); ?></p>
 		<h3><?php esc_html_e( 'Person editor', 'wp-my-family-tree' ); ?></h3>
 		<p><?php esc_html_e( 'Family people use a details-first classic editor by default. Enable the block editor in General if you prefer it. This setting does not change other posts, pages or saved biography content.', 'wp-my-family-tree' ); ?></p>
 		<h3><?php esc_html_e( 'Restore backups safely', 'wp-my-family-tree' ); ?></h3>

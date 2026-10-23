@@ -710,3 +710,17 @@
         padding-top:3px
     }
 }
+
+/* Extensible language settings; plain text overrides are kept separate from page content. */
+.wpmft-language-row{margin:12px 0;border:1px solid #d5ddd5;border-radius:8px;background:#fff}
+.wpmft-language-row>summary{padding:14px 16px;cursor:pointer;font-weight:600}
+.wpmft-language-row>summary small{margin-left:8px;color:#617063;font-weight:400}
+.wpmft-language-fields{padding:4px 16px 16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 20px}
+.wpmft-language-fields .wpmft-field{margin:0;width:100%}
+.wpmft-language-fields>.wpmft-check,.wpmft-language-fields>.description,.wpmft-language-json{grid-column:1/-1}
+.wpmft-language-json textarea,.wpmft-language-reference textarea{width:100%;font-family:ui-monospace,monospace;font-size:12px;tab-size:2;min-height:110px}
+.wpmft-language-reference{margin-top:22px}
+.wpmft-language-reference>summary{cursor:pointer;font-weight:600}
+@media(max-width:600px){.wpmft-language-fields{grid-template-columns:1fr}.wpmft-admin-tabs{flex-wrap:wrap}}
+
+.wpmft-save-bar[hidden]{display:none}

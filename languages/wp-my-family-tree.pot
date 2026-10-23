@@ -3,98 +3,130 @@
 # Licensed under GPL-3.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP My Family Tree 1.1.2\n"
+"Project-Id-Version: WP My Family Tree 1.2.1\n"
 "Report-Msgid-Bugs-To: https://digitalpulse.click/\n"
-"POT-Creation-Date: 2026-10-22 19:36+0000\n"
+"POT-Creation-Date: 2026-10-23 09:47+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: includes/class-wpmft-api.php:41 includes/class-wpmft-admin.php:361 includes/class-wpmft-security.php:49
+#: includes/class-wpmft-security.php:49 includes/class-wpmft-demo.php:601 includes/class-wpmft-api.php:52 includes/class-wpmft-admin.php:158 includes/class-wpmft-admin.php:360 includes/class-wpmft-admin.php:473 includes/class-wpmft-languages.php:167 includes/class-wpmft-toolbar.php:59
 msgid "A POST request is required."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:221
+#: includes/class-wpmft-admin.php:212
 msgid "A batch of family photographs has been protected. Continue until no photographs remain."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:721
+#: includes/class-wpmft-demo.php:525
+msgid "A bundled demo illustration could not be read."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:720
 msgid "A contact field was not saved. Use a valid email address and complete http:// or https:// links. The previous value has been retained."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:751
+#: includes/class-wpmft-admin.php:750
 msgid "A date was not saved. Use YYYY, YYYY-MM or a valid YYYY-MM-DD. The previous value has been retained."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:760
+#: includes/class-wpmft-admin.php:759
 msgid "A parent relationship was not saved because it would make a person their own ancestor."
 msgstr ""
 
-#: includes/class-wpmft-media.php:163
+#: includes/class-wpmft-admin.php:329
+msgid "A persistent object cache was requested but is not available. WordPress transients are being used safely until a host object cache is active."
+msgstr ""
+
+#: includes/class-wpmft-media.php:165
 msgid "A photograph could not be encrypted."
 msgstr ""
 
-#: includes/class-wpmft-media.php:200
+#: includes/class-wpmft-media.php:202
 msgid "A photograph could not be protected because you do not have permission to edit it. Ask an administrator to protect it or upload your own copy."
 msgstr ""
 
-#: includes/class-wpmft-media.php:159
+#: includes/class-wpmft-media.php:161
 msgid "A photograph could not be read."
 msgstr ""
 
-#: includes/class-wpmft-media.php:155
+#: includes/class-wpmft-demo.php:467
+msgid "A previous demo record was repurposed. The importer stopped without changing it; restore its demo marker or use a separate demo site."
+msgstr ""
+
+#: includes/class-wpmft-media.php:157
 msgid "A source photograph is missing. Restore the matching uploads backup."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:278
+#: includes/class-wpmft-admin.php:270
 msgid "Accent colour"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:475 includes/class-wpmft-admin.php:624
+#: includes/class-wpmft-demo.php:162 includes/class-wpmft-demo.php:275 includes/class-wpmft-demo.php:602 includes/class-wpmft-demo.php:788 includes/class-wpmft-admin.php:474 includes/class-wpmft-admin.php:623
 msgid "Access denied."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:235
+#: includes/class-wpmft-languages.php:205
+msgid "Add a language"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:226
 msgid "Add a person"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:160
+#: includes/class-wpmft-demo.php:636
+msgid "Add eight fictional cinema characters, original gallery illustrations and two English pages. The importer adds marked sample content and preserves existing records, pages and settings. Repeating it keeps edits to existing demo items."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:688
+msgid "Add fictional demo people, gallery illustrations and English pages? Existing content will be kept. Importing does not enable shared demo access."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:148
 msgid "Add no more than 50 partner relationships for one person."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:555
+#: includes/class-wpmft-admin.php:554
 msgid "Add partner relationship"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:803
+#: includes/class-wpmft-admin.php:802
 msgid "Add people as WordPress posts."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:229
+#: includes/class-wpmft-admin.php:220
 msgid "Add the Family Tree block or this shortcode to a page:"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:216
+#: includes/class-wpmft-languages.php:220
+msgid "Admin and server messages (JSON)"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:637
+msgid "All family connections and dates are invented. Character names are illustrative references; no movie stills, celebrity photographs or official character social accounts are included."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:207
 msgid "All remembered family sessions have been revoked."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:292
+#: includes/class-wpmft-admin.php:284
 msgid "Allow one photograph with a contact message"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:280
+#: includes/class-wpmft-admin.php:272
 msgid "Allow signed-in family visitors to save a tree image and print"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:295
+#: includes/class-wpmft-admin.php:287
 msgid "Allowed photograph formats"
 msgstr ""
 
-#: includes/class-wpmft-media.php:140
+#: includes/class-wpmft-media.php:142
 msgid "An attachment has no source file."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:800
+#: includes/class-wpmft-admin.php:799
 msgid "An existing WP Family Tree category is detected during setup. Keep it selected to reuse your people and relationships."
 msgstr ""
 
@@ -102,15 +134,19 @@ msgstr ""
 msgid "An interactive oak family tree with person dialogs and optional private access."
 msgstr ""
 
-#: includes/class-wpmft-media.php:178
+#: includes/class-wpmft-media.php:180
 msgid "An original photograph could not be removed. Check file permissions before sharing the site."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:240 includes/class-wpmft-admin.php:273
+#: includes/class-wpmft-demo.php:455
+msgid "Another demo import is running. Please try again shortly."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:265
 msgid "Appearance"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:266
+#: includes/class-wpmft-admin.php:258
 msgid "At least 12 characters. Leave blank to keep the current password. The password is stored as a one-way hash."
 msgstr ""
 
@@ -118,248 +154,404 @@ msgstr ""
 msgid "Attach one photo only."
 msgstr ""
 
-#: includes/class-wpmft-media.php:215
+#: includes/class-wpmft-media.php:217
 #, php-format
 msgid "Attachment %1$d: %2$s"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:269
-msgid "Automatically encrypt family photograph files when people are saved"
+#: includes/class-wpmft-admin.php:327
+msgid "Automatic"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:278
-msgid "Background colour"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:106
-msgid "Biography"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:584
-msgid "Birth / maiden name"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:584
-msgid "Birthplace"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:349
-msgid "Builds on the next tree request"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:254
-msgid "By default, people open with their details form above the biography editor. Other posts and pages keep their usual editor. Existing biographies are preserved when only person details change."
-msgstr ""
-
-#: includes/class-wpmft-admin.php:329
-msgid "Cache lifetime (minutes)"
+#: includes/class-wpmft-demo.php:660
+msgid "Automatic demo reset"
 msgstr ""
 
 #: includes/class-wpmft-admin.php:328
-msgid "Cache the internal relationship index"
+msgid "Automatic uses the host’s persistent object cache when available. Redis or Memcached must be configured separately by your host; otherwise this plugin uses WordPress transients. No global cache flush is performed."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:347
-msgid "Cache tools"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:804
-msgid "Check privacy while signed out."
-msgstr ""
-
-#: includes/class-wpmft-admin.php:616
-msgid "Choose / reorder photographs"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:803
-msgid "Choose Add a person, enter the full name as the title, then add a portrait, dates, parents, partners, contact details and photographs in the form at the top. Write the biography below. Children and siblings come from parent links."
-msgstr ""
-
-#: includes/class-wpmft-admin.php:549
-msgid "Choose Together for a current partner and rings in the tree. Shared children alone never imply a current relationship."
-msgstr ""
-
-#: includes/class-wpmft-admin.php:256
-msgid "Choose a page"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:161 includes/class-wpmft-admin.php:576
-msgid "Choose a portrait"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:150
-msgid "Choose family photographs"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:800
-msgid "Choose your family category."
-msgstr ""
-
-#: includes/class-wpmft-admin.php:353
-msgid "Clear Family Tree cache"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:354
-msgid "Clears this plugin’s index and refreshes its static asset URLs. Passwords, remembered access, anti-spam limits and protected media are retained. Host, CDN and other plugins’ caches are managed separately."
-msgstr ""
-
-#: includes/class-wpmft-performance.php:150
-msgid "Comments are disabled for posts, pages and media."
-msgstr ""
-
-#: includes/class-wpmft-admin.php:342
-msgid "Compact the full-window page HTML"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:240 includes/class-wpmft-admin.php:285
-msgid "Contact & hCaptcha"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:594
-msgid "Contact details"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:290
-msgid "Contact messages use WordPress mail delivery. The form does not save message contents to the family tree database. Your mail provider may retain delivered messages."
-msgstr ""
-
-#: includes/class-wpmft-admin.php:291
-msgid "Contact photo uploads"
-msgstr ""
-
-#: includes/class-wpmft-security.php:155 includes/class-wpmft-security.php:159 includes/class-wpmft-security.php:163
-msgid "Content not found."
-msgstr ""
-
-#: includes/class-wpmft-admin.php:312
-msgid "Create a tree page"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:801
-msgid "Create or edit the tree page."
-msgstr ""
-
-#: includes/class-wpmft-admin.php:584
-msgid "Date of birth"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:584
-msgid "Date of death (leave blank if living)"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:588
-msgid "Dates accept YYYY, YYYY-MM or YYYY-MM-DD. Older date text is retained unless you change it."
-msgstr ""
-
-#: includes/class-wpmft-admin.php:203
-msgid "Deactivate the original WP Family Tree plugin. Its older public routes can bypass the privacy settings of this replacement. Your posts and photographs are retained."
-msgstr ""
-
-#: includes/class-wpmft-admin.php:260
-msgid "Default interface language"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:816
-msgid "Developer"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:333
-msgid "Disable comments and pingbacks on posts, pages and media"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:349
-msgid "Disabled"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:289
-msgid "Display the contact email in the footer and exported tree image"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:508
-msgid "Divorced"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:550
-msgid "Divorced, separated and former partners are hidden from each other’s own tree. Both recorded parents remain visible when their child is selected."
-msgstr ""
-
-#: includes/class-wpmft-admin.php:522
-msgid "Edit the other person’s record"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:233
-msgid "Edit tree page"
-msgstr ""
-
-#: includes/class-wpmft-api.php:76
-msgid "Email"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:597
-msgid "Email address"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:299
-msgid "Enable hCaptcha (external anti-spam service)"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:286
-msgid "Enable the Contact Us form"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:253
-msgid "Enable the WordPress block editor for family people"
-msgstr ""
-
-#: includes/class-wpmft-admin.php:252
-msgid "Enable the family tree"
+#: includes/class-wpmft-admin.php:261
+msgid "Automatically encrypt family photograph files when people are saved"
 msgstr ""
 
 #: includes/class-wpmft-admin.php:270
+msgid "Background colour"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:97
+msgid "Biography"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:583
+msgid "Birth / maiden name"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:770
+msgid "Birth date (YYYY, YYYY-MM or YYYY-MM-DD)"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:583
+msgid "Birthplace"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:348
+msgid "Builds on the next tree request"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:246
+msgid "By default, people open with their details form above the biography editor. Other posts and pages keep their usual editor. Existing biographies are preserved when only person details change."
+msgstr ""
+
+#: includes/class-wpmft-toolbar.php:50
+msgid "Cache cleared"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:324
+msgid "Cache lifetime (minutes)"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:326
+msgid "Cache storage"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:323
+msgid "Cache the internal relationship index"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:346
+msgid "Cache tools"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:803
+msgid "Check privacy while signed out."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:615
+msgid "Choose / reorder photographs"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:802
+msgid "Choose Add a person, enter the full name as the title, then add a portrait, dates, parents, partners, contact details and photographs in the form at the top. Write the biography below. Children and siblings come from parent links."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:548
+msgid "Choose Together for a current partner and rings in the tree. Shared children alone never imply a current relationship."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:248
+msgid "Choose a page"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:149 includes/class-wpmft-admin.php:575
+msgid "Choose a portrait"
+msgstr ""
+
+#: includes/class-wpmft-languages.php:189
+msgid "Choose available interface languages, edit labels or add any number of languages. English is the fallback. Names and biographies are translated separately with optional Polylang."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:138
+msgid "Choose family photographs"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:799
+msgid "Choose your family category."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:761
+msgid "Cinema Family Demo Editor"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:442
+msgid "Cinema family demo"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:352 includes/class-wpmft-toolbar.php:28 includes/class-wpmft-toolbar.php:48
+msgid "Clear Family Tree cache"
+msgstr ""
+
+#: includes/class-wpmft-toolbar.php:49
+msgid "Clearing cache…"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:353
+msgid "Clears this plugin’s index and refreshes its static asset URLs. Passwords, remembered access, anti-spam limits and protected media are retained. Host, CDN and other plugins’ caches are managed separately."
+msgstr ""
+
+#: includes/class-wpmft-performance.php:152
+msgid "Comments are disabled for posts, pages and media."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:341
+msgid "Compact the full-window page HTML"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:277
+msgid "Contact & hCaptcha"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:593
+msgid "Contact details"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:282
+msgid "Contact messages use WordPress mail delivery. The form does not save message contents to the family tree database. Your mail provider may retain delivered messages."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:283
+msgid "Contact photo uploads"
+msgstr ""
+
+#: includes/class-wpmft-security.php:161 includes/class-wpmft-security.php:165 includes/class-wpmft-security.php:169
+msgid "Content not found."
+msgstr ""
+
+#: includes/class-wpmft-languages.php:206
+msgid "Copy the labels you want to change into a language’s Front-end labels JSON field. Keep placeholders unchanged, for example {name}, {count} and {days}."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:307
+msgid "Create a tree page"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:800
+msgid "Create or edit the tree page."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:583
+msgid "Date of birth"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:583
+msgid "Date of death (leave blank if living)"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:587
+msgid "Dates accept YYYY, YYYY-MM or YYYY-MM-DD. Older date text is retained unless you change it."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:194
+msgid "Deactivate the original WP Family Tree plugin. Its older public routes can bypass the privacy settings of this replacement. Your posts and photographs are retained."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:252 includes/class-wpmft-languages.php:199
+msgid "Default interface language"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:300
+msgid "Demo"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:635
+msgid "Demo content & sharing"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:613
+msgid "Demo content is ready. Existing content and settings were preserved. Sharing remains off until you explicitly enable it."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:647
+msgid "Demo mode is active."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:614
+msgid "Demo sharing is active. The shared editor can edit demo content only."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:546
+msgid "Demo sharing is blocked because real family records exist, including unpublished or trashed records. Use a separate demo site."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:650
+msgid "Demo sharing is locked. Its isolation check failed; shared sessions have been revoked."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:716 includes/class-wpmft-demo.php:736
+msgid "Demo sharing is not active."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:615
+msgid "Demo sharing is off. Its sessions and managed account have been revoked. Demo content is retained."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:419
+msgid "Demo sharing is unavailable. Please contact the site administrator."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:763
+msgid "Demo story saved."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:616
+msgid "Demo visitor edits have been reset. The next reset is due in 24 hours."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:815
+msgid "Developer"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:332
+msgid "Disable comments and pingbacks on posts, pages and media"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:657
+msgid "Disable demo mode"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:168
+msgid "Disable demo sharing before saving a new reset baseline."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:547
+msgid "Disable the existing demo session before enabling it again."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:348
+msgid "Disabled"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:691
+msgid "Discard current visitor edits and restore the saved demo starting state? Other site content and settings will be kept."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:281
+msgid "Display the contact email button in the footer"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:507
+msgid "Divorced"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:549
+msgid "Divorced, separated and former partners are hidden from each other’s own tree. Both recorded parents remain visible when their child is selected."
+msgstr ""
+
+#: includes/class-wpmft-languages.php:136
+msgid "Each language needs a unique code such as en, pt-br or zh-hant."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:521
+msgid "Edit the other person’s record"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:224
+msgid "Edit tree page"
+msgstr ""
+
+#: includes/class-wpmft-api.php:87
+msgid "Email"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:596
+msgid "Email address"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:689
+msgid "Enable a public shared demo login? Anyone given its published credentials can edit the marked sample stories. This requires an isolated demo tree."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:291
+msgid "Enable hCaptcha (external anti-spam service)"
+msgstr ""
+
+#: includes/class-wpmft-languages.php:216
+msgid "Enable language"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:653
+msgid "Enable shared demo mode"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:278
+msgid "Enable the Contact Us form"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:245
+msgid "Enable the WordPress block editor for family people"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:244
+msgid "Enable the family tree"
+msgstr ""
+
+#: includes/class-wpmft-languages.php:177
+msgid "Enable the selected default language before saving."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:262
 msgid "Encrypted photographs are served through the family access check. This switch controls protection of new files; disabling it does not make already encrypted photographs public. Use “Protect existing family photos” below to process older files."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:810
-msgid "English and Latvian interface text is included. Names and biographies are never automatically translated. With Polylang, add English and Latvian under Languages and create linked page/post translations as needed."
+#: includes/class-wpmft-languages.php:206 includes/class-wpmft-languages.php:206
+msgid "English front-end label reference"
 msgstr ""
 
-#: includes/class-wpmft-api.php:73
+#: includes/class-wpmft-languages.php:139
+msgid "Enter a language name and a valid locale, such as English and en_US."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:794
+msgid "Enter a title and a story within the displayed length limits."
+msgstr ""
+
+#: includes/class-wpmft-api.php:84
 msgid "Enter your full name, a valid email address, and a message of 10–10,000 characters."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:255
+#: includes/class-wpmft-admin.php:247
 msgid "Existing WP Family Tree posts remain ordinary WordPress posts in this category."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:334
+#: includes/class-wpmft-admin.php:333
 msgid "Existing comments are retained for administrators. Custom post type reviews and order notes are unaffected."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:120 block.json
+#: includes/class-wpmft-admin.php:111 block.json
 msgid "Family Tree"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:222
+#: includes/class-wpmft-demo.php:753 includes/class-wpmft-demo.php:753
+msgid "Family Tree Demo"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:560
+msgid "Family Tree Demo Editor"
+msgstr ""
+
+#: includes/class-wpmft-toolbar.php:25 includes/class-wpmft-toolbar.php:47
+msgid "Family Tree cache"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:213
 msgid "Family Tree cache cleared. Static asset URLs have been refreshed."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:288
+#: includes/class-wpmft-toolbar.php:69
+msgid "Family Tree cache cleared. The relationship index rebuilds on the next tree request."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:626
+msgid "Family Tree demo sharing was locked because its content is no longer isolated. Shared access has been revoked. Disable demo mode in Family Tree settings before configuring normal family access."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:280
 msgid "Family administrator email"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:287
+#: includes/class-wpmft-admin.php:279
 msgid "Family administrator name"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:255
+#: includes/class-wpmft-admin.php:247
 msgid "Family member category"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:813
+#: includes/class-wpmft-admin.php:812
 msgid "Family people use a details-first classic editor by default. Enable the block editor in General if you prefer it. This setting does not change other posts, pages or saved biography content."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:157
+#: includes/class-wpmft-admin.php:145
 msgid "Family photograph protection is complete."
 msgstr ""
 
@@ -367,91 +559,140 @@ msgstr ""
 msgid "Family tree"
 msgstr ""
 
-#: includes/class-wpmft-api.php:75
+#: includes/class-wpmft-api.php:86
 msgid "Family tree contact"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:239
+#: includes/class-wpmft-admin.php:230
 msgid "Family tree settings"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:104 includes/class-wpmft-admin.php:491
+#: includes/class-wpmft-admin.php:95 includes/class-wpmft-admin.php:490
 msgid "Family tree — person details"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:590
+#: includes/class-wpmft-admin.php:589
 msgid "Father / parent 1"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:582
+#: includes/class-wpmft-admin.php:581
 msgid "Female"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:510
+#: includes/class-wpmft-demo.php:443
+msgid "Fictional crossover characters and invented relationships. Visitor edits are public and reset every 24 hours."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:509
 msgid "Former partners"
 msgstr ""
 
-#: includes/class-wpmft-api.php:76
+#: includes/class-wpmft-admin.php:809
+msgid "Fourteen front-end language presets are included. Add more languages and translation overrides in the Languages tab. Names and biographies are never automatically translated. With optional Polylang, configure your content languages and link translated pages and people."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:648
+msgid "Front-end demo password"
+msgstr ""
+
+#: includes/class-wpmft-languages.php:220
+msgid "Front-end labels (JSON)"
+msgstr ""
+
+#: includes/class-wpmft-api.php:87
 msgid "Full name"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:581
+#: includes/class-wpmft-admin.php:580
 msgid "Gender"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:240 includes/class-wpmft-admin.php:251
+#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:243
 msgid "General"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:240 includes/class-wpmft-admin.php:307
+#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:301
 msgid "Getting started"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:268
+#: includes/class-wpmft-admin.php:260
 msgid "Hide the birth dates of living people in the tree and person dialogs"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:811
-msgid "In the default person editor, plugin labels follow the selected Polylang language without reloading or discarding unsaved edits. Other plugin screens start in your WordPress profile language and include an English / Latvian label switch. With the optional block editor, Polylang may save and reload when its content language changes."
+#: includes/class-wpmft-demo.php:638
+msgid "I understand that demo people will be added alongside existing content. This does not enable public demo access."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:570
+#: includes/class-wpmft-demo.php:652
+msgid "I understand that this creates a shared public demo account with a published password, on an isolated demo tree only."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:639
+msgid "Import demo content"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:545
+msgid "Import the demo first and keep its starting person published."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:810
+msgid "In the default person editor, plugin labels follow the selected Polylang language without reloading or discarding unsaved edits. Other plugin screens start in your WordPress profile language when available and include an extensible interface language switch. With the optional block editor, Polylang may save and reload when its content language changes."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:569
 msgid "Include this post as a person in the family tree"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:349
+#: includes/class-wpmft-admin.php:348
 msgid "Index cache"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:801
+#: includes/class-wpmft-admin.php:800
 msgid "Insert the Family Tree block, or a Shortcode block containing [wp_my_family_tree]. Choose a starting person in General."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:276
+#: includes/class-wpmft-admin.php:268
 msgid "Introduction (English)"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:277
+#: includes/class-wpmft-admin.php:269
 msgid "Introduction (Latvian)"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:298
+#: includes/class-wpmft-admin.php:290
 msgid "JPG, JPEG, PNG and WebP are selected by default. GIF and AVIF are optional when the server supports them. At least one format is required; selecting none restores the defaults."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:271
+#: includes/class-wpmft-languages.php:161
+msgid "Keep English enabled as the fallback language."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:263
 msgid "Keep a full backup before protecting files. Protection replaces public family image files with an encrypted vault. The database encryption key and encrypted uploads must be backed up together. Older cached or externally copied photographs cannot be recalled."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:226
+#: includes/class-wpmft-languages.php:155
+#, php-format
+msgid "Keep every translation placeholder unchanged, including {name}, {count} and %s."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:217
 msgid "Keep the stories. Connect the generations."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:809
+#: includes/class-wpmft-languages.php:217
+msgid "Language code"
+msgstr ""
+
+#: includes/class-wpmft-languages.php:181
+msgid "Language settings saved."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:299 includes/class-wpmft-admin.php:808
 msgid "Languages"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:351
+#: includes/class-wpmft-admin.php:350
 msgid "Last manual clear"
 msgstr ""
 
@@ -459,91 +700,147 @@ msgstr ""
 msgid "Leave 0 to use the starting person from Family Tree settings."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:301
+#: includes/class-wpmft-admin.php:293
 msgid "Leave blank to keep the stored secret. It is never included in the public page."
 msgstr ""
 
-#: wp-my-family-tree.php:85
+#: wp-my-family-tree.php:91
 msgid "Loading the family tree…"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:584
+#: includes/class-wpmft-languages.php:217
+msgid "Locale"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:770 includes/class-wpmft-admin.php:583
 msgid "Location"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:582
+#: includes/class-wpmft-demo.php:762
+msgid "Log out"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:581
 msgid "Male"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:236
+#: includes/class-wpmft-admin.php:227
 msgid "Manage family posts"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:293
+#: includes/class-wpmft-admin.php:285
 msgid "Maximum photograph size (MB)"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:267
+#: includes/class-wpmft-admin.php:259
 msgid "Maximum remembered access (days)"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:597
+#: includes/class-wpmft-admin.php:596
 msgid "Mobile phone"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:590
+#: includes/class-wpmft-admin.php:589
 msgid "Mother / parent 2"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:336
+#: includes/class-wpmft-demo.php:768
+msgid "Name / title"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:335
 msgid "Native device emoji still work. WordPress fallback detection, styles and external emoji hints are removed."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:153
+#: includes/class-wpmft-languages.php:217
+msgid "Native language name"
+msgstr ""
+
+#: includes/class-wpmft-languages.php:214
+msgid "New language"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:664
+msgid "Next reset:"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:141
 msgid "No family members found."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:163
+#: includes/class-wpmft-admin.php:151
 msgid "No portrait selected"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:351
+#: includes/class-wpmft-admin.php:350
 msgid "Not cleared yet"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:506 includes/class-wpmft-admin.php:582
+#: includes/class-wpmft-admin.php:505 includes/class-wpmft-admin.php:581
 msgid "Not specified"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:584
+#: includes/class-wpmft-demo.php:770 includes/class-wpmft-admin.php:583
 msgid "Occupation"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:595
+#: includes/class-wpmft-admin.php:594
 msgid "Only add details this person is comfortable sharing with everyone who can access the family tree."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:557
+#: includes/class-wpmft-demo.php:539
+msgid "Only an administrator can enable demo sharing."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:452
+msgid "Only an administrator can import demo content."
+msgstr ""
+
+#: includes/class-wpmft-languages.php:223
+msgid "Only overrides belong here. For admin labels, use the full English sentence as the key. Blank title fields keep the existing title or its Polylang translation."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:556
 msgid "Only this person’s record is saved. To change a status stored on both records, update both people. Choosing Not specified removes this record’s status without removing a partner or parent selected above."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:804
+#: includes/class-wpmft-admin.php:803
 msgid "Open a private window. Test the tree, a person’s old URL, a feed and an old direct photograph URL. Clear previous caches. The original plugin should be inactive."
 msgstr ""
 
-#: includes/class-wpmft-media.php:133
+#: includes/class-wpmft-demo.php:762
+msgid "Open demo tree"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:641
+msgid "Open demo tree page"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:254
+msgid "Open the Languages tab to enable preset languages, add languages or review optional Polylang for translated people and pages."
+msgstr ""
+
+#: includes/class-wpmft-media.php:135
 msgid "OpenSSL is required to protect photographs."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:345
+#: includes/class-wpmft-demo.php:644
+msgid "Optional shared demo mode"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:344
 msgid "Optional: omit theme styles, global presets and theme fonts. Keep this off when biographies or other page content use theme-styled blocks. Core block styles remain available; embedded pages retain their theme styling."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:582
+#: includes/class-wpmft-demo.php:528
+msgid "Original illustration for the fictional cinema family demo."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:581
 msgid "Other"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:591
+#: includes/class-wpmft-admin.php:590
 msgid "Other spouses / partners"
 msgstr ""
 
@@ -551,39 +848,47 @@ msgstr ""
 msgid "Our family tree"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:339
+#: includes/class-wpmft-admin.php:338
 msgid "Page source and assets"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:517
+#: includes/class-wpmft-admin.php:516
 msgid "Partner / co-parent"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:548
+#: includes/class-wpmft-admin.php:547
 msgid "Partner relationships"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:240 includes/class-wpmft-admin.php:306
+#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:298
 msgid "Performance & cache"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:350
+#: includes/class-wpmft-toolbar.php:33
+msgid "Performance & cache settings"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:349
 msgid "Persistent WordPress object cache"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:812
+#: includes/class-wpmft-admin.php:327
+msgid "Persistent object cache"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:811
 msgid "Person editor"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:73
+#: includes/class-wpmft-admin.php:64
 msgid "Person labels follow the Polylang language. This switch changes plugin labels only; names, biographies and the WordPress dashboard are unchanged."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:579
+#: includes/class-wpmft-admin.php:578
 msgid "Personal details"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:99
+#: includes/class-wpmft-admin.php:90
 msgid "Person’s full name"
 msgstr ""
 
@@ -591,23 +896,23 @@ msgstr ""
 msgid "Photo attachments are not available. Remove the photo and send your message again."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:610
+#: includes/class-wpmft-admin.php:609
 msgid "Photo gallery"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:158
+#: includes/class-wpmft-admin.php:146
 msgid "Photographs remaining:"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:584
+#: includes/class-wpmft-admin.php:583
 msgid "Place of death"
 msgstr ""
 
-#: includes/class-wpmft-security.php:101
+#: includes/class-wpmft-security.php:106
 msgid "Please complete the security challenge."
 msgstr ""
 
-#: wp-my-family-tree.php:85
+#: wp-my-family-tree.php:91
 msgid "Please enable JavaScript to explore this interactive family tree."
 msgstr ""
 
@@ -615,163 +920,219 @@ msgstr ""
 msgid "Please refresh the page and try again."
 msgstr ""
 
-#: includes/class-wpmft-api.php:71
+#: includes/class-wpmft-api.php:82
 msgid "Please wait a few seconds and submit the form again."
 msgstr ""
 
-#: includes/class-wpmft-api.php:56
+#: includes/class-wpmft-api.php:67
 msgid "Please wait a moment before trying again."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:71
+#: includes/class-wpmft-admin.php:62
 msgid "Plugin interface language"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:262
-msgid "Polylang is optional. When installed, it can manage translated pages and biographies; the plugin interface works in English and Latvian without it."
+#: includes/class-wpmft-languages.php:192
+msgid "Polylang is active. Its configured languages and translated page links control the public language menu. These presets supply interface labels."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:576
+#: includes/class-wpmft-languages.php:195
+msgid "Polylang is optional and free to install. The tree and its interface languages work without it. Installing it does not automatically translate your content."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:575
 msgid "Portrait"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:600
+#: includes/class-wpmft-admin.php:599
 msgid "Postal address"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:590
+#: includes/class-wpmft-languages.php:200
+msgid "Presets include translated front-end labels. Missing labels fall back to English. Custom translations are saved in the database and survive plugin updates."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:589
 msgid "Primary spouse / partner"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:240 includes/class-wpmft-admin.php:264
+#: includes/class-wpmft-admin.php:231 includes/class-wpmft-admin.php:256
 msgid "Privacy & access"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:304
+#: includes/class-wpmft-admin.php:296
 msgid "Privacy policy"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:802
+#: includes/class-wpmft-admin.php:801
 msgid "Private access starts locked until you set a password. Set the family administrator email and optionally enable hCaptcha."
 msgstr ""
 
-#: includes/class-wpmft-security.php:183
+#: includes/class-wpmft-security.php:189
 msgid "Private family record"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:271
+#: includes/class-wpmft-admin.php:263
 msgid "Private pages and family API responses use no-store headers. Exclude the tree page, admin-ajax.php and protected media from host/CDN page caching. Purge older public caches after migration."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:314
+#: includes/class-wpmft-admin.php:309
 msgid "Protect existing family photos"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:156
+#: includes/class-wpmft-admin.php:144
 msgid "Protecting family photographs…"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:341
+#: includes/class-wpmft-demo.php:604
+msgid "Read and confirm the demo notice before continuing."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:340
 msgid "Readable source files remain included. SCRIPT_DEBUG uses the readable files automatically."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:349
+#: includes/class-wpmft-admin.php:348
 msgid "Ready"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:343
+#: includes/class-wpmft-admin.php:342
 msgid "Reduces whitespace between tags while preserving inline spacing, scripts, styles and preformatted content. Admin pages and API responses are excluded."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:518
+#: includes/class-wpmft-admin.php:517
 msgid "Relationship status"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:152
+#: includes/class-wpmft-admin.php:140
 msgid "Remove"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:335
+#: includes/class-wpmft-admin.php:334
 msgid "Remove WordPress emoji scripts and styles"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:614
+#: includes/class-wpmft-admin.php:613
 msgid "Remove photograph from gallery"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:576
+#: includes/class-wpmft-admin.php:575
 msgid "Remove portrait"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:520
+#: includes/class-wpmft-admin.php:519
 msgid "Remove relationship row"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:499
+#: includes/class-wpmft-admin.php:498
 msgid "Remove selected person"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:337
+#: includes/class-wpmft-admin.php:336
 msgid "Remove unnecessary WordPress head tags"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:338
+#: includes/class-wpmft-admin.php:337
 msgid "Removes generator, RSD, Windows Live Writer and shortlink tags. Full-window family pages also omit feed and embed discovery links. Canonical URLs, language links and privacy directives are kept."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:617
+#: includes/class-wpmft-admin.php:616
 msgid "Removing a photograph here only removes it from this gallery. It does not delete the original media file."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:265
+#: includes/class-wpmft-demo.php:692
+msgid "Replace the saved demo starting state with the current sample content? Future daily resets will restore these values."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:257
 msgid "Require a family password"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:815
-msgid "Restore a matching UpdraftPlus set on staging first. Preserve every filename exactly, including its date, site name, 12-character identifier and -db.gz / -plugins.zip / -themes.zip / -uploads.zip suffix. A standalone plugin ZIP is installed using Plugins → Add New → Upload Plugin, not the Updraft restore screen."
+#: includes/class-wpmft-demo.php:666
+msgid "Reset demo now"
 msgstr ""
 
 #: includes/class-wpmft-admin.php:814
+msgid "Restore a matching UpdraftPlus set on staging first. Preserve every filename exactly, including its date, site name, 12-character identifier and -db.gz / -plugins.zip / -themes.zip / -uploads.zip suffix. A standalone plugin ZIP is installed using Plugins → Add New → Upload Plugin, not the Updraft restore screen."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:813
 msgid "Restore backups safely"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:313
-msgid "Revoke all remembered access"
+#: includes/class-wpmft-demo.php:665
+msgid "Restore the saved demo starting state now and discard current visitor edits."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:355
-msgid "Save changed settings before using the cache tool. Private family pages and API responses continue to use no-store headers."
+#: includes/class-wpmft-languages.php:196
+msgid "Review / install optional Polylang"
+msgstr ""
+
+#: includes/class-wpmft-compatibility.php:38
+msgid "Review active plugins"
 msgstr ""
 
 #: includes/class-wpmft-admin.php:308
+msgid "Revoke all remembered access"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:690
+msgid "Revoke the shared account and all demo sessions? Demo content will be kept and the normal Privacy settings will apply again."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:656
+msgid "Revoke the shared account and demo sessions, keep demo content, and restore the normal Privacy settings."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:778
+msgid "Sample people & pages"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:354
+msgid "Save changed settings before using the cache tool. Private family pages and API responses continue to use no-store headers."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:670
+msgid "Save current demo as reset baseline"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:775
+msgid "Save demo story"
+msgstr ""
+
+#: includes/class-wpmft-languages.php:205
+msgid "Save language settings"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:302
 msgid "Save settings"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:501
+#: includes/class-wpmft-admin.php:500
 msgid "Search by name…"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:154
+#: includes/class-wpmft-admin.php:142
 msgid "Search could not load. Please try again."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:155
+#: includes/class-wpmft-admin.php:143
 msgid "Searching…"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:255
+#: includes/class-wpmft-admin.php:247
 msgid "Select a category"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:509
+#: includes/class-wpmft-admin.php:508
 msgid "Separated"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:266
+#: includes/class-wpmft-admin.php:258
 msgid "Set a new family password"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:802
+#: includes/class-wpmft-admin.php:801
 msgid "Set access and contact details."
 msgstr ""
 
@@ -779,59 +1140,63 @@ msgstr ""
 msgid "Set the family category, password, languages, colours and contact details in Family Tree → Settings & help."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:121 includes/class-wpmft-admin.php:125
+#: includes/class-wpmft-admin.php:112 includes/class-wpmft-admin.php:116
 msgid "Settings"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:121
+#: includes/class-wpmft-admin.php:112
 msgid "Settings & help"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:308
+#: includes/class-wpmft-admin.php:302
 msgid "Settings belong to the plugin and work independently of your theme."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:214
+#: includes/class-wpmft-admin.php:205
 msgid "Settings saved."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:218
+#: includes/class-wpmft-admin.php:209
 msgid "Settings were not saved. Add both hCaptcha keys before enabling it."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:220
+#: includes/class-wpmft-admin.php:211
 msgid "Settings were not saved. Enter a valid family administrator email address."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:217
+#: includes/class-wpmft-admin.php:208
 msgid "Settings were not saved. Use a family password with at least 12 characters."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:806
+#: includes/class-wpmft-demo.php:543
+msgid "Shared demo accounts are available on single-site installations only. Demo content can still be imported on this network."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:805
 msgid "Shortcodes"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:282
+#: includes/class-wpmft-admin.php:274
 msgid "Show Android and Apple installation options in the footer"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:281
+#: includes/class-wpmft-admin.php:273
 msgid "Show an optional “Built by DigitalPulse” footer link"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:261
-msgid "Show the English / Latvian language switch"
+#: includes/class-wpmft-admin.php:253
+msgid "Show the language switch"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:602
+#: includes/class-wpmft-admin.php:601
 msgid "Social profiles"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:159
+#: includes/class-wpmft-admin.php:147
 msgid "Some photographs could not be protected. Keep the original backup and review the error before publishing."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:257
+#: includes/class-wpmft-admin.php:249
 msgid "Starting person"
 msgstr ""
 
@@ -839,55 +1204,91 @@ msgstr ""
 msgid "Starting person — post ID"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:350
+#: includes/class-wpmft-admin.php:349
 msgid "Storage"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:597
+#: includes/class-wpmft-demo.php:774
+msgid "Story (basic HTML allowed)"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:596
 msgid "Telephone"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:304
+#: includes/class-wpmft-admin.php:296
 msgid "Terms"
 msgstr ""
 
-#: includes/class-wpmft-api.php:90
+#: includes/class-wpmft-api.php:101
 msgid "Thank you. Your message has been sent to the family administrator."
 msgstr ""
 
-#: includes/class-wpmft-api.php:68
+#: includes/class-wpmft-toolbar.php:51
+msgid "The cache could not be cleared. Please reload and try again."
+msgstr ""
+
+#: includes/class-wpmft-api.php:79
 msgid "The contact form is not available."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:294
+#: includes/class-wpmft-demo.php:617
+msgid "The current demo titles, stories, dates, locations and occupations are saved as the reset baseline."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:286
 msgid "The default is 10 MB. Choose 1–100 MB; a lower server upload limit still applies. Photographs are emailed to the administrator and are not added to the public media library."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:331
+#: includes/class-wpmft-admin.php:330
 msgid "The default is 15 minutes. Person and relationship edits refresh the index automatically. Only numeric relationships are stored on the server; personal profiles, photographs and access tokens are not cached by this feature."
 msgstr ""
 
-#: includes/class-wpmft-media.php:167
+#: includes/class-wpmft-demo.php:818
+msgid "The demo has reset since this editor was opened. Reload the editor before saving again."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:105
+msgid "The demo is resetting or its reset could not finish. Please try again shortly."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:421
+msgid "The demo password is incorrect."
+msgstr ""
+
+#: includes/class-wpmft-media.php:169
 msgid "The encrypted photograph could not be verified."
 msgstr ""
 
-#: includes/class-wpmft-api.php:34
+#: includes/class-wpmft-api.php:44
 msgid "The family tree is currently unavailable."
 msgstr ""
 
-#: includes/class-wpmft-api.php:89
+#: includes/class-wpmft-demo.php:668
+msgid "The first activation saves the current demo as its starting state. That baseline is retained when sharing is disabled and enabled again. To deliberately change it, finish your demo edits while sharing is off, then save a new baseline below."
+msgstr ""
+
+#: includes/class-wpmft-languages.php:130
+msgid "The language settings could not be read."
+msgstr ""
+
+#: includes/class-wpmft-api.php:100
 msgid "The message could not be sent. Please try again later or use the administrator contact details."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:219
+#: includes/class-wpmft-compatibility.php:36
+msgid "The older WP Family Tree plugin can still fail on missing parent records or invalid birth dates. Check your tree with WP My Family Tree, then deactivate the older WP Family Tree plugin. Your existing family posts and relationships are retained."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:210
 msgid "The page could not be created. Please try again."
 msgstr ""
 
-#: includes/class-wpmft-security.php:83
+#: includes/class-wpmft-security.php:87
 msgid "The password is incorrect or family access has not been configured."
 msgstr ""
 
-#: includes/class-wpmft-api.php:48
+#: includes/class-wpmft-api.php:59
 msgid "The password is too long."
 msgstr ""
 
@@ -912,27 +1313,31 @@ msgstr ""
 msgid "The photo upload was interrupted. Please choose the photo again."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:259
+#: includes/class-wpmft-admin.php:251
 msgid "The plugin provides its own title, header and contact footer. This applies to pages containing the tree shortcode or block."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:576
+#: includes/class-wpmft-demo.php:661
+msgid "The plugin restores demo titles, stories, birth dates, locations and occupations to a saved starting state every 24 hours. Settings, relationships, media and unrelated content are kept. No backup plugin is required."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:575
 msgid "The portrait is the post’s featured image. Faces stay at the top of photo frames."
 msgstr ""
 
-#: includes/class-wpmft-media.php:177
+#: includes/class-wpmft-media.php:179
 msgid "The private file index could not be saved. Originals were retained."
 msgstr ""
 
-#: includes/class-wpmft-media.php:147
+#: includes/class-wpmft-media.php:149
 msgid "The private media folder could not be created."
 msgstr ""
 
-#: includes/class-wpmft-media.php:137
+#: includes/class-wpmft-media.php:139
 msgid "The private media key could not be created."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:477
+#: includes/class-wpmft-admin.php:476
 msgid "The protected media service is not available."
 msgstr ""
 
@@ -940,35 +1345,55 @@ msgstr ""
 msgid "The request origin could not be verified."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:808
+#: includes/class-wpmft-admin.php:807
 msgid "The root is a WordPress post ID. Legacy [family-tree] and [family-members] shortcodes are supported for migration."
 msgstr ""
 
-#: includes/class-wpmft-security.php:103
+#: includes/class-wpmft-demo.php:557
+msgid "The saved demo baseline no longer matches the marked samples. Review the demo content and save a new baseline before sharing."
+msgstr ""
+
+#: includes/class-wpmft-security.php:109
 msgid "The security challenge could not be verified. Please try again."
 msgstr ""
 
-#: includes/class-wpmft-security.php:105
+#: includes/class-wpmft-security.php:111
 msgid "The security challenge expired or failed. Please try again."
 msgstr ""
 
-#: includes/class-wpmft-security.php:99
+#: includes/class-wpmft-security.php:104
 msgid "The security challenge is not configured. Please contact the site administrator."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:542
+#: includes/class-wpmft-languages.php:171
+msgid "The server truncated the language form. No languages were changed. Please enable JavaScript and try again."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:541
 msgid "The two records have different statuses. A former relationship takes priority; update both records to resolve the difference."
 msgstr ""
 
-#: includes/class-wpmft-media.php:175
+#: includes/class-wpmft-demo.php:548
+msgid "The username demo already exists. No existing account has been changed. Use a separate demo site or rename that account yourself."
+msgstr ""
+
+#: includes/class-wpmft-media.php:177
 msgid "There are no photograph files to protect."
 msgstr ""
 
-#: includes/class-wpmft-api.php:64
+#: includes/class-wpmft-demo.php:740
+msgid "This action is not available to the demo editor."
+msgstr ""
+
+#: includes/class-wpmft-api.php:75
 msgid "This action is not available."
 msgstr ""
 
-#: includes/class-wpmft-data.php:263
+#: includes/class-wpmft-demo.php:791
+msgid "This is not editable demo content."
+msgstr ""
+
+#: includes/class-wpmft-data.php:263 includes/class-wpmft-data.php:265
 msgid "This person could not be found."
 msgstr ""
 
@@ -976,119 +1401,179 @@ msgstr ""
 msgid "This photo format is not allowed. Choose one of the listed image formats."
 msgstr ""
 
-#: includes/class-wpmft-media.php:242
+#: includes/class-wpmft-media.php:244
 msgid "This photograph is encrypted. Download it from the family gallery, edit it on your device, and upload the revised photograph."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:540
+#: includes/class-wpmft-admin.php:539
 msgid "This status comes from the other person’s record. Removing this row does not change their record."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:274
+#: includes/class-wpmft-admin.php:266
 msgid "Title (English)"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:275
+#: includes/class-wpmft-admin.php:267
 msgid "Title (Latvian)"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:507
+#: includes/class-wpmft-admin.php:506
 msgid "Together / current partners"
 msgstr ""
 
-#: includes/class-wpmft-api.php:47 includes/class-wpmft-security.php:81
+#: includes/class-wpmft-security.php:84 includes/class-wpmft-demo.php:420 includes/class-wpmft-api.php:58
 msgid "Too many attempts. Please try again in 15 minutes."
 msgstr ""
 
-#: includes/class-wpmft-api.php:69
+#: includes/class-wpmft-api.php:80
 msgid "Too many messages. Please try again later."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:279
+#: includes/class-wpmft-languages.php:148
+msgid "Translation values must be plain text without HTML. Keep placeholders such as {name} unchanged."
+msgstr ""
+
+#: includes/class-wpmft-languages.php:145
+msgid "Translations must be a JSON object with text keys and text values. No settings were changed."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:271
 msgid "Tree canvas height on large screens (px)"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:256
+#: includes/class-wpmft-languages.php:217
+msgid "Tree introduction translation"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:248
 msgid "Tree page"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:608
+#: includes/class-wpmft-languages.php:217
+msgid "Tree title translation"
+msgstr ""
+
+#: includes/class-wpmft-compatibility.php:35
+msgid "Two family tree plugins are active"
+msgstr ""
+
+#: includes/class-wpmft-admin.php:607
 msgid "Use a complete public profile URL beginning with https:// or http://."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:303
+#: includes/class-wpmft-admin.php:295
 msgid "Use hCaptcha on the contact form"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:302
+#: includes/class-wpmft-admin.php:294
 msgid "Use hCaptcha on the family password form"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:344
+#: includes/class-wpmft-admin.php:343
 msgid "Use lean styles on full-window tree pages"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:340
+#: includes/class-wpmft-admin.php:339
 msgid "Use minified plugin JavaScript and CSS"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:151
+#: includes/class-wpmft-admin.php:139
 msgid "Use selected photographs"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:258
+#: includes/class-wpmft-demo.php:669
+msgid "Use the current demo titles, stories, dates, locations and occupations for future resets, replacing the previous baseline."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:250
 msgid "Use the full-window layout without the theme header and footer"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:283
+#: includes/class-wpmft-admin.php:275
 msgid "Use the included oak leaf favicon and touch icons on the tree page"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:571
+#: includes/class-wpmft-admin.php:570
 msgid "Use the post title for the person’s full name and the biography editor for their story. Parent, partner and date fields reuse your existing WP Family Tree data."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:162
+#: includes/class-wpmft-demo.php:723
+msgid "Use the restricted demo editor for sample content."
+msgstr ""
+
+#: includes/class-wpmft-demo.php:645
+msgid "Use this on a separate demonstration site containing only demo family records. A restricted Family Tree Demo Editor can change marked sample names, dates and biographies, but cannot manage settings, other content, users, plugins or uploads. Contact sending is disabled during demo mode. Visitor edits are public and reset every 24 hours."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:150
 msgid "Use this portrait"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:232
+#: includes/class-wpmft-admin.php:223
 msgid "View tree"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:120 includes/class-wpmft-admin.php:226
+#: includes/class-wpmft-admin.php:111 includes/class-wpmft-admin.php:217
 msgid "WP My Family Tree"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:597
+#: includes/class-wpmft-admin.php:596
 msgid "Website"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:304
+#: includes/class-wpmft-admin.php:296
 msgid "When enabled, hCaptcha receives technical browser information and verifies form tokens. Review its service terms and add it to your privacy notice."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:332
+#: includes/class-wpmft-admin.php:331
 msgid "WordPress cleanup"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:350
+#: includes/class-wpmft-admin.php:349
 msgid "WordPress database transients"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:170
+#: includes/class-wpmft-demo.php:648
+msgid "WordPress demo login"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:648
+msgid "WordPress demo password"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:662
+msgid "WordPress runs scheduled tasks when the site receives a request. An overdue reset also runs before the next demo visit or save. An editor opened before a reset must be reloaded before saving."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:327
+msgid "WordPress transients"
+msgstr ""
+
+#: includes/class-wpmft-languages.php:194
+msgid "Would you like to translate people and pages too?"
+msgstr ""
+
+#: includes/class-wpmft-demo.php:761
+msgid "You can edit marked demonstration stories only. Visitor edits are public and reset every 24 hours. Do not enter personal or confidential information."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:161 includes/class-wpmft-languages.php:166
 msgid "You do not have permission to change family tree settings."
 msgstr ""
 
-#: includes/class-wpmft-api.php:55
+#: includes/class-wpmft-toolbar.php:62
+msgid "You do not have permission to clear this cache."
+msgstr ""
+
+#: includes/class-wpmft-api.php:18 includes/class-wpmft-api.php:66
 msgid "Your family session has ended. Please unlock the tree again."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:200
+#: includes/class-wpmft-admin.php:191
 msgid "Your family tree is locked for visitors. Set a family password in Privacy to allow access, or explicitly turn password protection off for a public tree."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:215
+#: includes/class-wpmft-admin.php:206
 msgid "Your family tree page is ready."
 msgstr ""
 
@@ -1096,7 +1581,11 @@ msgstr ""
 msgid "Your interactive oak tree appears here on the page. People open in dialogs and relatives load as visitors explore."
 msgstr ""
 
-#: includes/class-wpmft-admin.php:229
+#: includes/class-wpmft-toolbar.php:65
+msgid "Your session has expired. Please reload and try again."
+msgstr ""
+
+#: includes/class-wpmft-admin.php:220
 msgid "Your tree, in any theme"
 msgstr ""
 
@@ -1108,11 +1597,11 @@ msgstr ""
 msgid "genealogy"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:301
+#: includes/class-wpmft-admin.php:293
 msgid "hCaptcha secret key"
 msgstr ""
 
-#: includes/class-wpmft-admin.php:300
+#: includes/class-wpmft-admin.php:292
 msgid "hCaptcha site key"
 msgstr ""
 

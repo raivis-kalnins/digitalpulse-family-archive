@@ -161,7 +161,7 @@ final class WPMFT_Data {
 	public static function display_id( $id, $lang ) {
 		if ( function_exists( 'pll_get_post' ) ) {
 			$t = pll_get_post( $id, $lang );
-			if ( $t && 'publish' === get_post_status( $t ) && self::is_person( $t ) ) { return (int) $t; }
+			if ( $t && 'publish' === get_post_status( $t ) && self::is_person( $t ) && ( ! WPMFT_Demo::scoped_request() || WPMFT_Demo::allows_person( $t ) ) ) { return (int) $t; }
 		}
 		return $id;
 	}
@@ -262,6 +262,7 @@ final class WPMFT_Data {
 		$id = self::canonical( $id ); $index = self::index();
 		if ( ! isset( $index[$id] ) ) { return new WP_Error( 'not_found', __( 'This person could not be found.', 'wp-my-family-tree' ) ); }
 		$result = self::summary( $id, $lang ); $display = self::display_id( $id, $lang ); $p = get_post( $display );
+		if ( ! $p instanceof WP_Post ) { return new WP_Error( 'not_found', __( 'This person could not be found.', 'wp-my-family-tree' ) ); }
 		foreach ( array( 'birthPlace' => '_wpmft_birth_place', 'deathPlace' => '_wpmft_death_place', 'location' => '_wpmft_location', 'occupation' => '_wpmft_occupation', 'maidenName' => '_wpmft_maiden_name' ) as $key => $meta ) {
 			$result[$key] = (string) ( get_post_meta( $display, $meta, true ) ?: get_post_meta( $id, $meta, true ) );
 		}
@@ -323,6 +324,7 @@ final class WPMFT_Data {
 		$index = self::index(); $query = trim( $query ); $matches = array();
 		foreach ( array_keys( $index ) as $id ) {
 			$p = get_post( self::display_id( $id, $lang ) );
+			if ( ! $p instanceof WP_Post ) { continue; }
 			$haystack = remove_accents( $p->post_title ); $needle = remove_accents( $query );
 			if ( $query === '' || stripos( $haystack, $needle ) !== false || ( function_exists( 'mb_stripos' ) && mb_stripos( $haystack, $needle, 0, 'UTF-8' ) !== false ) ) { $matches[] = $id; }
 		}

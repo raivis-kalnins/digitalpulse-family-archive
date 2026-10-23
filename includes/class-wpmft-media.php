@@ -79,8 +79,10 @@ final class WPMFT_Media {
 		return openssl_decrypt( substr( $bytes, 35 ), 'aes-256-gcm', $key, OPENSSL_RAW_DATA, substr( $bytes, 7, 12 ), substr( $bytes, 19, 16 ) );
 	}
 	public static function serve() {
+		WPMFT_Demo::set_request_scope( WPMFT_Demo::guard_required() && ! wpmft_staff() );
 		WPMFT_Security::no_cache();
 		$id = isset( $_GET['id'] ) && is_scalar( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
+		if ( WPMFT_Demo::scoped_request() && ! WPMFT_Demo::allows_media( $id ) ) { status_header( 404 ); exit; }
 		if ( ! WPMFT_Security::authorized() && ! current_user_can( 'edit_post', $id ) ) { status_header( 403 ); exit; }
 		$size = isset( $_GET['size'] ) && is_string( $_GET['size'] ) ? sanitize_key( wp_unslash( $_GET['size'] ) ) : 'full';
 		if ( ! $id || ! self::is_private( $id ) || ! self::can_view( $id ) ) { status_header( 404 ); exit; }

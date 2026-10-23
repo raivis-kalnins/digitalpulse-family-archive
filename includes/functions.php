@@ -14,7 +14,7 @@ function wpmft_settings() {
 		'password_protection' => 1, 'password_hash' => '', 'session_version' => '', 'remember_days' => 30,
 		'hide_living_dates' => 0, 'private_media' => 1, 'language' => 'en', 'language_switch' => 1,
 		'person_block_editor' => 0, 'app_install' => 1, 'app_icons' => 1,
-		'performance_cache' => 1, 'cache_ttl' => 15, 'disable_comments' => 1, 'disable_emojis' => 1, 'clean_head' => 1,
+		'performance_cache' => 1, 'cache_ttl' => 15, 'cache_backend' => 'auto', 'disable_comments' => 1, 'disable_emojis' => 1, 'clean_head' => 1,
 		'minify_html' => 1, 'minify_assets' => 1, 'lean_standalone' => 0,
 		'accent' => '#315a42', 'background' => '#f5f4ed', 'tree_height' => 760,
 		'allow_export' => 1, 'show_credit' => 0, 'hcaptcha_enabled' => 0,
@@ -39,25 +39,27 @@ function wpmft_asset_url( $filename ) {
 	return WPMFT_URL . 'assets/' . $filename;
 }
 
-/** The interface supports English and Latvian; an unconfigured Polylang keeps the local switch. */
+/** Polylang controls content languages when configured; interface presets are independent. */
 function wpmft_polylang_languages() {
 	if ( ! function_exists( 'pll_languages_list' ) ) { return array(); }
-	return array_values( array_intersect( array( 'en', 'lv' ), (array) pll_languages_list( array( 'hide_empty' => 0, 'fields' => 'slug' ) ) ) );
+	return array_values( array_filter( (array) pll_languages_list( array( 'hide_empty' => 0, 'fields' => 'slug' ) ), array( 'WPMFT_Languages', 'valid_slug' ) ) );
 }
 
 function wpmft_language( $requested = '' ) {
 	$languages = wpmft_polylang_languages();
-	// AJAX explicitly supplies the page language; it must be a supported, configured language.
-	if ( in_array( $requested, array( 'en', 'lv' ), true ) && ( ! $languages || in_array( $requested, $languages, true ) ) ) { return $requested; }
+	$available = WPMFT_Languages::registry();
+	if ( is_string( $requested ) && isset( $available[$requested] ) && ( ! $languages || in_array( $requested, $languages, true ) ) ) { return $requested; }
 	if ( $languages ) {
 		$lang = function_exists( 'pll_current_language' ) ? pll_current_language( 'slug' ) : '';
 		if ( in_array( $lang, $languages, true ) ) { return $lang; }
 		$lang = function_exists( 'pll_default_language' ) ? pll_default_language( 'slug' ) : '';
 		return in_array( $lang, $languages, true ) ? $lang : $languages[0];
 	}
-	// Legacy query switching applies only when Polylang does not manage the site language.
-	if ( isset( $_GET['wpmft_lang'] ) && in_array( $_GET['wpmft_lang'], array( 'en', 'lv' ), true ) ) { return sanitize_key( $_GET['wpmft_lang'] ); }
-	return wpmft_settings()['language'] === 'lv' ? 'lv' : 'en';
+	// This read-only query selects labels; it never authorizes access or changes stored settings.
+	$query = isset( $_GET['wpmft_lang'] ) && is_string( $_GET['wpmft_lang'] ) ? sanitize_key( wp_unslash( $_GET['wpmft_lang'] ) ) : '';
+	if ( isset( $available[$query] ) ) { return $query; }
+	$default = wpmft_settings()['language'];
+	return is_string( $default ) && isset( $available[$default] ) ? $default : 'en';
 }
 
 function wpmft_locale( $lang ) {
@@ -67,36 +69,39 @@ function wpmft_locale( $lang ) {
 		$position = array_search( $lang, $slugs, true );
 		if ( false !== $position && ! empty( $locales[$position] ) ) { return $locales[$position]; }
 	}
-	return $lang === 'lv' ? 'lv' : 'en_US';
+	$available = WPMFT_Languages::registry();
+	return $available[$lang]['locale'] ?? 'en_US';
 }
 
-/** Use Polylang's translated URL for this page, preserving the normal theme language and locale. */
+/** Keep Polylang's real page URLs, including regional and newly added languages. */
 function wpmft_language_config() {
 	$current = wpmft_language(); $languages = wpmft_polylang_languages();
+	$registry = WPMFT_Languages::registry();
 	$result = array( 'provider' => $languages ? 'polylang' : 'local', 'current' => $current, 'languages' => array() );
-	if ( ! $languages ) { return $result; }
 	$links = array();
-	if ( ! is_admin() && function_exists( 'pll_the_languages' ) ) {
+	if ( $languages && ! is_admin() && function_exists( 'pll_the_languages' ) ) {
 		foreach ( (array) pll_the_languages( array( 'raw' => 1, 'echo' => 0, 'hide_if_empty' => 0, 'hide_if_no_translation' => 0 ) ) as $link ) {
 			if ( is_array( $link ) && isset( $link['slug'] ) ) { $links[$link['slug']] = $link; }
 		}
 	}
-	foreach ( $languages as $slug ) {
+	foreach ( $languages ?: array_keys( $registry ) as $slug ) {
 		$link = $links[$slug] ?? array();
 		$url = ! empty( $link['url'] ) && empty( $link['no_translation'] ) ? $link['url'] : wpmft_tree_url( $slug );
+		if ( ! $languages ) { $url = add_query_arg( 'wpmft_lang', $slug, $url ); }
 		$result['languages'][] = array(
-			'slug' => $slug, 'name' => ! empty( $link['name'] ) ? $link['name'] : ( $slug === 'lv' ? 'Latviešu' : 'English' ),
-			'locale' => wpmft_locale( $slug ),
-			'url' => esc_url_raw( $url ), 'current' => $slug === $current,
+			'slug' => $slug, 'name' => ! empty( $link['name'] ) ? $link['name'] : ( $registry[$slug]['name'] ?? $slug ),
+			'locale' => wpmft_locale( $slug ), 'url' => esc_url_raw( $url ), 'current' => $slug === $current,
 		);
 	}
 	return $result;
 }
 
-/** Explicit Latvian settings remain the fallback until an administrator adds a Polylang string translation. */
+/** Explicit interface titles are a fallback for optional Polylang string translations. */
 function wpmft_translated_setting( $settings, $key, $lang ) {
 	$source = $settings[$key];
+	$registry = WPMFT_Languages::registry();
 	$fallback = $lang === 'lv' && isset( $settings[$key . '_lv'] ) ? $settings[$key . '_lv'] : $source;
+	if ( ! empty( $registry[$lang][$key] ) ) { $fallback = $registry[$lang][$key]; }
 	if ( function_exists( 'pll_translate_string' ) && in_array( $lang, wpmft_polylang_languages(), true ) ) {
 		$translation = pll_translate_string( $source, $lang );
 		if ( is_string( $translation ) && $translation !== '' && $translation !== $source ) { return $translation; }
@@ -106,11 +111,22 @@ function wpmft_translated_setting( $settings, $key, $lang ) {
 
 function wpmft_public_settings() {
 	$s = wpmft_settings();
+	$demo = WPMFT_Demo::public_config();
+	$logged_in = is_user_logged_in();
+	$account_url = WPMFT_Demo::is_demo_user() ? admin_url( 'admin.php?page=wpmft-demo-editor' ) : ( current_user_can( 'manage_options' ) ? admin_url( 'admin.php?page=wpmft' ) : admin_url() );
+	$translations = array();
+	foreach ( array_keys( WPMFT_Languages::registry() ) as $slug ) { $translations[$slug] = array( 'title' => wpmft_translated_setting( $s, 'title', $slug ), 'subtitle' => wpmft_translated_setting( $s, 'subtitle', $slug ) ); }
 	return array(
+		'translations' => $translations, 'demo' => $demo,
+		'account' => array(
+			'loggedIn' => $logged_in,
+			'loginUrl' => esc_url_raw( wp_login_url( ! empty( $demo['treeUrl'] ) ? $demo['treeUrl'] : wpmft_tree_url() ) ),
+			'adminUrl' => $logged_in ? esc_url_raw( $account_url ) : '',
+		),
 		'title' => wpmft_translated_setting( $s, 'title', 'en' ), 'titleLv' => wpmft_translated_setting( $s, 'title', 'lv' ),
 		'subtitle' => wpmft_translated_setting( $s, 'subtitle', 'en' ), 'subtitleLv' => wpmft_translated_setting( $s, 'subtitle', 'lv' ),
-		'contactName' => $s['contact_name'], 'contactEmail' => $s['show_email'] ? $s['contact_email'] : '',
-		'contactEnabled' => (bool) $s['contact_enabled'], 'accent' => $s['accent'], 'background' => $s['background'],
+		'contactName' => WPMFT_Demo::guard_required() ? '' : $s['contact_name'], 'contactEmail' => $s['show_email'] && ! WPMFT_Demo::guard_required() ? $s['contact_email'] : '',
+		'contactEnabled' => (bool) $s['contact_enabled'] && ! WPMFT_Demo::guard_required(), 'accent' => $s['accent'], 'background' => $s['background'],
 		'contactUpload' => WPMFT_Contact_Upload::config(), 'appInstall' => (bool) $s['app_install'],
 		'showCredit' => (bool) $s['show_credit'], 'allowExport' => (bool) $s['allow_export'],
 		'treeHeight' => (int) $s['tree_height'], 'defaultView' => 'tree', 'languageSwitch' => (bool) $s['language_switch'],
@@ -118,7 +134,7 @@ function wpmft_public_settings() {
 }
 
 function wpmft_is_person( $id ) { return WPMFT_Data::is_person( (int) $id ); }
-function wpmft_staff() { return current_user_can( 'edit_others_posts' ); }
+function wpmft_staff() { return ! WPMFT_Demo::is_demo_user() && current_user_can( 'edit_others_posts' ); }
 function wpmft_is_tree_page() {
 	if ( ! is_singular( 'page' ) ) { return false; }
 	$p = get_queried_object();

@@ -84,6 +84,8 @@ final class WPMFT_Performance {
 		return array_values( array_filter( $urls, function ( $item ) {
 			$url = is_array( $item ) ? ( $item['href'] ?? '' ) : $item;
 			$host = wp_parse_url( 0 === strpos( (string) $url, '//' ) ? 'https:' . $url : $url, PHP_URL_HOST );
+			// This comparison removes a core emoji resource hint; it never loads a remote resource.
+			// phpcs:ignore PluginCheck.CodeAnalysis.Offloading.OffloadedContent -- Matching an existing hint for removal, not offloading assets.
 			return 's.w.org' !== $host && 's.w.org' !== $url;
 		} ) );
 	}

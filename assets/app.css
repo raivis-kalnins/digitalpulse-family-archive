@@ -42,9 +42,8 @@
 .wpmft-brand strong { display: block; font-size: 17px; font-weight: 600; letter-spacing: -.35px; line-height: 1.35; }
 .wpmft-brand small { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1.7px; color: var(--wpmft-muted); padding-top: 5px; line-height: 1.4; }
 .wpmft-header-actions { display: flex; align-items: center; gap: 19px; flex-shrink: 0; }
-.wpmft-languages { display: inline-flex; align-items: center; gap: 4px; background: #ebece1; padding: 4px; border-radius: 30px; }
-.wpmft-languages :is(button, a) { display: flex; align-items: center; gap: 7px; color: #66705f; background: none; border: 0; padding: 8px 12px; border-radius: 22px; font-size: 11px; line-height: 1.2; font-weight: 600; text-decoration: none; }
-.wpmft-languages :is(button, a).is-active { background: #fffef7; color: #2d4934; box-shadow: 0 1px 4px #23391c0e; }
+.wpmft-language-picker { display: inline-flex; align-items: center; gap: 7px; background: #eef0e3; color: #536a48; padding: 3px 10px; border: 1px solid #dbe2ce; border-radius: 10px; min-width: 0; }
+.wpmft-language-picker select { font: inherit; font-size: 12px; color: #344e36; background: transparent; border: 0; border-radius: 7px; min-height: 35px; max-width: 185px; padding: 3px 2px; cursor: pointer; }
 .wpmft-flag { border-radius: 2px; box-shadow: 0 0 0 1px #17261b12; }
 .wpmft-icon-button { display: inline-flex; justify-content: center; align-items: center; width: 42px; height: 42px; padding: 0; border: 1px solid var(--wpmft-line); background: #fffef7; color: var(--wpmft-ink); border-radius: 12px; transition: background .18s, border-color .18s; flex: 0 0 auto; }
 .wpmft-icon-button:hover { background: #edf0e1; border-color: #b5c1a6; }
@@ -89,14 +88,33 @@
 .wpmft-tree-context { display: flex; align-items: center; justify-content: space-between; position: relative; gap: 20px; padding: 23px 28px 6px; z-index: 2; }
 .wpmft-tree-context .wpmft-kicker { font-size: 9px; letter-spacing: 1.6px; }
 .wpmft-tree-context h2 { font: 400 24px/1.3 var(--wpmft-serif); margin-top: 3px; letter-spacing: -.3px; }
+.wpmft-tree-actions, .wpmft-fullscreen-export { display: flex; align-items: center; flex-shrink: 0; gap: 9px; }
+.wpmft-fullscreen-toggle { flex-shrink: 0; }
+.wpmft-fullscreen-export { gap: 5px; }
+body.wpmft-fullscreen-active .wpmft-shell { overflow: visible; }
+.wpmft-tree-panel.is-fullscreen { position: fixed; inset: 0; z-index: 100030; display: flex; flex-direction: column; width: 100%; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; border: 0; border-radius: 0; background: #fcfbf3; overscroll-behavior: none; }
+.wpmft-tree-panel.is-fullscreen .wpmft-tree-context { flex-shrink: 0; padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left)); border-bottom: 1px solid #e0e6d5; }
+.wpmft-tree-panel.is-fullscreen .wpmft-tree-viewport { flex: 1 1 0; height: auto; min-height: 0; }
+.wpmft-tree-panel.is-fullscreen .wpmft-tree-bottom { flex-shrink: 0; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+.wpmft-tree-panel.is-fullscreen .wpmft-branch-notice { flex-shrink: 0; padding-block: 6px; }
+.wpmft-fullscreen-status { flex-shrink: 0; }
+.wpmft-fullscreen-status .wpmft-message { margin: 0; border-radius: 0; padding-block: 8px; }
 .wpmft-view-count { color: #637255; font-size: 11px; background: #f0f2e6; border-radius: 20px; padding: 6px 11px; }
 .wpmft-tree-viewport { position: relative; width: 100%; height: var(--tree-height, 710px); overflow: hidden; cursor: grab; touch-action: none; overscroll-behavior: contain; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; outline-offset: -5px; isolation: isolate; background-image: radial-gradient(#c4cfb342 .7px, transparent .7px), radial-gradient(ellipse at 50% 46%, #ecf0db70, transparent 67%); background-size: 20px 20px, 100% 100%; }
 .wpmft-tree-viewport.is-dragging, .wpmft-tree-viewport.is-dragging * { cursor: grabbing; }
 .wpmft-tree-scene { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; user-select: none; }
 .wpmft-oak-art, .wpmft-relationship-lines { position: absolute; inset: 0; pointer-events: none; }
+.wpmft-oak-art { opacity: .55; }
 .wpmft-relationship-lines path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.wpmft-relationship-lines .is-parent { stroke: #86996e; stroke-width: 2.8px; opacity: .75; }
-.wpmft-relationship-lines .is-spouse { stroke: #af8b76; stroke-width: 2.3px; stroke-dasharray: 5 6; opacity: .85; }
+.wpmft-relationship-lines .wpmft-line-halo { stroke: #f7f5ec; stroke-width: 7px; }
+.wpmft-relationship-lines .is-parent { stroke: #7c936b; stroke-width: 2.6px; }
+.wpmft-relationship-lines .is-spouse { stroke: #a47762; stroke-width: 2.6px; stroke-dasharray: 6 5; }
+.wpmft-relationship-lines .is-co-parent { stroke: #85919b; stroke-width: 2.6px; stroke-dasharray: 2 5; }
+.wpmft-relationship-lines .wpmft-line-junction { fill: #7c936b; }
+.wpmft-relationship-lines .is-active .wpmft-line-halo { stroke-width: 9px; }
+.wpmft-relationship-lines .is-active .is-parent { stroke: #345b3d; stroke-width: 3.5px; }
+.wpmft-relationship-lines .is-active .is-spouse { stroke: #865238; stroke-width: 3.5px; }
+.wpmft-relationship-lines .is-active .is-co-parent { stroke: #596e7c; stroke-width: 3.5px; }
 .wpmft-partner-marker { position: absolute; transform: translate(-50%, -50%); display: grid; place-items: center; width: 29px; height: 25px; border: 1px solid #d5ddc6; border-radius: 13px; background: #fffdf5; color: #8a744e; z-index: 2; cursor: help; }
 .wpmft-partner-tooltip { display: none; position: absolute; bottom: calc(100% + 7px); left: 50%; transform: translateX(-50%); width: max-content; max-width: 210px; padding: 5px 9px; border-radius: 6px; background: #304b35; color: #fffdf3; font-size: 12px; font-weight: 400; line-height: 1.4; text-align: center; pointer-events: none; }
 .wpmft-partner-marker:hover .wpmft-partner-tooltip, .wpmft-partner-marker:focus-visible .wpmft-partner-tooltip { display: block; }
@@ -108,6 +126,8 @@
 .wpmft-node-dates { font-size: 11px; color: #637255; line-height: 1.3; display: block; margin-top: 3px; max-width: 154px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wpmft-tree-node.is-selected .wpmft-node-person { border: 2px solid #7f9a5c; background: #edf2de; box-shadow: 0 0 0 5px #a3b7891a, 0 7px 20px #34532610; padding-top: 8px; }
 .wpmft-tree-node.is-remembered .wpmft-avatar img { filter: saturate(.8); }
+.wpmft-tree-node.is-connected .wpmft-node-person { border-color: #96aa82; }
+.wpmft-tree-node.is-traced:not(.is-selected) .wpmft-node-person { border-color: #527347; box-shadow: 0 0 0 3px #7d9a6324, 0 7px 20px #34532610; }
 .wpmft-node-branch { position: absolute; top: 3px; right: -9px; width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 1px solid #d2dcc2; border-radius: 50%; background: #fffef7; color: #617b4e; box-shadow: 0 2px 5px #3444290b; }
 .wpmft-node-branch.has-more { background: #e6ecd7; border-color: #a9bc8f; }
 .wpmft-node-branch:hover { background: #355b3e; color: #fff; }
@@ -130,6 +150,10 @@
 .wpmft-legend i { display: inline-block; width: 7px; height: 7px; border-radius: 2px 0 2px 0; background: #9bab80; }
 .wpmft-legend i.is-selected { background: #466a3e; }
 .wpmft-legend i.is-descendant { background: #c6cda2; }
+.wpmft-legend i.is-parent-link, .wpmft-legend i.is-partner-link, .wpmft-legend i.is-coparent-link { width: 22px; height: 0; border-radius: 0; border-top: 2px solid #7c936b; background: transparent; }
+.wpmft-legend i.is-partner-link { border-top-color: #a47762; border-top-style: dashed; }
+.wpmft-legend i.is-coparent-link { border-top-color: #85919b; border-top-style: dotted; }
+.wpmft-tree-bottom .wpmft-trace-note { display: flex; align-items: center; gap: 6px; color: #345b3d; }
 .wpmft-tree-bottom > p { color: #637255; font-size: 10px; line-height: 1.5; }
 .wpmft-tree-updating { position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; background: #f9faf1a6; backdrop-filter: blur(2px); }
 .wpmft-tree-updating .wpmft-loading { background: #fffef6; border-radius: 12px; border: 1px solid #d7dfc8; padding: 16px 23px; box-shadow: 0 7px 25px #2c422114; }
@@ -144,26 +168,34 @@
 .wpmft-empty { text-align: center; padding: 90px 25px 120px; border: 1px solid #d9dfcc; border-radius: 20px; color: #637255; background: #fcfbf3; }
 .wpmft-empty h2 { font: 400 34px/1.3 var(--wpmft-serif); margin-top: 24px; color: #3c583d; }
 .wpmft-empty p { max-width: 540px; margin: 15px auto 0; font-size: 14px; }
-.wpmft-footer { border-top: 1px solid #dce2d0; background: #eef0e3; padding: 24px 0 20px; }
-.wpmft-footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-.wpmft-footer-story { display: flex; align-items: center; gap: 12px; color: #637255; }
-.wpmft-footer-story svg { transform: rotate(-23deg); }
-.wpmft-footer-story p { color: #637255; font-family: var(--wpmft-serif); font-size: 16px; line-height: 1.6; font-style: italic; }
-.wpmft-footer-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; min-width: 0; }
-.wpmft-footer-contact { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 20px; }
-.wpmft-footer-contact > span { color: #637255; font-size: 11px; overflow-wrap: anywhere; }
-.wpmft-footer-contact .wpmft-button { background: #f9faf0; border-color: #ccd7bb; }
-.wpmft-credit { text-align: center; color: #637255; font-size: 10px; padding: 18px 20px 0; }
+.wpmft-footer { border-top: 1px solid #dce2d0; background: #eef0e3; padding: 14px 0 12px; }
+.wpmft-footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.wpmft-footer-story { display: flex; align-items: center; gap: 9px; color: #637255; min-width: 0; }
+.wpmft-footer-story svg { flex-shrink: 0; transform: rotate(-23deg); }
+.wpmft-footer-copy { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.wpmft-footer-story p { color: #637255; font-family: var(--wpmft-serif); font-size: 14px; line-height: 1.5; font-style: italic; }
+.wpmft-footer-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; min-width: 0; }
+.wpmft-footer-contact { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 7px; min-width: 0; }
+.wpmft-footer-contact .wpmft-button { background: #f9faf0; border-color: #ccd7bb; min-height: 38px; padding: 8px 11px; font-size: 11px; border-radius: 9px; text-decoration: none; }
+.wpmft-footer-email { min-width: 0; max-width: 280px; }
+.wpmft-footer-email span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.wpmft-credit { text-align: left; color: #637255; font-size: 10px; line-height: 1.5; }
 .wpmft-credit a { text-decoration: none; color: #60754e; }
 .wpmft-credit a:hover { text-decoration: underline; }
+.wpmft-footer-form { flex-shrink: 0; }
 .wpmft-install-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px 13px; }
-.wpmft-install-label { color: #637255; font-size: 10px; line-height: 1.5; }
 .wpmft-install-buttons { display: flex; gap: 7px; flex-wrap: wrap; }
 .wpmft-install .wpmft-install-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 38px; border: 1px solid #cbd4bf; border-radius: 9px; background: #f8f9ef; padding: 8px 11px; color: #47613d; font-size: 11px; line-height: 1.3; font-weight: 500; transition: background .18s, border-color .18s; }
 .wpmft-install-button:hover { background: #fffef7; border-color: #a9ba94; }
 .wpmft-install-button .wpmft-spinner { width: 17px; height: 17px; }
 .wpmft-installed { display: inline-flex; align-items: center; gap: 7px; color: #5d7350; font-size: 11px; }
 .wpmft-install-status { flex-basis: 100%; text-align: right; color: #637255; font-size: 10px; }
+.wpmft-demo-notice { display: flex; align-items: flex-start; gap: 10px; padding: 12px 15px; margin: 0 0 20px; border: 1px solid #e1d8b7; border-radius: 12px; background: #fbf5e4; color: #6b5b32; font-size: 12px; line-height: 1.6; }
+.wpmft-demo-notice > svg { margin-top: 2px; }
+.wpmft-demo-notice strong { font-size: 12px; font-weight: 600; }
+.wpmft-demo-notice p { margin-top: 2px; }
+.wpmft-gate-card .wpmft-demo-password { padding: 10px 12px; margin: 14px 0; border: 1px solid #e1d8b7; border-radius: 8px; background: #fbf5e4; color: #6b5b32; font-size: 12px; }
+.wpmft-demo-password code { font: 600 14px/1.5 ui-monospace, monospace; background: #fffdf4; padding: 2px 6px; border-radius: 4px; }
 
 /* Password gate. No family information is rendered before authorization. */
 .wpmft-gate { min-height: 680px; position: relative; display: flex; align-items: center; justify-content: center; margin: -10px 0 6px; padding: 26px 0 55px; }
@@ -326,18 +358,23 @@
 .wpmft-icon-button.is-dark { background: #d7e5cc16; color: #f7faee; border-color: #d7e5cc25; }
 .wpmft-icon-button.is-dark:hover { background: #d7e5cc2b; }
 .wpmft-lightbox .wpmft-modal-close { right: 6px; top: 6px; }
-.wpmft-lightbox-image { display: flex; justify-content: center; align-items: center; flex: 1; min-height: 0; padding: 10px 55px; overflow: auto; }
-.wpmft-lightbox-image > img { width: auto; height: auto; max-height: 100%; max-width: 100%; object-fit: contain; border-radius: 4px; }
-.wpmft-lightbox-image.is-zoomed { justify-content: flex-start; align-items: flex-start; padding: 0; }
+.wpmft-lightbox-image { display: flex; justify-content: center; align-items: center; flex: 1; min-height: 0; padding: 10px 55px; overflow: hidden; touch-action: pan-y pinch-zoom; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.wpmft-lightbox-image > img { width: auto; height: auto; max-height: 100%; max-width: 100%; object-fit: contain; border-radius: 4px; transition: transform .18s ease-out; animation: wpmft-photo-enter .18s ease-out; }
+.wpmft-lightbox-image.is-swiping > img { transition: none; }
+.wpmft-lightbox-image.is-zoomed { justify-content: flex-start; align-items: flex-start; padding: 0; overflow: auto; touch-action: auto; }
 .wpmft-lightbox-image.is-zoomed > img { min-width: 150%; max-width: none; max-height: none; width: 150%; }
 .wpmft-lightbox-caption { text-align: center; color: #c6d0bb; padding: 14px 40px 4px; font-size: 12px; line-height: 1.7; flex-shrink: 0; max-height: 20vh; overflow: auto; }
 .wpmft-lightbox-arrow { display: grid; place-items: center; position: absolute; top: calc(50% - 25px); width: 46px; height: 46px; border-radius: 50%; background: #d7e5cc19; border: 1px solid #d7e5cc28; color: #f7faee; padding: 0; z-index: 2; }
 .wpmft-lightbox-arrow:hover { background: #d7e5cc35; }
 .wpmft-lightbox-arrow.is-previous { left: 0; }
 .wpmft-lightbox-arrow.is-next { right: 0; }
-.wpmft-lightbox-dots { display: flex; justify-content: center; gap: 7px; flex-wrap: wrap; margin-top: 11px; }
-.wpmft-lightbox-dots button { width: 7px; height: 7px; border: 0; border-radius: 50%; background: #8d9b7b60; padding: 0; }
-.wpmft-lightbox-dots button.is-active { background: #e4ebd6; }
+.wpmft-lightbox-dots { display: flex; justify-content: center; gap: 2px; flex-wrap: wrap; margin-top: 5px; }
+.wpmft-lightbox-dots button { display: grid; place-items: center; width: 26px; height: 26px; border: 0; border-radius: 50%; background: transparent; padding: 0; }
+.wpmft-lightbox-dots button::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #8d9b7b80; }
+.wpmft-lightbox-dots button.is-active::after { background: #e4ebd6; }
+.wpmft-lightbox-caption .wpmft-swipe-hint { display: none; color: #aab99c; font-size: 10px; line-height: 1.5; }
+@keyframes wpmft-photo-enter { from { opacity: .55; } to { opacity: 1; } }
+@media (pointer: coarse) { .wpmft-lightbox-caption .wpmft-swipe-hint { display: block; } }
 .wpmft-print-frame { position: fixed; width: 1px; height: 1px; border: 0; bottom: 0; right: 0; opacity: 0; pointer-events: none; }
 
 @media (hover: none) {
@@ -369,9 +406,9 @@
     .wpmft-search { max-width: none; flex: 1 0 calc(100% - 290px); }
     .wpmft-export-actions { gap: 6px; }
     .wpmft-toolbar { row-gap: 13px; }
-    .wpmft-footer-inner { align-items: flex-start; }
+    .wpmft-footer-inner { align-items: center; }
     .wpmft-footer-actions { max-width: 57%; }
-    .wpmft-footer-contact { gap: 10px; }
+    .wpmft-footer-contact { gap: 7px; }
     .wpmft-footer-story p { max-width: 250px; font-size: 14px; }
     .wpmft-directory { padding: 24px; }
     .wpmft-directory-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
@@ -391,9 +428,9 @@
     .wpmft-brand strong { font-size: 13px; letter-spacing: -.15px; }
     .wpmft-brand small { font-size: 8px; letter-spacing: .65px; padding-top: 3px; }
     .wpmft-header-actions { gap: 2px; }
-    .wpmft-languages { padding: 3px; gap: 1px; }
-    .wpmft-languages :is(button, a) { padding: 7px; gap: 4px; font-size: 9px; }
-    .wpmft-languages :is(button, a) svg { width: 16px; height: 11px; }
+    .wpmft-language-picker { padding: 2px 6px; gap: 4px; border-radius: 9px; }
+    .wpmft-language-picker > svg { width: 14px; }
+    .wpmft-language-picker select { max-width: 118px; min-height: 36px; font-size: 11px; }
     .wpmft-lock { width: 31px; height: 35px; border-radius: 8px; }
     .wpmft-lock svg { width: 16px; }
     .wpmft-main { padding-bottom: 25px; }
@@ -418,6 +455,12 @@
     .wpmft-tree-context { padding: 19px 17px 4px; gap: 10px; align-items: flex-start; }
     .wpmft-tree-context .wpmft-kicker { font-size: 8px; letter-spacing: 1.3px; }
     .wpmft-tree-context h2 { font-size: 21px; }
+    .wpmft-tree-context > div:first-child { min-width: 0; }
+    .wpmft-tree-actions { gap: 6px; }
+    .wpmft-fullscreen-toggle { width: 40px; height: 40px; }
+    .wpmft-tree-panel.is-fullscreen .wpmft-tree-context h2 { font-size: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .wpmft-tree-panel.is-fullscreen .wpmft-view-count { display: none; }
+    .wpmft-fullscreen-export .wpmft-icon-button { width: 40px; height: 40px; }
     .wpmft-view-count { font-size: 8px; max-width: 85px; text-align: center; padding: 5px 8px; }
     .wpmft-tree-viewport { height: min(var(--tree-height), 565px); background-size: 17px 17px, 100% 100%; }
     .wpmft-zoom-tools { right: 12px; bottom: 12px; padding: 4px; border-radius: 12px; }
@@ -428,19 +471,20 @@
     .wpmft-legend span { font-size: 9px; }
     .wpmft-tree-bottom > p { font-size: 9px; text-align: center; width: 100%; }
     .wpmft-branch-notice { padding: 12px 16px; font-size: 10px; align-items: flex-start; gap: 8px; }
-    .wpmft-footer { padding: 21px 0 17px; }
-    .wpmft-footer-inner { flex-direction: column; gap: 19px; align-items: center; }
-    .wpmft-footer-actions { width: 100%; max-width: none; align-items: center; gap: 16px; }
-    .wpmft-footer-story { gap: 10px; }
-    .wpmft-footer-story p { max-width: none; font-size: 14px; text-align: center; }
-    .wpmft-footer-story svg { width: 24px; height: 24px; }
-    .wpmft-footer-contact { justify-content: center; gap: 15px; }
-    .wpmft-footer-contact .wpmft-button { padding: 9px 12px; font-size: 10px; min-height: 36px; }
-    .wpmft-footer-contact > span { font-size: 10px; }
-    .wpmft-install-controls { justify-content: center; gap: 8px; }
-    .wpmft-install-label { flex-basis: 100%; text-align: center; }
-    .wpmft-install-buttons { justify-content: center; gap: 8px; }
-    .wpmft-install .wpmft-install-button { min-height: 42px; padding: 10px 14px; font-size: 11px; }
+    .wpmft-footer { padding: 14px 0 11px; }
+    .wpmft-footer-inner { flex-direction: column; gap: 11px; align-items: center; }
+    .wpmft-footer-actions { width: 100%; max-width: 410px; align-items: center; justify-content: center; gap: 7px; }
+    .wpmft-footer-story { gap: 7px; }
+    .wpmft-footer-story p { max-width: none; font-size: 12px; text-align: left; }
+    .wpmft-footer-story svg { width: 20px; height: 20px; }
+    .wpmft-footer-contact { width: 100%; justify-content: center; flex-wrap: nowrap; gap: 7px; }
+    .wpmft-footer-contact .wpmft-button { padding: 10px 12px; font-size: 11px; min-height: 44px; }
+    .wpmft-footer-email { flex: 1; max-width: none; }
+    .wpmft-footer-contact > button { flex-shrink: 0; }
+    .wpmft-footer-actions > .wpmft-install { width: 100%; }
+    .wpmft-install-controls { justify-content: center; gap: 7px; }
+    .wpmft-install-buttons { width: 100%; justify-content: center; gap: 7px; }
+    .wpmft-install .wpmft-install-button { flex: 1; min-height: 44px; padding: 10px 12px; font-size: 11px; }
     .wpmft-install-status { text-align: center; }
     .wpmft-gate { min-height: 610px; margin: 0; padding: 5px 0 30px; }
     .wpmft-gate-card { width: min(100%, 410px); padding: 27px 26px 25px; border-radius: 22px; }
@@ -506,10 +550,11 @@
     .wpmft-lightbox .wpmft-dialog { height: calc(100dvh - 20px); }
     .wpmft-lightbox-top { padding-left: 0; min-height: 45px; }
     .wpmft-lightbox-image { padding: 8px 0; }
-    .wpmft-lightbox-arrow { top: auto; bottom: 10px; width: 37px; height: 37px; }
+    .wpmft-lightbox-arrow { top: auto; bottom: 13px; width: 44px; height: 44px; }
     .wpmft-lightbox-arrow svg { width: 22px; }
-    .wpmft-lightbox-caption { padding: 12px 42px 10px; font-size: 11px; min-height: 55px; }
-    .wpmft-lightbox-dots { gap: 6px; }
+    .wpmft-lightbox-caption { padding: 10px 48px 10px; font-size: 11px; min-height: 65px; }
+    .wpmft-lightbox-dots { gap: 2px; }
+    .wpmft-lightbox-top .wpmft-icon-button, .wpmft-lightbox .wpmft-modal-close { width: 44px; height: 44px; }
     .wpmft-message { font-size: 12px; padding: 11px 12px; }
 }
 @media (max-width: 375px) {
@@ -518,8 +563,8 @@
     .wpmft-brand strong { max-width: 126px; font-size: 12px; }
     .wpmft-brand-mark { width: 25px; }
     .wpmft-brand-mark svg { width: 24px; }
-    .wpmft-languages :is(button, a) { padding: 6px; }
-    .wpmft-languages :is(button, a) span { display: none; }
+    .wpmft-language-picker > svg { display: none; }
+    .wpmft-language-picker select { max-width: 92px; }
     .wpmft-intro h1 { font-size: 31px; }
     .wpmft-stat { min-width: 52px; padding-left: 10px; }
     .wpmft-view-switch button { gap: 4px; padding: 8px; }
@@ -537,7 +582,7 @@
     .wpmft-spinner { animation-duration: 1.6s; }
 }
 @media print {
-    .wpmft-header-actions, .wpmft-toolbar, .wpmft-zoom-tools, .wpmft-node-branch, .wpmft-footer-contact button, .wpmft-overlay { display: none; }
+    .wpmft-header-actions, .wpmft-toolbar, .wpmft-zoom-tools, .wpmft-node-branch, .wpmft-tree-actions, .wpmft-footer-contact button, .wpmft-overlay { display: none; }
     .wpmft-main, .wpmft-header-inner, .wpmft-footer-inner { width: 100%; }
     .wpmft-shell { background: #fff; }
     .wpmft-tree-panel { break-inside: avoid; }

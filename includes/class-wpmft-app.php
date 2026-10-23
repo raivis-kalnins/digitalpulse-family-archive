@@ -69,11 +69,12 @@ final class WPMFT_App {
 			( $parts['scheme'] ?? '' ) !== $home['scheme'] || ( $parts['port'] ?? null ) !== ( $home['port'] ?? null ) ) { $start = home_url( '/' ); }
 		$scope = trailingslashit( $home['path'] ?? '/' );
 		$icons = WPMFT_URL . 'assets/icons/';
+		$labels = WPMFT_Languages::labels( $lang );
 		return array(
 			'id' => $scope . '?wpmft-app=1',
 			'name' => wp_strip_all_tags( wpmft_translated_setting( $s, 'title', $lang ) ),
-			'short_name' => $lang === 'lv' ? 'Dzimtas koks' : 'Family Tree',
-			'description' => $lang === 'lv' ? 'Jūsu dzimtas stāsti, paaudzes un fotogrāfijas.' : 'Your family stories, generations and photographs.',
+			'short_name' => $labels['tree'] ?? 'Family Tree',
+			'description' => $labels['subtitle'] ?? 'Your family stories, generations and photographs.',
 			'lang' => str_replace( '_', '-', wpmft_locale( $lang ) ),
 			'start_url' => esc_url_raw( $start ), 'scope' => $scope,
 			'display' => 'standalone', 'display_override' => array( 'standalone', 'minimal-ui' ),

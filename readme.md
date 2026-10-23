@@ -2,7 +2,7 @@
 
 An oak-inspired WordPress family tree for the stories, photographs and people that connect generations. Explore relatives in a responsive React interface, open a person in a detailed modal, and manage the archive through familiar WordPress posts.
 
-**Version 1.1.2** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
+**Version 1.2.2** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
 Developed by **Raivis Kalnins**, web developer at [DigitalPulse](https://digitalpulse.click/).  
 Project: [github.com/raivis-kalnins/wp-my-family-tree](https://github.com/raivis-kalnins/wp-my-family-tree)
 
@@ -10,32 +10,28 @@ Project: [github.com/raivis-kalnins/wp-my-family-tree](https://github.com/raivis
 
 *The screenshot contains fictional demonstration records and illustrated portraits. No private family records or photographs are included in this plugin.*
 
-## What is new in 1.1.2
+## What is new in 1.2.2
 
-- **Performance and cache controls.** A server-side relationship index avoids rebuilding the same graph on every request. Relevant edits invalidate it automatically; the administrator can clear it and refresh plugin asset URLs from a dedicated panel.
-- **WordPress cleanup.** Optional switches disable comments and pingbacks on ordinary posts, pages and media, remove WordPress emoji assets, and omit unnecessary discovery tags. Existing comments remain stored and custom post type reviews and order notes keep working.
-- **Smaller page resources.** Prebuilt minified plugin JavaScript and CSS, conservative full-window HTML compaction, and a single viewport tag. Readable sources remain included.
-- **Optional lean styling.** Full-window pages can omit the theme's styles, global presets and fonts. This is off by default because existing biographies may use theme-styled blocks.
-- **English and Latvian controls.** The new settings, cache status and clear tool are translated in both plugin interface languages.
+- **Restored footer contact form.** Contact us (Pieteikties in Latvian) opens the existing form for sending the family administrator a description and an optional photo. The same button is available to signed-out and signed-in visitors whenever contact is enabled.
 
-### Included from 1.1.1
+## Version 1.2.1 improvements
 
-- **Aligned gallery controls.** The photo-gallery remove buttons have a centred cross, consistent dimensions and a visible keyboard focus indicator in the person editor.
-- **Easier mobile navigation.** Start a swipe on a person card or the tree background. A short tap still opens the person or branch; dragging does not accidentally open a modal. Two-finger gestures zoom the tree.
+- **Daily demo reset.** Shared demo content returns to its saved starting state every 24 hours. The plugin handles scheduling and recovery without a backup plugin.
+- **Clearer family connections.** Tree connectors and relationship highlighting make dense family views easier to follow.
+- **A tighter footer.** The optional developer credit sits directly below the left-hand motto. Email, the contact-form button and device installation controls remain together.
 
-### Included from 1.1.0
+## Version 1.2.0 improvements
 
-- **Person details first.** Family people open with their portrait, dates, relationships, contact details and gallery form directly below the post title. Gutenberg is disabled for people by default and can be enabled in settings. Other posts and pages keep their normal editor.
-- **Richer person profiles.** Add email, telephone, mobile phone, postal address, website, Facebook, Instagram, LinkedIn, X / Twitter, YouTube and TikTok links.
-- **Private photo messages.** The Contact Us modal accepts one photo through a keyboard-accessible picker or drag and drop. The default limit is 10 MB, with size and supported formats configurable by the administrator.
-- **Clearer form labels.** “Your full name” in English and “Vārds Uzvārds” in Latvian.
-- **English and Latvian administration.** Person-field labels follow the person's Polylang language. A plugin-interface language selector also changes the plugin's labels without replacing unsaved names, biographies or form values.
-- **Quick editing.** A small light-grey Edit button appears in a person's modal only when the signed-in WordPress account is allowed to edit that record.
-- **Home Screen installation.** Android and Apple footer controls, a web-app manifest, a new oak favicon and `touch.png`, and 192 / 512 px app icons. Installed views continue to require an internet connection and the configured family access.
-- **Cleaner header.** The brown decorative stripe has been removed.
-- **One complete guide.** Installation, administration, privacy, troubleshooting and development notes are consolidated in this `readme.md`.
+- **Swipe through person galleries.** Touch gestures move between photographs, with arrows, keyboard controls, larger dot targets and zoom retained. Vertical scrolling and panning a zoomed photograph do not change slides.
+- **A fullscreen tree.** Expand just the tree panel, exit with the close button or Escape, and keep person details usable inside fullscreen. Browsers without element fullscreen use an in-page alternative. PNG exports and printing contain only the selected tree branch, without the site header or contact footer.
+- **Edit in a new tab.** Authorized editors can open a person's editor while keeping their place in the tree.
+- **Object-cache support and a toolbar tool.** Choose automatic, WordPress-transient or persistent object-cache storage. Administrators can clear only the Family Tree cache from the WordPress toolbar; the clean icon rotates while the request runs.
+- **Fourteen language presets and custom languages.** English is the default for new installations. Add or edit any number of interface languages in settings, with optional Polylang content translations and English fallback for untranslated labels.
+- **An optional cinema-family demo.** Import eight fictional crossover characters, eleven original illustrations and two English pages after confirmation. Existing content is preserved. A separate, explicitly enabled demo-sharing mode provides a restricted sample editor and a front-end demo password only when no real family records exist.
+- **A compact footer.** Email is a mail button beside the contact form and optional Android / iPhone installation controls, with a mobile layout and an optional credit beneath the motto.
+- **Public distribution documentation.** A WordPress.org-format readme, external-service disclosures, readable source, build instructions and review notes are included.
 
-The earlier top-aligned photograph frames, Polylang page-language synchronization, contact-button spacing, and current/former partner fixes are included.
+The existing private-media, contact-photo, relationship-status, mobile tree-gesture and performance-cleanup features are retained.
 
 ## Features at a glance
 
@@ -45,26 +41,25 @@ The earlier top-aligned photograph frames, Polylang page-language synchronizatio
 | Person modal | Portrait, biography, dates, places, relationships, contact information, social links and gallery lightbox |
 | WordPress content | Ordinary posts for people; a Family Tree block and `[wp_my_family_tree]` shortcode for the page |
 | Theme integration | Optional full-window page with its own H1, header and contact footer; embedded mode for a theme layout |
-| Languages | English and Latvian interfaces, translated plugin administration, native Polylang page links and optional biography translations |
+| Languages | Fourteen bundled frontend interfaces, unlimited custom languages, editable labels, English fallback and optional Polylang page/content translations |
 | Privacy | Optional family password, remembered viewing access up to 30 days, server access checks and no-store responses |
 | Photographs | Top-aligned portraits and optional encrypted family-media delivery |
 | Contact | Independent recipient settings, optional hCaptcha, private single-photo attachment and WordPress mail delivery |
 | Installation | Oak favicon, Apple touch icon, web-app manifest and Android / Apple footer help |
-| Sharing | Optional tree PNG export and printing with the page title and contact footer |
-| Performance | Server-side relationship index, scoped cache clearing, minified assets, full-window HTML compaction and configurable WordPress cleanup |
+| Sharing | Fullscreen tree panel, tree-only PNG export and printing |
+| Performance | Server-side relationship index, optional persistent object cache, scoped animated toolbar clearing, minified assets, full-window HTML compaction and configurable WordPress cleanup |
+| Demo | Additive fictional content import and an isolated, restricted shared editor available only after administrator opt-in |
 
 ## Update an existing installation
 
 1. In WordPress, open **Plugins → Add New Plugin → Upload Plugin**.
-2. Select a complete `wp-my-family-tree-1.1.2.zip` archive and click **Install Now**.
+2. Select a complete `wp-my-family-tree-1.2.2.zip` archive and click **Install Now**.
 3. When WordPress finds the existing plugin, choose **Replace current with uploaded**.
 4. Open **Family Tree → Settings & help → Performance & cache**, review the new defaults, and reload the family page.
 
 This release is a **plugin-only update**. No database import, theme replacement or UpdraftPlus restore is needed. The archive keeps the existing `wp-my-family-tree` plugin folder. Your person posts, relationships, uploaded photographs, stored password, settings and media-encryption key remain in the site's existing data. New settings receive their defaults automatically.
 
 Use the complete installable ZIP for WordPress's replacement uploader. A patch or a ZIP containing only changed files is not a complete plugin package. Keep your usual site backup before any plugin update, particularly when the site uses encrypted photographs.
-
-If you received `wp-my-family-tree-1.1.2-changed-files.zip`, it is a patch for **1.1.0 or 1.1.1**, including the earlier mobile gesture and gallery fixes. Extract it and merge its `wp-my-family-tree/` contents into the existing folder at `wp-content/plugins/wp-my-family-tree/`, replacing matching files and retaining the others. Do not use the WordPress plugin uploader for this partial archive.
 
 ## First-time setup
 
@@ -73,7 +68,7 @@ If you received `wp-my-family-tree-1.1.2-changed-files.zip`, it is a patch for *
 3. Open **Family Tree → Settings & help**. Select the category containing family posts and choose a starting person.
 4. Use **Create a tree page**, or put the **Family Tree** block / shortcode on an existing page and select it as the tree page.
 5. Under **Privacy & access**, set a family password, or deliberately switch password protection off for a public tree. New private installations remain locked until a password is configured.
-6. Under **Appearance**, set the English and Latvian titles and introductions, colours and optional installation controls.
+6. Under **Appearance**, set the title, introduction, colours and optional installation controls. Use **Languages** for translated titles and interface labels.
 7. Under **Contact & hCaptcha**, enter the family administrator's name and recipient email address. Review photo uploads and optional hCaptcha.
 8. Open the page in a signed-out browser window to check the visitor experience.
 
@@ -140,35 +135,91 @@ A status recorded on either person applies to the pair. Saving one person does n
 
 ### Edit from a person modal
 
-A WordPress user who can edit the displayed person sees a small **Edit** button in the modal. It opens the appropriate post editor and preserves the selected plugin language. A shared family password only grants viewing access; it does not grant editing permissions or expose an edit link.
+A WordPress user who can edit the displayed person sees a small **Edit** button in the modal. It opens the appropriate post editor in a new browser tab and preserves the selected plugin language. A shared family password only grants viewing access; it does not grant editing permissions or expose an edit link.
 
-## English, Latvian and Polylang
+## Interface languages and optional Polylang
 
-English and Latvian are included. Without configured Polylang languages, the plugin's EN / LV control changes the interface and keeps the choice in the page URL.
+New installations start in English. Existing installations retain their saved language. The **Languages** tab includes these ready-to-use frontend presets:
 
-To synchronize the tree with the theme:
+| Language | Code | Language | Code |
+| --- | --- | --- | --- |
+| English | `en` | Latvian | `lv` |
+| Spanish | `es` | Lithuanian | `lt` |
+| Polish | `pl` | Estonian | `et` |
+| French | `fr` | Danish | `da` |
+| German | `de` | Swedish | `sv` |
+| Norwegian Bokmål | `nb` | Norwegian Nynorsk | `nn` |
+| Finnish | `fi` | Icelandic | `is` |
 
-1. Install and activate [Polylang](https://wordpress.org/plugins/polylang/).
-2. Add English (`en`) and Latvian (`lv`) under **Languages**. The Latvian WordPress locale is `lv`.
-3. Create English and Latvian tree pages, put the same block or shortcode on each, and connect them as translations in Polylang.
-4. Set the English and Latvian titles and introductions in **Appearance**. Polylang string translations can override the registered title and introduction.
-5. Keep the plugin language switch enabled. It opens Polylang's translated page URLs, so the theme and tree use the same page language.
+Enable the languages you want, select the default, and save. The public language menu scales to the configured languages rather than displaying a fixed pair of buttons. Dates and numbers use the selected locale. English remains available as the fallback.
 
-Names and biographies remain exactly as entered; the plugin does not machine-translate them or duplicate people. A published linked person translation is used when available, with the original record as a fallback. Relationship metadata and the new contact fields are covered by `wpml-config.xml`.
+Use **Add language** to add a unique language code, name and locale. There is no fixed limit on the number of languages. Supply frontend translations as a JSON object whose keys match `languages/interfaces/en.json` → `frontend`; supply administrator labels as a JSON object mapping the original English text to its translation. A partial dictionary is valid: missing labels fall back to English. Preserve placeholders such as `{name}`, `{count}` and `{days}`. Per-language titles and subtitles can also be configured.
 
-An old `wpmft_lang` query parameter does not override a configured Polylang page language. This release supports same-origin language URLs, such as `/` and `/lv/dzimtas-koks/`. Separate language domains or subdomains are outside the supported viewing-session and origin-check setup.
+For example, a custom frontend override can contain:
 
-### Language in the WordPress dashboard
+```json
+{"tree":"Our family connections","contact":"Write to the archive"}
+```
 
-Person-form labels initially follow the person's Polylang language, falling back to the WordPress user's language. Changing the Polylang selector updates plugin labels. The plugin also includes a **Plugin interface language** control on its settings and person forms; it changes plugin labels without replacing unsaved field contents.
+The bundled frontend dictionaries contain the complete interface key set. Administrator translation coverage varies: Latvian includes the existing detailed catalog, while the other presets include common controls and use English for remaining labels. All administrator labels can be overridden or translated further. The WordPress dashboard, theme and core editor use their own language settings.
 
-The WordPress dashboard menus, core editor controls and theme use their own language configuration. For a Latvian dashboard throughout, set the WordPress user's language to Latvian and install the corresponding WordPress language pack. The plugin does not override another plugin's or WordPress's translations.
+### Translate pages and biographies with Polylang
 
-If Gutenberg is enabled for people, Polylang may save/reload the editor when changing a post's content language. Follow Polylang's confirmation prompt. The plugin's own interface-language selector only changes labels.
+Polylang is optional. When it is absent, the Languages panel links to its free WordPress.org installation screen; no additional plugin is installed automatically. The family tree and its interface language menu work without it.
+
+1. Install and activate [Polylang](https://wordpress.org/plugins/polylang/) if you want translated WordPress content.
+2. Configure your content languages in Polylang.
+3. Create a tree page in each language, insert the same block or shortcode, and connect the pages as translations.
+4. Add translations of person posts where needed. Names and biographies remain exactly as entered; this plugin does not machine-translate them or duplicate people.
+5. Keep the plugin language switch enabled. With configured Polylang languages, it follows translated page URLs so the theme and tree use the same page language.
+
+A published linked person translation is used when available, with the original record as fallback. Relationship and contact metadata synchronization is described in `wpml-config.xml`. An old `wpmft_lang` query parameter does not override Polylang's current page language.
+
+The visitor access/session setup is designed for one site origin. Separate Polylang domains or subdomains require independent access and hosting configuration and are not covered by this release's verified setup.
+
+### Plugin labels in the dashboard
+
+The **Plugin interface language** control changes this plugin's labels without replacing unsaved form values. Person-form labels can follow the person's Polylang language. To change the entire WordPress dashboard, choose the user's WordPress language and install its language pack separately. Changing the content language in the block editor may trigger Polylang's own save/reload workflow.
+
+## Demo content and optional shared demo mode
+
+Demo content is never imported on activation. Open **Demo** in the plugin settings, read the notice, tick its confirmation and choose **Import demo content**. A second browser confirmation makes the intended import explicit.
+
+The importer adds eight sample people: George McFly, Lorraine Baines McFly, Marty McFly, Jennifer Parker, Amélie Poulain, Nino Quincampoix, Paddington Brown and Matilda Wormwood. Their dates, locations and crossover family links are invented examples, not film canon or real biographies. Original English descriptions, eight monogram portraits, three gallery landscapes, a tree page and an introduction page demonstrate the plugin. Social buttons link to the social networks themselves and do not impersonate character accounts.
+
+The importer adds marked records and keeps existing people, relationships, pages, settings and media. Repeating it reuses marked demo items and preserves edits to them. It does not enable shared access, replace your tree page or starting-person setting, change the family password, or create an account. Imported sample people are part of the archive's person data; remove them in WordPress when they are no longer wanted.
+
+### Share an isolated demo
+
+On a separate single-site installation containing only demo family records, enable **Shared demo mode** after its additional confirmation. This creates:
+
+| Access | Demo credential |
+| --- | --- |
+| WordPress username | `demo` |
+| WordPress password | `Demo@demo123Editor` |
+| Front-end family password | `demo` |
+
+These intentionally public credentials apply only after an administrator enables the mode. No account or demo mode is enabled by default. An existing user named `demo` is never taken over or assigned a new password; activation stops instead.
+
+The shared account has a custom **Family Tree Demo Editor** role. It opens a constrained editor for marked sample people and pages, including names/titles, story text and selected person fields. It is not a standard WordPress Editor. It cannot manage settings, real content, users, plugins, uploads, arbitrary shortcodes or dynamic blocks. Contact sending is disabled while demo sharing is guarded. Visitor edits to sample stories are public.
+
+Enabling shared mode is blocked if real family posts exist, including drafts, private posts and items in the trash. If a real family record is introduced later or the demo's isolation checks fail, shared access is locked and demo sessions are revoked. An administrator must disable the mode to restore the normal privacy configuration. Demo sharing is unavailable on Multisite; importing the sample content remains available.
+
+The demo gate uses its own cookie and session generation. It leaves the normal family password hash and privacy settings intact. **Disable demo mode** revokes the shared account and sessions while retaining sample posts, pages and media. Plugin deactivation also revokes the shared account. As with all family access controls, independently protect the site before disabling the plugin if it contains private published content.
+
+### Automatic reset every 24 hours
+
+Shared demo mode keeps a saved starting copy of the fields visitors can edit: person/page titles and stories, birth dates, locations and occupations. The plugin restores those fields every 24 hours. The starting copy is retained across resets and demo-mode restarts, so a visitor edit does not become the new default merely because sharing was switched off and on.
+
+To deliberately replace the starting copy, disable demo sharing, finish the sample edits as an administrator, then use **Save current demo as reset baseline** and confirm the replacement. Enable sharing again when the saved examples are ready.
+
+The reset affects only records still owned by the demo importer. Relationships, photographs, unrelated posts, real family data and normal site settings are not restored or deleted. UpdraftPlus or another backup plugin is not required. A first upgrade from an already-active 1.2.0 demo without a saved copy uses the original bundled sample fields.
+
+WordPress schedules the daily task. On an idle site, WP-Cron may run after its scheduled time; the plugin also checks for an overdue reset before allowing the next demo access or edit. The Demo settings show the next reset and provide a separately confirmed **Reset demo now** action. A form opened before a reset must be reloaded before it can save again.
 
 ## Contact form and photo attachments
 
-The footer's **Contact Us** button opens the contact modal. Set the recipient in **Contact & hCaptcha**. The form asks for the visitor's full name, email address, message and an optional photograph. The privacy text has space above the Send button.
+The footer's **Contact us / Pieteikties** button and the private archive's access-help link open the contact modal. Set the recipient in **Contact & hCaptcha**. The footer contact button works for both signed-out and signed-in visitors; it does not open the WordPress dashboard. The form asks for the visitor's full name, email address, message and an optional photograph. The privacy text has space above the Send button.
 
 ### Upload settings
 
@@ -191,9 +242,9 @@ The original photo is attached privately to the administrator's email. It is **n
 
 Messages use `wp_mail()` and the site's configured mail transport. A successful response means WordPress accepted the send operation; delivery to the recipient's inbox depends on the mail service. Verify the recipient and use a correctly configured SMTP transport if required by the host.
 
-hCaptcha is optional and disabled by default. Supply your own site key and secret before enabling it on the contact form, password form or both. The browser loads hCaptcha only when configured; the secret is verified on the server. Leaving the secret field blank in settings preserves the stored value.
+hCaptcha is optional and disabled by default. Supply your own site key and secret before enabling it on the contact form, password form or both. The browser loads `https://js.hcaptcha.com/1/api.js` only on enabled challenge forms. Completing a challenge contacts hCaptcha and its asset hosts. The server posts the site key, secret, response token and visitor IP address to `https://api.hcaptcha.com/siteverify`; the secret is never sent to the browser. Leaving the secret field blank in settings preserves the stored value.
 
-The form also retains server-side origin and CSRF checks, a honeypot, a minimum completion interval and rate limits. Review [hCaptcha privacy](https://www.hcaptcha.com/privacy) and [terms](https://www.hcaptcha.com/terms) when enabling that external service.
+The form also retains server-side origin and CSRF checks, a honeypot, a minimum completion interval and rate limits. Enabling this service requires an hCaptcha account and keys. Review [hCaptcha](https://www.hcaptcha.com/), its [privacy policy](https://www.hcaptcha.com/privacy) and [terms](https://www.hcaptcha.com/terms). The plugin has no analytics or telemetry and makes no call to an author-operated service. Email uses your site's mail provider. Social links and optional author credits open only when a visitor follows them.
 
 ## Favicon and Home Screen installation
 
@@ -217,11 +268,15 @@ Open **Family Tree → Settings & help → Performance & cache**. The relationsh
 
 ### Relationship index and clearing
 
-The cache stores numeric person IDs, relationship lists, translation mappings and partner-status values on the server using WordPress transients. Its default lifetime is **15 minutes**, adjustable from **1 to 60 minutes**. It avoids rebuilding the graph on every tree request. It does not store profile responses, names, biographies, photographs, contact details, viewing tokens or permission decisions. WordPress may discard a transient early; the plugin rebuilds a missing index when needed.
+The cache stores numeric person IDs, relationship lists, translation mappings and partner-status values on the server. Its default lifetime is **15 minutes**, adjustable from **1 to 60 minutes**. It avoids rebuilding the graph on every tree request. It does not store profile responses, names, biographies, photographs, contact details, viewing tokens or permission decisions. WordPress may discard a transient early; the plugin rebuilds a missing index when needed.
 
-Saving people, relationship metadata, categories, Polylang mappings or relevant settings invalidates the index automatically. Imports that bypass WordPress hooks with direct SQL need a manual clear or must wait for expiry. The panel displays whether the cache is ready, which storage WordPress is using, and the last manual clear time. A separate cache service is not required.
+Saving people, relationship metadata, categories, Polylang mappings or relevant settings invalidates the index automatically. Imports that bypass WordPress hooks with direct SQL need a manual clear or must wait for expiry. The panel displays whether the cache is ready, which storage WordPress is using, and the last manual clear time. A separate cache service is not required for the transient backend.
 
-Use **Clear Family Tree cache** to remove this site's relationship index and change the version used in plugin script and stylesheet URLs. The next tree request rebuilds the index. Only administrators can use this POST-and-nonce-protected action. Save changed settings before using the tool.
+The **Cache storage** option supports **Automatic**, **WordPress transients** and **Persistent object cache**. Automatic uses the WordPress object-cache API when a persistent backend is installed and falls back to transients otherwise. An explicitly requested object cache also falls back safely when no persistent backend is available, with the status shown in settings. The transient option uses WordPress's Transients API, which WordPress itself may back with object storage when an external cache is active.
+
+This plugin does not install Redis or Memcached, replace `wp-content/object-cache.php`, or configure a host service. A host-supported persistent cache plugin/drop-in must already be available to retain object-cache entries between requests.
+
+Use **Clear Family Tree cache** to remove this site's relationship index and change the version used in plugin script and stylesheet URLs. The next tree request rebuilds the index. Only administrators can use this POST-and-nonce-protected action. The **Family Tree cache** item in the WordPress administrator toolbar performs the same scoped clear; its icon rotates while the request runs and announces success or failure. Save changed settings before using the settings-panel tool.
 
 Clearing preserves passwords, remembered family access, anti-spam limits, media-encryption keys and uploaded photographs. It does not flush other plugins' caches or host/CDN caches. **Private pages and API responses still use `no-store`; this feature does not enable public page caching.**
 
@@ -257,13 +312,20 @@ Old public photograph URLs, third-party copies and external caches are outside t
 
 ## Troubleshooting
 
+Errors naming `wp-family-tree/family-tree.php`, `class.node.php` or `class.tree.php` belong to the older WP Family Tree plugin. Deactivate that plugin after activating this replacement and keep its existing posts and media. The replacement reuses compatible data and provides its own guarded relationship handling; editing a different plugin's PHP files is not required. Errors from other plugins or their scheduled tasks need to be addressed in those plugins.
+
+
 | Problem | What to check |
 | --- | --- |
 | The tree is locked after activation | Set a family password, then test signed out; WordPress editing access and visitor password access are separate |
 | No people appear | Check the configured category, person checkbox, published status and starting person |
 | A person still opens in Gutenberg | Disable the person block-editor setting and confirm the post is included as a family person; use Add a person for new records |
 | The editor has an old photograph | Check the featured image and upload an uncropped original; framed images cannot recover an already cropped source |
-| Latvian labels do not appear | Check the post's Polylang language or plugin-interface selector; configure EN/LV languages and linked tree pages for theme synchronization |
+| A translation does not appear | Check enabled Languages presets, custom label JSON, the plugin-interface selector and Polylang page links; missing admin labels intentionally use English |
+| Object cache shows a fallback | Ask the host to enable a supported persistent cache backend; the plugin continues using WordPress transients |
+| Demo mode cannot be enabled | Check for real family posts including drafts and trash, an existing `demo` account, or a Multisite installation |
+| Gallery swiping does not change the photo | Exit photo zoom first; zoomed photos can be panned. Arrows and keyboard controls remain available |
+| Fullscreen keeps browser chrome on a phone | The in-page fullscreen fallback fills the viewport when the browser does not offer element fullscreen |
 | A former partner still appears as current | Inspect partner statuses on both records; former statuses take precedence when they conflict |
 | A child is missing a parent | Set the child's actual parent fields; a partner relationship alone does not create parentage |
 | Uploads stop below the configured limit | Review PHP `upload_max_filesize`, `post_max_size`, host request limits and mail-provider attachment limits |
@@ -277,17 +339,21 @@ Old public photograph URLs, third-party copies and external caches are outside t
 
 ## Īsā pamācība latviski
 
-1. Pilno `wp-my-family-tree-1.1.2.zip` pakotni instalējiet sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni**, aizstājot esošo spraudni. Ja saņemta `changed-files` pakotne, tās failus apvienojiet ar esošo spraudņa mapi, saglabājot pārējos failus; tā nav paredzēta WordPress augšupielādētājam. Datubāzes imports un motīva nomaiņa nav vajadzīga.
+1. Pilno `wp-my-family-tree-1.2.2.zip` pakotni instalējiet sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni**, aizstājot esošo spraudni. Ja saņemta `changed-files` pakotne, tās failus apvienojiet ar esošo spraudņa mapi, saglabājot pārējos failus; tā nav paredzēta WordPress augšupielādētājam. Datubāzes imports un motīva nomaiņa nav vajadzīga.
 2. Spraudņa iestatījumos izvēlieties dzimtas ierakstu kategoriju, sākuma personu un koka lapu. Lapā ievietojiet bloku **Family Tree** vai īskodu `[wp_my_family_tree]`.
 3. Personas rediģēšanā detalizētā forma atrodas uzreiz zem virsraksta. Virsrakstā norādiet personas pilnu vārdu, izvēlieties portretu, vecākus, partnerus, datumus un galeriju. Dzīvesstāsta redaktors atrodas zem formas. Bloku redaktoru personām pēc vajadzības var ieslēgt spraudņa iestatījumos.
 4. Pievienojiet e-pastu, tālruni, mobilo tālruni, adresi, mājaslapu un sociālo tīklu saites tikai tad, ja persona piekrīt tās kopīgot ar koka apmeklētājiem.
 5. Pašreizējam partnerim izvēlieties statusu **Kopā**; bijušajam partnerim norādiet atbilstošu šķiršanās statusu. Bērna kokā saglabājas abi norādītie vecāki. Jauns partneris nekļūst par bērna vecāku automātiski.
-6. Polylang iestatiet angļu un latviešu valodu, sasaistiet tulkotās koka lapas un ievietojiet tajās vienu un to pašu īskodu vai bloku. Personas formas uzraksti seko personas valodai. Spraudņa valodas pārslēgs maina uzrakstus, saglabājot ievadītās lauku vērtības un nesaglabātos personas datus.
+6. Sadaļā **Valodas** izvēlieties no 14 gatavām saskarnes valodām vai pievienojiet savas valodas un tulkojumus. Jaunai instalācijai noklusējums ir angļu valoda; esošie valodas iestatījumi tiek saglabāti. Polylang ir papildu iespēja lapu un dzīvesstāstu tulkošanai: sasaistiet tulkotās koka lapas un ievietojiet tajās vienu un to pašu īskodu vai bloku. Personas formas uzraksti seko personas valodai. Spraudņa valodas pārslēgs maina uzrakstus, saglabājot ievadītās lauku vērtības un nesaglabātos personas datus.
 7. Kontaktformā tiek prasīts **Vārds Uzvārds**. Var pievienot vienu fotogrāfiju līdz 10 MB pēc noklusējuma. Administrators var mainīt izmēru un atļautos formātus; servera ierobežojumi joprojām ir spēkā. Fotogrāfija tiek nosūtīta e-pastā, nevis publicēta multivides bibliotēkā.
 8. Kājene piedāvā Android un Apple instalēšanas iespējas. iPhone / iPad ierīcē izmantojiet Safari kopīgošanas izvēlni un **Add to Home Screen**. Dzimtas datiem nepieciešams interneta savienojums.
-9. Privātam kokam iestatiet vismaz 12 rakstzīmju paroli. Piekļuvi var atcerēties līdz 30 dienām. WordPress lietotājs ar rediģēšanas tiesībām personas logā redz nelielu rediģēšanas pogu.
+9. Privātam kokam iestatiet vismaz 12 rakstzīmju paroli. Piekļuvi var atcerēties līdz 30 dienām. WordPress lietotājs ar rediģēšanas tiesībām personas logā redz rediģēšanas pogu, kas atver personas redaktoru jaunā cilnē.
 10. Šifrētos attēlus un datubāzi vienmēr dublējiet kopā, lai saglabātu attēlu atšifrēšanas atslēgu.
-11. Sadaļā **Veiktspēja un kešatmiņa** pārvaldiet radniecības indeksa kešatmiņu, komentārus, emocijzīmes un lapas apjoma samazināšanu. Poga **Iztīrīt dzimtas koka kešatmiņu** saglabā paroles, atcerēto piekļuvi un aizsargātos attēlus. Samazinātā motīva stilu kopa ir papildu iespēja, kas pēc noklusējuma ir izslēgta.
+11. Sadaļā **Veiktspēja un kešatmiņa** pārvaldiet radniecības indeksa kešatmiņu, komentārus, emocijzīmes un lapas apjoma samazināšanu. Var izmantot hostinga jau konfigurēto objektu kešatmiņu; spraudnis pats Redis neinstalē. Kešatmiņu var iztīrīt arī administratora rīkjoslā. Poga **Iztīrīt dzimtas koka kešatmiņu** saglabā paroles, atcerēto piekļuvi un aizsargātos attēlus. Samazinātā motīva stilu kopa ir papildu iespēja, kas pēc noklusējuma ir izslēgta.
+12. Personas galerijā attēlus var pāršķirt ar horizontālu vilcienu vai bultiņām. Koka pilnekrāna skatā pieejama aizvēršanas poga; attēla saglabāšana un drukāšana ietver tikai koku.
+13. Demonstrācijas imports pievieno izdomātu kino tēlu piemērus, nemainot esošos ierakstus. Koplietojamais demonstrācijas režīms jāieslēdz atsevišķi tikai izolētā vietnē bez īstiem dzimtas ierakstiem. Šis režīms izveido ierobežotu demonstrācijas redaktoru, nevis parastu WordPress redaktora kontu; pilni nosacījumi un piekļuves dati aprakstīti šīs pamācības demonstrācijas sadaļā.
+14. Koplietojamā demonstrācijā apmeklētāju labotie vārdi, stāsti, dzimšanas datumi, vietas un nodarbošanās tiek atjaunoti no saglabātā sākotnējā stāvokļa ik pēc 24 stundām. Sadaļā **Demo** redzams nākamais atiestatīšanas laiks un pieejama tūlītēja atiestatīšana. Atsevišķs rezerves kopiju spraudnis nav vajadzīgs. Ja vietne nav apmeklēta, nokavēta atiestatīšana tiek veikta pirms nākamās piekļuves demonstrācijai.
+15. Kājenes izstrādātāja norāde atrodas tieši zem kreisā saukļa. Poga **Pieteikties** ar aploksnes ikonu atver saziņas formu dzimtas administratoram. Tajā var nosūtīt vārdu, e-pastu, aprakstu par radinieku un pēc izvēles pievienot fotogrāfiju. Tā darbojas arī tad, ja apmeklētājs jau ir pieslēdzies WordPress.
 
 ## Source, repository and licensing
 
@@ -300,7 +366,7 @@ npm ci
 npm run build
 ```
 
-The build uses the exact esbuild version in `package-lock.json` and requires Node 18 or newer. Keep `node_modules/` out of release archives and the repository. Use the readable source files for development; do not edit generated `.min.*` files directly.
+The build uses esbuild **0.25.5**, pinned in `package-lock.json`, and requires Node 18 or newer. Keep `node_modules/` out of release archives and the repository. Use the readable source files for development; do not edit generated `.min.*` files directly.
 
 | Path | Purpose |
 | --- | --- |
@@ -313,19 +379,33 @@ The build uses the exact esbuild version in `package-lock.json` and requires Nod
 | `assets/icons/`, `touch.png` | Original oak artwork, favicon and installation icons |
 | `assets/editor.js`, `assets/editor.asset.php`, `block.json` | WordPress page block and dependencies |
 | `templates/standalone.php` | Optional full-window template |
-| `languages/` | Translation sources, Latvian MO and block translation catalogs |
+| `languages/` | POT/PO/MO and block catalogs; `interfaces/*.json` contains frontend and administrator label dictionaries |
+| `assets/demo/` | Original monogram and landscape illustrations with licensing notes |
 | `wpml-config.xml` | Person-field translation and synchronization rules |
 | `scripts/build-assets.mjs`, `package.json`, `package-lock.json` | Reproducible minified-asset build; development only |
 | `docs/screenshot.png` | Fictional demonstration screenshot rendered above on GitHub |
-| `readme.md`, `LICENSE` | This guide and the complete license |
+| `readme.md`, `readme.txt`, `LICENSE` | This guide, the WordPress.org directory description and the complete license |
+| `docs/wordpress-org.md`, `SECURITY.md` | Submission/release notes and the security model |
 
-Preserve this folder structure when replacing the public Git repository. Do not flatten includes, assets or language files into the repository root. For an installable ZIP, place these files inside one `wp-my-family-tree/` directory. This archive intentionally uses `readme.md` only and contains no `readme.txt` or separate `HELP.txt`.
+Preserve this folder structure when replacing the public Git repository. Do not flatten includes, assets or language files into the repository root. For an installable ZIP, place these files inside one `wp-my-family-tree/` directory. The Markdown guide serves GitHub and local users; `readme.txt` follows the WordPress.org directory format. Both are included for public distribution.
 
 Keep databases, real family media, Updraft backup sets, passwords, keys, test credentials and production configuration out of the public repository. The included screenshot and icon artwork are suitable for the public project. Preparing this package does not publish it to GitHub or submit it to the WordPress.org directory.
 
 Copyright © 2026 **Raivis Kalnins / DigitalPulse**. Licensed under the [GNU General Public License, version 3 or later](LICENSE). Icon artwork is included under the same license. Legacy-data compatibility refers to WP Family Tree by Arvind Shah; this is a separate plugin using compatible existing data.
 
 ## Changelog
+
+### 1.2.2
+
+Restored the footer contact modal for signed-out and signed-in visitors, replacing the unintended account navigation. Updated Latvian Pieteikties labels and relative-description guidance. Existing photo upload, validation, recipient, anti-spam controls and demo mail restrictions are preserved.
+
+### 1.2.1
+
+Built-in 24-hour restoration of shared demo edits with a retained baseline, overdue recovery, manual reset and protected ownership checks. Moved the optional credit beneath the footer motto and added WordPress sign-in/dashboard controls. Improved relationship connector readability.
+
+### 1.2.0
+
+Touch gallery swiping; new-tab person editing; fullscreen tree with an in-page fallback; tree-only PNG/print; compact mail-button footer; extensible interface languages and fourteen frontend presets; object-cache backend selection and animated administrator toolbar clearing; additive cinema demo content and optional isolated shared editor; legacy-plugin conflict guidance and WordPress.org-format documentation.
 
 ### 1.1.2
 

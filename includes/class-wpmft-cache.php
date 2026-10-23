@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 final class WPMFT_Cache {
 	const GENERATION_OPTION = 'wpmft_cache_generation';
+	const OBJECT_GROUP = 'wpmft_performance';
 	private static $dirty = array();
 	private static $build_generation = null;
 
@@ -33,6 +34,24 @@ final class WPMFT_Cache {
 	private static function ttl() { return max( 1, min( 60, absint( wpmft_settings()['cache_ttl'] ?? 15 ) ) ); }
 	private static function dirty() { return ! empty( self::$dirty[get_current_blog_id()] ); }
 
+	private static function requested_backend() {
+		$backend = wpmft_settings()['cache_backend'] ?? 'auto';
+		return in_array( $backend, array( 'auto', 'transient', 'object' ), true ) ? $backend : 'auto';
+	}
+
+	/** Object caching needs a persistent cache supplied by the host or another plugin. */
+	private static function backend() {
+		return 'transient' !== self::requested_backend() && wp_using_ext_object_cache() ? 'object' : 'transient';
+	}
+
+	private static function read_record( $key ) {
+		return 'object' === self::backend() ? wp_cache_get( $key, self::OBJECT_GROUP ) : get_transient( $key );
+	}
+
+	private static function store_record( $key, $record, $ttl ) {
+		return 'object' === self::backend() ? wp_cache_set( $key, $record, self::OBJECT_GROUP, $ttl ) : set_transient( $key, $record, $ttl );
+	}
+
 	/** Read the tiny generation directly so another worker's invalidation is not hidden by a local option cache. */
 	private static function generation() {
 		global $wpdb;
@@ -52,7 +71,11 @@ final class WPMFT_Cache {
 	private static function rotate_generation() {
 		$old = self::generation();
 		// Only this performance namespace is deleted. Access/rate-limit transients are unrelated.
-		if ( '' !== $old ) { delete_transient( self::key( $old ) ); }
+		if ( '' !== $old ) {
+			// Delete both locations, including after switching the selected backend.
+			delete_transient( self::key( $old ) );
+			wp_cache_delete( self::key( $old ), self::OBJECT_GROUP );
+		}
 		update_option( self::GENERATION_OPTION, wp_generate_uuid4(), false );
 		self::$build_generation = null;
 	}
@@ -60,6 +83,13 @@ final class WPMFT_Cache {
 	/** Clear this site's plugin performance cache; old in-flight builders keep an obsolete key. */
 	public static function clear() {
 		self::invalidate();
+	}
+
+	/** Shared manual purge for the settings page and the authenticated toolbar action. */
+	public static function purge() {
+		self::clear();
+		update_option( 'wpmft_asset_revision', str_replace( '-', '', wp_generate_uuid4() ), false );
+		update_option( 'wpmft_cache_cleared_at', time(), false );
 	}
 
 	private static function invalidate() {
@@ -142,7 +172,7 @@ final class WPMFT_Cache {
 
 	private static function record( $generation ) {
 		if ( '' === $generation ) { return false; }
-		$record = get_transient( self::key( $generation ) );
+		$record = self::read_record( self::key( $generation ) );
 		if ( ! is_array( $record ) || 1 !== ( $record['schema'] ?? 0 ) || $generation !== ( $record['generation'] ?? '' ) || ! is_int( $record['built_at'] ?? null ) || ! is_int( $record['expires_at'] ?? null ) || $record['expires_at'] <= time() || ! self::valid_graph( $record['graph'] ?? null ) ) { return false; }
 		return $record;
 	}
@@ -159,12 +189,21 @@ final class WPMFT_Cache {
 		$generation = self::$build_generation;
 		if ( ! self::enabled() || self::dirty() || ! $generation || ! self::valid_graph( $graph ) || $generation !== self::generation() ) { return false; }
 		$ttl = self::ttl() * MINUTE_IN_SECONDS;
-		return set_transient( self::key( $generation ), array( 'schema' => 1, 'generation' => $generation, 'built_at' => time(), 'expires_at' => time() + $ttl, 'graph' => $graph ), $ttl );
+		return self::store_record( self::key( $generation ), array( 'schema' => 1, 'generation' => $generation, 'built_at' => time(), 'expires_at' => time() + $ttl, 'graph' => $graph ), $ttl );
 	}
 
 	public static function status() {
 		$enabled = self::enabled();
 		$record = $enabled && ! self::dirty() ? self::record( self::generation() ) : false;
-		return array( 'enabled' => $enabled, 'ttl' => self::ttl(), 'warm' => (bool) $record, 'built_at' => $record ? $record['built_at'] : 0, 'persistent_object_cache' => wp_using_ext_object_cache() );
+		return array(
+			'enabled' => $enabled,
+			'ttl' => self::ttl(),
+			'warm' => (bool) $record,
+			'built_at' => $record ? $record['built_at'] : 0,
+			'backend' => self::backend(),
+			'requested_backend' => self::requested_backend(),
+			'persistent_object_cache' => (bool) wp_using_ext_object_cache(),
+			'backend_fallback' => 'object' === self::requested_backend() && ! wp_using_ext_object_cache(),
+		);
 	}
 }

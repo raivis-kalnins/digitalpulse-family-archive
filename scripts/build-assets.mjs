@@ -3,7 +3,7 @@ import {build} from 'esbuild';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-for (const name of ['app.js', 'admin.js', 'install.js', 'app.css', 'admin.css']) {
+for (const name of ['app.js', 'admin.js', 'install.js', 'app.css', 'admin.css', 'toolbar.js', 'toolbar.css', 'demo-admin.js', 'demo-admin.css']) {
     await build({
         absWorkingDir:root,
         entryPoints:['assets/' + name],

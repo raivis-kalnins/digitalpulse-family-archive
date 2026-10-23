@@ -3,16 +3,20 @@
     'use strict';
     var config = window.WPMFT_ADMIN || {};
     var strings = config.strings || {};
-    var dictionary = config.translations || {};
+    var catalogs = config.catalogs || {lv: config.translations || {}};
+    var dictionary = Object.create(null);
     var reverseDictionary = Object.create(null);
-    Object.keys(dictionary).forEach(function (key) { reverseDictionary[dictionary[key]] = key; });
+    Object.keys(catalogs).forEach(function (language) {
+        Object.keys(catalogs[language]).forEach(function (key) { dictionary[key] = true; reverseDictionary[catalogs[language][key]] = key; });
+    });
+    function translatedSource(source) { return (catalogs[config.language] || {})[source] || source; }
     function sourceText(text) {
         if (Object.prototype.hasOwnProperty.call(dictionary, text)) return text;
         return reverseDictionary[text] || null;
     }
     function translate(text) {
         var source = sourceText(text);
-        return source ? (config.language === 'lv' ? dictionary[source] : source) : text;
+        return source ? translatedSource(source) : text;
     }
     var sourceStrings = {};
     Object.keys(strings).forEach(function (key) { sourceStrings[key] = sourceText(strings[key]) || strings[key]; });
@@ -35,7 +39,7 @@
                 saved = {source: source, before: node.nodeValue.slice(0, node.nodeValue.indexOf(text)), after: node.nodeValue.slice(node.nodeValue.indexOf(text) + text.length)};
                 textSources.set(node, saved);
             }
-            node.nodeValue = saved.before + (config.language === 'lv' ? dictionary[saved.source] : saved.source) + saved.after;
+            node.nodeValue = saved.before + translatedSource(saved.source) + saved.after;
         }
         root.querySelectorAll('[placeholder],[aria-label],[title],input[type="submit"]').forEach(function (element) {
             var saved = attributeSources.get(element) || {};
@@ -43,7 +47,7 @@
                 var source = saved[attribute] || sourceText(element.getAttribute(attribute) || '');
                 if (!source) return;
                 saved[attribute] = source;
-                element.setAttribute(attribute, config.language === 'lv' ? dictionary[source] : source);
+                element.setAttribute(attribute, translatedSource(source));
             });
             attributeSources.set(element, saved);
         });
@@ -51,7 +55,7 @@
     }
 
     function setLanguage(language) {
-        if (language !== 'en' && language !== 'lv') return;
+        if (!(config.languages || ['en', 'lv']).includes(language)) return;
         config.language = language;
         Object.keys(sourceStrings).forEach(function (key) { strings[key] = translate(sourceStrings[key]); });
         document.querySelectorAll('.wpmft-settings,.wpmft-person-panel,#wpmft-person,.wpmft-biography-heading,#toplevel_page_wpmft .wp-menu-name,#toplevel_page_wpmft .wp-submenu a').forEach(translateLabels);
@@ -61,7 +65,7 @@
     }
 
     function ready() {
-        setLanguage(config.language === 'lv' ? 'lv' : 'en');
+        setLanguage(config.language || 'en');
         document.addEventListener('change', function (event) {
             if (event.target.matches('.wpmft-admin-language,.post_lang_choice,#post_lang_choice,select[name="post_lang_choice"]')) setLanguage(event.target.value);
         });
@@ -77,6 +81,58 @@
             var language = document.createElement('input');
             language.type = 'hidden'; language.name = 'wpmft_admin_lang'; language.value = config.language;
             form.append(language);
+        });
+
+        var languageRows = document.getElementById('wpmft-language-rows');
+        var languageTemplate = document.getElementById('wpmft-language-template');
+        var addLanguage = document.getElementById('wpmft-add-language');
+        if (languageRows && languageTemplate && addLanguage) {
+            var languageIndex = languageRows.children.length;
+            addLanguage.addEventListener('click', function () {
+                var fragment = languageTemplate.content.cloneNode(true);
+                fragment.querySelectorAll('[name]').forEach(function (field) { field.name = field.name.replace('__INDEX__', String(languageIndex)); });
+                languageIndex++;
+                var row = fragment.querySelector('.wpmft-language-row');
+                row.open = true;
+                languageRows.append(fragment);
+                var code = row.querySelector('input[name$="[slug]"]');
+                if (code) code.focus();
+            });
+            languageRows.addEventListener('input', function (event) {
+                var field = event.target;
+                if (!field.matches('input[name$="[name]"],input[name$="[slug]"]')) return;
+                var row = field.closest('.wpmft-language-row');
+                var code = row.querySelector('input[name$="[slug]"]').value.trim();
+                var name = row.querySelector('input[name$="[name]"]').value.trim();
+                row.querySelector('.wpmft-language-row-title').textContent = name || code || 'New language';
+                row.querySelector('summary small').textContent = code;
+                var defaults = document.querySelector('[name="wpmft_default_language"]');
+                if (defaults && /^[a-z]{2,3}(?:[-_][a-z0-9]{2,8})*$/.test(code)) {
+                    var option = Array.from(defaults.options).find(function (item) { return item.value === code; });
+                    if (!option) { option = document.createElement('option'); option.value = code; defaults.append(option); }
+                    option.textContent = name || code;
+                }
+            });
+        }
+
+        var languageForm = document.getElementById('wpmft-language-tool');
+        if (languageForm && languageRows) languageForm.addEventListener('submit', function () {
+            var rows = [];
+            var fields = [];
+            languageRows.querySelectorAll('.wpmft-language-row').forEach(function (row) {
+                var entry = {};
+                row.querySelectorAll('[name]').forEach(function (field) {
+                    var match = field.name.match(/^wpmft_languages\[\d+\]\[([a-z_]+)\]$/);
+                    if (!match) return;
+                    entry[match[1]] = field.type === 'checkbox' ? (field.checked ? '1' : '') : field.value;
+                    fields.push(field);
+                });
+                rows.push(entry);
+            });
+            var payload = document.createElement('input');
+            payload.type = 'hidden'; payload.name = 'wpmft_languages_json'; payload.value = JSON.stringify(rows);
+            languageForm.append(payload);
+            fields.forEach(function (field) { field.disabled = true; });
         });
 
         var classicPerson = document.querySelector('.wpmft-person-editor[data-classic-person="1"]');
@@ -143,6 +199,8 @@
             function showPanel(hash) {
                 var active = sections.find(function (panel) { return '#' + panel.id === hash; }) || sections[0];
                 sections.forEach(function (panel) { panel.hidden = panel !== active; });
+                var saveBar = document.querySelector('.wpmft-save-bar');
+                if (saveBar) saveBar.hidden = ['wpmft-languages', 'wpmft-demo'].includes(active.id);
 				var sectionField = document.querySelector('[name="wpmft_section"]');
 				if (sectionField) sectionField.value = active.id.replace('wpmft-', '');
                 links.forEach(function (link) {
@@ -158,6 +216,7 @@
                     showPanel(link.hash);
                 });
             });
+            window.addEventListener('hashchange', function () { showPanel(window.location.hash); });
             showPanel(window.location.hash);
         }
 

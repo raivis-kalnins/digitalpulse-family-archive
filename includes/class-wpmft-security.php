@@ -21,7 +21,7 @@ final class WPMFT_Security {
 		add_filter( 'oembed_response_data', array( __CLASS__, 'guard_oembed' ), 10, 2 );
 		add_filter( 'xmlrpc_enabled', array( __CLASS__, 'xmlrpc' ) );
 	}
-	public static function protected_mode() { return ! empty( wpmft_settings()['password_protection'] ); }
+	public static function protected_mode() { return WPMFT_Demo::guard_required() || ! empty( wpmft_settings()['password_protection'] ); }
 	public static function no_cache() {
 		foreach ( array( 'DONOTCACHEPAGE', 'DONOTCACHEDB', 'DONOTCACHEOBJECT' ) as $constant ) { if ( ! defined( $constant ) ) { define( $constant, true ); } }
 		if ( ! headers_sent() ) {
@@ -59,7 +59,10 @@ final class WPMFT_Security {
 		return true;
 	}
 	public static function authorized() {
-		if ( ! self::protected_mode() || wpmft_staff() ) { return true; }
+		if ( WPMFT_Demo::is_demo_user() && ! WPMFT_Demo::active() ) { return false; }
+		if ( wpmft_staff() ) { return true; }
+		if ( WPMFT_Demo::guard_required() ) { return WPMFT_Demo::front_authorized(); }
+		if ( ! self::protected_mode() ) { return true; }
 		$token = isset( $_COOKIE['wpmft_session'] ) && is_string( $_COOKIE['wpmft_session'] ) ? (string) wp_unslash( $_COOKIE['wpmft_session'] ) : '';
 		if ( ! preg_match( '/^[a-f0-9]{64}$/D', $token ) ) { return false; }
 		$session = get_transient( 'wpmft_session_' . hash( 'sha256', $token ) );
@@ -68,7 +71,7 @@ final class WPMFT_Security {
 	}
 	public static function rate_limit( $scope, $limit, $window ) {
 		// REMOTE_ADDR is used deliberately: arbitrary forwarded headers must not bypass throttling.
-		$ip = (string) ( $_SERVER['REMOTE_ADDR'] ?? 'unknown' );
+		$ip = isset( $_SERVER['REMOTE_ADDR'] ) && is_string( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown';
 		$key = 'wpmft_rate_' . hash_hmac( 'sha256', $scope . '|' . $ip, wp_salt( 'auth' ) );
 		$state = get_transient( $key );
 		if ( ! is_array( $state ) || $state['until'] <= time() ) { $state = array( 'count' => 0, 'until' => time() + $window ); }
@@ -79,6 +82,7 @@ final class WPMFT_Security {
 	}
 	public static function unlock( $password, $remember ) {
 		if ( ! self::rate_limit( 'unlock', 10, 15 * MINUTE_IN_SECONDS ) ) { return new WP_Error( 'rate_limit', __( 'Too many attempts. Please try again in 15 minutes.', 'wp-my-family-tree' ) ); }
+		if ( WPMFT_Demo::guard_required() ) { return WPMFT_Demo::unlock( $password, $remember ); }
 		$s = wpmft_settings();
 		if ( ! $s['password_hash'] || ! wp_check_password( $password, $s['password_hash'] ) ) { return new WP_Error( 'password', __( 'The password is incorrect or family access has not been configured.', 'wp-my-family-tree' ) ); }
 		self::logout();
@@ -89,6 +93,7 @@ final class WPMFT_Security {
 		return true;
 	}
 	public static function logout() {
+		WPMFT_Demo::logout();
 		$token = isset( $_COOKIE['wpmft_session'] ) && is_string( $_COOKIE['wpmft_session'] ) ? (string) wp_unslash( $_COOKIE['wpmft_session'] ) : '';
 		if ( preg_match( '/^[a-f0-9]{64}$/D', $token ) ) { delete_transient( 'wpmft_session_' . hash( 'sha256', $token ) ); }
 		self::cookie( 'wpmft_session', '', time() - HOUR_IN_SECONDS );
@@ -99,7 +104,8 @@ final class WPMFT_Security {
 		if ( ! $s['hcaptcha_site_key'] || ! $s['hcaptcha_secret'] ) { return new WP_Error( 'captcha_config', __( 'The security challenge is not configured. Please contact the site administrator.', 'wp-my-family-tree' ) ); }
 		$token = isset( $_POST['h-captcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['h-captcha-response'] ) ) : '';
 		if ( ! $token || strlen( $token ) > 8192 ) { return new WP_Error( 'captcha', __( 'Please complete the security challenge.', 'wp-my-family-tree' ) ); }
-		$response = wp_remote_post( 'https://api.hcaptcha.com/siteverify', array( 'timeout' => 15, 'body' => array( 'secret' => $s['hcaptcha_secret'], 'sitekey' => $s['hcaptcha_site_key'], 'response' => $token, 'remoteip' => sanitize_text_field( $_SERVER['REMOTE_ADDR'] ?? '' ) ) ) );
+		$ip = isset( $_SERVER['REMOTE_ADDR'] ) && is_string( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+		$response = wp_remote_post( 'https://api.hcaptcha.com/siteverify', array( 'timeout' => 15, 'body' => array( 'secret' => $s['hcaptcha_secret'], 'sitekey' => $s['hcaptcha_site_key'], 'response' => $token, 'remoteip' => $ip ) ) );
 		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) { return new WP_Error( 'captcha_unavailable', __( 'The security challenge could not be verified. Please try again.', 'wp-my-family-tree' ) ); }
 		$data = json_decode( wp_remote_retrieve_body( $response ), true );
 		if ( empty( $data['success'] ) ) { return new WP_Error( 'captcha', __( 'The security challenge expired or failed. Please try again.', 'wp-my-family-tree' ) ); }

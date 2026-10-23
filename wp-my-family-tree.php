@@ -2,8 +2,8 @@
 /**
  * Plugin Name: WP My Family Tree
  * Plugin URI: https://github.com/raivis-kalnins/wp-my-family-tree
- * Description: A private, interactive oak family tree with person galleries, a block and shortcode, and English/Latvian support. Reuses WP Family Tree posts.
- * Version: 1.1.2
+ * Description: A private, interactive family tree with touch galleries, multilingual labels, demo tools, a block and shortcode. Reuses WP Family Tree posts.
+ * Version: 1.2.2
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Author: Raivis Kalnins — DigitalPulse
@@ -16,11 +16,12 @@
  * @package WPMyFamilyTree
  */
 defined( 'ABSPATH' ) || exit;
-define( 'WPMFT_VERSION', '1.1.2' );
+define( 'WPMFT_VERSION', '1.2.2' );
 define( 'WPMFT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WPMFT_URL', plugin_dir_url( __FILE__ ) );
 
 require_once WPMFT_DIR . 'includes/functions.php';
+require_once WPMFT_DIR . 'includes/class-wpmft-languages.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-data.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-security.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-media.php';
@@ -29,6 +30,9 @@ require_once WPMFT_DIR . 'includes/class-wpmft-api.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-admin.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-app.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-cache.php';
+require_once WPMFT_DIR . 'includes/class-wpmft-toolbar.php';
+require_once WPMFT_DIR . 'includes/class-wpmft-compatibility.php';
+require_once WPMFT_DIR . 'includes/class-wpmft-demo.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-performance.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-output.php';
 
@@ -47,6 +51,7 @@ function wpmft_activate() {
 	update_option( 'wpmft_settings', $s, false );
 }
 register_activation_hook( __FILE__, 'wpmft_activate' );
+register_deactivation_hook( __FILE__, array( 'WPMFT_Demo', 'deactivate' ) );
 
 add_action( 'init', function () {
 	load_plugin_textdomain( 'wp-my-family-tree', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
@@ -80,8 +85,9 @@ function wpmft_shortcode( $attributes = array(), $content = null, $tag = 'wp_my_
 	wp_localize_script( 'wpmft-app', 'WPMFT_CONFIG', array(
 		'ajaxUrl' => admin_url( 'admin-ajax.php' ), 'rootId' => $root,
 		'language' => $language, 'i18n' => wpmft_language_config(), 'settings' => $public_settings,
+		'translations' => WPMFT_Languages::dictionaries( 'frontend', wpmft_polylang_languages() ),
 	) );
-	$title = $language === 'lv' ? $public_settings['titleLv'] : $public_settings['title'];
+	$title = $public_settings['translations'][$language]['title'] ?? $public_settings['title'];
 	return '<div class="wpmft-app" data-view="' . ( $attributes['view'] === 'list' ? 'list' : 'tree' ) . '" data-root="' . esc_attr( $root ) . '"><div class="wpmft-boot"><h1>' . esc_html( $title ) . '</h1><p role="status">' . esc_html__( 'Loading the family tree…', 'wp-my-family-tree' ) . '</p><noscript>' . esc_html__( 'Please enable JavaScript to explore this interactive family tree.', 'wp-my-family-tree' ) . '</noscript></div></div>';
 }
 
@@ -94,6 +100,10 @@ add_action( 'wp_enqueue_scripts', function () {
 	if ( wpmft_is_tree_page() ) { wp_enqueue_style( 'wpmft-app' ); wp_enqueue_script( 'wpmft-app' ); }
 } );
 
+WPMFT_Languages::init();
+WPMFT_Demo::init();
+WPMFT_Toolbar::init();
+WPMFT_Compatibility::init();
 WPMFT_Security::init();
 WPMFT_Media::init();
 WPMFT_API::init();
