@@ -32,6 +32,8 @@
             noPeople: 'Your family story starts here.', noPeopleHelp: 'The administrator can add a person in the WordPress dashboard and choose the family category.',
             about: 'Life story', details: 'Life details', born: 'Born', died: 'Died', birthPlace: 'Birthplace', deathPlace: 'Place of death', location: 'Location', occupation: 'Occupation', maidenName: 'Birth surname',
             memories: 'Photographs & memories', gallery: 'Open photograph gallery', photos: 'photographs', photo: 'Photograph', previousPhoto: 'Previous photograph', nextPhoto: 'Next photograph', zoomPhoto: 'Zoom photograph',
+            photoLoading: 'Loading photograph…', photoLoadError: 'This photograph could not load.', photoRetry: 'Load photograph again', photoStory: 'Photograph story', photoDate: 'When',
+            whatsapp: 'WhatsApp', whatsappAdmin: 'Chat with the family administrator on WhatsApp', whatsappPerson: 'Chat with {name} on WhatsApp',
             noBiography: 'There is more to this story. Contact the family administrator to share a memory or photograph.', connections: 'Family connections', noConnections: 'No family connections have been added yet.',
             contactHeading: 'Keep the story growing', contactIntro: 'Have a memory, a photograph or a correction to share? Send a message to the family administrator.',
             name: 'Your full name', email: 'Email address', message: 'Your message', messagePlaceholder: 'Tell us what you would like to share…', send: 'Send message', sending: 'Sending…',
@@ -77,6 +79,8 @@
             noPeople: 'Šeit sākas tavas dzimtas stāsts.', noPeopleHelp: 'Administrators var pievienot cilvēku WordPress vadības panelī un izvēlēties dzimtas kategoriju.',
             about: 'Dzīvesstāsts', details: 'Dzīves dati', born: 'Dzimšanas datums', died: 'Miršanas datums', birthPlace: 'Dzimšanas vieta', deathPlace: 'Miršanas vieta', location: 'Dzīvesvieta', occupation: 'Nodarbošanās', maidenName: 'Dzimtais uzvārds',
             memories: 'Fotogrāfijas un atmiņas', gallery: 'Atvērt fotogaleriju', photos: 'fotogrāfijas', photo: 'Fotogrāfija', previousPhoto: 'Iepriekšējā fotogrāfija', nextPhoto: 'Nākamā fotogrāfija', zoomPhoto: 'Pietuvināt fotogrāfiju',
+            photoLoading: 'Ielādē fotogrāfiju…', photoLoadError: 'Šo fotogrāfiju neizdevās ielādēt.', photoRetry: 'Ielādēt fotogrāfiju vēlreiz', photoStory: 'Fotogrāfijas stāsts', photoDate: 'Kad',
+            whatsapp: 'WhatsApp', whatsappAdmin: 'Sazināties ar dzimtas administratoru WhatsApp', whatsappPerson: 'Sazināties ar {name} WhatsApp',
             noBiography: 'Šim stāstam vēl ir turpinājums. Sazinies ar dzimtas administratoru, lai pievienotu atmiņu vai fotogrāfiju.', connections: 'Ģimenes saites', noConnections: 'Ģimenes saites vēl nav pievienotas.',
             contactHeading: 'Pieteikties', contactIntro: 'Sazinies ar dzimtas administratoru: nosūti foto un aprakstu par radinieku, atmiņu vai precizējumu.',
             name: 'Vārds Uzvārds', email: 'E-pasta adrese', message: 'Apraksts par radinieku vai ziņa', messagePlaceholder: 'Ieraksti radinieka vārdu, saistību ar dzimtu un informāciju, kuru vēlies papildināt…', send: 'Nosūtīt ziņu', sending: 'Nosūta…',
@@ -122,6 +126,7 @@
         edit: 'm16 3 5 5M4 15 17 2l5 5L9 20l-7 2zM4 15l5 5',
         phone: 'M7 3H3c-1 10 8 19 18 18v-4l-5-3-2 3a18 18 0 0 1-7-7l3-2z',
         mobile: 'M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2ZM10 5h4M12 18h.01',
+        whatsapp: 'M12.04 2a9.93 9.93 0 0 0-8.58 14.96L2 22l5.18-1.36A10 10 0 1 0 12.04 2Zm0 18.18a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.07.8.82-3-.2-.31a8.23 8.23 0 1 1 6.93 3.83Zm4.52-6.15c-.25-.13-1.47-.73-1.7-.81-.23-.09-.4-.13-.57.13-.17.25-.65.81-.8.98-.15.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.15-.25-.02-.38.11-.51.11-.11.25-.29.37-.44.13-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.13-.57-1.38-.78-1.88-.2-.49-.41-.42-.57-.43h-.49c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1s.9 2.44 1.03 2.61c.13.17 1.77 2.71 4.29 3.8.6.26 1.07.41 1.44.52.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.15-1.18-.06-.11-.23-.17-.48-.29Z',
         globe: 'M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0ZM2 12h20M12 2c5 5 5 15 0 20-5-5-5-15 0-20Z',
         external: 'M15 3h6v6m0-6L10 14M10 3H3v18h18v-7',
         share: 'M12 15V2m-4 4 4-4 4 4M7 9H3v12h18V9h-4',
@@ -159,6 +164,30 @@
         if (typeof url !== 'string' || !url.trim()) return '';
         try { const u = new URL(url, location.href); return /^https?:$/.test(u.protocol) && !u.username && !u.password ? u.href : ''; } catch (_) { return ''; }
     };
+    const whatsappLink = url => {
+        const safe = validLink(url); if (!safe) return '';
+        const link = new URL(safe);
+        return link.origin === 'https://wa.me' && /^\/[1-9]\d{6,14}$/.test(link.pathname) && !link.search && !link.hash ? safe : '';
+    };
+    const photoSrcset = value => typeof value === 'string' ? value.split(',').map(item => {
+        const match = item.trim().match(/^(\S+)\s+([1-9]\d{0,4})w$/);
+        return match && Number(match[2]) <= 16000 && validPhoto(match[1]) ? validPhoto(match[1]) + ' ' + match[2] + 'w' : '';
+    }).filter(Boolean).join(', ') : '';
+    const photoSetWidth = set => Math.max(0, ...set.split(',').map(item => Number(item.trim().match(/\s(\d+)w$/)?.[1]) || 0));
+    const photoPreviewWidth = photo => {
+        const width = Number(photo.width) || 0, height = Number(photo.height) || 0;
+        return Math.floor(width * Math.min(1, 1600 / Math.max(1, width, height)));
+    };
+    const photoPreview = photo => {
+        const set = photoSrcset(photo.srcset), complete = photoSetWidth(set) + 1 >= photoPreviewWidth(photo);
+        return { src: complete ? (photo.display || photo.url) : photo.url, srcset: complete ? set : '' };
+    };
+    const photoSources = (photo, mode) => (Array.isArray(photo?.sources) ? photo.sources : []).filter(source => {
+        const set = photoSrcset(source.srcset);
+        // A thumbnail-only optimized set must not replace a sharper full-screen fallback.
+        return ['image/avif', 'image/webp'].includes(source.type) && set && (mode === 'thumb' || photoSetWidth(set) + 1 >= photoPreviewWidth(photo));
+    });
+    const photoStory = photo => typeof photo.description === 'string' ? photo.description : (typeof photo.caption === 'string' ? photo.caption : '');
     const fileSize = (bytes, lang) => new Intl.NumberFormat(localeFor(lang), { maximumFractionDigits: 1 }).format(bytes / (bytes >= 1048576 ? 1048576 : 1024)) + (bytes >= 1048576 ? ' MB' : ' KB');
     const photoConfig = upload => {
         const safeFormats = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
@@ -180,7 +209,7 @@
         return parsed.searchParams.get('action') === 'wpmft_media' ? 'attachment:' + parsed.searchParams.get('id') : safe;
     };
     function Icon({ name, size = 20, ...props }) {
-        return h('svg', { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.65, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true, focusable: false, ...props }, h('path', { d: PATHS[name] || PATHS.leaf }));
+        return h('svg', { width: size, height: size, viewBox: '0 0 24 24', fill: name === 'whatsapp' ? 'currentColor' : 'none', stroke: name === 'whatsapp' ? 'none' : 'currentColor', strokeWidth: 1.65, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true, focusable: false, ...props }, h('path', { d: PATHS[name] || PATHS.leaf }));
     }
     // Original inline vectors keep language flags consistent without remote assets or emoji fonts.
     const languageCountries = { en: 'US', es: 'ES', pl: 'PL', fr: 'FR', de: 'DE', lv: 'LV', lt: 'LT', et: 'EE', da: 'DK', sv: 'SE', nb: 'NO', nn: 'NO', fi: 'FI', is: 'IS' };
@@ -301,12 +330,57 @@
         return children ? h('div', { className: 'wpmft-message is-' + kind, role: kind === 'error' ? 'alert' : 'status' }, h(Icon, { name: kind === 'error' ? 'info' : 'check', size: 18 }), h('span', null, children)) : null;
     }
     function Photo({ person, className = '', size = 64, leaf = false, lazy = true }) {
-        const [failed, setFailed] = useState(false);
+        const image = useRef(null);
+        const [result, setResult] = useState({ url: '', status: 'loading' });
         const url = validPhoto(person?.photo || person?.thumb || person?.url);
-        useEffect(() => setFailed(false), [url]);
-        return h('span', { className: cls('wpmft-avatar', className, leaf && 'is-leaf'), style: { '--avatar-size': size + 'px' } },
-            url && !failed ? h('img', { src: url, alt: '', loading: lazy ? 'lazy' : 'eager', decoding: 'async', draggable: false, onError: () => setFailed(true) }) : h('span', { className: 'wpmft-initials', 'aria-hidden': true }, initial(person?.name)),
+        const status = result.url === url ? result.status : 'loading';
+        const attach = useCallback(element => {
+            image.current = element;
+            // A cached photograph may finish before React's passive effects run.
+            if (element?.complete && element.naturalWidth) setResult({ url, status: 'loaded' });
+        }, [url]);
+        useEffect(() => {
+            // Preserve a load/error already received for this URL instead of hiding it again.
+            setResult(previous => previous.url === url ? previous : { url, status: 'loading' });
+        }, [url]);
+        function settled(event, state) {
+            // Late events from a previous person must not change the current photograph.
+            if (image.current === event.currentTarget) setResult({ url, status: state });
+        }
+        return h('span', { className: cls('wpmft-avatar', className, leaf && 'is-leaf', url && status === 'loading' && 'is-loading'), style: { '--avatar-size': size + 'px' } },
+            url && status !== 'failed' ? h('img', { key: url, ref: attach, src: url, alt: '', width: size, height: size, loading: lazy ? 'lazy' : 'eager', decoding: 'async', draggable: false, onLoad: event => settled(event, 'loaded'), onError: event => settled(event, 'failed') }) : h('span', { className: 'wpmft-initials', 'aria-hidden': true }, initial(person?.name)),
             leaf && h('span', { className: 'wpmft-leaf-vein', 'aria-hidden': true }));
+    }
+
+    function GalleryImage({ photo, lang, mode = 'thumb', zoom = false, onReady, onDoubleClick, style }) {
+        const box = useRef(null), image = useRef(null), ready = useRef(onReady);
+        const [visible, setVisible] = useState(mode !== 'thumb'), [loaded, setLoaded] = useState(false), [failed, setFailed] = useState(false), [fallback, setFallback] = useState(false), [attempt, setAttempt] = useState(0);
+        ready.current = onReady;
+        const preview = photoPreview(photo);
+        const src = validPhoto(fallback || zoom ? photo.url : (mode === 'thumb' ? photo.thumb : preview.src) || photo.url);
+        const sizes = mode === 'thumb' ? '(max-width: 650px) 28vw, 190px' : '(max-width: 650px) 95vw, min(1200px, 90vw)';
+        useEffect(() => { setLoaded(Boolean(image.current?.complete && image.current.naturalWidth)); setFailed(false); }, [src, zoom, attempt]);
+        useEffect(() => {
+            if (visible || !box.current) return;
+            if (!window.IntersectionObserver) { setVisible(true); return; }
+            const observer = new IntersectionObserver(entries => {
+                if (entries.some(entry => entry.isIntersecting)) { setVisible(true); observer.disconnect(); }
+            }, { rootMargin: '240px' });
+            observer.observe(box.current); return () => observer.disconnect();
+        }, [visible]);
+        function completed(event) {
+            const element = event.currentTarget, source = element.currentSrc;
+            Promise.resolve(element.decode ? element.decode() : null).catch(() => {}).then(() => {
+                if (image.current === element && element.currentSrc === source && element.naturalWidth) { setLoaded(true); if (ready.current) ready.current(); }
+            });
+        }
+        function retry() { setFailed(false); setLoaded(false); setFallback(false); setAttempt(value => value + 1); }
+        return h('span', { ref: box, className: cls('wpmft-gallery-image', 'is-' + mode, visible && !loaded && !failed && 'is-loading', loaded && 'is-loaded', failed && 'has-error'), style, 'aria-busy': visible && !loaded && !failed },
+            visible && !failed && h('picture', null,
+                !fallback && !zoom && photoSources(photo, mode).map(source => h('source', { key: source.type, type: source.type, srcSet: photoSrcset(source.srcset), sizes })),
+                h('img', { key: src + ':' + attempt + ':' + (fallback ? 'original' : 'preview'), ref: image, src, srcSet: !fallback && !zoom ? (mode === 'thumb' ? photoSrcset(photo.srcset) : preview.srcset) || undefined : undefined, sizes, width: Number(photo.width) > 0 ? photo.width : undefined, height: Number(photo.height) > 0 ? photo.height : undefined, alt: photo.alt || photo.caption || tr(lang, 'photo'), loading: mode === 'thumb' ? 'lazy' : 'eager', decoding: 'async', fetchpriority: mode === 'lightbox' ? 'high' : 'low', draggable: false, onLoad: completed, onDoubleClick, onError: () => { if (!fallback) { setFallback(true); setLoaded(false); } else { setFailed(true); } } })),
+            !loaded && !failed && h('span', { className: 'wpmft-image-placeholder', 'aria-hidden': true }, h(Icon, { name: 'photo', size: mode === 'thumb' ? 25 : 42 }), mode === 'lightbox' && h('span', null, tr(lang, 'photoLoading'))),
+            failed && h('span', { className: 'wpmft-image-error' }, h(Icon, { name: 'photo', size: 24 }), h('span', null, tr(lang, 'photoLoadError')), mode === 'lightbox' && h('button', { type: 'button', className: 'wpmft-button is-small', onClick: retry }, tr(lang, 'photoRetry'))));
     }
 
     // Original vector artwork. This is decorative; relationship edges are drawn separately.
@@ -361,7 +435,8 @@
             return blocks;
         }
         const levels = [...grouped.keys()].sort((a, b) => a - b), widest = Math.max(1, ...[...grouped.values()].map(v => v.length));
-        const width = Math.max(1260, widest * 230 + 140), points = new Map(), rows = new Map();
+        let width = Math.max(1260, widest * 230 + 140);
+        const points = new Map(), rows = new Map();
         levels.forEach(g => {
             let row = grouped.get(g).slice();
             const root = g === 0 ? row.find(n => Number(n.id) === Number(data.root)) : null;
@@ -390,6 +465,46 @@
         levels.filter(g => g > 0).forEach(g => orderRow(g, parents));
         levels.filter(g => g < 0).reverse().forEach(g => orderRow(g, children));
         rows.forEach((row, g) => row.forEach((node, i) => points.set(String(node.id), { ...node, x: width / 2 + (i - (row.length - 1) / 2) * 230, y: 0, level: levels.indexOf(g) })));
+
+        // Align actual relatives across rows instead of centering every generation independently.
+        // Current couples move as one block; pooled positions keep neighbouring cards 230px apart.
+        function alignRow(g, links, relativeLevel) {
+            const blocks = rowBlocks(rows.get(g)); let offset = 0;
+            const targets = blocks.map((block, index) => {
+                if (index) offset += (blocks[index - 1].length + block.length) * 115;
+                const anchors = [];
+                block.forEach((node, i) => {
+                    const point = points.get(String(node.id));
+                    const relatives = [...(links.get(String(node.id)) || [])].map(id => points.get(id)).filter(p => p && p.level === point.level + relativeLevel);
+                    if (relatives.length) anchors.push(relatives.reduce((sum, p) => sum + p.x, 0) / relatives.length - (i - (block.length - 1) / 2) * 230);
+                });
+                const center = anchors.length ? anchors.reduce((sum, x) => sum + x, 0) / anchors.length : block.reduce((sum, node) => sum + points.get(String(node.id)).x, 0) / block.length;
+                return { block, offset, center, weight: Math.max(1, anchors.length) };
+            });
+            const pools = [];
+            targets.forEach((target, index) => {
+                pools.push({ start: index, end: index, weight: target.weight, total: (target.center - target.offset) * target.weight });
+                while (pools.length > 1) {
+                    const right = pools[pools.length - 1], left = pools[pools.length - 2];
+                    if (left.total / left.weight <= right.total / right.weight) break;
+                    pools.splice(-2, 2, { start: left.start, end: right.end, weight: left.weight + right.weight, total: left.total + right.total });
+                }
+            });
+            pools.forEach(pool => {
+                for (let i = pool.start; i <= pool.end; i++) {
+                    const target = targets[i], center = pool.total / pool.weight + target.offset;
+                    target.block.forEach((node, index) => { points.get(String(node.id)).x = center + (index - (target.block.length - 1) / 2) * 230; });
+                }
+            });
+        }
+        levels.filter(g => g < 0).reverse().forEach(g => alignRow(g, children, 1));
+        levels.filter(g => g > 0).forEach(g => alignRow(g, parents, -1));
+        if (points.size) {
+            const xs = [...points.values()].map(p => p.x), minX = Math.min(...xs), maxX = Math.max(...xs);
+            width = Math.max(width, maxX - minX + 370);
+            const shift = width / 2 - (minX + maxX) / 2;
+            points.forEach(point => { point.x += shift; });
+        }
 
         // A shared rail represents exactly the parent edges recorded for those children in this view.
         // Partner/spouse edges never add a parent, and different parent sets never share a rail.
@@ -422,7 +537,11 @@
         });
         const levelY = []; let nextY = 120 + (partnerTracks.get(0) || 0) * 14;
         levels.forEach((g, index) => {
-            if (index) nextY += 162 + 40 + (Math.max(1, tracks.get(index)?.length || 0) + (partnerTracks.get(index) || 0)) * 14;
+            if (index) {
+                const rowFamilies = familyList.filter(family => family.level === index);
+                const compact = rowFamilies.length && rowFamilies.every(family => family.childIds.length === 1);
+                nextY += 162 + (compact ? 20 : 40) + (Math.max(1, tracks.get(index)?.length || 0) + (partnerTracks.get(index) || 0)) * 14;
+            }
             levelY.push(nextY);
             rows.get(g).forEach(node => { points.get(String(node.id)).y = nextY; });
         });
@@ -595,10 +714,11 @@
 
     function PersonContacts({ person, lang }) {
         const contacts = person.contacts || {};
+        const whatsapp = whatsappLink(contacts.whatsapp);
         const socialLabels = { facebook: 'Facebook', instagram: 'Instagram', linkedin: 'LinkedIn', x: 'X', youtube: 'YouTube', tiktok: 'TikTok' };
         const socials = (Array.isArray(person.socials) ? person.socials : []).filter(item => socialLabels[item.key] && validLink(item.url));
         const fields = ['email', 'phone', 'mobile', 'address', 'website'].filter(key => typeof contacts[key] === 'string' && contacts[key].trim());
-        if (!fields.length && !socials.length) return null;
+        if (!fields.length && !socials.length && !whatsapp) return null;
         function contactValue(key) {
             const value = contacts[key];
             if (key === 'email') return h('a', { href: 'mailto:' + encodeURIComponent(value) }, value);
@@ -612,13 +732,17 @@
         return h('section', { className: 'wpmft-person-contact' }, h('h3', null, tr(lang, 'contactDetails')),
             fields.length > 0 && h('dl', { className: 'wpmft-contact-details' }, fields.map(key => h('div', { key, className: cls('wpmft-contact-detail', key === 'address' && 'is-address') },
                 h('dt', null, h(Icon, { name: { email: 'mail', phone: 'phone', mobile: 'mobile', address: 'pin', website: 'globe' }[key], size: 15 }), tr(lang, key)), h('dd', null, contactValue(key))))),
+            whatsapp && h('a', { className: 'wpmft-button is-small wpmft-whatsapp', href: whatsapp, target: '_blank', rel: 'noopener noreferrer', 'aria-label': tr(lang, 'newTab', { label: tr(lang, 'whatsappPerson', { name: person.name }) }) }, h(Icon, { name: 'whatsapp', size: 19 }), tr(lang, 'whatsapp')),
             socials.length > 0 && h('div', { className: 'wpmft-social-links' }, socials.map(item => h('a', { key: item.key, href: validLink(item.url), target: '_blank', rel: 'noopener noreferrer', 'aria-label': tr(lang, 'socialProfile', { platform: socialLabels[item.key] }) }, socialLabels[item.key], h(Icon, { name: 'external', size: 13 })))));
     }
 
     function Lightbox({ gallery, start, lang, onClose }) {
-        const [index, setIndex] = useState(start || 0), [zoom, setZoom] = useState(false), [offset, setOffset] = useState(0);
+        const [index, setIndex] = useState(start || 0), [zoom, setZoom] = useState(false), [offset, setOffset] = useState(0), [readyPhoto, setReadyPhoto] = useState('');
         const swipe = useRef(null), suppressTap = useRef(false);
         const current = gallery[index], next = useCallback(delta => { setIndex(i => (i + delta + gallery.length) % gallery.length); setZoom(false); setOffset(0); }, [gallery.length]);
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        const preload = current && readyPhoto === current.url && !zoom && !connection?.saveData && !/^(slow-)?2g$/.test(connection?.effectiveType || '') && !(connection?.downlink > 0 && connection.downlink < 1.5);
+        const nearby = preload && gallery.length > 1 ? [...new Set([(index + 1) % gallery.length, (index + gallery.length - 1) % gallery.length])].filter(value => value !== index) : [];
         useEffect(() => {
             const listener = e => { if (e.key === 'ArrowLeft') { e.preventDefault(); next(-1); } if (e.key === 'ArrowRight') { e.preventDefault(); next(1); } };
             document.addEventListener('keydown', listener); return () => document.removeEventListener('keydown', listener);
@@ -626,6 +750,7 @@
         function swipeStart(e) {
             if (!e.isPrimary) { swipe.current = null; setOffset(0); return; }
             suppressTap.current = false;
+            if (e.target.closest('button,a,input,select,textarea,[role="button"],[contenteditable="true"]')) return;
             if (zoom || gallery.length < 2 || (e.pointerType === 'mouse' && e.button !== 0)) return;
             swipe.current = { id: e.pointerId, x: e.clientX, y: e.clientY, dx: 0, dy: 0, active: false, cancelled: false, width: e.currentTarget.clientWidth };
             try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
@@ -653,10 +778,11 @@
         return h(Modal, { title: tr(lang, 'gallery'), onClose, wide: true, className: 'wpmft-lightbox' },
             h('div', { className: 'wpmft-lightbox-top' }, h('span', { role: 'status', 'aria-live': 'polite', 'aria-atomic': true }, tr(lang, 'photoPosition', { current: index + 1, total: gallery.length })), h('button', { type: 'button', className: 'wpmft-icon-button is-dark', 'aria-label': tr(lang, 'zoomPhoto'), 'aria-pressed': zoom, onClick: () => { setZoom(!zoom); setOffset(0); swipe.current = null; } }, h(Icon, { name: zoom ? 'minus' : 'plus' }))),
             h(CloseButton, { lang, onClick: onClose, dark: true }),
-            h('div', { className: cls('wpmft-lightbox-image', zoom && 'is-zoomed', offset !== 0 && 'is-swiping'), onPointerDown: swipeStart, onPointerMove: swipeMove, onPointerUp: swipeEnd, onPointerCancel: swipeEnd, onLostPointerCapture: swipeEnd, onClickCapture: e => { if (suppressTap.current && e.detail !== 0) { e.preventDefault(); e.stopPropagation(); } } }, h('img', { key: current.url, src: validPhoto(current.url), alt: current.alt || current.caption || tr(lang, 'photo'), style: offset ? { transform: 'translateX(' + offset + 'px)' } : undefined, onDoubleClick: () => { if (!suppressTap.current) setZoom(!zoom); }, draggable: false })),
+            h('div', { className: cls('wpmft-lightbox-image', zoom && 'is-zoomed', offset !== 0 && 'is-swiping'), onPointerDown: swipeStart, onPointerMove: swipeMove, onPointerUp: swipeEnd, onPointerCancel: swipeEnd, onLostPointerCapture: swipeEnd, onClickCapture: e => { if (suppressTap.current && e.detail !== 0) { e.preventDefault(); e.stopPropagation(); } } }, h(GalleryImage, { key: current.url, photo: current, lang, mode: 'lightbox', zoom, onReady: () => setReadyPhoto(current.url), style: offset ? { transform: 'translateX(' + offset + 'px)' } : undefined, onDoubleClick: () => { if (!suppressTap.current) setZoom(!zoom); } })),
+            nearby.length > 0 && h('div', { className: 'wpmft-gallery-preload', 'aria-hidden': true }, nearby.map(i => h(GalleryImage, { key: gallery[i].url, photo: gallery[i], lang, mode: 'preload' }))),
             gallery.length > 1 && h('button', { type: 'button', className: 'wpmft-lightbox-arrow is-previous', onClick: () => next(-1), 'aria-label': tr(lang, 'previousPhoto') }, h(Icon, { name: 'left', size: 30 })),
             gallery.length > 1 && h('button', { type: 'button', className: 'wpmft-lightbox-arrow is-next', onClick: () => next(1), 'aria-label': tr(lang, 'nextPhoto') }, h(Icon, { name: 'right', size: 30 })),
-            h('div', { className: 'wpmft-lightbox-caption' }, current.caption || current.alt || '', gallery.length > 1 && h('div', { className: 'wpmft-lightbox-dots' }, gallery.map((photo, i) => h('button', { type: 'button', key: photo.id || i, className: i === index ? 'is-active' : '', 'aria-label': tr(lang, 'photo') + ' ' + (i + 1), 'aria-current': i === index ? 'true' : undefined, onClick: () => { setIndex(i); setZoom(false); setOffset(0); } }))), gallery.length > 1 && !zoom && h('p', { className: 'wpmft-swipe-hint' }, tr(lang, 'swipePhoto'))));
+            h('div', { className: 'wpmft-lightbox-caption' }, current.date && h('p', { className: 'wpmft-photo-date' }, h(Icon, { name: 'calendar', size: 14 }), h('span', { 'aria-label': tr(lang, 'photoDate') }, dateLabel(current.date, lang))), photoStory(current) && h('p', { className: 'wpmft-photo-story' }, photoStory(current)), gallery.length > 1 && h('div', { className: 'wpmft-lightbox-dots' }, gallery.map((photo, i) => h('button', { type: 'button', key: photo.id || i, className: i === index ? 'is-active' : '', 'aria-label': tr(lang, 'photo') + ' ' + (i + 1), 'aria-current': i === index ? 'true' : undefined, onClick: () => { setIndex(i); setZoom(false); setOffset(0); } }))), gallery.length > 1 && !zoom && h('p', { className: 'wpmft-swipe-hint' }, tr(lang, 'swipePhoto'))));
     }
     function PersonDialog({ id, lang, api, onClose, onPerson, onRoot }) {
         const [person, setPerson] = useState(null), [error, setError] = useState(''), [retry, setRetry] = useState(0), [lightbox, setLightbox] = useState(null);
@@ -699,7 +825,9 @@
                     h('div', { className: 'wpmft-life-facts' }, ['born', 'died', 'birthPlace', 'deathPlace', 'maidenName', 'occupation'].filter(k => person[k]).map(k => h('div', { className: 'wpmft-life-fact', key: k }, h('span', null, tr(lang, k)), h('strong', null, k === 'born' || k === 'died' ? dateLabel(person[k], lang) : person[k])))),
                     h('section', { className: 'wpmft-biography' }, h('h3', null, tr(lang, 'about')), person.bio ? h('div', { className: 'wpmft-prose', onClick: biographyClick, dangerouslySetInnerHTML: { __html: person.bio } }) : h('p', { className: 'wpmft-muted' }, tr(lang, 'noBiography'))),
                     h(PersonContacts, { person, lang }),
-                    gallery.length > 0 && h('section', { className: 'wpmft-gallery-section' }, h('div', { className: 'wpmft-section-heading' }, h('h3', null, tr(lang, 'memories')), h('span', null, gallery.length)), h('div', { className: 'wpmft-gallery' }, gallery.map((photo, i) => h('button', { type: 'button', key: photo.id || i, onClick: () => setLightbox(i), 'aria-label': (photo.alt || tr(lang, 'photo')) + ' — ' + (i + 1) + '/' + gallery.length }, h('img', { src: validPhoto(photo.thumb || photo.url), alt: photo.alt || '', loading: 'lazy', decoding: 'async' }), h('span', { 'aria-hidden': true }, h(Icon, { name: 'plus' })))))),
+                    gallery.length > 0 && h('section', { className: 'wpmft-gallery-section' }, h('div', { className: 'wpmft-section-heading' }, h('h3', null, tr(lang, 'memories')), h('span', null, gallery.length)), h('div', { className: 'wpmft-gallery' }, gallery.map((photo, i) => h('figure', { key: photo.id || i },
+                        h('button', { type: 'button', onClick: () => setLightbox(i), 'aria-label': (photo.alt || tr(lang, 'photo')) + ' — ' + (i + 1) + '/' + gallery.length }, h(GalleryImage, { photo, lang }), h('span', { className: 'wpmft-gallery-open', 'aria-hidden': true }, h(Icon, { name: 'plus' }))),
+                        (photo.date || photoStory(photo)) && h('figcaption', null, photo.date && h('span', { className: 'wpmft-photo-date' }, dateLabel(photo.date, lang)), photoStory(photo) && h('span', { className: 'wpmft-photo-story' }, photoStory(photo))))))),
                     h('section', { className: 'wpmft-relations' }, h('h3', null, tr(lang, 'connections')), !relationGroups.length && h('p', { className: 'wpmft-muted' }, tr(lang, 'noConnections')), relationGroups.map(group => h('div', { key: group.key, className: 'wpmft-relation-group' }, h('h4', null, group.icon && h(Icon, { name: group.icon, size: 17 }), tr(lang, group.key)), h('div', { className: 'wpmft-relation-list' }, group.people.map(p => h('button', { type: 'button', key: p.id, onClick: () => onPerson(p.id) }, h(Photo, { person: p, size: 42 }), h('span', null, h('strong', null, p.name), years(p) && h('small', null, years(p))), h(Icon, { name: 'right', size: 17 }))))))))),
             lightbox !== null && h(Lightbox, { gallery, start: lightbox, lang, onClose: () => setLightbox(null) }));
     }
@@ -1230,7 +1358,7 @@
                         view === 'list' ? h(Directory, { key: lang, lang, api, onPerson: setPersonId, onRoot: chooseRoot }) : tree?.nodes?.length ? h(Tree, { data: tree, lang, busy: treeBusy, onPerson: setPersonId, onRoot: chooseRoot, onHome: () => chooseRoot(initialRoot.current), settings, exportRef: exportLayout, onSnapshot: snapshot, exporting, notice, error: treeError }) : treeBusy ? h('div', { className: 'wpmft-starting' }, h(Loader, { label: tr(lang, 'loading') })) : h('section', { className: 'wpmft-empty' }, h(OakMark, { size: 80 }), h('h2', null, tr(lang, 'noPeople')), h('p', null, tr(lang, 'noPeopleHelp'))))),
             h('footer', { className: 'wpmft-footer' }, h('div', { className: 'wpmft-footer-inner' }, h('div', { className: 'wpmft-footer-story' }, h(OakMark, { size: 28 }), h('div', { className: 'wpmft-footer-copy' }, h('p', null, tr(lang, 'footer')),
                     enabled(settings.showCredit, false) && h('small', { className: 'wpmft-credit' }, tr(lang, 'credit'), ' ', h('a', { href: 'https://digitalpulse.click/', target: '_blank', rel: 'noopener noreferrer' }, 'DigitalPulse · Raivis Kalnins')))),
-                h('div', { className: 'wpmft-footer-actions' }, h('div', { className: 'wpmft-footer-contact' }, settings.contactEmail && h('a', { className: 'wpmft-button is-small wpmft-footer-email', href: 'mailto:' + encodeURIComponent(settings.contactEmail).replace(/%40/g, '@') }, h(Icon, { name: 'mail', size: 16 }), h('span', null, settings.contactEmail)), contactEnabled && h('button', { type: 'button', className: 'wpmft-button is-small wpmft-footer-form', 'aria-haspopup': 'dialog', onClick: () => setContact(true) }, h(Icon, { name: 'mail', size: 16 }), h('span', null, tr(lang, 'contact')))),
+                h('div', { className: 'wpmft-footer-actions' }, h('div', { className: 'wpmft-footer-contact' }, false && settings.contactEmail && h('a', { className: 'wpmft-button is-small wpmft-footer-email', href: 'mailto:' + encodeURIComponent(settings.contactEmail).replace(/%40/g, '@') }, h(Icon, { name: 'mail', size: 16 }), h('span', null, settings.contactEmail)), contactEnabled && h('button', { type: 'button', className: 'wpmft-button is-small wpmft-footer-form', 'aria-haspopup': 'dialog', onClick: () => setContact(true) }, h(Icon, { name: 'mail', size: 16 }), h('span', null, tr(lang, 'contact'))), whatsappLink(settings.adminWhatsappUrl) && h('a', { className: 'wpmft-button is-small wpmft-whatsapp', href: whatsappLink(settings.adminWhatsappUrl), target: '_blank', rel: 'noopener noreferrer', 'aria-label': tr(lang, 'newTab', { label: tr(lang, 'whatsappAdmin') }), title: tr(lang, 'whatsappAdmin') }, h(Icon, { name: 'whatsapp', size: 18 }), h('span', null, tr(lang, 'whatsapp')))),
                     enabled(settings.appInstall, false) && h(InstallControls, { lang })))),
             personId && authorized && h(PersonDialog, { key: lang, id: personId, lang, api, onClose: () => setPersonId(null), onPerson: setPersonId, onRoot: chooseRoot }), contact && boot && contactEnabled && h(ContactDialog, { lang, api, captcha: boot.hcaptcha, upload: settings.contactUpload, onClose: () => setContact(false) }));
     }

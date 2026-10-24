@@ -261,6 +261,33 @@ final class WPMFT_Data {
 		return array_values( array_filter( $ids, function ( $attachment ) { return wp_attachment_is_image( $attachment ); } ) );
 	}
 
+	/** Per-person photo stories do not change a shared attachment's caption on another person's page. */
+	public static function gallery_details( $id ) {
+		$id = absint( $id );
+		$canonical = self::canonical( $id );
+		$inherited = $canonical !== $id ? get_post_meta( $canonical, '_wpmft_gallery_details', true ) : array();
+		$local = get_post_meta( $id, '_wpmft_gallery_details', true );
+		$inherited = is_array( $inherited ) ? $inherited : array();
+		$local = is_array( $local ) ? $local : array();
+		$result = array();
+		foreach ( self::gallery_ids( $id ) as $photo ) {
+			$details = isset( $local[$photo] ) && is_array( $local[$photo] ) ? $local[$photo] : ( $inherited[$photo] ?? array() );
+			$details = is_array( $details ) ? $details : array();
+			$result[$photo] = array(
+				'description' => isset( $details['description'] ) && is_string( $details['description'] ) ? sanitize_textarea_field( $details['description'] ) : wp_strip_all_tags( (string) get_post_field( 'post_excerpt', $photo, 'raw' ) ),
+				'date' => isset( $details['date'] ) && is_string( $details['date'] ) ? sanitize_text_field( $details['date'] ) : '',
+			);
+		}
+		return $result;
+	}
+
+	/** An explicitly blank translated number hides its inherited WhatsApp contact. */
+	public static function whatsapp_number( $id ) {
+		$id = absint( $id );
+		$source = metadata_exists( 'post', $id, '_wpmft_whatsapp' ) ? $id : self::canonical( $id );
+		return wpmft_whatsapp_number( get_post_meta( $source, '_wpmft_whatsapp', true ) );
+	}
+
 	/** All image references stay protected even when they are not selected for the visible gallery. */
 	public static function referenced_image_ids( $id, $with_children = true ) {
 		$ids = array( get_post_thumbnail_id( $id ) );
@@ -294,6 +321,7 @@ final class WPMFT_Data {
 		$result['contacts'] = array(
 			'email' => is_email( $email ) ? $email : '',
 			'phone' => sanitize_text_field( $contact( 'phone' ) ), 'mobile' => sanitize_text_field( $contact( 'mobile' ) ),
+			'whatsapp' => wpmft_whatsapp_url( self::whatsapp_number( $display ) ),
 			'address' => sanitize_textarea_field( $contact( 'address' ) ), 'website' => self::contact_url( $contact( 'website' ) ),
 		);
 		$result['socials'] = array();
@@ -315,9 +343,10 @@ final class WPMFT_Data {
 		$content = preg_replace( '/<a\b[^>]*>\s*<\/a>/i', '', $content );
 		$result['bio'] = WPMFT_Media::rewrite_html( wp_kses_post( wpautop( $content ) ) );
 		$result['gallery'] = array();
+		$gallery_details = self::gallery_details( $display );
 		foreach ( self::gallery_ids( $display ) as $photo ) {
 			$a = get_post( $photo );
-			$result['gallery'][] = array( 'id' => $photo, 'url' => WPMFT_Media::url( $photo, 'full' ), 'thumb' => WPMFT_Media::url( $photo, 'medium' ), 'alt' => (string) get_post_meta( $photo, '_wp_attachment_image_alt', true ), 'caption' => $a ? wp_strip_all_tags( $a->post_excerpt ) : '' );
+			$result['gallery'][] = array_merge( WPMFT_Media::image_data( $photo ), array( 'id' => $photo, 'alt' => (string) get_post_meta( $photo, '_wp_attachment_image_alt', true ), 'caption' => $a ? wp_strip_all_tags( $a->post_excerpt ) : '', 'description' => $gallery_details[$photo]['description'], 'date' => $gallery_details[$photo]['date'] ) );
 		}
 		$portrait = get_post_thumbnail_id( $display ) ?: get_post_thumbnail_id( $id );
 		if ( $portrait ) { $result['photo'] = WPMFT_Media::url( $portrait, 'large' ); }

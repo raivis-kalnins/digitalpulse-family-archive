@@ -2,7 +2,7 @@
 
 A free, open-source WordPress plugin for the stories, photographs and people that connect generations. Explore relatives in a responsive oak-inspired family tree, open a person in a detailed modal, and manage the archive through familiar WordPress posts.
 
-**Version 1.2.6** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
+**Version 1.2.8** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
 Developed by **Raivis Kalnins**, web developer at [DigitalPulse](https://digitalpulse.click/).  
 Project: [github.com/raivis-kalnins/wp-my-family-tree](https://github.com/raivis-kalnins/wp-my-family-tree)
 
@@ -14,7 +14,35 @@ The package is prepared for free distribution through the [WordPress.org Plugin 
 
 *The screenshot contains fictional demonstration records and illustrated portraits. No private family records or photographs are included in this plugin.*
 
-## What is new in 1.2.6
+## What is new in 1.2.8
+
+- **Portraits stay visible after refresh.** Completed small images keep their loaded state when pages are cached or person panels reopen. Changing or removing a photograph also resets the correct image state.
+- **Missing thumbnails recover safely.** The authenticated media endpoint can use a readable original when an ordinary display copy is missing. Private access and actual image MIME types remain enforced.
+- **Optimization continues past a problem photo.** Each request prepares one photograph. Failed or busy attachments are reported by ID while later photographs can finish; partial completion is clearly distinguished from a fully successful run.
+- **Counts reflect the current archive.** The settings screen reads the actual pending total after reload, without encoding images. Missing optimized files can be detected and rebuilt with **Prepare existing family photographs**.
+
+Install the complete update through WordPress and clear the Family Tree/static-asset caches. Then open **Performance & cache** and run **Prepare existing family photographs** if photos remain pending. Originals, person records and saved gallery selections are retained.
+
+## Version 1.2.7 improvements
+
+- **Optional WhatsApp contacts.** Add an administrator number in Contact settings and a separate number for each person. Buttons open WhatsApp only after a click, with no embedded chat script. Administrator contact is hidden during public demo sharing.
+- **A story for every photograph.** Each selected gallery photo has its own description and flexible date, such as “Summer 1980”. Stories belong to that person’s gallery; a shared attachment’s captions on other pages remain independent.
+- **Smoother gallery loading.** Responsive previews, lazy loading, reserved image space, restrained loading animation and error recovery make slow connections easier to use. The lightbox loads its current image and limits nearby preloading.
+- **Modern image formats.** Automatic AVIF or WebP display copies use the server’s available WordPress image editor. Quality defaults to 82 and is adjustable from 60–92. Existing images can be prepared in small, pausable batches. Original files and animated formats are retained, and protected photographs continue through authenticated delivery.
+- **Children beneath their parents.** Child groups align with recorded parents; a single child sits closer underneath where card and connector spacing permit. Current partners remain together without being treated as a child’s parent unless that relationship is recorded.
+- **A familiar demo editor.** The demo uses the same details-first visual structure, with safe personal/contact/photo-story editing and a matching settings overview. Daily reset includes those fields. Demo setup appears for an empty first installation; later the Demo tab is enabled through General. An active demo always keeps its stop-sharing control available.
+
+### Configure the new options
+
+In **Family Tree → Contact & hCaptcha**, enable the administrator WhatsApp button and enter a full international number with its country code. This optional administrator link is shown on the public sign-in screen as well as the unlocked tree. In a person’s **Contact details**, enter their WhatsApp number or leave it blank to hide the icon.
+
+In a person’s **Photo gallery**, fill **When / date** and **Photo story / description**, then click **Update**. Unsaved stories remain with their photographs when you add or reorder images. These fields accept plain text, including approximate dates; they do not require invented calendar dates.
+
+In **Performance & cache**, choose automatic image optimization, save the settings, and use **Prepare existing family photographs** for the existing archive. The screen reports which encoders are available. New person edits queue background preparation. Conversion is never performed while a visitor waits for a photo, and browsers retain ordinary image fallbacks. AVIF generation requires server support: [WordPress AVIF documentation](https://make.wordpress.org/core/2024/02/23/wordpress-6-5-adds-avif-support/).
+
+In **General**, enable **Show the Demo tab for sample content and demo sharing** when you need the optional Demo tab. Hiding the tools does not silently change active sharing or its daily reset. The public demo remains restricted to its owned sample records; site settings, relationships and media ownership are protected.
+
+## Version 1.2.6 improvements
 
 - **The saved gallery matches the frontend.** Only the selected photographs appear, in their saved order. Removing every photograph keeps the gallery empty; old attachments do not reappear.
 - **A separate profile portrait.** The portrait stays in the profile header and is included in a saved gallery only when selected there.
@@ -84,7 +112,7 @@ The existing private-media, contact-photo, relationship-status, mobile tree-gest
 
 ### Update My Family Tree 1.2.3 or later
 
-Back up the site, upload the complete `my-family-tree-1.2.6.zip` through **Plugins → Add New Plugin → Upload Plugin**, and choose **Replace current with uploaded**. Keep the `my-family-tree/` folder name, then verify the tree page, photographs and contact form. Existing data and settings are retained.
+Back up the site, upload the complete `my-family-tree-1.2.8.zip` through **Plugins → Add New Plugin → Upload Plugin**, and choose **Replace current with uploaded**. Keep the `my-family-tree/` folder name, then verify the tree page, photographs and contact form. Existing data and settings are retained.
 
 ### Migrate from WP My Family Tree 1.2.2 or earlier
 
@@ -92,7 +120,7 @@ The package now uses `my-family-tree/`. WordPress treats this folder as a separa
 
 1. Back up the site's database and uploads together. If the archive contains private published content, enable independent site access protection for the switch because deactivating the old plugin stops its access checks.
 2. Open **Plugins** and deactivate **WP My Family Tree**. If it is network-active, deactivate it in Network Admin first.
-3. Open **Plugins → Add New Plugin → Upload Plugin**, select the complete `my-family-tree-1.2.6.zip`, and click **Install Now**.
+3. Open **Plugins → Add New Plugin → Upload Plugin**, select the complete `my-family-tree-1.2.8.zip`, and click **Install Now**.
 4. Activate **My Family Tree**. Keep the old copy inactive; the new entry point blocks activation while the previous copy is active.
 5. Open the tree page and verify the privacy gate, photographs, person editor and **Contact us / Pieteikties** form. Review **Family Tree → Settings & help**, then clear the Family Tree cache and any applicable page cache.
 6. After verifying the new version, delete the inactive **WP My Family Tree** copy from the Plugins screen. Its bundled code has no uninstall data-deletion routine. Leave **My Family Tree** active.
@@ -393,7 +421,7 @@ Errors naming `wp-family-tree/family-tree.php`, `class.node.php` or `class.tree.
 
 ## Īsā pamācība latviski
 
-1. Pirms atjaunināšanas dublējiet datubāzi un augšupielādes. Privātai vietnei pārejas laikā nodrošiniet atsevišķu piekļuves aizsardzību. Deaktivizējiet **WP My Family Tree**, pēc tam sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni** instalējiet pilno `my-family-tree-1.2.6.zip` pakotni un aktivizējiet **My Family Tree**. Jaunās mapes dēļ WordPress to uzskata par atsevišķu spraudni; abas versijas reizē neaktivizējiet. Pārbaudiet koku, piekļuvi, fotogrāfijas un kontaktformu, tad veco neaktīvo spraudni var izdzēst. Esošie dati un iestatījumi paliek; datubāzes imports un motīva nomaiņa nav vajadzīga. Demonstrācijas koplietojamo režīmu pēc šīs pārejas ieslēdziet atkārtoti tikai tad, ja tas nepieciešams.
+1. Pirms atjaunināšanas dublējiet datubāzi un augšupielādes. Privātai vietnei pārejas laikā nodrošiniet atsevišķu piekļuves aizsardzību. Deaktivizējiet **WP My Family Tree**, pēc tam sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni** instalējiet pilno `my-family-tree-1.2.8.zip` pakotni un aktivizējiet **My Family Tree**. Jaunās mapes dēļ WordPress to uzskata par atsevišķu spraudni; abas versijas reizē neaktivizējiet. Pārbaudiet koku, piekļuvi, fotogrāfijas un kontaktformu, tad veco neaktīvo spraudni var izdzēst. Esošie dati un iestatījumi paliek; datubāzes imports un motīva nomaiņa nav vajadzīga. Demonstrācijas koplietojamo režīmu pēc šīs pārejas ieslēdziet atkārtoti tikai tad, ja tas nepieciešams.
 2. Spraudņa iestatījumos izvēlieties dzimtas ierakstu kategoriju, sākuma personu un koka lapu. Lapā ievietojiet bloku **Family Tree** vai īskodu `[wp_my_family_tree]`.
 3. Personas rediģēšanā detalizētā forma atrodas uzreiz zem virsraksta. Virsrakstā norādiet personas pilnu vārdu, izvēlieties portretu, vecākus, partnerus, datumus un galeriju. Dzīvesstāsta redaktors atrodas zem formas. Bloku redaktoru personām pēc vajadzības var ieslēgt spraudņa iestatījumos.
 4. Pievienojiet e-pastu, tālruni, mobilo tālruni, adresi, mājaslapu un sociālo tīklu saites tikai tad, ja persona piekrīt tās kopīgot ar koka apmeklētājiem.
@@ -449,6 +477,14 @@ Keep databases, real family media, Updraft backup sets, passwords, keys, test cr
 Copyright © 2026 **Raivis Kalnins / DigitalPulse**. Licensed under the [GNU General Public License, version 3 or later](LICENSE). Icon artwork is included under the same license. Legacy-data compatibility refers to WP Family Tree by Arvind Shah; this is a separate plugin using compatible existing data.
 
 ## Changelog
+
+### 1.2.8
+
+Fixed a portrait loading-state race that could leave decoded thumbnails hidden after refresh or reopening a person. Missing ordinary thumbnails can fall back to the authenticated original. Optimization now advances through failed or busy photographs, processes one image per request, and reports partial results and current pending counts. Missing optimized files can be rebuilt without replacing original media.
+
+### 1.2.7
+
+Added optional WhatsApp contacts, per-photo stories and dates, responsive galleries, validated AVIF/WebP display copies, closer placement of children, and a familiar restricted demo editor. Daily demo reset includes the new editable fields, and optional demo tools move to General after setup.
 
 ### 1.2.6
 

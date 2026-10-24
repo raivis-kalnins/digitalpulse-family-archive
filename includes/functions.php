@@ -9,11 +9,13 @@ function wpmft_settings() {
 		'subtitle' => 'Every leaf has a story. Every branch brings us together.',
 		'subtitle_lv' => 'Katrai lapai savs stāsts. Katrs zars mūs vieno.',
 		'contact_name' => '', 'contact_email' => get_option( 'admin_email' ), 'show_email' => 0, 'contact_enabled' => 1,
+		'whatsapp_enabled' => 0, 'whatsapp_phone' => '',
 		'contact_upload_enabled' => 1, 'contact_upload_max_mb' => 10,
 		'contact_upload_formats' => array( 'jpg', 'jpeg', 'png', 'webp' ),
 		'password_protection' => 1, 'password_hash' => '', 'session_version' => '', 'remember_days' => 30,
 		'hide_living_dates' => 0, 'private_media' => 1, 'language' => 'en', 'language_switch' => 1,
 		'person_block_editor' => 0, 'person_admin_labels' => 1, 'app_install' => 1, 'app_icons' => 1,
+		'demo_tools_enabled' => 0, 'image_optimization' => 'auto', 'image_quality' => 82,
 		'performance_cache' => 1, 'cache_ttl' => 15, 'cache_backend' => 'auto', 'disable_comments' => 1, 'disable_emojis' => 1, 'clean_head' => 1,
 		'minify_html' => 1, 'minify_assets' => 1, 'lean_standalone' => 0,
 		'accent' => '#315a42', 'background' => '#f5f4ed', 'tree_height' => 760,
@@ -22,6 +24,20 @@ function wpmft_settings() {
 	);
 	$s = get_option( 'wpmft_settings', array() );
 	return wp_parse_args( is_array( $s ) ? $s : array(), $defaults );
+}
+
+/** Normalize an explicitly supplied international number; never turn arbitrary URLs into chat links. */
+function wpmft_whatsapp_number( $value ) {
+	if ( ! is_string( $value ) || strlen( $value ) > 64 ) { return ''; }
+	$number = preg_replace( '/[\s().-]+/u', '', trim( $value ) );
+	if ( ! is_string( $number ) ) { return ''; }
+	$number = preg_replace( '/^(?:\+|00)/', '', $number );
+	return preg_match( '/^[1-9][0-9]{6,14}$/D', $number ) ? $number : '';
+}
+
+function wpmft_whatsapp_url( $value ) {
+	$number = wpmft_whatsapp_number( $value );
+	return $number ? 'https://wa.me/' . $number : '';
 }
 
 /** Public static files may be cached; this revision never applies to private API/media responses. */
@@ -126,6 +142,7 @@ function wpmft_public_settings() {
 		'title' => wpmft_translated_setting( $s, 'title', 'en' ), 'titleLv' => wpmft_translated_setting( $s, 'title', 'lv' ),
 		'subtitle' => wpmft_translated_setting( $s, 'subtitle', 'en' ), 'subtitleLv' => wpmft_translated_setting( $s, 'subtitle', 'lv' ),
 		'contactName' => WPMFT_Demo::guard_required() ? '' : $s['contact_name'], 'contactEmail' => $s['show_email'] && ! WPMFT_Demo::guard_required() ? $s['contact_email'] : '',
+		'adminWhatsappUrl' => $s['whatsapp_enabled'] && ! WPMFT_Demo::guard_required() ? wpmft_whatsapp_url( $s['whatsapp_phone'] ) : '',
 		'contactEnabled' => (bool) $s['contact_enabled'] && ! WPMFT_Demo::guard_required(), 'accent' => $s['accent'], 'background' => $s['background'],
 		'contactUpload' => WPMFT_Contact_Upload::config(), 'appInstall' => (bool) $s['app_install'],
 		'showCredit' => (bool) $s['show_credit'], 'allowExport' => (bool) $s['allow_export'],

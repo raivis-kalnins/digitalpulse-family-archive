@@ -29,7 +29,7 @@
         var node;
         while ((node = walker.nextNode())) {
             var parent = node.parentElement;
-            if (!parent || parent.closest('script,style,textarea,.wpmft-person-chip,.wpmft-person-results,.wpmft-gallery-preview,.wpmft-portrait-preview,[data-wpmft-user-content]')) continue;
+            if (!parent || parent.closest('script,style,textarea,.wpmft-person-chip,.wpmft-person-results,.wpmft-portrait-preview,[data-wpmft-user-content]')) continue;
             if (parent.tagName === 'OPTION' && parent.parentElement && ['wpmft[category_id]', 'wpmft[page_id]'].includes(parent.parentElement.name) && Number(parent.value) > 0) continue;
             var saved = textSources.get(node);
             if (!saved) {
@@ -404,6 +404,88 @@
             });
         });
 
+        var optimizeButton = document.getElementById('wpmft-optimize-images');
+        var pauseOptimization = document.getElementById('wpmft-pause-image-optimization');
+        var optimizationStatus = document.getElementById('wpmft-image-optimization-status');
+        if (optimizeButton && pauseOptimization && optimizationStatus) {
+            var pauseRequested = false, optimizationGeneration = 0;
+            var statusController = typeof AbortController === 'function' ? new AbortController() : null;
+            function integer(value) { return Number.isSafeInteger(value) && value >= 0; }
+            function requestOptimization(values, controller) {
+                var body = new URLSearchParams(Object.assign({action: 'wpmft_admin_optimize_media', nonce: config.optimizationNonce, wpmft_admin_lang: config.language}, values));
+                var timer;
+                var request = fetch(config.ajaxUrl, {method: 'POST', credentials: 'same-origin', body: body, signal: controller ? controller.signal : undefined}).then(function (response) {
+                    return response.json().then(function (json) {
+                        if (!response.ok || !json || !json.success || !json.data) throw new Error(json && json.data && json.data.message || strings.imagesOptimizationError);
+                        return json.data;
+                    }, function () { throw new Error(strings.imagesOptimizationError); });
+                }, function () { throw new Error(strings.imagesOptimizationError); });
+                // A host timeout or broken response must not leave the controls calculating forever.
+                return Promise.race([request, new Promise(function (resolve, reject) {
+                    timer = setTimeout(function () {
+                        if (controller) controller.abort();
+                        reject(new Error(strings.imagesOptimizationError));
+                    }, 45000);
+                })]).finally(function () { clearTimeout(timer); });
+            }
+            function showOptimization(headline, run) {
+                optimizationStatus.textContent = headline;
+                if (!run) return;
+                var summary = strings.imagesOptimizationProcessed + ' ' + run.processed + ' · ' + strings.imagesOptimizationSkipped + ' ' + run.skipped;
+                if (run.remaining !== null) summary += ' · ' + strings.imagesOptimizationUnscanned + ' ' + run.remaining;
+                optimizationStatus.append(document.createElement('br'), document.createTextNode(summary));
+                run.errors.forEach(function (error) { optimizationStatus.append(document.createElement('br'), document.createTextNode(error)); });
+            }
+            var statusGeneration = optimizationGeneration;
+            optimizationStatus.setAttribute('aria-busy', 'true');
+            showOptimization(strings.imagesOptimizationChecking);
+            requestOptimization({op: 'status'}, statusController).then(function (data) {
+                if (statusGeneration !== optimizationGeneration) return;
+                if (!integer(data.pending) || !integer(data.total) || data.pending > data.total) throw new Error(strings.imagesOptimizationCheckError);
+                showOptimization(strings.imagesOptimizationPending + ' ' + data.pending + ' / ' + data.total);
+            }).catch(function () {
+                if (statusGeneration === optimizationGeneration) showOptimization(strings.imagesOptimizationCheckError);
+            }).finally(function () {
+                if (statusGeneration === optimizationGeneration) optimizationStatus.setAttribute('aria-busy', 'false');
+            });
+            pauseOptimization.addEventListener('click', function () { pauseRequested = true; pauseOptimization.disabled = true; });
+            optimizeButton.addEventListener('click', function () {
+                if (optimizeButton.disabled) return;
+                optimizationGeneration++;
+                if (statusController) statusController.abort();
+                var run = {cursor: 0, processed: 0, skipped: 0, remaining: null, errors: []};
+                pauseRequested = false;
+                optimizeButton.disabled = true;
+                pauseOptimization.hidden = false;
+                pauseOptimization.disabled = false;
+                optimizationStatus.setAttribute('aria-busy', 'true');
+                showOptimization(strings.optimizingImages);
+                function batch() {
+                    if (pauseRequested) { showOptimization(strings.imagesOptimizationPaused, run); return Promise.resolve(); }
+                    var controller = typeof AbortController === 'function' ? new AbortController() : null;
+                    return requestOptimization({after: run.cursor}, controller).then(function (data) {
+                        if (!integer(data.processed) || !integer(data.attempted) || !integer(data.cursor) || !integer(data.remaining) || data.processed > data.attempted || !Array.isArray(data.errors) || data.errors.some(function (error) { return typeof error !== 'string'; })) throw new Error(strings.imagesOptimizationError);
+                        data.errors.forEach(function (error) { if (run.errors.indexOf(error) < 0) run.errors.push(error); });
+                        if (!data.attempted && data.errors.length) throw new Error(strings.imagesOptimizationError);
+                        if ((data.attempted && data.cursor <= run.cursor) || (!data.attempted && data.remaining)) throw new Error(strings.imagesOptimizationError);
+                        run.cursor = data.cursor;
+                        run.processed += data.processed;
+                        run.skipped += data.attempted - data.processed;
+                        run.remaining = data.remaining;
+                        if (!run.remaining) { showOptimization(run.skipped || run.errors.length ? strings.imagesOptimizationPartial : strings.imagesOptimized, run); return; }
+                        if (pauseRequested) { showOptimization(strings.imagesOptimizationPaused, run); return; }
+                        showOptimization(strings.optimizingImages, run);
+                        return new Promise(function (resolve) { setTimeout(resolve, 150); }).then(batch);
+                    });
+                }
+                batch().catch(function (error) { showOptimization(error.message || strings.imagesOptimizationError, run); }).finally(function () {
+                    optimizeButton.disabled = false;
+                    pauseOptimization.hidden = true;
+                    optimizationStatus.setAttribute('aria-busy', 'false');
+                });
+            });
+        }
+
         var galleryAddButton = document.getElementById('wpmft-add-gallery');
         var galleryButton = document.getElementById('wpmft-edit-gallery');
         var galleryInput = document.getElementById('wpmft-gallery-ids');
@@ -411,6 +493,29 @@
         var galleryStatus = document.getElementById('wpmft-gallery-status');
         if (galleryAddButton && galleryButton && galleryInput && galleryPreview && galleryStatus) {
             var galleryFrame;
+            var photoDetails = new Map();
+            function rememberPhotoDetails() {
+                galleryPreview.querySelectorAll('figure[data-id]').forEach(function (figure) {
+                    var date = figure.querySelector('[data-gallery-detail="date"]');
+                    var story = figure.querySelector('[data-gallery-detail="description"]');
+                    photoDetails.set(Number(figure.dataset.id), {date: date ? date.value : '', description: story ? story.value : ''});
+                });
+            }
+            function detailField(id, key, value) {
+                var label = document.createElement('label');
+                label.className = 'wpmft-field';
+                var title = document.createElement('span');
+                title.textContent = key === 'date' ? strings.photoDate : strings.photoStory;
+                var field = document.createElement(key === 'date' ? 'input' : 'textarea');
+                field.name = 'wpmft_person[_wpmft_gallery_details][' + id + '][' + key + ']';
+                field.dataset.galleryDetail = key;
+                field.value = value || '';
+                field.maxLength = key === 'date' ? 100 : 2000;
+                if (key === 'date') { field.type = 'text'; field.placeholder = strings.photoDatePlaceholder; }
+                else field.rows = 3;
+                label.append(title, field);
+                return label;
+            }
             function ids() {
                 return Array.from(new Set(galleryInput.value.split(',').map(Number).filter(function (id) { return Number.isInteger(id) && id > 0; })));
             }
@@ -421,6 +526,7 @@
                 galleryPreview.querySelectorAll('.wpmft-remove-image').forEach(function (button) { button.disabled = busy; });
             }
             function renderImages(attachments, append) {
+                rememberPhotoDetails();
                 var nextIds = append ? ids() : [];
                 if (!append) galleryPreview.replaceChildren();
                 attachments.forEach(function (item) {
@@ -430,14 +536,23 @@
                     var figure = document.createElement('figure');
                     figure.dataset.id = String(id);
                     var image = document.createElement('img');
-                    image.src = item.sizes && item.sizes.thumbnail ? item.sizes.thumbnail.url : item.url;
+                    image.src = item.sizes && (item.sizes.medium || item.sizes.thumbnail) ? (item.sizes.medium || item.sizes.thumbnail).url : item.url;
                     image.alt = item.alt || '';
+                    image.loading = 'lazy';
+                    image.decoding = 'async';
+                    var imageWrap = document.createElement('div');
+                    imageWrap.className = 'wpmft-gallery-image';
+                    imageWrap.append(image);
                     var remove = document.createElement('button');
                     remove.type = 'button';
                     remove.className = 'wpmft-remove-image';
                     remove.textContent = '×';
                     remove.setAttribute('aria-label', strings.removeImage || strings.remove || 'Remove');
-                    figure.append(image, remove);
+                    var details = photoDetails.get(id) || {date: '', description: typeof item.caption === 'string' ? item.caption.replace(/<[^>]*>/g, '') : ''};
+                    var caption = document.createElement('figcaption');
+                    caption.className = 'wpmft-gallery-details';
+                    caption.append(detailField(id, 'date', details.date), detailField(id, 'description', details.description));
+                    figure.append(imageWrap, remove, caption);
                     galleryPreview.append(figure);
                 });
                 galleryInput.value = nextIds.join(',');
@@ -490,6 +605,7 @@
             galleryPreview.addEventListener('click', function (event) {
                 var remove = event.target.closest('.wpmft-remove-image');
                 if (!remove || remove.disabled || !galleryPreview.contains(remove)) return;
+                rememberPhotoDetails();
                 remove.closest('figure').remove();
                 galleryInput.value = Array.from(galleryPreview.querySelectorAll('figure')).map(function (figure) { return figure.dataset.id; }).join(',');
                 galleryStatus.textContent = '';

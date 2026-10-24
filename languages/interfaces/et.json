@@ -172,7 +172,15 @@
     "dashboard": "Töölaud",
     "demoNotice": "Väljamõeldud tegelased eri filmidest ja väljamõeldud peresuhted. Külastajate muudatused on avalikud ja lähtestatakse iga 24 tunni järel.",
     "parentChild": "Vanem–laps",
-    "connectionsFor": "Seosed: {name}"
+    "connectionsFor": "Seosed: {name}",
+    "photoLoading": "Foto laadimine…",
+    "photoLoadError": "Seda fotot ei õnnestunud laadida.",
+    "photoRetry": "Laadi foto uuesti",
+    "photoStory": "Foto lugu",
+    "photoDate": "Millal",
+    "whatsapp": "WhatsApp",
+    "whatsappAdmin": "Võta pere halduriga ühendust WhatsAppis",
+    "whatsappPerson": "Vestle kasutajaga {name} WhatsAppis"
   },
   "admin": {
     "Family Tree": "Sugupuu",

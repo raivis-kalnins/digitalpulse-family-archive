@@ -172,7 +172,15 @@
     "dashboard": "Kontrollpanel",
     "demoNotice": "Fiktiva figurer från olika filmer och påhittade släktband. Besökarnas ändringar är offentliga och återställs var 24:e timme.",
     "parentChild": "Förälder–barn",
-    "connectionsFor": "Relationer: {name}"
+    "connectionsFor": "Relationer: {name}",
+    "photoLoading": "Läser in fotografiet…",
+    "photoLoadError": "Det gick inte att läsa in fotografiet.",
+    "photoRetry": "Läs in fotografiet igen",
+    "photoStory": "Berättelsen bakom fotografiet",
+    "photoDate": "När",
+    "whatsapp": "WhatsApp",
+    "whatsappAdmin": "Kontakta familjens administratör på WhatsApp",
+    "whatsappPerson": "Kontakta {name} på WhatsApp"
   },
   "admin": {
     "Family Tree": "Släktträd",

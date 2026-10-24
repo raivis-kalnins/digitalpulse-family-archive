@@ -172,7 +172,15 @@
     "dashboard": "Dashboard",
     "demoNotice": "Fictional crossover characters and invented relationships. Visitor edits are public and reset every 24 hours.",
     "parentChild": "Parent–child",
-    "connectionsFor": "Connections: {name}"
+    "connectionsFor": "Connections: {name}",
+    "photoLoading": "Loading photograph…",
+    "photoLoadError": "This photograph could not load.",
+    "photoRetry": "Load photograph again",
+    "photoStory": "Photograph story",
+    "photoDate": "When",
+    "whatsapp": "WhatsApp",
+    "whatsappAdmin": "Chat with the family administrator on WhatsApp",
+    "whatsappPerson": "Chat with {name} on WhatsApp"
   },
   "admin": {}
 }

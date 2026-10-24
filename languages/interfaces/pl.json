@@ -172,7 +172,15 @@
     "dashboard": "Panel",
     "demoNotice": "Fikcyjne postacie z różnych filmów i wymyślone relacje. Zmiany wprowadzane przez odwiedzających są publiczne i są resetowane co 24 godziny.",
     "parentChild": "Rodzic–dziecko",
-    "connectionsFor": "Powiązania: {name}"
+    "connectionsFor": "Powiązania: {name}",
+    "photoLoading": "Wczytywanie zdjęcia…",
+    "photoLoadError": "Nie udało się wczytać tego zdjęcia.",
+    "photoRetry": "Wczytaj zdjęcie ponownie",
+    "photoStory": "Historia zdjęcia",
+    "photoDate": "Kiedy",
+    "whatsapp": "WhatsApp",
+    "whatsappAdmin": "Napisz do administratora rodziny na WhatsApp",
+    "whatsappPerson": "Napisz do {name} na WhatsApp"
   },
   "admin": {
     "Family Tree": "Drzewo genealogiczne",

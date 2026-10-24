@@ -172,7 +172,15 @@
     "dashboard": "Panel de control",
     "demoNotice": "Personajes ficticios de distintas películas y relaciones inventadas. Los cambios de los visitantes son públicos y se restablecen cada 24 horas.",
     "parentChild": "Progenitor–hijo",
-    "connectionsFor": "Relaciones: {name}"
+    "connectionsFor": "Relaciones: {name}",
+    "photoLoading": "Cargando fotografía…",
+    "photoLoadError": "No se pudo cargar esta fotografía.",
+    "photoRetry": "Volver a cargar la fotografía",
+    "photoStory": "Historia de la fotografía",
+    "photoDate": "Cuándo",
+    "whatsapp": "WhatsApp",
+    "whatsappAdmin": "Hablar con el administrador familiar por WhatsApp",
+    "whatsappPerson": "Hablar con {name} por WhatsApp"
   },
   "admin": {
     "Family Tree": "Árbol genealógico",

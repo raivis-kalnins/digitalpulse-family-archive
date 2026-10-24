@@ -172,7 +172,15 @@
     "dashboard": "Valdymo skydelis",
     "demoNotice": "Išgalvoti skirtingų filmų veikėjai ir giminystės ryšiai. Lankytojų pakeitimai yra vieši ir atkuriami į pradinę būseną kas 24 valandas.",
     "parentChild": "Tėvas / motina–vaikas",
-    "connectionsFor": "Ryšiai: {name}"
+    "connectionsFor": "Ryšiai: {name}",
+    "photoLoading": "Įkeliama nuotrauka…",
+    "photoLoadError": "Šios nuotraukos nepavyko įkelti.",
+    "photoRetry": "Įkelti nuotrauką dar kartą",
+    "photoStory": "Nuotraukos istorija",
+    "photoDate": "Kada",
+    "whatsapp": "WhatsApp",
+    "whatsappAdmin": "Susisiekti su šeimos administratoriumi per WhatsApp",
+    "whatsappPerson": "Susisiekti su {name} per WhatsApp"
   },
   "admin": {
     "Family Tree": "Giminės medis",

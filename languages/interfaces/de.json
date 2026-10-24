@@ -172,7 +172,15 @@
     "dashboard": "Dashboard",
     "demoNotice": "Fiktive Figuren aus verschiedenen Filmen und erfundene Verwandtschaftsbeziehungen. Änderungen von Besuchern sind öffentlich und werden alle 24 Stunden zurückgesetzt.",
     "parentChild": "Elternteil–Kind",
-    "connectionsFor": "Verbindungen: {name}"
+    "connectionsFor": "Verbindungen: {name}",
+    "photoLoading": "Foto wird geladen…",
+    "photoLoadError": "Dieses Foto konnte nicht geladen werden.",
+    "photoRetry": "Foto erneut laden",
+    "photoStory": "Geschichte zum Foto",
+    "photoDate": "Wann",
+    "whatsapp": "WhatsApp",
+    "whatsappAdmin": "Familienadministrator über WhatsApp kontaktieren",
+    "whatsappPerson": "{name} über WhatsApp kontaktieren"
   },
   "admin": {
     "Family Tree": "Stammbaum",

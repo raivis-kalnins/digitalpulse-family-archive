@@ -147,7 +147,8 @@ body.wpmft-fullscreen-active .wpmft-shell { overflow: visible; }
 .wpmft-node-branch:hover { background: #355b3e; color: #fff; }
 .wpmft-branch-dot { position: absolute; top: 0; right: 0; width: 7px; height: 7px; background: #873f4a; border-radius: 100%; box-shadow: 0 0 0 2px #fcfbf3; }
 .wpmft-avatar { display: inline-flex; width: var(--avatar-size, 64px); height: var(--avatar-size, 64px); flex: 0 0 auto; border-radius: 50%; align-items: center; justify-content: center; overflow: hidden; position: relative; background: #e2e9d3; color: #57714a; }
-.wpmft-avatar img { width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center top; }
+.wpmft-avatar img { width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center top; transition: opacity .25s ease; }
+.wpmft-avatar.is-loading img { opacity: 0; }
 .wpmft-avatar.is-leaf { border-radius: 38% 12% 42% 12%; transform: rotate(-4deg); background: linear-gradient(145deg, #e6eccf, #d1dfb8); box-shadow: inset 0 0 0 1px #b4c49b80; }
 .wpmft-avatar.is-leaf img { transform: rotate(4deg) scale(1.1); transform-origin: center top; }
 .wpmft-initials { font-family: var(--wpmft-serif); font-size: calc(var(--avatar-size, 64px) * .35); font-weight: 400; letter-spacing: -.04em; }
@@ -336,15 +337,29 @@ body.wpmft-fullscreen-active .wpmft-shell { overflow: visible; }
 .wpmft-social-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 19px; }
 .wpmft-social-links a { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 7px 11px; border: 1px solid #dbe3cd; border-radius: 8px; background: #f5f7ec; color: #546e46; font-size: 11px; line-height: 1.4; text-decoration: none; }
 .wpmft-social-links a:hover { background: #eaf0de; border-color: #bfcead; }
+.wpmft-person-contact > .wpmft-whatsapp { margin-top: 17px; }
+.wpmft-button.wpmft-whatsapp { color: #216342; background: #edf7ed; border-color: #c2dcc5; text-decoration: none; }
+.wpmft-button.wpmft-whatsapp:hover { color: #144b30; background: #e1f1e2; border-color: #9cc5a5; }
 .wpmft-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 17px; }
 .wpmft-section-heading h3 { margin: 0; }
 .wpmft-section-heading > span { display: inline-flex; align-items: center; justify-content: center; min-width: 25px; padding: 2px 7px; font-size: 10px; background: #edf1e2; border-radius: 20px; color: #637255; }
-.wpmft-gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-.wpmft-gallery > button { aspect-ratio: 4/3; overflow: hidden; border-radius: 11px; padding: 0; border: 0; background: #e4e9d8; position: relative; }
-.wpmft-gallery img { width: 100%; height: 100%; object-fit: cover; object-position: center top; transform-origin: center top; transition: transform .25s; }
-.wpmft-gallery > button:hover img { transform: scale(1.05); }
-.wpmft-gallery button > span { position: absolute; inset: 0; display: grid; place-items: center; background: #253e2c44; color: #fff; opacity: 0; transition: opacity .2s; }
-.wpmft-gallery > button:hover > span, .wpmft-gallery > button:focus-visible > span { opacity: 1; }
+.wpmft-gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; gap: 17px 10px; }
+.wpmft-gallery > figure { min-width: 0; margin: 0; }
+.wpmft-gallery figure > button { display: block; width: 100%; aspect-ratio: 4/3; overflow: hidden; border-radius: 11px; padding: 0; border: 0; background: #e4e9d8; position: relative; }
+.wpmft-gallery-image { display: block; position: relative; overflow: hidden; isolation: isolate; width: 100%; height: 100%; }
+.wpmft-gallery-image picture { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity .25s ease; }
+.wpmft-gallery-image.is-loaded picture { opacity: 1; }
+.wpmft-gallery-image img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; transform-origin: center top; transition: transform .25s ease; }
+.wpmft-image-placeholder, .wpmft-image-error { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 12px; color: #73856b; background: #e7ecdc; font-size: 11px; line-height: 1.5; text-align: center; }
+.wpmft-image-placeholder > svg { opacity: .45; }
+.wpmft-gallery-image.is-loading::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(110deg, transparent 25%, #ffffff70 45%, transparent 65%); background-size: 250% 100%; animation: wpmft-image-shimmer 1.8s ease-in-out infinite; }
+@keyframes wpmft-image-shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+.wpmft-gallery figure > button:hover img { transform: scale(1.04); }
+.wpmft-gallery .wpmft-gallery-open { position: absolute; inset: 0; display: grid; place-items: center; background: #253e2c44; color: #fff; opacity: 0; transition: opacity .2s; }
+.wpmft-gallery figure > button:hover .wpmft-gallery-open, .wpmft-gallery figure > button:focus-visible .wpmft-gallery-open { opacity: 1; }
+.wpmft-gallery figcaption { padding: 8px 2px 0; color: #52664b; font-size: 11px; line-height: 1.65; overflow-wrap: anywhere; }
+.wpmft-photo-date { display: flex; align-items: center; justify-content: inherit; gap: 6px; font-size: 10px; font-weight: 600; color: #6d7d5d; margin: 0 0 3px; }
+.wpmft-gallery .wpmft-photo-story { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; white-space: pre-wrap; }
 .wpmft-relation-group { margin-top: 21px; }
 .wpmft-relation-group h4 { display: flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.3px; color: #637255; margin-bottom: 11px; }
 .wpmft-relation-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
@@ -373,11 +388,20 @@ body.wpmft-fullscreen-active .wpmft-shell { overflow: visible; }
 .wpmft-icon-button.is-dark:hover { background: #d7e5cc2b; }
 .wpmft-lightbox .wpmft-modal-close { right: 6px; top: 6px; }
 .wpmft-lightbox-image { display: flex; justify-content: center; align-items: center; flex: 1; min-height: 0; padding: 10px 55px; overflow: hidden; touch-action: pan-y pinch-zoom; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
-.wpmft-lightbox-image > img { width: auto; height: auto; max-height: 100%; max-width: 100%; object-fit: contain; border-radius: 4px; transition: transform .18s ease-out; animation: wpmft-photo-enter .18s ease-out; }
-.wpmft-lightbox-image.is-swiping > img { transition: none; }
+.wpmft-lightbox-image > .wpmft-gallery-image { display: flex; justify-content: center; align-items: center; border-radius: 4px; transition: transform .18s ease-out; }
+.wpmft-lightbox-image .wpmft-gallery-image picture { display: flex; justify-content: center; align-items: center; }
+.wpmft-lightbox-image .wpmft-gallery-image img { width: auto; height: auto; max-height: 100%; max-width: 100%; object-fit: contain; border-radius: 4px; }
+.wpmft-lightbox-image .wpmft-image-placeholder, .wpmft-lightbox-image .wpmft-image-error { background: #d5e0c712; color: #c6d0bb; border-radius: 8px; }
+.wpmft-lightbox-image .wpmft-gallery-image.is-loading::after { opacity: .13; }
+.wpmft-lightbox-image.is-swiping > .wpmft-gallery-image { transition: none; }
 .wpmft-lightbox-image.is-zoomed { justify-content: flex-start; align-items: flex-start; padding: 0; overflow: auto; touch-action: auto; }
-.wpmft-lightbox-image.is-zoomed > img { min-width: 150%; max-width: none; max-height: none; width: 150%; }
+.wpmft-lightbox-image.is-zoomed > .wpmft-gallery-image { min-width: 150%; width: 150%; height: auto; flex-shrink: 0; overflow: visible; }
+.wpmft-lightbox-image.is-zoomed .wpmft-gallery-image picture { height: auto; }
+.wpmft-lightbox-image.is-zoomed .wpmft-gallery-image img { width: 100%; max-height: none; }
+.wpmft-gallery-preload { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
 .wpmft-lightbox-caption { text-align: center; color: #c6d0bb; padding: 14px 40px 4px; font-size: 12px; line-height: 1.7; flex-shrink: 0; max-height: 20vh; overflow: auto; }
+.wpmft-lightbox-caption .wpmft-photo-date { justify-content: center; color: #aebf9e; margin-bottom: 4px; }
+.wpmft-lightbox-caption .wpmft-photo-story { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .wpmft-lightbox-arrow { display: grid; place-items: center; position: absolute; top: calc(50% - 25px); width: 46px; height: 46px; border-radius: 50%; background: #d7e5cc19; border: 1px solid #d7e5cc28; color: #f7faee; padding: 0; z-index: 2; }
 .wpmft-lightbox-arrow:hover { background: #d7e5cc35; }
 .wpmft-lightbox-arrow.is-previous { left: 0; }
@@ -490,7 +514,7 @@ body.wpmft-fullscreen-active .wpmft-shell { overflow: visible; }
     .wpmft-footer-story { gap: 7px; }
     .wpmft-footer-story p { max-width: none; font-size: 12px; text-align: left; }
     .wpmft-footer-story svg { width: 20px; height: 20px; }
-    .wpmft-footer-contact { width: 100%; justify-content: center; flex-wrap: nowrap; gap: 7px; }
+    .wpmft-footer-contact { width: 100%; justify-content: center; flex-wrap: wrap; gap: 7px; }
     .wpmft-footer-contact .wpmft-button { padding: 10px 12px; font-size: 11px; min-height: 44px; }
     .wpmft-footer-email { flex: 1; max-width: none; }
     .wpmft-footer-contact > button { flex-shrink: 0; }
@@ -543,7 +567,7 @@ body.wpmft-fullscreen-active .wpmft-shell { overflow: visible; }
     .wpmft-person-body h3 { font-size: 21px; }
     .wpmft-prose { font-size: 13px; }
     .wpmft-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
-    .wpmft-gallery > button { border-radius: 8px; }
+    .wpmft-gallery figure > button { border-radius: 8px; }
     .wpmft-relation-list { grid-template-columns: 1fr; }
     .wpmft-relation-list > button { padding: 9px 11px; }
     .wpmft-contact-content { padding: 31px 25px 28px; }
@@ -591,6 +615,7 @@ body.wpmft-fullscreen-active .wpmft-shell { overflow: visible; }
 }
 @media (prefers-reduced-motion: reduce) {
     .wpmft-app *, .wpmft-overlay * { animation-duration: .01ms; transition-duration: .01ms; scroll-behavior: auto; }
+    .wpmft-gallery-image.is-loading::after { animation: none; }
     .wpmft-spinner { animation-duration: 1.6s; }
 }
 @media print {

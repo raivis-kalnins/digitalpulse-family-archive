@@ -3,7 +3,7 @@ Tags: family tree, genealogy, family, privacy, shortcode
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.6
+Stable tag: 1.2.9
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -66,7 +66,9 @@ Importing requires confirmation and preserves existing records, pages, media and
 
 On an isolated single-site installation with no real family records, a separately confirmed shared demo mode creates the username demo with password Demo@demo123Editor and front-end password demo. No such account exists by default. An existing demo username is not modified.
 
-The custom Family Tree Demo Editor can add, edit and remove demo persons and pages through a constrained dashboard. A read-only Settings overview explains the tree page, appearance, languages, access, contact and performance options. The account cannot manage real content, site settings, users, plugins or uploads. Contact sending is disabled during shared demo mode. Demo edits are public.
+The custom Family Tree Demo Editor can add, edit and remove demo persons and pages through a constrained dashboard using the regular person editor's visual layout. Personal details, contact fields, WhatsApp numbers, photo stories and dates are editable. A read-only Settings overview explains the tree page, appearance, languages, access, contact and performance options. The account cannot manage real content, site settings, users, plugins or uploads. Contact sending and the administrator WhatsApp link are disabled during shared demo mode. Demo edits are public.
+
+On an empty first installation the Demo tab is available during setup. After setup, enable Show the Demo tab for sample content and demo sharing in General settings whenever you need these optional tools. Hiding the tab does not disable active sharing or daily reset; General always provides a control to manage or stop active sharing.
 
 Removal requires confirmation. The starting person and tree landing page remain available, and up to 50 visitor-created records are allowed per reset cycle. Persons and Demo pages provide clear Add, Edit, Remove and View actions.
 
@@ -74,7 +76,7 @@ Real family records, including drafts and trashed records, block shared demo mod
 
 = Daily demo reset =
 
-While shared demo mode is active, the plugin restores original demo titles, stories, publication status, dates, locations and occupations to a retained starting copy every 24 hours. Removed original samples return, and records created through the shared demo editor are deleted. The reset checks demo ownership before changing a record and preserves real family records, relationships, media and normal settings. No backup plugin is required.
+While shared demo mode is active, the plugin restores original demo titles, stories, publication status, personal details, contact fields, WhatsApp numbers, photo stories and dates to a retained starting copy every 24 hours. Removed original samples return, and records created through the shared demo editor are deleted. The reset checks demo ownership before changing a record and preserves real family records, relationships, media and normal settings. No backup plugin is required.
 
 The task uses WordPress cron, with an overdue check before the next demo access or edit. On a site with no requests, execution can be later than the scheduled time. Demo settings show the next reset and offer a confirmed Reset demo now control. Old editor forms must be reloaded after a reset. The saved starting copy survives disabling and re-enabling demo mode. Active older demos without a saved copy use the original bundled sample fields.
 
@@ -107,7 +109,7 @@ See readme.md for the complete administration, privacy, backup and troubleshooti
 
 == Installation ==
 
-1. Upload the complete my-family-tree-1.2.6.zip through Plugins > Add New Plugin > Upload Plugin, or place the my-family-tree directory in wp-content/plugins.
+1. Upload the complete my-family-tree-1.2.9.zip through Plugins > Add New Plugin > Upload Plugin, or place the my-family-tree directory in wp-content/plugins.
 2. Activate My Family Tree. If migrating from WP My Family Tree, follow the rename instructions below before activation.
 3. Deactivate the older WP Family Tree plugin if it is still active. Keep its existing posts and media.
 4. Open Family Tree settings, select the family category and starting person, and create or select a tree page.
@@ -135,6 +137,14 @@ Version 1.2.3 changes the public plugin name and folder to My Family Tree / my-f
 Deactivation revokes shared demo access. On an isolated demonstration site, re-enable shared demo mode explicitly if needed; imported samples and their saved reset baseline remain available. Future updates within the my-family-tree folder can use WordPress's normal replacement workflow.
 
 == Frequently Asked Questions ==
+
+= Can I add WhatsApp chat links? =
+
+Yes. Enable the optional administrator button in Contact & hCaptcha and enter an international phone number with its country code. The administrator button is visible before and after family sign-in, except in public demo mode. Each person has a separate optional WhatsApp field. Clicking a button opens https://wa.me/ using WhatsApp’s click-to-chat feature. No WhatsApp script loads and no contact request is sent automatically. WhatsApp is operated by Meta; its terms and privacy policy apply after following the link: https://www.whatsapp.com/legal/ and https://www.whatsapp.com/legal/privacy-policy/.
+
+= How do photo stories and modern image formats work? =
+
+Each gallery photograph has a description and a flexible When / date field in the person editor. These are saved for that person, without changing a shared attachment’s captions elsewhere. Performance & cache can prepare smaller AVIF or WebP display copies where the server’s WordPress image editor supports them. Original files are retained. Existing archives use the manual batch tool; later person edits queue background preparation. Protected copies remain encrypted and use authenticated delivery. Animated images keep their existing format, and unavailable encoders fall back to ordinary WordPress image sizes.
 
 = Is My Family Tree free to use? =
 
@@ -201,6 +211,23 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 1. Fictional family records and original illustrated portraits in the interactive oak-inspired tree.
 
 == Changelog ==
+
+= 1.2.9 =
+
+* Fixed completed portrait thumbnails remaining invisible after cached page refreshes or reopening a person.
+* Added authenticated original-image fallback when an ordinary thumbnail file is unavailable.
+* Made image optimization progress past failed or busy attachments, with one photograph per request and a partial-result report.
+* Added fresh optimization counts on the settings screen and detection of missing optimized copies for rebuilding.
+* Preserved original photographs, gallery selections and private-media access checks.
+
+= 1.2.7 =
+
+* Added optional administrator and per-person WhatsApp chat links with international number validation.
+* Added per-person descriptions and flexible dates for each gallery photograph, with add/reorder persistence.
+* Improved responsive gallery loading, reduced-motion-aware placeholders and recoverable image errors.
+* Added capability-aware AVIF/WebP display copies, adjustable quality and a batch tool for existing photographs without replacing originals.
+* Aligned children with recorded parents and tightened single-child spacing while preserving couple and connector clearance.
+* Matched the restricted demo editor to the normal person form, extended daily reset to new editable fields, and moved optional demo tools behind a General setting after initial setup.
 
 = 1.2.6 =
 
@@ -285,6 +312,14 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 
 == Upgrade Notice ==
 
+= 1.2.9 =
+
+Fixes blank portraits after refresh and stalled image optimization. Replace the complete ZIP and clear cached assets. In Performance & cache, prepare any pending photographs again. Existing person data and originals are retained.
+
+= 1.2.7 =
+
+Adds WhatsApp contacts, photo stories, smoother galleries, optional modern image copies, closer child placement and a familiar demo editor. Replace the complete plugin ZIP and clear static caches. Prepare existing photographs in Performance & cache when an encoder is available.
+
 = 1.2.6 =
 
 Fixes extra frontend gallery photos absent from the editor. Saved selections, including an empty gallery, now control the display. Replace with the complete ZIP and clear cached assets. Person data and media are retained.
@@ -312,3 +347,6 @@ Use the complete ZIP to replace the plugin. Shared demos now restore their edita
 = 1.2.0 =
 
 Use the complete ZIP to replace the plugin. Existing family data and privacy settings are retained. Demo import and shared demo mode require separate opt-in.
+
+= 1.2.9 =
+* Removed the redundant footer email button while retaining the contact form and email delivery settings. Refined WhatsApp icon appearance.

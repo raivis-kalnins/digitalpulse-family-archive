@@ -172,7 +172,15 @@
     "dashboard": "Vadības panelis",
     "demoNotice": "Izdomāti dažādu filmu tēli un radniecības saites. Apmeklētāju veiktās izmaiņas ir publiskas un tiek atiestatītas ik pēc 24 stundām.",
     "parentChild": "Vecāks–bērns",
-    "connectionsFor": "Saiknes: {name}"
+    "connectionsFor": "Saiknes: {name}",
+    "photoLoading": "Ielādē fotogrāfiju…",
+    "photoLoadError": "Šo fotogrāfiju neizdevās ielādēt.",
+    "photoRetry": "Ielādēt fotogrāfiju vēlreiz",
+    "photoStory": "Fotogrāfijas stāsts",
+    "photoDate": "Kad",
+    "whatsapp": "WhatsApp",
+    "whatsappAdmin": "Sazināties ar dzimtas administratoru WhatsApp",
+    "whatsappPerson": "Sazināties ar {name} WhatsApp"
   },
   "admin": {}
 }

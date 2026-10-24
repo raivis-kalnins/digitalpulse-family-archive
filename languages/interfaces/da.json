@@ -172,7 +172,15 @@
     "dashboard": "Kontrolpanel",
     "demoNotice": "Fiktive figurer fra forskellige film og opdigtede familieforhold. Besøgendes ændringer er offentlige og nulstilles hver 24. time.",
     "parentChild": "Forælder–barn",
-    "connectionsFor": "Forbindelser: {name}"
+    "connectionsFor": "Forbindelser: {name}",
+    "photoLoading": "Indlæser fotografi…",
+    "photoLoadError": "Dette fotografi kunne ikke indlæses.",
+    "photoRetry": "Indlæs fotografiet igen",
+    "photoStory": "Historien bag fotografiet",
+    "photoDate": "Hvornår",
+    "whatsapp": "WhatsApp",
+    "whatsappAdmin": "Kontakt familiens administrator på WhatsApp",
+    "whatsappPerson": "Kontakt {name} på WhatsApp"
   },
   "admin": {
     "Family Tree": "Slægtstræ",

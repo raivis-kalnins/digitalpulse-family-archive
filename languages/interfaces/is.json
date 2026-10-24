@@ -172,7 +172,15 @@
     "dashboard": "Stjórnborð",
     "demoNotice": "Skáldaðar persónur úr ólíkum kvikmyndum og uppspunnin fjölskyldutengsl. Breytingar gesta eru opinberar og eru endurstilltar á 24 klukkustunda fresti.",
     "parentChild": "Foreldri–barn",
-    "connectionsFor": "Tengsl: {name}"
+    "connectionsFor": "Tengsl: {name}",
+    "photoLoading": "Hleð ljósmynd…",
+    "photoLoadError": "Ekki tókst að hlaða þessa ljósmynd.",
+    "photoRetry": "Hlaða ljósmyndinni aftur",
+    "photoStory": "Sagan á bak við ljósmyndina",
+    "photoDate": "Hvenær",
+    "whatsapp": "WhatsApp",
+    "whatsappAdmin": "Hafðu samband við fjölskyldustjórnandann á WhatsApp",
+    "whatsappPerson": "Hafðu samband við {name} á WhatsApp"
   },
   "admin": {
     "Family Tree": "Ættartré",

@@ -22,7 +22,7 @@ The plugin has no telemetry, author-operated service or paid feature gate. Polyl
 | --- | --- |
 | Plugin name | My Family Tree |
 | Proposed plugin slug / text domain | my-family-tree |
-| Version / stable tag | 1.2.6 |
+| Version / stable tag | 1.2.9 |
 | Minimum WordPress | 6.5 |
 | Minimum PHP | 7.4 |
 | Tested up to (directory header) | 7.1 |
@@ -42,9 +42,13 @@ Version 1.2.5 retains that compatibility header and fixes gallery retention, por
 
 Version 1.2.6 makes saved gallery selections authoritative, including empty selections, and removes automatic portrait insertion from saved galleries. The person editor exposes inherited and legacy photographs so the editable and displayed lists agree. Explicit translated selections take precedence over inherited content. The private-media reference list remains separate and comprehensive, preserving detection, authorization, ownership recording and encryption for images outside the visible gallery. This update needs no database restore and does not delete media files.
 
+Version 1.2.7 adds optional outbound WhatsApp links, per-person photo stories and dates, responsive image loading and capability-aware modern display copies. No external image optimizer or embedded chat script is used. Image conversion is queued or administrator-triggered, with encrypted derivatives and ordinary-format fallback. The demo editor uses the regular visual structure while retaining sample-only permissions and daily reset. Demo tools are optional in General after initial setup.
+
+Version 1.2.9 fixes cached portrait loading state, authenticated fallback for missing ordinary thumbnails, and optimizer queue starvation after a failed photo. Manual optimization handles one image per request, reports failed attachment IDs without blocking later images, and refreshes pending counts without performing conversions. Missing optimized files can be rebuilt. Existing original media, gallery membership and authorization remain protected.
+
 ## Name correction for resubmission
 
-Version 1.2.3 changes the PHP `Plugin Name` header and directory readme title to **My Family Tree**, addressing the reviewer's objection to the former leading “WP”. The installable ZIP is `my-family-tree-1.2.6.zip`, with one `my-family-tree/` folder, the `my-family-tree.php` entry point and the matching `my-family-tree` text domain. Directory acceptance and the final permalink remain subject to the Plugins Team's review.
+Version 1.2.3 changes the PHP `Plugin Name` header and directory readme title to **My Family Tree**, addressing the reviewer's objection to the former leading “WP”. The installable ZIP is `my-family-tree-1.2.9.zip`, with one `my-family-tree/` folder, the `my-family-tree.php` entry point and the matching `my-family-tree` text domain. Directory acceptance and the final permalink remain subject to the Plugins Team's review.
 
 The source repository remains at `https://github.com/raivis-kalnins/wp-my-family-tree`. That existing repository URL is not the proposed WordPress.org permalink. Internal `wpmft` data keys, existing shortcodes and the saved block identifier `wp-my-family-tree/tree` are retained for compatibility.
 

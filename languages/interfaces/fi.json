@@ -172,7 +172,15 @@
     "dashboard": "Hallintapaneeli",
     "demoNotice": "Kuvitteellisia hahmoja eri elokuvista ja keksittyjä sukulaisuussuhteita. Vierailijoiden muutokset ovat julkisia ja palautetaan alkutilaan 24 tunnin välein.",
     "parentChild": "Vanhempi–lapsi",
-    "connectionsFor": "Yhteydet: {name}"
+    "connectionsFor": "Yhteydet: {name}",
+    "photoLoading": "Ladataan valokuvaa…",
+    "photoLoadError": "Tätä valokuvaa ei voitu ladata.",
+    "photoRetry": "Lataa valokuva uudelleen",
+    "photoStory": "Valokuvan tarina",
+    "photoDate": "Milloin",
+    "whatsapp": "WhatsApp",
+    "whatsappAdmin": "Ota yhteyttä perheen ylläpitäjään WhatsAppissa",
+    "whatsappPerson": "Ota yhteyttä henkilöön {name} WhatsAppissa"
   },
   "admin": {
     "Family Tree": "Sukupuu",

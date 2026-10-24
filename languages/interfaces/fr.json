@@ -172,7 +172,15 @@
     "dashboard": "Tableau de bord",
     "demoNotice": "Personnages fictifs de différents films et liens de parenté inventés. Les modifications des visiteurs sont publiques et réinitialisées toutes les 24 heures.",
     "parentChild": "Parent–enfant",
-    "connectionsFor": "Liens : {name}"
+    "connectionsFor": "Liens : {name}",
+    "photoLoading": "Chargement de la photographie…",
+    "photoLoadError": "Cette photographie n’a pas pu être chargée.",
+    "photoRetry": "Recharger la photographie",
+    "photoStory": "Histoire de la photographie",
+    "photoDate": "Quand",
+    "whatsapp": "WhatsApp",
+    "whatsappAdmin": "Contacter l’administrateur de la famille sur WhatsApp",
+    "whatsappPerson": "Contacter {name} sur WhatsApp"
   },
   "admin": {
     "Family Tree": "Arbre généalogique",

@@ -25,6 +25,19 @@ final class WPMFT_Demo {
 	private static $mutating_post = 0;
 	private static $reset_failed = false;
 
+	/** Demo writes use an explicit allowlist; identities, relationships and media ownership stay protected. */
+	private static function editor_meta_keys() {
+		return array( 'born', 'died', 'gender', '_wpmft_maiden_name', '_wpmft_birth_place', '_wpmft_death_place', '_wpmft_location', '_wpmft_occupation', '_wpmft_email', '_wpmft_phone', '_wpmft_mobile', '_wpmft_whatsapp', '_wpmft_address', '_wpmft_website', '_wpmft_social_facebook', '_wpmft_social_instagram', '_wpmft_social_linkedin', '_wpmft_social_x', '_wpmft_social_youtube', '_wpmft_social_tiktok', '_wpmft_gallery_details' );
+	}
+
+	private static function valid_gallery_details( $value ) {
+		if ( ! is_array( $value ) || count( $value ) > 100 ) { return false; }
+		foreach ( $value as $id => $detail ) {
+			if ( ! ctype_digit( (string) $id ) || (int) $id < 1 || ! self::allows_media( (int) $id ) || ! is_array( $detail ) || array_diff( array_keys( $detail ), array( 'description', 'date' ) ) || ! isset( $detail['description'], $detail['date'] ) || ! is_string( $detail['description'] ) || ! is_string( $detail['date'] ) || strlen( $detail['description'] ) > 8000 || strlen( $detail['date'] ) > 400 ) { return false; }
+		}
+		return true;
+	}
+
 	/** Once a response uses demo credentials it stays constrained, even if mode changes mid-request. */
 	public static function set_request_scope( $enabled = true ) { if ( $enabled ) { self::$request_scope = true; } }
 	public static function scoped_request() { return self::$request_scope; }
@@ -129,7 +142,7 @@ final class WPMFT_Demo {
 		if ( ! is_array( $manifest ) || empty( $manifest['token'] ) || empty( $manifest['items']['marty'] ) ) { return self::reset_error(); }
 		$people = self::people();
 		$pages = self::pages( $manifest );
-		$baseline = array( 'version' => 2, 'token' => $manifest['token'] ?? '', 'created' => time(), 'source' => $original ? 'bundled' : 'administrator', 'items' => array() );
+		$baseline = array( 'version' => 3, 'token' => $manifest['token'] ?? '', 'created' => time(), 'source' => $original ? 'bundled' : 'administrator', 'items' => array() );
 		global $wpdb;
 		foreach ( array_merge( $people, $pages ) as $key => $seed ) {
 			$id = absint( $manifest['items'][$key] ?? 0 );
@@ -143,8 +156,10 @@ final class WPMFT_Demo {
 			if ( $original ) { $row['title'] = 'post' === $type ? $seed['name'] : $seed['title']; $row['story'] = 'post' === $type ? self::person_content( $seed ) : $seed['content']; }
 			if ( 'post' === $type ) {
 				wp_cache_delete( $id, 'post_meta' );
-				foreach ( array( 'born' => 'born', '_wpmft_location' => 'location', '_wpmft_occupation' => 'occupation' ) as $meta => $field ) {
-					$row['meta'][$meta] = $original ? $seed[$field] : ( metadata_exists( 'post', $id, $meta ) ? (string) get_post_meta( $id, $meta, true ) : null );
+				$defaults = array( 'born' => $seed['born'], 'gender' => $seed['gender'], '_wpmft_location' => $seed['location'], '_wpmft_occupation' => $seed['occupation'], '_wpmft_website' => 'https://example.com/', '_wpmft_social_instagram' => 'https://www.instagram.com/', '_wpmft_social_youtube' => 'https://www.youtube.com/' );
+				foreach ( self::editor_meta_keys() as $meta ) {
+					$value = metadata_exists( 'post', $id, $meta ) ? get_post_meta( $id, $meta, true ) : null;
+					$row['meta'][$meta] = $original ? ( $defaults[$meta] ?? null ) : ( null === $value || '_wpmft_gallery_details' === $meta ? $value : ( is_scalar( $value ) ? (string) $value : null ) );
 				}
 			}
 			$baseline['items'][$key] = $row;
@@ -154,17 +169,17 @@ final class WPMFT_Demo {
 
 	private static function valid_baseline( $baseline ) {
 		$manifest = self::fresh_option( self::MANIFEST_OPTION );
-		if ( ! is_array( $baseline ) || ! in_array( $baseline['version'] ?? 0, array( 1, 2 ), true ) || empty( $baseline['token'] ) || empty( $manifest['token'] ) || ! hash_equals( (string) $manifest['token'], (string) $baseline['token'] ) ) { return false; }
+		if ( ! is_array( $baseline ) || ! in_array( $baseline['version'] ?? 0, array( 1, 2, 3 ), true ) || empty( $baseline['token'] ) || empty( $manifest['token'] ) || ! hash_equals( (string) $manifest['token'], (string) $baseline['token'] ) ) { return false; }
 		$types = array_fill_keys( array_keys( self::people() ), 'post' ) + array( 'tree-page' => 'page', 'about-page' => 'page' );
 		if ( ! isset( $baseline['items'] ) || ! is_array( $baseline['items'] ) || array_diff_key( $types, $baseline['items'] ) || array_diff_key( $baseline['items'], $types ) ) { return false; }
 		$expected = array();
 		foreach ( $types as $key => $type ) {
 			$row = $baseline['items'][$key];
 			if ( ! is_array( $row ) || ! isset( $row['id'], $row['type'], $row['title'], $row['story'], $row['meta'], $row['revisions'] ) || absint( $row['id'] ) !== absint( $manifest['items'][$key] ?? 0 ) || $row['type'] !== $type || ! is_string( $row['title'] ) || ! is_string( $row['story'] ) || ! is_array( $row['meta'] ) || ! is_array( $row['revisions'] ) || isset( $expected[(int) $row['id']] ) ) { return false; }
-			if ( 2 === $baseline['version'] && ! in_array( $row['status'] ?? '', array( 'publish', 'draft', 'pending', 'private', 'future', 'trash' ), true ) ) { return false; }
-			$allowed = 'post' === $type ? array( 'born', '_wpmft_location', '_wpmft_occupation' ) : array();
+			if ( $baseline['version'] >= 2 && ! in_array( $row['status'] ?? '', array( 'publish', 'draft', 'pending', 'private', 'future', 'trash' ), true ) ) { return false; }
+			$allowed = 'post' === $type ? ( 3 === $baseline['version'] ? self::editor_meta_keys() : array( 'born', '_wpmft_location', '_wpmft_occupation' ) ) : array();
 			if ( array_diff( array_keys( $row['meta'] ), $allowed ) || array_diff( $allowed, array_keys( $row['meta'] ) ) ) { return false; }
-			foreach ( $row['meta'] as $value ) { if ( null !== $value && ! is_string( $value ) ) { return false; } }
+			foreach ( $row['meta'] as $meta => $value ) { if ( null !== $value && ( '_wpmft_gallery_details' === $meta ? ! self::valid_gallery_details( $value ) : ! is_string( $value ) ) ) { return false; } }
 			$expected[(int) $row['id']] = $type;
 		}
 		return self::validate_owned_ids( $expected );
@@ -173,16 +188,26 @@ final class WPMFT_Demo {
 	/** Upgrade old baselines before removal without recapturing visitor-edited stories or metadata. */
 	private static function upgrade_baseline( $baseline, $lock, $state ) {
 		if ( ! self::valid_baseline( $baseline ) ) { return self::reset_error(); }
-		if ( 2 === $baseline['version'] ) { return $baseline; }
+		if ( 3 === $baseline['version'] ) { return $baseline; }
 		$updated = $baseline;
-		$updated['version'] = 2;
+		$updated['version'] = 3;
 		global $wpdb;
 		foreach ( $updated['items'] as &$row ) {
 			if ( ! self::owns_write_lock( $lock ) || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::validate_owned_ids( array( $row['id'] => $row['type'] ) ) ) { return self::reset_error(); }
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Capture only the original record's authoritative pre-removal publication status.
-			$status = $wpdb->get_var( $wpdb->prepare( "SELECT post_status FROM {$wpdb->posts} WHERE ID=%d AND post_type=%s", $row['id'], $row['type'] ) );
-			if ( $wpdb->last_error || ! in_array( $status, array( 'publish', 'draft', 'pending', 'private', 'future', 'trash' ), true ) ) { return self::reset_error(); }
-			$row['status'] = $status;
+			if ( 1 === $baseline['version'] ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Version 1 could not change publication status.
+				$status = $wpdb->get_var( $wpdb->prepare( "SELECT post_status FROM {$wpdb->posts} WHERE ID=%d AND post_type=%s", $row['id'], $row['type'] ) );
+				if ( $wpdb->last_error || ! in_array( $status, array( 'publish', 'draft', 'pending', 'private', 'future', 'trash' ), true ) ) { return self::reset_error(); }
+				$row['status'] = $status;
+			}
+			if ( 'post' === $row['type'] ) {
+				wp_cache_delete( $row['id'], 'post_meta' );
+				// Previous demo versions could not edit these fields. Never recapture the already-editable fields.
+				foreach ( array_diff( self::editor_meta_keys(), array( 'born', '_wpmft_location', '_wpmft_occupation' ) ) as $meta ) {
+					$value = metadata_exists( 'post', $row['id'], $meta ) ? get_post_meta( $row['id'], $meta, true ) : null;
+					$row['meta'][$meta] = null === $value || '_wpmft_gallery_details' === $meta ? $value : ( is_scalar( $value ) ? (string) $value : null );
+				}
+			}
 		}
 		unset( $row );
 		if ( ! self::valid_baseline( $updated ) || ! self::owns_write_lock( $lock ) || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || self::fresh_option( self::BASELINE_OPTION ) !== $baseline ) { return self::reset_error(); }
@@ -328,7 +353,7 @@ final class WPMFT_Demo {
 		$baseline = self::fresh_option( self::BASELINE_OPTION );
 		if ( false === $baseline ) { return self::reset_error(); }
 		$due = empty( $state['next_reset_at'] ) || empty( $state['reset_cycle'] ) || ! empty( $state['reset_pending'] ) || (int) $state['next_reset_at'] <= time();
-		if ( ! $force && is_array( $baseline ) && 2 === ( $baseline['version'] ?? 0 ) && ! $due ) { self::schedule_reset( $state['next_reset_at'] ); return true; }
+		if ( ! $force && is_array( $baseline ) && 3 === ( $baseline['version'] ?? 0 ) && ! $due ) { self::schedule_reset( $state['next_reset_at'] ); return true; }
 		$lock = self::acquire_write_lock();
 		if ( ! $lock ) { return self::reset_error(); }
 		self::$resetting = true;
@@ -382,7 +407,8 @@ final class WPMFT_Demo {
 					if ( ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::owns_write_lock( $lock ) || ! self::validate_owned_ids( array( $row['id'] => $row['type'] ) ) ) { self::$reset_failed = true; return self::reset_error(); }
 					if ( null === $value ) { delete_post_meta( $row['id'], $key ); } else { update_post_meta( $row['id'], $key, wp_slash( $value ) ); }
 					wp_cache_delete( $row['id'], 'post_meta' );
-					if ( null === $value ? metadata_exists( 'post', $row['id'], $key ) : (string) get_post_meta( $row['id'], $key, true ) !== $value ) { self::$reset_failed = true; return self::reset_error(); }
+					$stored_value = get_post_meta( $row['id'], $key, true );
+					if ( null === $value ? metadata_exists( 'post', $row['id'], $key ) : ( is_array( $value ) ? $stored_value !== $value : (string) $stored_value !== $value ) ) { self::$reset_failed = true; return self::reset_error(); }
 				}
 				$revisions = self::revision_ids( $row['id'] );
 				if ( false === $revisions ) { self::$reset_failed = true; return self::reset_error(); }
@@ -468,6 +494,16 @@ final class WPMFT_Demo {
 			parse_str( $query, $parts );
 			return isset( $parts['action'], $parts['id'] ) && 'wpmft_media' === $parts['action'] && $collect( $parts['id'], 'attachment' );
 		};
+		$srcset = function ( $value ) use ( $image ) {
+			if ( '' === $value ) { return true; }
+			if ( ! is_string( $value ) || strlen( $value ) > 16000 ) { return false; }
+			$candidates = preg_split( '/\s*,\s*/', trim( $value ) );
+			if ( ! $candidates || count( $candidates ) > 12 ) { return false; }
+			foreach ( $candidates as $candidate ) {
+				if ( ! preg_match( '/^(\S+)\s+[1-9][0-9]*w$/D', $candidate, $match ) || ! $image( $match[1] ) ) { return false; }
+			}
+			return true;
+		};
 		$person = function ( $row ) use ( $collect, $image ) {
 			return is_array( $row ) && isset( $row['id'] ) && $collect( $row['id'], 'post' ) && $image( $row['photo'] ?? '' );
 		};
@@ -483,7 +519,12 @@ final class WPMFT_Demo {
 			if ( ! $person( $payload ) ) { return false; }
 			if ( isset( $payload['relations'] ) && ! is_array( $payload['relations'] ) || isset( $payload['gallery'] ) && ! is_array( $payload['gallery'] ) ) { return false; }
 			foreach ( $payload['relations'] ?? array() as $rows ) { if ( ! is_array( $rows ) ) { return false; } foreach ( $rows as $row ) { if ( ! $person( $row ) ) { return false; } } }
-			foreach ( $payload['gallery'] ?? array() as $row ) { if ( ! is_array( $row ) || ! $collect( $row['id'] ?? 0, 'attachment' ) || ! $image( $row['url'] ?? '' ) || ! $image( $row['thumb'] ?? '' ) ) { return false; } }
+			foreach ( $payload['gallery'] ?? array() as $row ) {
+				if ( ! is_array( $row ) || ! $collect( $row['id'] ?? 0, 'attachment' ) || ! $image( $row['url'] ?? '' ) || ! $image( $row['thumb'] ?? '' ) || ! $image( $row['display'] ?? '' ) || ! $srcset( $row['srcset'] ?? '' ) || isset( $row['sources'] ) && ! is_array( $row['sources'] ) ) { return false; }
+				foreach ( $row['sources'] ?? array() as $source ) {
+					if ( ! is_array( $source ) || ! in_array( $source['type'] ?? '', array( 'image/avif', 'image/webp', 'image/jpeg', 'image/png', 'image/gif' ), true ) || ! $srcset( $source['srcset'] ?? '' ) ) { return false; }
+				}
+			}
 		} else { return false; }
 		return self::validate_owned_ids( $expected );
 	}
@@ -755,12 +796,13 @@ final class WPMFT_Demo {
 		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_die( esc_html__( 'A POST request is required.', 'my-family-tree' ), '', array( 'response' => 405 ) ); }
 		if ( ! current_user_can( 'manage_options' ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
 		check_admin_referer( $action );
+		if ( 'wpmft_demo_disable' !== $action && ! self::tools_visible() ) { wp_die( esc_html__( 'Enable the optional demo tools in General settings before using this action.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
 		if ( empty( $_POST['wpmft_demo_confirm'] ) || '1' !== $_POST['wpmft_demo_confirm'] ) { wp_die( esc_html__( 'Read and confirm the demo notice before continuing.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
 	}
 
 	private static function finish( $result, $message ) {
 		set_transient( 'wpmft_demo_notice_' . get_current_user_id(), array( 'error' => is_wp_error( $result ), 'message' => is_wp_error( $result ) ? $result->get_error_message() : $message ), MINUTE_IN_SECONDS );
-		wp_safe_redirect( admin_url( 'admin.php?page=wpmft#wpmft-demo' ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=wpmft#' . ( self::tools_visible() ? 'wpmft-demo' : 'wpmft-general' ) ) );
 		exit;
 	}
 
@@ -768,7 +810,29 @@ final class WPMFT_Demo {
 	public static function handle_enable() { self::require_admin( 'wpmft_demo_enable' ); self::finish( self::enable(), __( 'Demo sharing is active. The shared editor can edit demo content only.', 'my-family-tree' ) ); }
 	public static function handle_disable() { self::require_admin( 'wpmft_demo_disable' ); self::finish( self::disable(), __( 'Demo sharing is off. Its sessions and managed account have been revoked. Demo content is retained.', 'my-family-tree' ) ); }
 	public static function handle_reset() { self::require_admin( 'wpmft_demo_reset' ); self::finish( self::reset_now(), __( 'Demo visitor edits have been reset. The next reset is due in 24 hours.', 'my-family-tree' ) ); }
-	public static function handle_baseline() { self::require_admin( 'wpmft_demo_baseline' ); self::finish( self::capture_baseline(), __( 'The current demo titles, stories, dates, locations and occupations are saved as the reset baseline.', 'my-family-tree' ) ); }
+	public static function handle_baseline() { self::require_admin( 'wpmft_demo_baseline' ); self::finish( self::capture_baseline(), __( 'The current demo titles, stories, personal details, contacts and photo stories are saved as the reset baseline.', 'my-family-tree' ) ); }
+
+	/** First-time empty installs offer setup once; established sites opt in from General. */
+	public static function tools_visible() {
+		$s = wpmft_settings();
+		if ( ! empty( $s['demo_tools_enabled'] ) ) { return true; }
+		return ! get_option( 'wpmft_demo_setup_complete', 0 ) && empty( $s['page_id'] ) && empty( self::manifest()['items'] ) && ! WPMFT_Data::ids( false );
+	}
+
+	/** Hiding tools never hides an active shared account or silently changes its access. */
+	public static function render_general_status() {
+		if ( ! self::guard_required() ) {
+			if ( self::tools_visible() && empty( wpmft_settings()['demo_tools_enabled'] ) ) { echo '<p class="description">' . esc_html__( 'The Demo tab is available for this initial setup. Save General settings to finish setup.', 'my-family-tree' ) . '</p>'; }
+			return;
+		}
+		echo '<div class="wpmft-admin-note"><p><strong>' . esc_html__( 'Shared demo access is active or locked.', 'my-family-tree' ) . '</strong> ' . esc_html__( 'Hiding the Demo tab does not stop shared access or its daily reset.', 'my-family-tree' ) . '</p>';
+		if ( self::tools_visible() ) {
+			echo '<p><a class="button" href="#wpmft-demo">' . esc_html__( 'Manage or disable demo sharing', 'my-family-tree' ) . '</a></p>';
+		} else {
+			echo '<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-disable" name="wpmft_demo_confirm" value="1" required><span>' . esc_html__( 'Revoke the shared account and demo sessions, keep demo content, and restore the normal Privacy settings.', 'my-family-tree' ) . '</span></label><p><button type="submit" form="wpmft-demo-disable" class="button">' . esc_html__( 'Disable demo mode', 'my-family-tree' ) . '</button></p>';
+		}
+		echo '</div>';
+	}
 
 	public static function notices() {
 		if ( ! current_user_can( 'manage_options' ) ) { return; }
@@ -812,7 +876,7 @@ final class WPMFT_Demo {
 		<?php endif; ?>
 		<hr>
 		<h3><?php esc_html_e( 'Automatic demo reset', 'my-family-tree' ); ?></h3>
-		<p><?php esc_html_e( 'Every 24 hours the plugin restores original demo titles, stories, publication status, birth dates, locations and occupations. Removed original samples return, and visitor-created records are deleted. Settings, relationships, media and unrelated content are kept. No backup plugin is required.', 'my-family-tree' ); ?></p>
+		<p><?php esc_html_e( 'Every 24 hours the plugin restores original demo titles, stories, publication status, personal details, contacts and photo stories. Removed original samples return, and visitor-created records are deleted. Settings, relationships, media and unrelated content are kept. No backup plugin is required.', 'my-family-tree' ); ?></p>
 		<p class="description"><?php esc_html_e( 'WordPress runs scheduled tasks when the site receives a request. An overdue reset also runs before the next demo visit or save. An editor opened before a reset must be reloaded before saving.', 'my-family-tree' ); ?></p>
 		<?php if ( $active ) : $reset_state = self::state(); ?>
 		<p><strong><?php esc_html_e( 'Next reset:', 'my-family-tree' ); ?></strong> <?php echo esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $reset_state['next_reset_at'] ) ); ?></p>
@@ -841,6 +905,7 @@ final class WPMFT_Demo {
 			wp_dequeue_script( 'wp-core-commands' );
 			wp_dequeue_script( 'wp-commands' );
 			wp_dequeue_style( 'wp-commands' );
+			wp_enqueue_style( 'wpmft-admin', wpmft_asset_url( 'admin.css' ), array(), wpmft_asset_version() );
 		}
 		wp_enqueue_script( 'wpmft-demo-admin', wpmft_asset_url( 'demo-admin.js' ), array(), wpmft_asset_version(), true );
 		wp_enqueue_style( 'wpmft-demo-admin', wpmft_asset_url( 'demo-admin.css' ), array(), wpmft_asset_version() );
@@ -913,6 +978,9 @@ final class WPMFT_Demo {
 		$menu = array();
 		add_menu_page( __( 'Family Tree Demo', 'my-family-tree' ), __( 'Persons', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor', array( __CLASS__, 'editor_page' ), 'dashicons-groups', 2 );
 		add_submenu_page( 'wpmft-demo-editor', __( 'Persons', 'my-family-tree' ), __( 'All persons', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor', array( __CLASS__, 'editor_page' ) );
+		add_submenu_page( 'wpmft-demo-editor', __( 'Add person', 'my-family-tree' ), __( 'Add person', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor&create=post', array( __CLASS__, 'editor_page' ) );
+		add_submenu_page( 'wpmft-demo-editor', __( 'Pages', 'my-family-tree' ), __( 'Pages', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor&view=pages', array( __CLASS__, 'editor_page' ) );
+		add_submenu_page( 'wpmft-demo-editor', __( 'Family tree settings', 'my-family-tree' ), __( 'Family tree settings', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor&view=settings', array( __CLASS__, 'editor_page' ) );
 	}
 
 	public static function editor_page() {
@@ -937,10 +1005,9 @@ final class WPMFT_Demo {
 		if ( $create_type ) { $heading = $show_pages ? __( 'Add page', 'my-family-tree' ) : __( 'Add person', 'my-family-tree' ); }
 		if ( $removing ) { $heading = $show_pages ? __( 'Remove page', 'my-family-tree' ) : __( 'Remove person', 'my-family-tree' ); }
 		?>
-		<div class="wrap wpmft-demo-editor">
+		<div class="wrap wpmft-settings wpmft-demo-editor">
 			<header class="wpmft-demo-header">
-				<p class="wpmft-demo-eyebrow"><?php esc_html_e( 'Family Tree Demo', 'my-family-tree' ); ?></p>
-				<h1><?php echo esc_html( $heading ); ?></h1>
+				<div class="wpmft-admin-heading"><div><p class="wpmft-eyebrow">DigitalPulse · <?php esc_html_e( 'Family Tree Demo', 'my-family-tree' ); ?></p><h1><?php echo esc_html( $heading ); ?></h1></div><span class="wpmft-version"><?php echo esc_html( WPMFT_VERSION ); ?></span></div>
 				<?php if ( $post ) : ?><p class="wpmft-demo-selected-name"><?php echo esc_html( $post->post_title ); ?></p><?php endif; ?>
 				<nav class="wpmft-demo-nav" aria-label="<?php esc_attr_e( 'Demo navigation', 'my-family-tree' ); ?>">
 					<a class="button" href="<?php echo esc_url( $list_url ); ?>" <?php echo ! $post && ! $create_type && ! $show_pages && ! $show_settings ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'All persons', 'my-family-tree' ); ?></a>
@@ -973,15 +1040,16 @@ final class WPMFT_Demo {
 			else { echo '<input type="hidden" name="person" value="' . absint( $id ) . '">'; }
 			wp_nonce_field( $create_type ? 'wpmft_demo_create_' . $create_type : 'wpmft_demo_save_' . $id );
 			echo '<input type="hidden" name="wpmft_demo_reset_cycle" value="' . esc_attr( self::state()['reset_cycle'] ?? '' ) . '">';
-			echo '<table class="form-table"><tr><th><label for="wpmft-demo-title">' . esc_html( $show_pages ? __( 'Name / title', 'my-family-tree' ) : __( 'Person’s full name', 'my-family-tree' ) ) . '</label></th><td><input class="large-text" id="wpmft-demo-title" name="demo_title" value="' . esc_attr( $post ? $post->post_title : '' ) . '" maxlength="160" required></td></tr>';
-			if ( ! $show_pages ) {
-				foreach ( array( 'born' => __( 'Birth date (YYYY, YYYY-MM or YYYY-MM-DD)', 'my-family-tree' ), '_wpmft_location' => __( 'Location', 'my-family-tree' ), '_wpmft_occupation' => __( 'Occupation', 'my-family-tree' ) ) as $key => $label ) {
-					echo '<tr><th><label for="demo-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label></th><td><input class="regular-text" id="demo-' . esc_attr( $key ) . '" name="demo_meta[' . esc_attr( $key ) . ']" value="' . esc_attr( $post ? get_post_meta( $id, $key, true ) : '' ) . '" maxlength="160"></td></tr>';
-				}
+			echo '<div class="wpmft-person-panel"><label class="wpmft-field wpmft-demo-title-field" for="wpmft-demo-title"><span>' . esc_html( $show_pages ? __( 'Name / title', 'my-family-tree' ) : __( 'Person’s full name', 'my-family-tree' ) ) . '</span><input class="large-text" id="wpmft-demo-title" name="demo_title" value="' . esc_attr( $post ? $post->post_title : '' ) . '" maxlength="160" required></label>';
+			if ( ! $show_pages ) { self::editor_person_fields( $post ); }
+			echo '</div><section class="wpmft-person-panel"><h2 class="wpmft-biography-heading">' . esc_html__( 'Biography / page story', 'my-family-tree' ) . '</h2>';
+			if ( $id === $tree_id ) {
+				echo '<textarea class="large-text" rows="3" id="wpmft-demo-story" name="demo_story" readonly>' . esc_textarea( $post->post_content ) . '</textarea><p class="description">' . esc_html__( 'This page displays the demo family tree. Its shortcode is preserved; you can edit the page title.', 'my-family-tree' ) . '</p>';
+			} else {
+				wp_editor( $post ? $post->post_content : '', 'wpmft-demo-story', array( 'textarea_name' => 'demo_story', 'media_buttons' => false, 'textarea_rows' => 14, 'teeny' => true, 'tinymce' => array( 'toolbar1' => 'formatselect,bold,italic,bullist,numlist,blockquote,undo,redo,removeformat', 'toolbar2' => '' ), 'quicktags' => array( 'buttons' => 'strong,em,block,del,ins,ul,ol,li,close' ) ) );
+				echo '<p class="description">' . esc_html__( 'Write a story with simple formatting. Shared demo pages do not run shortcodes or embedded scripts.', 'my-family-tree' ) . '</p>';
 			}
-			echo '<tr><th><label for="wpmft-demo-story">' . esc_html__( 'Story (basic HTML allowed)', 'my-family-tree' ) . '</label></th><td><textarea class="large-text" rows="' . ( $id === $tree_id ? '3' : '16' ) . '" id="wpmft-demo-story" name="demo_story" maxlength="12000" ' . ( $id === $tree_id ? 'readonly' : '' ) . '>' . esc_textarea( $post ? $post->post_content : '' ) . '</textarea>';
-			if ( $id === $tree_id ) { echo '<p class="description">' . esc_html__( 'This page displays the demo family tree. Its shortcode is preserved; you can edit the page title.', 'my-family-tree' ) . '</p>'; }
-			echo '</td></tr></table>';
+			echo '</section>';
 			echo '<div class="wpmft-demo-form-actions">';
 			submit_button( $create_type ? $heading : ( $show_pages ? __( 'Save demo page', 'my-family-tree' ) : __( 'Save person', 'my-family-tree' ) ), 'primary', 'submit', false );
 			echo '<a class="button" href="' . esc_url( $show_pages ? $pages_url : $list_url ) . '">' . esc_html__( 'Cancel', 'my-family-tree' ) . '</a></div></form>';
@@ -991,7 +1059,7 @@ final class WPMFT_Demo {
 		} else {
 			echo '<p class="wpmft-demo-content-actions"><a class="button button-primary" href="' . esc_url( add_query_arg( 'create', $show_pages ? 'page' : 'post', $list_url ) ) . '">' . esc_html( $show_pages ? __( 'Add page', 'my-family-tree' ) : __( 'Add person', 'my-family-tree' ) ) . '</a></p>';
 			if ( ! $show_pages ) {
-				echo '<p class="wpmft-demo-intro">' . esc_html__( 'Choose Edit person to change a name, biography, birth date, location or occupation. Use View person to see the public profile.', 'my-family-tree' ) . '</p>';
+				echo '<p class="wpmft-demo-intro">' . esc_html__( 'Choose Edit person to try personal details, contact fields, WhatsApp and photo stories in the same layout as the family editor. Use View person to see the public profile.', 'my-family-tree' ) . '</p>';
 				echo '<div class="wpmft-demo-search"><label for="wpmft-demo-search">' . esc_html__( 'Search persons', 'my-family-tree' ) . '</label><input type="search" id="wpmft-demo-search" aria-controls="wpmft-demo-person-list" autocomplete="off"></div>';
 			}
 			echo '<ul class="wpmft-demo-cards" id="wpmft-demo-person-list">';
@@ -1015,6 +1083,64 @@ final class WPMFT_Demo {
 			echo '</ul><p id="wpmft-demo-empty" role="status" hidden>' . esc_html__( 'No persons found.', 'my-family-tree' ) . '</p>';
 		}
 		echo '</div>';
+	}
+
+	/** The shared editor uses the regular person panel styles without exposing WordPress media or user APIs. */
+	private static function editor_person_fields( $post ) {
+		$id = $post ? (int) $post->ID : 0;
+		$portrait = $id ? get_post_thumbnail_id( $id ) : 0;
+		?>
+		<div class="wpmft-person-editor">
+			<label class="wpmft-check"><input type="checkbox" checked disabled><span><?php esc_html_e( 'Include this post as a person in the family tree', 'my-family-tree' ); ?></span></label>
+			<div class="wpmft-portrait-editor">
+				<div class="wpmft-portrait-preview"><?php if ( $portrait && self::allows_media( $portrait ) ) { echo wp_get_attachment_image( $portrait, 'medium' ); } else { echo '<span class="dashicons dashicons-admin-users" aria-hidden="true"></span>'; } ?></div>
+				<div><h3><?php esc_html_e( 'Portrait', 'my-family-tree' ); ?></h3><p class="description"><?php esc_html_e( 'The portrait is the post’s featured image. Faces stay at the top of photo frames.', 'my-family-tree' ); ?></p><p class="description"><?php esc_html_e( 'Sample portraits, gallery selection and family links are protected in the shared demo. Personal details, contacts and photo stories below are editable.', 'my-family-tree' ); ?></p></div>
+			</div>
+			<h3><?php esc_html_e( 'Personal details', 'my-family-tree' ); ?></h3>
+			<div class="wpmft-person-grid">
+				<label class="wpmft-field"><span><?php esc_html_e( 'Gender', 'my-family-tree' ); ?></span><select name="demo_meta[gender]">
+				<?php foreach ( array( '' => __( 'Not specified', 'my-family-tree' ), 'm' => __( 'Male', 'my-family-tree' ), 'f' => __( 'Female', 'my-family-tree' ), 'x' => __( 'Other', 'my-family-tree' ) ) as $value => $label ) : ?><option value="<?php echo esc_attr( $value ); ?>" <?php selected( $id ? get_post_meta( $id, 'gender', true ) : '', $value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?>
+				</select></label>
+				<?php foreach ( array( 'born' => __( 'Date of birth', 'my-family-tree' ), 'died' => __( 'Date of death (leave blank if living)', 'my-family-tree' ), '_wpmft_maiden_name' => __( 'Birth / maiden name', 'my-family-tree' ), '_wpmft_birth_place' => __( 'Birthplace', 'my-family-tree' ), '_wpmft_death_place' => __( 'Place of death', 'my-family-tree' ), '_wpmft_location' => __( 'Location', 'my-family-tree' ), '_wpmft_occupation' => __( 'Occupation', 'my-family-tree' ) ) as $key => $label ) { self::editor_field( $id, $key, $label ); } ?>
+			</div>
+			<p class="description"><?php esc_html_e( 'Dates accept YYYY, YYYY-MM or YYYY-MM-DD. Older date text is retained unless you change it.', 'my-family-tree' ); ?></p>
+			<h3><?php esc_html_e( 'Family connections', 'my-family-tree' ); ?></h3>
+			<div class="wpmft-person-grid">
+			<?php foreach ( array( 'father' => __( 'Father / parent 1', 'my-family-tree' ), 'mother' => __( 'Mother / parent 2', 'my-family-tree' ), 'spouse' => __( 'Primary spouse / partner', 'my-family-tree' ) ) as $key => $label ) : $related = $id ? absint( get_post_meta( $id, $key, true ) ) : 0; ?>
+				<label class="wpmft-field"><span><?php echo esc_html( $label ); ?></span><input type="text" readonly value="<?php echo esc_attr( $related && self::allows_person( $related ) ? get_the_title( $related ) : '' ); ?>"></label>
+			<?php endforeach; ?>
+			</div>
+			<section class="wpmft-contact-details"><h3><?php esc_html_e( 'Contact details', 'my-family-tree' ); ?></h3>
+				<p class="description"><?php esc_html_e( 'Use fictional contact information in this public demo. Changes are visible to other visitors until the daily reset.', 'my-family-tree' ); ?></p>
+				<div class="wpmft-person-grid">
+				<?php foreach ( array( '_wpmft_email' => array( __( 'Email address', 'my-family-tree' ), 'email' ), '_wpmft_phone' => array( __( 'Telephone', 'my-family-tree' ), 'tel' ), '_wpmft_mobile' => array( __( 'Mobile phone', 'my-family-tree' ), 'tel' ), '_wpmft_whatsapp' => array( __( 'WhatsApp number', 'my-family-tree' ), 'tel' ), '_wpmft_website' => array( __( 'Website', 'my-family-tree' ), 'url' ) ) as $key => $field ) { self::editor_field( $id, $key, $field[0], $field[1] ); } ?>
+				<label class="wpmft-field wpmft-field-wide"><span><?php esc_html_e( 'Postal address', 'my-family-tree' ); ?></span><textarea name="demo_meta[_wpmft_address]" rows="3" maxlength="500"><?php echo esc_textarea( $id ? get_post_meta( $id, '_wpmft_address', true ) : '' ); ?></textarea></label>
+				</div>
+				<p class="description"><?php esc_html_e( 'For WhatsApp, include the country code, for example +371 or +44. Leave it blank to hide the chat icon.', 'my-family-tree' ); ?></p>
+				<h3><?php esc_html_e( 'Social profiles', 'my-family-tree' ); ?></h3><div class="wpmft-person-grid">
+				<?php foreach ( array( 'facebook' => 'Facebook', 'instagram' => 'Instagram', 'linkedin' => 'LinkedIn', 'x' => 'X / Twitter', 'youtube' => 'YouTube', 'tiktok' => 'TikTok' ) as $key => $label ) { self::editor_field( $id, '_wpmft_social_' . $key, $label, 'url' ); } ?>
+				</div>
+			</section>
+			<h3><?php esc_html_e( 'Photo gallery', 'my-family-tree' ); ?></h3>
+			<?php $gallery = $id ? array_values( array_filter( WPMFT_Data::gallery_ids( $id ), array( __CLASS__, 'allows_media' ) ) ) : array(); $details = $id ? WPMFT_Data::gallery_details( $id ) : array(); ?>
+			<?php if ( $gallery ) : ?><div class="wpmft-demo-gallery">
+			<?php foreach ( $gallery as $photo ) : $detail = $details[$photo] ?? array( 'description' => '', 'date' => '' ); ?>
+				<article class="wpmft-demo-gallery-card">
+					<?php echo wp_get_attachment_image( $photo, 'medium', false, array( 'loading' => 'lazy', 'decoding' => 'async' ) ); ?>
+					<div><label class="wpmft-field"><span><?php esc_html_e( 'When was it taken?', 'my-family-tree' ); ?></span><input type="text" name="demo_meta[_wpmft_gallery_details][<?php echo absint( $photo ); ?>][date]" value="<?php echo esc_attr( $detail['date'] ); ?>" maxlength="100"></label>
+					<label class="wpmft-field"><span><?php esc_html_e( 'Photo story / description', 'my-family-tree' ); ?></span><textarea name="demo_meta[_wpmft_gallery_details][<?php echo absint( $photo ); ?>][description]" rows="3" maxlength="2000"><?php echo esc_textarea( $detail['description'] ); ?></textarea></label></div>
+				</article>
+			<?php endforeach; ?>
+			</div><?php else : ?><p class="description"><?php esc_html_e( 'The administrator can assign sample photographs to this person. Existing sample galleries let you try photo stories and dates.', 'my-family-tree' ); ?></p><?php endif; ?>
+		</div>
+		<?php
+	}
+
+	private static function editor_field( $person, $key, $label, $type = 'text' ) {
+		$value = $person ? get_post_meta( $person, $key, true ) : '';
+		?>
+		<label class="wpmft-field"><span><?php echo esc_html( $label ); ?></span><input type="<?php echo esc_attr( $type ); ?>" name="demo_meta[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( is_scalar( $value ) ? $value : '' ); ?>" maxlength="<?php echo 'url' === $type ? 2048 : 250; ?>" <?php echo in_array( $key, array( 'born', 'died' ), true ) ? 'placeholder="YYYY-MM-DD"' : ''; ?>></label>
+		<?php
 	}
 
 	/** A read-only allowlist. Private credentials and contact recipients never enter this markup. */
@@ -1043,40 +1169,46 @@ final class WPMFT_Demo {
 		$background = sanitize_hex_color( $s['background'] ) ?: '#f5f4ed';
 		?>
 		<p class="wpmft-demo-intro" id="wpmft-demo-settings-help"><?php esc_html_e( 'These settings explain how My Family Tree works. Only the site administrator can change them.', 'my-family-tree' ); ?></p>
-		<div class="wpmft-demo-settings-grid" aria-describedby="wpmft-demo-settings-help">
-			<section class="wpmft-demo-settings-group">
+		<nav class="wpmft-admin-tabs wpmft-demo-settings-tabs" aria-label="<?php esc_attr_e( 'Family tree settings', 'my-family-tree' ); ?>">
+			<?php foreach ( array( 'general' => __( 'General', 'my-family-tree' ), 'privacy' => __( 'Privacy & access', 'my-family-tree' ), 'appearance' => __( 'Appearance', 'my-family-tree' ), 'contact' => __( 'Contact & hCaptcha', 'my-family-tree' ), 'performance' => __( 'Performance & cache', 'my-family-tree' ), 'languages' => __( 'Languages', 'my-family-tree' ) ) as $key => $label ) : ?><a href="#wpmft-demo-settings-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></a><?php endforeach; ?>
+		</nav>
+		<div class="wpmft-settings-form wpmft-demo-settings-panels" aria-describedby="wpmft-demo-settings-help">
+			<section id="wpmft-demo-settings-general" class="wpmft-settings-section wpmft-demo-settings-group">
 				<h2><?php esc_html_e( 'General', 'my-family-tree' ); ?></h2>
 				<dl>
 					<dt><?php esc_html_e( 'Tree page', 'my-family-tree' ); ?></dt><dd><?php if ( $tree_url ) : ?><a href="<?php echo esc_url( $tree_url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( get_the_title( $tree_id ) ); ?></a><?php endif; ?></dd>
 					<dt><?php esc_html_e( 'Starting person', 'my-family-tree' ); ?></dt><dd><?php if ( $root ) : ?><a href="<?php echo esc_url( add_query_arg( 'person', $root_id, $list_url ) ); ?>"><?php echo esc_html( $root->post_title ); ?></a><?php endif; ?></dd>
 				</dl>
 				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Shortcodes', 'my-family-tree' ); ?></span><input type="text" readonly value="[wp_my_family_tree]"></label>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['demo_tools_enabled'] ) ); ?>><span><?php esc_html_e( 'Show the Demo tab for sample content and demo sharing', 'my-family-tree' ); ?></span></label>
 			</section>
-			<section class="wpmft-demo-settings-group">
+			<section id="wpmft-demo-settings-appearance" class="wpmft-settings-section wpmft-demo-settings-group">
 				<h2><?php esc_html_e( 'Appearance', 'my-family-tree' ); ?></h2>
 				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['standalone'] ) ); ?>><span><?php esc_html_e( 'Use the full-window layout without the theme header and footer', 'my-family-tree' ); ?></span></label>
 				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Accent colour', 'my-family-tree' ); ?></span><input type="text" readonly value="<?php echo esc_attr( $accent ); ?>"></label>
 				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Background colour', 'my-family-tree' ); ?></span><input type="text" readonly value="<?php echo esc_attr( $background ); ?>"></label>
 				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Tree canvas height on large screens (px)', 'my-family-tree' ); ?></span><input type="number" readonly value="<?php echo absint( $s['tree_height'] ); ?>"></label>
 			</section>
-			<section class="wpmft-demo-settings-group">
+			<section id="wpmft-demo-settings-languages" class="wpmft-settings-section wpmft-demo-settings-group">
 				<h2><?php esc_html_e( 'Languages', 'my-family-tree' ); ?></h2>
 				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Default interface language', 'my-family-tree' ); ?></span><input type="text" readonly value="<?php echo esc_attr( $default_language_name ); ?>"></label>
 				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['language_switch'] ) ); ?>><span><?php esc_html_e( 'Show the language switch', 'my-family-tree' ); ?></span></label>
 				<ul class="wpmft-demo-language-list"><?php foreach ( $languages['languages'] as $language ) : ?><li><?php echo esc_html( $language['name'] ); ?></li><?php endforeach; ?></ul>
 				<p><?php echo esc_html( 'polylang' === $languages['provider'] ? __( 'Polylang is active. Its configured languages and translated page links control the public language menu. These presets supply interface labels.', 'my-family-tree' ) : __( 'Polylang is optional and free to install. The tree and its interface languages work without it. Installing it does not automatically translate your content.', 'my-family-tree' ) ); ?></p>
 			</section>
-			<section class="wpmft-demo-settings-group">
+			<section id="wpmft-demo-settings-privacy" class="wpmft-settings-section wpmft-demo-settings-group">
 				<h2><?php esc_html_e( 'Privacy & access', 'my-family-tree' ); ?></h2>
 				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled checked><span><?php esc_html_e( 'Optional shared demo mode', 'my-family-tree' ); ?></span></label>
 				<p><?php esc_html_e( 'Demo access is separate from the private-family password. The shared account can manage demo persons and pages only. Original content returns and new items are removed every 24 hours.', 'my-family-tree' ); ?></p>
 			</section>
-			<section class="wpmft-demo-settings-group">
-				<h2><?php esc_html_e( 'Contact form', 'my-family-tree' ); ?></h2>
+			<section id="wpmft-demo-settings-contact" class="wpmft-settings-section wpmft-demo-settings-group">
+				<h2><?php esc_html_e( 'Contact & hCaptcha', 'my-family-tree' ); ?></h2>
 				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled><span><?php esc_html_e( 'Contact messages', 'my-family-tree' ); ?></span></label>
 				<p><?php esc_html_e( 'Family visitors can send a message, a relative’s description and an optional photograph to the administrator. Sending is disabled during shared demo mode.', 'my-family-tree' ); ?></p>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['hcaptcha_enabled'] ) ); ?>><span><?php esc_html_e( 'Enable hCaptcha (external anti-spam service)', 'my-family-tree' ); ?></span></label>
+				<p><?php esc_html_e( 'Optional WhatsApp buttons can connect visitors with the administrator or individual persons. Administrator contact details and service keys are not shown in this shared settings view.', 'my-family-tree' ); ?></p>
 			</section>
-			<section class="wpmft-demo-settings-group">
+			<section id="wpmft-demo-settings-performance" class="wpmft-settings-section wpmft-demo-settings-group">
 				<h2><?php esc_html_e( 'Performance & cache', 'my-family-tree' ); ?></h2>
 				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( $cache['enabled'] ); ?>><span><?php esc_html_e( 'Cache the internal relationship index', 'my-family-tree' ); ?></span></label>
 				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Cache storage', 'my-family-tree' ); ?></span><input type="text" readonly value="<?php echo esc_attr( 'object' === $cache['backend'] ? __( 'Persistent WordPress object cache', 'my-family-tree' ) : __( 'WordPress database transients', 'my-family-tree' ) ); ?>"></label>
@@ -1094,7 +1226,7 @@ final class WPMFT_Demo {
 		if ( ! is_array( $state ) || empty( $state['enabled'] ) || ! empty( $state['quarantined'] ) || ! empty( $state['reset_pending'] ) || (int) ( $state['next_reset_at'] ?? 0 ) <= time() || get_current_user_id() !== absint( $state['user_id'] ?? 0 ) || ! self::owns_write_lock( $lock ) || self::real_family_count() ) { return self::reset_error(); }
 		if ( ! is_string( $cycle ) || empty( $state['reset_cycle'] ) || ! hash_equals( (string) $state['reset_cycle'], $cycle ) ) { return new WP_Error( 'demo_stale', __( 'The demo has reset since this page was opened. Reload it before making changes.', 'my-family-tree' ) ); }
 		$baseline = self::fresh_option( self::BASELINE_OPTION );
-		if ( ! is_array( $baseline ) || 2 !== ( $baseline['version'] ?? 0 ) || ! self::valid_baseline( $baseline ) || ! self::valid_visitor_ledger( self::fresh_option( self::MANIFEST_OPTION ) ) ) { return self::reset_error(); }
+		if ( ! is_array( $baseline ) || 3 !== ( $baseline['version'] ?? 0 ) || ! self::valid_baseline( $baseline ) || ! self::valid_visitor_ledger( self::fresh_option( self::MANIFEST_OPTION ) ) ) { return self::reset_error(); }
 		return $state;
 	}
 
@@ -1105,7 +1237,49 @@ final class WPMFT_Demo {
 		return ! $wpdb->last_error && is_array( $post ) && in_array( $post['post_type'], array( 'post', 'page' ), true ) && 'publish' === $post['post_status'] && self::validate_owned_ids( array( $id => $post['post_type'] ) ) ? $post : false;
 	}
 
-	/** Shared create/save inputs expose only static stories and the existing three person fields. */
+	private static function limit_editor_text( $value, $length ) {
+		return function_exists( 'mb_substr' ) ? mb_substr( $value, 0, $length ) : wp_check_invalid_utf8( substr( $value, 0, $length ), true );
+	}
+
+	/** Values are sanitized again under the mutation lock; only current sample gallery images can receive stories. */
+	private static function sanitize_editor_meta( $submitted, $person = 0 ) {
+		$meta = array();
+		if ( ! is_array( $submitted ) ) { return $meta; }
+		foreach ( self::editor_meta_keys() as $key ) {
+			if ( ! array_key_exists( $key, $submitted ) ) { continue; }
+			if ( '_wpmft_gallery_details' === $key ) {
+				if ( ! $person || ! is_array( $submitted[$key] ) || count( $submitted[$key] ) > 100 ) { continue; }
+				$details = array();
+				foreach ( WPMFT_Data::gallery_ids( $person ) as $photo ) {
+					if ( ! self::allows_media( $photo ) || ! isset( $submitted[$key][$photo] ) || ! is_array( $submitted[$key][$photo] ) ) { continue; }
+					$row = $submitted[$key][$photo];
+					if ( ! isset( $row['description'], $row['date'] ) || ! is_string( $row['description'] ) || ! is_string( $row['date'] ) || strlen( $row['description'] ) > 8000 || strlen( $row['date'] ) > 400 ) { continue; }
+					$details[$photo] = array( 'description' => self::limit_editor_text( sanitize_textarea_field( $row['description'] ), 2000 ), 'date' => self::limit_editor_text( sanitize_text_field( $row['date'] ), 100 ) );
+				}
+				$meta[$key] = $details;
+				continue;
+			}
+			if ( ! is_string( $submitted[$key] ) || strlen( $submitted[$key] ) > 8192 ) { continue; }
+			$value = '_wpmft_address' === $key ? sanitize_textarea_field( $submitted[$key] ) : sanitize_text_field( $submitted[$key] );
+			if ( in_array( $key, array( 'born', 'died' ), true ) && ! self::valid_date( $value ) ) { continue; }
+			if ( 'gender' === $key && ! in_array( $value, array( '', 'm', 'f', 'x' ), true ) ) { continue; }
+			if ( '_wpmft_email' === $key ) {
+				if ( '' !== $value && ! is_email( $value ) ) { continue; }
+				$value = sanitize_email( $value );
+			}
+			if ( '_wpmft_whatsapp' === $key ) { $value = wpmft_whatsapp_number( $value ); }
+			$url_field = '_wpmft_website' === $key || 0 === strpos( $key, '_wpmft_social_' );
+			if ( $url_field && '' !== $value ) {
+				$parts = wp_parse_url( $value );
+				if ( ! is_array( $parts ) || empty( $parts['host'] ) || ! in_array( strtolower( $parts['scheme'] ?? '' ), array( 'http', 'https' ), true ) || isset( $parts['user'] ) || isset( $parts['pass'] ) ) { continue; }
+				$value = esc_url_raw( $value, array( 'http', 'https' ) );
+			}
+			$meta[$key] = self::limit_editor_text( $value, $url_field ? 2048 : ( '_wpmft_address' === $key ? 500 : 250 ) );
+		}
+		return $meta;
+	}
+
+	/** Shared create/save inputs expose only static stories and allowlisted person fields. */
 	private static function editor_values() {
 		$title = isset( $_POST['demo_title'] ) && is_string( $_POST['demo_title'] ) ? sanitize_text_field( wp_unslash( $_POST['demo_title'] ) ) : '';
 		$story = isset( $_POST['demo_story'] ) && is_string( $_POST['demo_story'] ) ? wp_unslash( $_POST['demo_story'] ) : '';
@@ -1114,12 +1288,8 @@ final class WPMFT_Demo {
 		$story = preg_replace( '/\[[^\]]*\]/', '', $story );
 		$story = wp_kses_post( $story );
 		$submitted = isset( $_POST['demo_meta'] ) && is_array( $_POST['demo_meta'] ) ? wp_unslash( $_POST['demo_meta'] ) : array();
-		$meta = array();
-		foreach ( array( 'born', '_wpmft_location', '_wpmft_occupation' ) as $key ) {
-			if ( ! isset( $submitted[$key] ) || ! is_string( $submitted[$key] ) || strlen( $submitted[$key] ) > 640 ) { continue; }
-			$value = sanitize_text_field( $submitted[$key] );
-			if ( 'born' !== $key || self::valid_date( $value ) ) { $meta[$key] = $value; }
-		}
+		$person = isset( $_POST['person'] ) && is_scalar( $_POST['person'] ) ? absint( $_POST['person'] ) : 0;
+		$meta = self::sanitize_editor_meta( $submitted, $person );
 		$cycle = isset( $_POST['wpmft_demo_reset_cycle'] ) && is_string( $_POST['wpmft_demo_reset_cycle'] ) ? sanitize_text_field( wp_unslash( $_POST['wpmft_demo_reset_cycle'] ) ) : '';
 		return array( 'title' => $title, 'story' => $story, 'meta' => $meta, 'cycle' => $cycle );
 	}
@@ -1166,7 +1336,7 @@ final class WPMFT_Demo {
 			if ( is_wp_error( self::mutation_state( $cycle, $lock ) ) || ! self::validate_owned_ids( array( $id => $type ) ) ) { return self::reset_error(); }
 			if ( 'post' === $type ) {
 				update_post_meta( $id, '_wpmft_person', '1' );
-				foreach ( array( 'born', '_wpmft_location', '_wpmft_occupation' ) as $field ) { if ( isset( $meta[$field] ) ) { update_post_meta( $id, $field, wp_slash( $meta[$field] ) ); } }
+				foreach ( self::sanitize_editor_meta( $meta ) as $field => $value ) { update_post_meta( $id, $field, wp_slash( $value ) ); }
 			}
 			if ( function_exists( 'pll_set_post_language' ) && function_exists( 'pll_languages_list' ) ) {
 				$source = absint( $manifest['items']['post' === $type ? 'marty' : 'tree-page'] ?? 0 );
@@ -1255,11 +1425,8 @@ final class WPMFT_Demo {
 			self::$mutating_post = 0;
 			if ( is_wp_error( $result ) || ! $result ) { return self::reset_error(); }
 			if ( 'post' === $type ) {
-				foreach ( array( 'born', '_wpmft_location', '_wpmft_occupation' ) as $key ) {
-					if ( ! isset( $meta[$key] ) || ! is_string( $meta[$key] ) || strlen( $meta[$key] ) > 640 ) { continue; }
+				foreach ( self::sanitize_editor_meta( $meta, $id ) as $key => $value ) {
 					if ( ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) || ! self::owns_write_lock( $lock ) || ! self::validate_owned_ids( array( $id => $type ) ) ) { return self::reset_error(); }
-					$value = sanitize_text_field( $meta[$key] );
-					if ( 'born' === $key && ! self::valid_date( $value ) ) { continue; }
 					update_post_meta( $id, $key, wp_slash( $value ) );
 				}
 			}
