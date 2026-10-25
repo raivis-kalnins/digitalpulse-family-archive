@@ -69,16 +69,18 @@ final class WPMFT_Data {
 	}
 
 	public static function ids( $published = true ) {
-		global $wpdb;
-		$categories = self::categories() ?: array( 0 );
-		$placeholders = implode( ',', array_fill( 0, count( $categories ), '%d' ) );
-		// The dynamic portion contains only fixed %d tokens; every category value is prepared.
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$sql = $wpdb->prepare( "SELECT p.ID FROM {$wpdb->posts} p WHERE p.post_type='post' AND (%d=0 OR p.post_status='publish') AND (%d=1 OR p.post_status NOT IN ('trash','auto-draft')) AND (EXISTS (SELECT 1 FROM {$wpdb->term_relationships} tr INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id=tt.term_taxonomy_id WHERE tr.object_id=p.ID AND tt.taxonomy='category' AND tt.term_id IN ({$placeholders})) OR EXISTS (SELECT 1 FROM {$wpdb->postmeta} marker WHERE marker.post_id=p.ID AND marker.meta_key='_wpmft_person' AND marker.meta_value='1')) ORDER BY p.post_title,p.ID", array_merge( array( (int) $published, (int) $published ), $categories ) );
-		// This category-or-marker query intentionally bypasses public filters and persistent family-data caches.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Prepared immediately above.
-		$ids = array_map( 'intval', $wpdb->get_col( $sql ) );
-		// Access filters need IDs only. Avoid loading every biography and metadata row for privacy exclusions.
+		$statuses = $published ? array( 'publish' ) : array( 'publish', 'private', 'draft', 'pending', 'future' );
+		$base = array(
+			'post_type' => 'post', 'post_status' => $statuses, 'posts_per_page' => -1, 'fields' => 'ids',
+			'orderby' => array( 'title' => 'ASC', 'ID' => 'ASC' ), 'no_found_rows' => true, 'suppress_filters' => false,
+		);
+		$ids = array();
+		$categories = self::categories();
+		if ( $categories ) {
+			$ids = get_posts( $base + array( 'category__in' => $categories, 'wpmft_internal' => true, 'lang' => '' ) );
+		}
+		$marked = get_posts( $base + array( 'meta_key' => '_wpmft_person', 'meta_value' => '1', 'wpmft_internal' => true, 'lang' => '' ) ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Backward-compatible person marker.
+		$ids = array_values( array_unique( array_map( 'absint', array_merge( $ids, $marked ) ) ) );
 		if ( $ids && $published ) { _prime_post_caches( $ids, false, true ); }
 		return $ids;
 	}
@@ -235,7 +237,13 @@ final class WPMFT_Data {
 		foreach ( $nodes as $id => &$node ) {
 			$r = $index[$id];
 			$node['hasMore'] = (bool) array_diff( array_merge( $r['parents'], $r['spouses'], $r['children'], $r['siblings'] ), array_keys( $nodes ) );
-			foreach ( $r['parents'] as $parent ) { if ( isset( $nodes[$parent] ) ) { $edges[] = array( 'from' => $parent, 'to' => $id, 'type' => 'parent' ); } }
+			$father_ids = array_map( array( __CLASS__, 'canonical' ), self::relation_ids( get_post_meta( $id, 'father', true ) ) );
+			$mother_ids = array_map( array( __CLASS__, 'canonical' ), self::relation_ids( get_post_meta( $id, 'mother', true ) ) );
+			foreach ( $r['parents'] as $parent ) {
+				if ( ! isset( $nodes[$parent] ) ) { continue; }
+				$parent_role = in_array( $parent, $mother_ids, true ) ? 'mother' : ( in_array( $parent, $father_ids, true ) ? 'father' : 'parent' );
+				$edges[] = array( 'from' => $parent, 'to' => $id, 'type' => 'parent', 'role' => $parent_role );
+			}
 			foreach ( $r['spouses'] as $spouse ) { if ( $id < $spouse && isset( $nodes[$spouse] ) ) { $edges[] = array( 'from' => $id, 'to' => $spouse, 'type' => 'spouse', 'status' => self::partner_status( $id, $spouse ) ); } }
 		}
 		unset( $node );
@@ -310,7 +318,7 @@ final class WPMFT_Data {
 		if ( ! isset( $index[$id] ) ) { return new WP_Error( 'not_found', __( 'This person could not be found.', 'my-family-tree' ) ); }
 		$result = self::summary( $id, $lang ); $display = self::display_id( $id, $lang ); $p = get_post( $display );
 		if ( ! $p instanceof WP_Post ) { return new WP_Error( 'not_found', __( 'This person could not be found.', 'my-family-tree' ) ); }
-		foreach ( array( 'birthPlace' => '_wpmft_birth_place', 'deathPlace' => '_wpmft_death_place', 'location' => '_wpmft_location', 'occupation' => '_wpmft_occupation', 'maidenName' => '_wpmft_maiden_name' ) as $key => $meta ) {
+		foreach ( array( 'birthPlace' => '_wpmft_birth_place', 'deathPlace' => '_wpmft_death_place', 'location' => '_wpmft_location', 'occupation' => '_wpmft_occupation', 'maidenName' => '_wpmft_maiden_name', 'nameDay' => '_wpmft_name_day' ) as $key => $meta ) {
 			$result[$key] = (string) ( get_post_meta( $display, $meta, true ) ?: get_post_meta( $id, $meta, true ) );
 		}
 		$contact = function ( $key ) use ( $display, $id ) {

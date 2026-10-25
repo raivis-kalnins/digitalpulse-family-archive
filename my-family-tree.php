@@ -3,7 +3,7 @@
  * Plugin Name: My Family Tree
  * Plugin URI: https://github.com/raivis-kalnins/wp-my-family-tree
  * Description: Free, open-source family trees with biographies, photo galleries, multilingual labels, private access and demo tools.
- * Version: 1.2.9
+ * Version: 1.3.9
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Author: Raivis Kalnins — DigitalPulse
@@ -28,7 +28,6 @@ defined( 'ABSPATH' ) || exit;
 	if ( $conflict ) {
 		// WordPress includes the entry point before calling its activation hook.
 		register_activation_hook( $plugin_file, static function () use ( $plugin_file ) {
-			load_plugin_textdomain( 'my-family-tree', false, dirname( plugin_basename( $plugin_file ) ) . '/languages' );
 			wp_die(
 				esc_html__( 'Deactivate the older WP My Family Tree plugin or any duplicate copy before activating My Family Tree. Your family posts, photographs and saved settings will be retained.', 'my-family-tree' ),
 				esc_html__( 'Another family tree plugin is active', 'my-family-tree' ),
@@ -38,7 +37,6 @@ defined( 'ABSPATH' ) || exit;
 
 		$notice = static function () use ( $plugin_file ) {
 			if ( ! current_user_can( 'activate_plugins' ) && ! current_user_can( 'manage_network_plugins' ) ) { return; }
-			load_plugin_textdomain( 'my-family-tree', false, dirname( plugin_basename( $plugin_file ) ) . '/languages' );
 			echo '<div class="notice notice-error"><p>' . esc_html__( 'My Family Tree is not running because another copy is active. Deactivate the older WP My Family Tree plugin or duplicate copy, then activate My Family Tree.', 'my-family-tree' ) . '</p></div>';
 		};
 		add_action( 'admin_notices', $notice );
@@ -46,7 +44,7 @@ defined( 'ABSPATH' ) || exit;
 		return;
 	}
 
-	define( 'WPMFT_VERSION', '1.2.9' );
+	define( 'WPMFT_VERSION', '1.3.9' );
 	define( 'WPMFT_FILE', $plugin_file );
 	define( 'WPMFT_DIR', plugin_dir_path( $plugin_file ) );
 	define( 'WPMFT_URL', plugin_dir_url( $plugin_file ) );

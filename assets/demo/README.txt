@@ -1,15 +1,8 @@
-Original demo artwork
-====================
+Demo media
+==========
 
-These eleven PNG files are original geometric landscapes and monogram designs
-created for My Family Tree. They are distributed under the plugin's
-GPL-3.0-or-later license. The illustrations contain no movie stills, photographs,
-studio logos, or depictions of actors.
+My Family Tree no longer ships placeholder/monogram demo portraits.
 
-The optional demo importer uses names of fictional screen characters as
-illustrative references. It labels the dates, places and crossover relationships
-as invented demonstration content. It does not assert film canon, affiliation,
-endorsement, or ownership of those character names.
+When an administrator imports or refreshes the fictional Morgan family demo, the plugin downloads a fixed allowlist of public-domain archival photographs from Wikimedia Commons. All twelve images must download and validate before a refresh replaces existing demo media.
 
-No external image service is contacted. The importer copies these bundled
-illustrations into the site's Media Library only after administrator consent.
+Source and licence details are documented in docs/THIRD-PARTY.md. The photographs are illustrative and do not depict the named fictional demo people.

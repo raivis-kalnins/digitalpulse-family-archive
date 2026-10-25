@@ -3,7 +3,7 @@ Tags: family tree, genealogy, family, privacy, shortcode
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.9
+Stable tag: 1.3.9
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -60,7 +60,7 @@ Production JavaScript and CSS are supplied minified with readable sources. Optio
 
 = Optional demo =
 
-An administrator can import eight fictional cinema-inspired people, eight original monogram portraits, three original gallery illustrations and two English pages. Character references include Marty McFly, Amélie Poulain, Paddington Brown and Matilda Wormwood. Dates, places and crossover family links are invented examples, not biographies or film canon.
+An administrator can import eight fictional members of the Morgan family, realistic public-domain archival demo photographs and two English pages. Names, dates, biographies and relationships are invented. The photographs are illustrative and do not depict the named fictional people. The import succeeds only when all eight archival source photographs can be downloaded and validated; it never silently substitutes placeholder portraits.
 
 Importing requires confirmation and preserves existing records, pages, media and settings. Repeating the import preserves edits to marked demo records. It does not create an account or enable public demo access.
 
@@ -84,7 +84,7 @@ To replace the saved starting copy deliberately, disable sharing, edit the sampl
 
 = Privacy and external services =
 
-The plugin has no analytics, telemetry, author-operated service or external update system. Core tree code, styles, icons and demo illustrations are included in the package. Social links, website links and the optional author credit are ordinary links followed only by a visitor's action; the author credit is off by default.
+The plugin has no analytics, telemetry, author-operated service or external update system. Core tree code, styles and icons are included in the package. Social links, website links and the optional author credit are ordinary links followed only by a visitor's action; the author credit is off by default.
 
 hCaptcha is an optional external anti-spam service and is disabled by default. An administrator must obtain an hCaptcha account, enter a site key and secret, and enable the relevant form before it is used.
 
@@ -93,6 +93,13 @@ On enabled challenge forms, the browser loads https://js.hcaptcha.com/1/api.js a
 * Service: https://www.hcaptcha.com/
 * Terms: https://www.hcaptcha.com/terms
 * Privacy: https://www.hcaptcha.com/privacy
+
+The optional administrator-triggered demo import can download a fixed set of public-domain archival photographs from Wikimedia Commons. This request happens only when an administrator imports or refreshes demo content; no family records, passwords, contact details or visitor identifiers are sent by the plugin. If any photograph cannot be downloaded and validated, the import/refresh reports that file and does not report a successful media refresh. The sample names, dates, biographies and relationships remain fictional and the photographs do not depict the named sample people.
+
+* Service: https://commons.wikimedia.org/
+* Terms: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+* Privacy: https://foundation.wikimedia.org/wiki/Policy:Privacy_policy
+* Media credits and licence notes: docs/THIRD-PARTY.md
 
 Contact messages use wp_mail() and the site's configured mail transport. An optional photograph is attached to the email, not published or added to the Media Library. Temporary upload files are removed after processing. Your mail provider or other mail-logging plugins may retain their own copies.
 
@@ -109,7 +116,7 @@ See readme.md for the complete administration, privacy, backup and troubleshooti
 
 == Installation ==
 
-1. Upload the complete my-family-tree-1.2.9.zip through Plugins > Add New Plugin > Upload Plugin, or place the my-family-tree directory in wp-content/plugins.
+1. Upload the complete my-family-tree-1.3.9.zip through Plugins > Add New Plugin > Upload Plugin, or place the my-family-tree directory in wp-content/plugins.
 2. Activate My Family Tree. If migrating from WP My Family Tree, follow the rename instructions below before activation.
 3. Deactivate the older WP Family Tree plugin if it is still active. Keep its existing posts and media.
 4. Open Family Tree settings, select the family category and starting person, and create or select a tree page.
@@ -184,7 +191,7 @@ No. The custom demo role can add, edit and remove demo persons and pages through
 
 = Are the demo names and images real family records? =
 
-No. Character names are illustrative references. Dates, locations and relationships are invented. The included monograms and landscapes are original artwork; no movie stills, celebrity photos or private records are shipped.
+No. The sample people are fictional and use invented names, dates, biographies and relationships. Optional demo import downloads public-domain archival photographs for illustration; those photographs do not depict the named fictional people. If Wikimedia Commons is unavailable, the administrator is shown the failed source instead of silently receiving placeholder artwork.
 
 = How do I share only the tree? =
 
@@ -208,17 +215,40 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 
 == Screenshots ==
 
-1. Fictional family records and original illustrated portraits in the interactive oak-inspired tree.
+1. Fictional family records with realistic public-domain archival demonstration photographs in the interactive oak-inspired tree.
 
 == Changelog ==
 
-= 1.2.9 =
+= 1.3.9 =
+* Fixed demo gallery delivery by keeping public-domain demo media public while real family media remains protected.
+* Increased family-card spacing and sibling branch separation.
+* Bundled Latvian name-day data locally and removed the runtime remote-data dependency.
+* Added translator comments for placeholder strings and cleaned several Plugin Check findings.
 
-* Fixed completed portrait thumbnails remaining invisible after cached page refreshes or reopening a person.
-* Added authenticated original-image fallback when an ordinary thumbnail file is unavailable.
-* Made image optimization progress past failed or busy attachments, with one photograph per request and a partial-result report.
-* Added fresh optimization counts on the settings screen and detection of missing optimized copies for rebuilding.
-* Preserved original photographs, gallery selections and private-media access checks.
+= 1.3.5 =
+* Fixed the demo photograph importer to use Wikimedia Commons Special:Redirect file URLs instead of fragile calculated upload paths.
+* Made demo media refresh transactional: all eight portraits and four gallery photographs must validate before any existing media is replaced.
+* Removed bundled monogram/placeholder demo images and added an administrator media-health count.
+* Clears Family Tree caches after a successful demo-media refresh.
+
+= 1.3.4 =
+* Added the realistic fictional Morgan family dataset and public-domain archival photo source documentation.
+
+= 1.3.3 =
+* Replaced the legacy placeholder demo with a realistic fictional heritage-family dataset.
+* Added optional public-domain archival demo photographs from Wikimedia Commons with bundled offline fallbacks and source credits.
+* Added an administrator-only refresh action for existing demo sites and rebuilt demo photo captions.
+
+= 1.3.2 =
+* Refined birthday/name-day calendar typography, cell padding, edge spacing and month navigation controls.
+
+= 1.3.2 =
+
+* Added a family birthday calendar and warm same-day birthday notice for living relatives.
+* Added optional once-per-year birthday email to living people with an email address, linking back to their family profile.
+* Added Latvian name-day notices and calendar matching, with no name-day email, plus an optional per-person MM-DD override.
+* Kept siblings with the same recorded parents together and wrapped separate large family groups onto clearer additional rows.
+* Retained the 1.2.9 portrait-refresh, thumbnail fallback and resilient AVIF/WebP optimizer fixes.
 
 = 1.2.7 =
 
@@ -312,9 +342,9 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 
 == Upgrade Notice ==
 
-= 1.2.9 =
+= 1.3.2 =
 
-Fixes blank portraits after refresh and stalled image optimization. Replace the complete ZIP and clear cached assets. In Performance & cache, prepare any pending photographs again. Existing person data and originals are retained.
+Adds birthdays, optional birthday email, Latvian name days and clearer sibling grouping. Replace the complete ZIP and clear Family Tree/static caches. Birthday email is opt-in under Birthdays & calendar.
 
 = 1.2.7 =
 
@@ -348,5 +378,3 @@ Use the complete ZIP to replace the plugin. Shared demos now restore their edita
 
 Use the complete ZIP to replace the plugin. Existing family data and privacy settings are retained. Demo import and shared demo mode require separate opt-in.
 
-= 1.2.9 =
-* Removed the redundant footer email button while retaining the contact form and email delivery settings. Refined WhatsApp icon appearance.

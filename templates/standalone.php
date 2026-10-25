@@ -17,7 +17,7 @@ WPMFT_Output::begin_document();
 <?php
 while ( have_posts() ) {
 	the_post();
-	echo apply_filters( 'the_content', get_the_content() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WordPress content pipeline.
+	the_content();
 }
 wp_footer();
 ?>

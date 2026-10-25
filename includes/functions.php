@@ -16,6 +16,7 @@ function wpmft_settings() {
 		'hide_living_dates' => 0, 'private_media' => 1, 'language' => 'en', 'language_switch' => 1,
 		'person_block_editor' => 0, 'person_admin_labels' => 1, 'app_install' => 1, 'app_icons' => 1,
 		'demo_tools_enabled' => 0, 'image_optimization' => 'auto', 'image_quality' => 82,
+		'celebrations_enabled' => 1, 'celebration_header' => 1, 'birthday_email_enabled' => 0, 'name_days_lv' => 1,
 		'performance_cache' => 1, 'cache_ttl' => 15, 'cache_backend' => 'auto', 'disable_comments' => 1, 'disable_emojis' => 1, 'clean_head' => 1,
 		'minify_html' => 1, 'minify_assets' => 1, 'lean_standalone' => 0,
 		'accent' => '#315a42', 'background' => '#f5f4ed', 'tree_height' => 760,
@@ -147,6 +148,7 @@ function wpmft_public_settings() {
 		'contactUpload' => WPMFT_Contact_Upload::config(), 'appInstall' => (bool) $s['app_install'],
 		'showCredit' => (bool) $s['show_credit'], 'allowExport' => (bool) $s['allow_export'],
 		'treeHeight' => (int) $s['tree_height'], 'defaultView' => 'tree', 'languageSwitch' => (bool) $s['language_switch'],
+		'celebrationHeader' => (bool) $s['celebration_header'],
 	);
 }
 

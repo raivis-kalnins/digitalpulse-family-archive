@@ -85,7 +85,7 @@ In **General**, enable **Show the Demo tab for sample content and demo sharing**
 - **Edit in a new tab.** Authorized editors can open a person's editor while keeping their place in the tree.
 - **Object-cache support and a toolbar tool.** Choose automatic, WordPress-transient or persistent object-cache storage. Administrators can clear only the Family Tree cache from the WordPress toolbar; the clean icon rotates while the request runs.
 - **Fourteen language presets and custom languages.** English is the default for new installations. Add or edit any number of interface languages in settings, with optional Polylang content translations and English fallback for untranslated labels.
-- **An optional cinema-family demo.** Import eight fictional crossover characters, eleven original illustrations and two English pages after confirmation. Existing content is preserved. A separate, explicitly enabled demo-sharing mode provides a restricted sample editor and a front-end demo password only when no real family records exist.
+- **An optional realistic heritage-family demo.** Import eight fictional Morgan-family records, public-domain archival photographs and two English pages after confirmation. Existing content is preserved. A separate, explicitly enabled demo-sharing mode provides a restricted sample editor and a front-end demo password only when no real family records exist.
 - **A compact footer.** Email is a mail button beside the contact form and optional Android / iPhone installation controls, with a mobile layout and an optional credit beneath the motto.
 - **Public distribution documentation.** A WordPress.org-format readme, external-service disclosures, readable source, build instructions and review notes are included.
 
@@ -261,7 +261,7 @@ The **Plugin interface language** control changes this plugin's labels without r
 
 Demo content is never imported on activation. Open **Demo** in the plugin settings, read the notice, tick its confirmation and choose **Import demo content**. A second browser confirmation makes the intended import explicit.
 
-The importer adds eight sample people: George McFly, Lorraine Baines McFly, Marty McFly, Jennifer Parker, Amélie Poulain, Nino Quincampoix, Paddington Brown and Matilda Wormwood. Their dates, locations and crossover family links are invented examples, not film canon or real biographies. Original English descriptions, eight monogram portraits, three gallery landscapes, a tree page and an introduction page demonstrate the plugin. Social buttons link to the social networks themselves and do not impersonate character accounts.
+The importer adds eight fictional Morgan-family sample people with invented dates, locations, biographies and relationships. Fixed public-domain archival photographs from Wikimedia Commons are imported for portraits and the family-memory gallery; the photographs do not depict the fictional names. All twelve images must download and validate before a refresh replaces existing demo media. A tree page and introduction page demonstrate the plugin.
 
 The importer adds marked records and keeps existing people, relationships, pages, settings and media. Repeating it reuses marked demo items and preserves edits to them. It does not enable shared access, replace your tree page or starting-person setting, change the family password, or create an account. Imported sample people are part of the archive's person data; remove them in WordPress when they are no longer wanted.
 
@@ -433,7 +433,7 @@ Errors naming `wp-family-tree/family-tree.php`, `class.node.php` or `class.tree.
 10. Šifrētos attēlus un datubāzi vienmēr dublējiet kopā, lai saglabātu attēlu atšifrēšanas atslēgu.
 11. Sadaļā **Veiktspēja un kešatmiņa** pārvaldiet radniecības indeksa kešatmiņu, komentārus, emocijzīmes un lapas apjoma samazināšanu. Var izmantot hostinga jau konfigurēto objektu kešatmiņu; spraudnis pats Redis neinstalē. Kešatmiņu var iztīrīt arī administratora rīkjoslā. Poga **Iztīrīt dzimtas koka kešatmiņu** saglabā paroles, atcerēto piekļuvi un aizsargātos attēlus. Samazinātā motīva stilu kopa ir papildu iespēja, kas pēc noklusējuma ir izslēgta.
 12. Personas galerijā attēlus var pāršķirt ar horizontālu vilcienu vai bultiņām. Koka pilnekrāna skatā pieejama aizvēršanas poga; attēla saglabāšana un drukāšana ietver tikai koku.
-13. Demonstrācijas imports pievieno izdomātu kino tēlu piemērus, nemainot esošos ierakstus. Koplietojamais demonstrācijas režīms jāieslēdz atsevišķi tikai izolētā vietnē bez īstiem dzimtas ierakstiem. Šis režīms izveido ierobežotu demonstrācijas redaktoru, nevis parastu WordPress redaktora kontu; pilni nosacījumi un piekļuves dati aprakstīti šīs pamācības demonstrācijas sadaļā.
+13. Demonstrācijas imports pievieno reālistisku, izdomātu dzimtas piemēru ar publiskā domēna arhīva fotogrāfijām, nemainot esošos ierakstus. Koplietojamais demonstrācijas režīms jāieslēdz atsevišķi tikai izolētā vietnē bez īstiem dzimtas ierakstiem. Šis režīms izveido ierobežotu demonstrācijas redaktoru, nevis parastu WordPress redaktora kontu; pilni nosacījumi un piekļuves dati aprakstīti šīs pamācības demonstrācijas sadaļā.
 14. Koplietojamā demonstrācijā apmeklētāju labotie vārdi, stāsti, dzimšanas datumi, vietas un nodarbošanās tiek atjaunoti no saglabātā sākotnējā stāvokļa ik pēc 24 stundām. Sadaļā **Demo** redzams nākamais atiestatīšanas laiks un pieejama tūlītēja atiestatīšana. Atsevišķs rezerves kopiju spraudnis nav vajadzīgs. Ja vietne nav apmeklēta, nokavēta atiestatīšana tiek veikta pirms nākamās piekļuves demonstrācijai.
 15. Kājenes izstrādātāja norāde atrodas tieši zem kreisā saukļa. Poga **Pieteikties** ar aploksnes ikonu atver saziņas formu dzimtas administratoram. Tajā var nosūtīt vārdu, e-pastu, aprakstu par radinieku un pēc izvēles pievienot fotogrāfiju. Tā darbojas arī tad, ja apmeklētājs jau ir pieslēdzies WordPress.
 
@@ -463,7 +463,7 @@ The build uses esbuild **0.25.5**, pinned in `package-lock.json`, and requires N
 | `assets/editor.js`, `assets/editor.asset.php`, `block.json` | WordPress page block and dependencies |
 | `templates/standalone.php` | Optional full-window template |
 | `languages/` | POT/PO/MO and block catalogs; `interfaces/*.json` contains frontend and administrator label dictionaries |
-| `assets/demo/` | Original monogram and landscape illustrations with licensing notes |
+| `assets/demo/` | Demo-media documentation; archival photographs are imported from the documented public-domain allowlist |
 | `wpml-config.xml` | Person-field translation and synchronization rules |
 | `scripts/build-assets.mjs`, `package.json`, `package-lock.json` | Reproducible minified-asset build; development only |
 | `docs/screenshot.png` | Fictional demonstration screenshot rendered above on GitHub |
@@ -477,6 +477,27 @@ Keep databases, real family media, Updraft backup sets, passwords, keys, test cr
 Copyright © 2026 **Raivis Kalnins / DigitalPulse**. Licensed under the [GNU General Public License, version 3 or later](LICENSE). Icon artwork is included under the same license. Legacy-data compatibility refers to WP Family Tree by Arvind Shah; this is a separate plugin using compatible existing data.
 
 ## Changelog
+
+### 1.3.9
+
+- Fixed a regression that rejected valid POST requests in Demo import/refresh, language saving, cache toolbar actions, API POST requests and restricted demo editor actions. Request methods are now normalized without lowercasing before comparison.
+
+### 1.3.6
+- Fixed demo gallery delivery by keeping public-domain demo media public while real family media remains protected.
+- Increased family-card spacing and sibling branch separation.
+- Bundled Latvian name-day data locally and removed the runtime remote-data dependency.
+- Added translator comments for placeholder strings and cleaned several Plugin Check findings.
+
+
+### 1.3.5
+
+- Fixed archival demo downloads to use Wikimedia Commons Special:Redirect file URLs instead of calculated upload paths.
+- Demo refresh is transactional: all eight portraits and four gallery photographs must validate before existing demo media is replaced.
+- Removed bundled monogram/placeholder demo media and added an administrator 8/8 media-health indicator.
+- Clears person, relationship and asset caches after a successful demo refresh.
+
+### 1.3.2
+- Refined birthday/name-day calendar typography, cell padding, edge spacing and month navigation controls.
 
 ### 1.2.8
 
@@ -512,7 +533,7 @@ Built-in 24-hour restoration of shared demo edits with a retained baseline, over
 
 ### 1.2.0
 
-Touch gallery swiping; new-tab person editing; fullscreen tree with an in-page fallback; tree-only PNG/print; compact mail-button footer; extensible interface languages and fourteen frontend presets; object-cache backend selection and animated administrator toolbar clearing; additive cinema demo content and optional isolated shared editor; legacy-plugin conflict guidance and WordPress.org-format documentation.
+Touch gallery swiping; new-tab person editing; fullscreen tree with an in-page fallback; tree-only PNG/print; compact mail-button footer; extensible interface languages and fourteen frontend presets; object-cache backend selection and animated administrator toolbar clearing; additive realistic heritage-family demo content and optional isolated shared editor; legacy-plugin conflict guidance and WordPress.org-format documentation.
 
 ### 1.1.2
 
@@ -537,3 +558,19 @@ Top-aligned image frames and proportional portraits; Polylang page-language sync
 ### 1.0.0
 
 Initial oak-tree interface, legacy post-data compatibility, person modals and galleries, private viewing access, English / Latvian interface and independent contact settings.
+
+
+## Birthdays, calendar and Latvian name days
+
+My Family Tree includes an optional family calendar for living relatives with full `YYYY-MM-DD` birth dates. A small celebration banner appears on the family page on birthdays, and the calendar button opens month-by-month birthdays. Administrators can optionally enable one birthday email per person per year; the email is sent only when the person is living and has a valid email address saved in their person record.
+
+When the public interface is Latvian, the same calendar can also show Latvian name days. Name days never send email. The plugin caches the MIT-licensed `slikts/vardadienas` traditional-name-day dataset from GitHub for up to 30 days and includes a local fallback plus the official traditional-calendar additions effective from 1 January 2026. A person can also use a manual `MM-DD` name-day override.
+
+The birthday calendar and Latvian name-day options are available under **Family Tree → Settings & help → Birthdays & calendar**.
+
+
+### Demo media in 1.3.3
+
+The default demo now uses a realistic fictional Morgan family rather than cinema-character references. Names, dates, biographies and relationships are invented. When an administrator imports or explicitly refreshes demo samples, the plugin attempts to download a fixed set of public-domain archival photographs from Wikimedia Commons. These photographs are illustrative and do **not** depict the named fictional people. A demo media import or refresh now succeeds only when all eight archival source photographs download and validate; placeholder portraits are not silently substituted. Existing real family records are never changed by the demo refresh action.
+
+For an existing demo site, disable shared demo mode first, then use **Demo → Refresh demo sample data & photos**. This replaces only marked demo records/media and saves the refreshed samples as the new 24-hour reset baseline.

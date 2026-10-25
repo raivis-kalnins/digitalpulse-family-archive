@@ -164,11 +164,11 @@ final class WPMFT_Languages {
 
 	public static function save() {
 		if ( ! current_user_can( 'manage_options' ) ) { wp_die( esc_html__( 'You do not have permission to change family tree settings.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
-		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_die( esc_html__( 'A POST request is required.', 'my-family-tree' ), '', array( 'response' => 405 ) ); }
+		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) ) { wp_die( esc_html__( 'A POST request is required.', 'my-family-tree' ), '', array( 'response' => 405 ) ); }
 		check_admin_referer( 'wpmft_save_languages' );
 		// JavaScript submits one JSON field, avoiding PHP's max_input_vars limit for long lists.
 		// The final marker also makes a truncated non-JavaScript form fail without losing languages.
-		if ( ! isset( $_POST['wpmft_languages_complete'] ) || '1' !== $_POST['wpmft_languages_complete'] ) { self::notice( __( 'The server truncated the language form. No languages were changed. Please enable JavaScript and try again.', 'my-family-tree' ), true ); }
+		if ( ! isset( $_POST['wpmft_languages_complete'] ) || '1' !== sanitize_text_field( wp_unslash( $_POST['wpmft_languages_complete'] ) ) ) { self::notice( __( 'The server truncated the language form. No languages were changed. Please enable JavaScript and try again.', 'my-family-tree' ), true ); }
 		$rows = isset( $_POST['wpmft_languages'] ) && is_array( $_POST['wpmft_languages'] ) ? wp_unslash( $_POST['wpmft_languages'] ) : array();
 		if ( isset( $_POST['wpmft_languages_json'] ) && is_string( $_POST['wpmft_languages_json'] ) ) { $rows = json_decode( wp_unslash( $_POST['wpmft_languages_json'] ), true ); }
 		$validated = self::validate( $rows );

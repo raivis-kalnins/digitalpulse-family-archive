@@ -27,7 +27,7 @@ final class WPMFT_Demo {
 
 	/** Demo writes use an explicit allowlist; identities, relationships and media ownership stay protected. */
 	private static function editor_meta_keys() {
-		return array( 'born', 'died', 'gender', '_wpmft_maiden_name', '_wpmft_birth_place', '_wpmft_death_place', '_wpmft_location', '_wpmft_occupation', '_wpmft_email', '_wpmft_phone', '_wpmft_mobile', '_wpmft_whatsapp', '_wpmft_address', '_wpmft_website', '_wpmft_social_facebook', '_wpmft_social_instagram', '_wpmft_social_linkedin', '_wpmft_social_x', '_wpmft_social_youtube', '_wpmft_social_tiktok', '_wpmft_gallery_details' );
+		return array( 'born', 'died', 'gender', '_wpmft_name_day', '_wpmft_maiden_name', '_wpmft_birth_place', '_wpmft_death_place', '_wpmft_location', '_wpmft_occupation', '_wpmft_email', '_wpmft_phone', '_wpmft_mobile', '_wpmft_whatsapp', '_wpmft_address', '_wpmft_website', '_wpmft_social_facebook', '_wpmft_social_instagram', '_wpmft_social_linkedin', '_wpmft_social_x', '_wpmft_social_youtube', '_wpmft_social_tiktok', '_wpmft_gallery_details' );
 	}
 
 	private static function valid_gallery_details( $value ) {
@@ -44,6 +44,7 @@ final class WPMFT_Demo {
 
 	public static function init() {
 		add_action( 'admin_post_wpmft_demo_import', array( __CLASS__, 'handle_import' ) );
+		add_action( 'admin_post_wpmft_demo_refresh', array( __CLASS__, 'handle_refresh' ) );
 		add_action( 'admin_post_wpmft_demo_enable', array( __CLASS__, 'handle_enable' ) );
 		add_action( 'admin_post_wpmft_demo_disable', array( __CLASS__, 'handle_disable' ) );
 		add_action( 'admin_post_wpmft_demo_reset', array( __CLASS__, 'handle_reset' ) );
@@ -53,6 +54,7 @@ final class WPMFT_Demo {
 		add_action( 'admin_post_wpmft_demo_remove', array( __CLASS__, 'handle_remove' ) );
 		add_action( self::RESET_HOOK, array( __CLASS__, 'scheduled_reset' ) );
 		add_action( 'init', array( __CLASS__, 'prepare_reset' ), 30 );
+		add_action( 'init', array( __CLASS__, 'maybe_upgrade_demo_gallery' ), 35 );
 		add_action( 'admin_init', array( __CLASS__, 'guard_admin' ), 0 );
 		add_action( 'admin_menu', array( __CLASS__, 'editor_menu' ), 999 );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_assets' ) );
@@ -68,6 +70,45 @@ final class WPMFT_Demo {
 		add_filter( 'allow_password_reset', array( __CLASS__, 'allow_password_reset' ), 99, 2 );
 		add_filter( 'wp_post_revisions_to_keep', array( __CLASS__, 'revision_count' ), PHP_INT_MAX, 2 );
 		add_filter( 'wp_page_revisions_to_keep', array( __CLASS__, 'revision_count' ), PHP_INT_MAX, 2 );
+	}
+
+	/** Repair older demo galleries automatically after an update, without remote downloads. */
+	public static function maybe_upgrade_demo_gallery() {
+		$manifest = self::manifest();
+		if ( empty( $manifest['token'] ) || empty( $manifest['items'] ) || (int) get_option( 'wpmft_demo_sample_version', 0 ) >= 5 ) { return; }
+		$gallery_keys = array( 'george', 'lorraine', 'jennifer', 'amelie' );
+		$gallery = array();
+		foreach ( $gallery_keys as $key ) {
+			$id = absint( $manifest['items']['portrait-' . $key] ?? 0 );
+			if ( ! $id || ! self::is_demo_post( $id ) || 'attachment' !== get_post_type( $id ) || ! wp_attachment_is_image( $id ) ) { return; }
+			$gallery[] = $id;
+		}
+		$stories = array(
+			array( 'date' => 'c. 1840', 'description' => __( 'An archival public-domain portrait used to demonstrate how a family memory can be captioned and dated.', 'my-family-tree' ) ),
+			array( 'date' => 'c. 1845', 'description' => __( 'A second archival portrait used illustratively in this fictional family archive.', 'my-family-tree' ) ),
+			array( 'date' => 'c. 1870', 'description' => __( 'A public-domain portrait used to demonstrate an individual memory inside a person gallery.', 'my-family-tree' ) ),
+			array( 'date' => 'c. 1890', 'description' => __( 'A fourth archival portrait used to demonstrate a larger family-memory gallery.', 'my-family-tree' ) ),
+		);
+		$details = array();
+		foreach ( $gallery as $index => $photo_id ) { $details[$photo_id] = $stories[$index]; }
+		foreach ( self::people() as $key => $person ) {
+			$id = absint( $manifest['items'][$key] ?? 0 );
+			if ( ! $id || ! self::is_demo_post( $id ) ) { continue; }
+			update_post_meta( $id, '_wpmft_gallery', $gallery );
+			update_post_meta( $id, '_wpmft_gallery_details', $details );
+			clean_post_cache( $id );
+		}
+		foreach ( array( 'album-1', 'album-2', 'album-3', 'album-4' ) as $legacy_key ) {
+			$legacy_id = absint( $manifest['items'][$legacy_key] ?? 0 );
+			if ( $legacy_id && 'attachment' === get_post_type( $legacy_id ) && self::is_demo_post( $legacy_id ) ) { wp_delete_attachment( $legacy_id, true ); }
+			unset( $manifest['items'][$legacy_key] );
+		}
+		update_option( self::MANIFEST_OPTION, $manifest, false );
+		$baseline = self::make_baseline( true );
+		if ( ! is_wp_error( $baseline ) && self::valid_baseline( $baseline ) ) { update_option( self::BASELINE_OPTION, $baseline, false ); }
+		update_option( 'wpmft_demo_sample_version', 5, false );
+		WPMFT_Data::reset_cache();
+		if ( class_exists( 'WPMFT_Cache' ) ) { WPMFT_Cache::purge(); }
 	}
 
 	public static function manifest() {
@@ -365,7 +406,8 @@ final class WPMFT_Demo {
 			if ( false === $baseline ) { return self::reset_error(); }
 			if ( ! $baseline ) {
 				// Upgrading an already-public 1.2.0 demo must not treat visitor edits as its original state.
-				$baseline = self::make_baseline( true );
+				self::purge_orphan_demo_media( $manifest );
+			$baseline = self::make_baseline( true );
 				if ( is_wp_error( $baseline ) ) { return self::reset_error(); }
 				if ( ! self::owns_write_lock( $lock ) || ! self::same_demo_session( $state, self::fresh_option( self::STATE_OPTION ) ) ) { return self::reset_error(); }
 				update_option( self::BASELINE_OPTION, $baseline, false );
@@ -515,6 +557,11 @@ final class WPMFT_Demo {
 		} elseif ( 'search' === $kind ) {
 			if ( ! isset( $payload['people'] ) || ! is_array( $payload['people'] ) ) { return false; }
 			foreach ( $payload['people'] ?? array() as $row ) { if ( ! $person( $row ) ) { return false; } }
+		} elseif ( 'calendar' === $kind ) {
+			foreach ( array( 'birthdays', 'namedays', 'todayBirthdays', 'todayNamedays' ) as $field ) {
+				if ( isset( $payload[$field] ) && ! is_array( $payload[$field] ) ) { return false; }
+				foreach ( $payload[$field] ?? array() as $row ) { if ( ! is_array( $row ) || ! $collect( $row['id'] ?? 0, 'post' ) ) { return false; } }
+			}
 		} elseif ( 'person' === $kind ) {
 			if ( ! $person( $payload ) ) { return false; }
 			if ( isset( $payload['relations'] ) && ! is_array( $payload['relations'] ) || isset( $payload['gallery'] ) && ! is_array( $payload['gallery'] ) ) { return false; }
@@ -536,14 +583,13 @@ final class WPMFT_Demo {
 		if ( ! is_array( $manifest ) ) { return false; }
 		$owned = array_map( 'absint', array_values( $manifest['items'] ?? array() ) );
 		if ( empty( $manifest['token'] ) || array_diff( array_keys( $expected ), $owned ) || isset( $expected[0] ) ) { return false; }
-		global $wpdb;
-		$ids = implode( ',', array_map( 'absint', array_keys( $expected ) ) );
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- The dynamic list consists exclusively of validated positive integers.
-		$sql = $wpdb->prepare( "SELECT DISTINCT p.ID,p.post_type FROM {$wpdb->posts} p INNER JOIN {$wpdb->postmeta} d ON d.post_id=p.ID WHERE p.ID IN ({$ids}) AND d.meta_key='_wpmft_demo' AND d.meta_value=%s", $manifest['token'] );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- A fresh final response authorization check.
-		$rows = $wpdb->get_results( $sql, ARRAY_A );
-		if ( ! is_array( $rows ) || count( $rows ) !== count( $expected ) ) { return false; }
-		foreach ( $rows as $row ) { if ( ! isset( $expected[(int) $row['ID']] ) || $expected[(int) $row['ID']] !== $row['post_type'] ) { return false; } }
+		foreach ( $expected as $id => $post_type ) {
+			$id = absint( $id );
+			$post = $id ? get_post( $id ) : null;
+			if ( ! $post instanceof WP_Post || $post_type !== $post->post_type ) { return false; }
+			$marker = (string) get_post_meta( $id, '_wpmft_demo', true );
+			if ( '' === $marker || ! hash_equals( (string) $manifest['token'], $marker ) ) { return false; }
+		}
 		return true;
 	}
 
@@ -599,7 +645,7 @@ final class WPMFT_Demo {
 		if ( ! self::active() ) { return false; }
 		$state = self::state();
 		if ( self::is_demo_user() && get_current_user_id() === absint( $state['user_id'] ?? 0 ) && current_user_can( self::CAP ) ) { return true; }
-		$token = isset( $_COOKIE['wpmft_demo_session'] ) && is_string( $_COOKIE['wpmft_demo_session'] ) ? wp_unslash( $_COOKIE['wpmft_demo_session'] ) : '';
+		$token = isset( $_COOKIE['wpmft_demo_session'] ) && is_string( $_COOKIE['wpmft_demo_session'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['wpmft_demo_session'] ) ) : '';
 		if ( ! preg_match( '/^[a-f0-9]{64}$/D', $token ) ) { return false; }
 		$session = get_transient( 'wpmft_demo_session_' . hash( 'sha256', $token ) );
 		return is_array( $session ) && isset( $session['generation'], $session['expires'] ) && $session['expires'] > time() && hash_equals( (string) $state['generation'], (string) $session['generation'] );
@@ -619,7 +665,7 @@ final class WPMFT_Demo {
 	}
 
 	public static function logout() {
-		$token = isset( $_COOKIE['wpmft_demo_session'] ) && is_string( $_COOKIE['wpmft_demo_session'] ) ? wp_unslash( $_COOKIE['wpmft_demo_session'] ) : '';
+		$token = isset( $_COOKIE['wpmft_demo_session'] ) && is_string( $_COOKIE['wpmft_demo_session'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['wpmft_demo_session'] ) ) : '';
 		if ( preg_match( '/^[a-f0-9]{64}$/D', $token ) ) { delete_transient( 'wpmft_demo_session_' . hash( 'sha256', $token ) ); }
 		if ( $token ) { WPMFT_Security::cookie( 'wpmft_demo_session', '', time() - HOUR_IN_SECONDS ); }
 	}
@@ -629,8 +675,8 @@ final class WPMFT_Demo {
 		$manifest = self::manifest();
 		return array(
 			'active' => $active, 'guarded' => self::guard_required(),
-			'label' => $active ? __( 'Cinema family demo', 'my-family-tree' ) : '',
-			'notice' => $active ? __( 'Fictional crossover characters and invented relationships. Visitor edits are public and reset every 24 hours.', 'my-family-tree' ) : '',
+			'label' => $active ? __( 'Family archive demo', 'my-family-tree' ) : '',
+			'notice' => $active ? __( 'Fictional family archive with invented people and relationships. Visitor edits are public and reset every 24 hours.', 'my-family-tree' ) : '',
 			'password' => $active ? 'demo' : '',
 			'rootId' => $active ? absint( $manifest['items']['marty'] ?? 0 ) : 0,
 			'treeUrl' => $active && ! empty( $manifest['items']['tree-page'] ) ? get_permalink( $manifest['items']['tree-page'] ) : '',
@@ -672,17 +718,27 @@ final class WPMFT_Demo {
 				$person = $people[$key];
 				foreach ( array( 'father', 'mother', 'spouse' ) as $relation ) { if ( ! empty( $person[$relation] ) ) { update_post_meta( $id, $relation, $manifest['items'][$person[$relation]] ); } }
 				if ( ! empty( $person['spouse'] ) ) { update_post_meta( $id, '_wpmft_partner_status', array( $manifest['items'][$person['spouse']] => 'together' ) ); }
-				$portrait = self::import_image( $manifest, 'portrait-' . $key, $key . '.png', $id, $person['name'] . ' — original demo monogram' );
+				$portrait = self::import_demo_photo( $manifest, 'portrait-' . $key, $key, $id, $person['name'] . ' — archival public-domain demo portrait' );
 				if ( is_wp_error( $portrait ) ) { return $portrait; }
 				set_post_thumbnail( $id, $portrait );
 			}
+			/* Reuse four validated archival portrait attachments for the demo gallery. This avoids a second remote-media path while still demonstrating captions, dates and the lightbox. */
+			$gallery_keys = array( 'george', 'lorraine', 'jennifer', 'amelie' );
 			$gallery = array();
-			for ( $i = 1; $i <= 3; $i++ ) {
-				$image = self::import_image( $manifest, 'album-' . $i, 'album-' . $i . '.png', $manifest['items']['marty'], 'Original fictional family album illustration ' . $i );
-				if ( is_wp_error( $image ) ) { return $image; }
-				$gallery[] = $image;
+			foreach ( $gallery_keys as $gallery_key ) {
+				$photo_id = absint( $manifest['items']['portrait-' . $gallery_key] ?? 0 );
+				if ( ! $photo_id || ! wp_attachment_is_image( $photo_id ) ) { return new WP_Error( 'demo_gallery_missing', __( 'A validated archival demo portrait is missing, so the sample gallery could not be created.', 'my-family-tree' ) ); }
+				$gallery[] = $photo_id;
 			}
-			foreach ( $created as $id ) { update_post_meta( $id, '_wpmft_gallery', $gallery ); do_action( 'wpmft_person_saved', $id ); update_post_meta( $id, '_wpmft_demo_seeded', 1 ); }
+			$gallery_details = array();
+			$gallery_copy = array(
+				array( 'date' => 'c. 1840', 'description' => __( 'An archival public-domain portrait used to demonstrate how a family memory can be captioned and dated.', 'my-family-tree' ) ),
+				array( 'date' => 'c. 1845', 'description' => __( 'A second archival portrait used illustratively in this fictional family archive.', 'my-family-tree' ) ),
+				array( 'date' => 'c. 1870', 'description' => __( 'A public-domain portrait used to demonstrate an individual memory inside a person gallery.', 'my-family-tree' ) ),
+				array( 'date' => 'c. 1890', 'description' => __( 'A fourth archival portrait used to demonstrate a larger family-memory gallery.', 'my-family-tree' ) ),
+			);
+			foreach ( $gallery as $index => $photo_id ) { $gallery_details[$photo_id] = $gallery_copy[$index] ?? array( 'date' => '', 'description' => '' ); }
+			foreach ( $created as $id ) { update_post_meta( $id, '_wpmft_gallery', $gallery ); update_post_meta( $id, '_wpmft_gallery_details', $gallery_details ); do_action( 'wpmft_person_saved', $id ); update_post_meta( $id, '_wpmft_demo_seeded', 1 ); }
 			$pages = self::pages( $manifest );
 			foreach ( $pages as $key => $page ) {
 				if ( self::existing_item( $manifest, $key ) ) { continue; }
@@ -706,23 +762,196 @@ final class WPMFT_Demo {
 		return 0;
 	}
 
-	private static function import_image( &$manifest, $key, $filename, $parent, $alt ) {
+
+	/** Public-domain media used only when an administrator imports or refreshes demo content. */
+	private static function media_sources() {
+		return array(
+			'george' => array( 'file' => 'A fisherman NLW3365030.jpg', 'credit' => 'John Thomas / National Library of Wales', 'license' => 'Public Domain Mark 1.0' ),
+			'lorraine' => array( 'file' => 'A woman holding a fan NLW3364728.jpg', 'credit' => 'John Thomas / National Library of Wales', 'license' => 'Public Domain Mark 1.0' ),
+			'marty' => array( 'file' => 'A bearded man NLW3364994.jpg', 'credit' => 'John Thomas / National Library of Wales', 'license' => 'Public Domain Mark 1.0' ),
+			'jennifer' => array( 'file' => 'A woman (Tanner) NLW3362610.jpg', 'credit' => 'John Thomas / National Library of Wales', 'license' => 'Public Domain Mark 1.0' ),
+			'amelie' => array( 'file' => 'A girl standing NLW3364957.jpg', 'credit' => 'John Thomas / National Library of Wales', 'license' => 'Public Domain Mark 1.0' ),
+			'nino' => array( 'file' => 'A boy standing NLW3364958.jpg', 'credit' => 'John Thomas / National Library of Wales', 'license' => 'Public Domain Mark 1.0' ),
+			'paddington' => array( 'file' => 'A child sitting NLW3364776.jpg', 'credit' => 'John Thomas / National Library of Wales', 'license' => 'Public Domain Mark 1.0' ),
+			'matilda' => array( 'file' => 'A child NLW3364996.jpg', 'credit' => 'John Thomas / National Library of Wales', 'license' => 'Public Domain Mark 1.0' ),
+			'album-1' => array( 'file' => 'Family photograph 1965.jpg', 'credit' => 'Jeanne boleyn / Wikimedia Commons', 'license' => 'Public domain dedication' ),
+			'album-2' => array( 'file' => 'OldFamily.JPG', 'credit' => 'Polylerus / Wikimedia Commons', 'license' => 'Public domain dedication' ),
+			'album-3' => array( 'file' => 'A group including a man, woman and two children NLW3364678.jpg', 'credit' => 'John Thomas / National Library of Wales', 'license' => 'Public Domain Mark 1.0' ),
+			'album-4' => array( 'file' => 'A girl, four boys and a baby NLW3364931.jpg', 'credit' => 'John Thomas / National Library of Wales', 'license' => 'Public Domain Mark 1.0' ),
+		);
+	}
+
+	private static function commons_file_url( $filename ) {
+		return 'https://commons.wikimedia.org/wiki/Special:Redirect/file/' . rawurlencode( str_replace( ' ', '_', trim( (string) $filename ) ) );
+	}
+
+	private static function import_demo_photo( &$manifest, $key, $source_key, $parent, $alt ) {
 		$existing = self::existing_item( $manifest, $key );
 		if ( $existing ) { return $existing; }
-		$file = WPMFT_DIR . 'assets/demo/' . $filename;
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- A bundled file from a fixed allowlist, never a remote or user-supplied path.
-		$bytes = file_get_contents( $file );
-		if ( false === $bytes ) { return new WP_Error( 'demo_image', __( 'A bundled demo illustration could not be read.', 'my-family-tree' ) ); }
-		$upload = wp_upload_bits( 'wpmft-demo-' . $filename, null, $bytes );
-		if ( ! empty( $upload['error'] ) ) { return new WP_Error( 'demo_image', $upload['error'] ); }
-		$id = wp_insert_attachment( array( 'post_title' => $alt, 'post_excerpt' => __( 'Original illustration for the fictional cinema family demo.', 'my-family-tree' ), 'post_mime_type' => 'image/png', 'post_status' => 'inherit', 'post_parent' => absint( $parent ), 'meta_input' => array( '_wpmft_demo' => $manifest['token'], '_wpmft_demo_key' => $key, '_wp_attachment_image_alt' => $alt ) ), $upload['file'], $parent, true );
-		if ( is_wp_error( $id ) ) { wp_delete_file( $upload['file'] ); return $id; }
+		$sources = self::media_sources();
+		$source = $sources[$source_key] ?? null;
+		if ( ! $source ) { return new WP_Error( 'demo_image', __( 'A demo photograph source is missing.', 'my-family-tree' ) ); }
+		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/image.php';
+		$url = self::commons_file_url( $source['file'] );
+		$tmp = download_url( $url, 25 );
+		if ( is_wp_error( $tmp ) ) {
+			/* translators: 1: archival photograph filename, 2: download error message. */
+			return new WP_Error( 'demo_image_download', sprintf( __( 'Could not download the archival demo photograph “%1$s”: %2$s', 'my-family-tree' ), $source['file'], $tmp->get_error_message() ) );
+		}
+		$size = is_file( $tmp ) ? filesize( $tmp ) : 0;
+		$mime = is_file( $tmp ) && function_exists( 'wp_get_image_mime' ) ? wp_get_image_mime( $tmp ) : false;
+		if ( ! $size || $size > 5 * MB_IN_BYTES || 'image/jpeg' !== $mime ) {
+			if ( is_file( $tmp ) ) { wp_delete_file( $tmp ); }
+			/* translators: %s: archival photograph filename. */
+			return new WP_Error( 'demo_image_invalid', sprintf( __( 'The archival demo photograph “%s” was unavailable or was not a valid JPEG image.', 'my-family-tree' ), $source['file'] ) );
+		}
+		$file = array( 'name' => sanitize_file_name( $source['file'] ), 'tmp_name' => $tmp );
+		$upload = wp_handle_sideload( $file, array( 'test_form' => false, 'mimes' => array( 'jpg|jpeg' => 'image/jpeg' ) ) );
+		if ( ! empty( $upload['error'] ) || empty( $upload['file'] ) ) {
+			if ( is_file( $tmp ) ) { wp_delete_file( $tmp ); }
+			/* translators: 1: archival photograph filename, 2: WordPress upload error message. */
+			return new WP_Error( 'demo_image_upload', sprintf( __( 'WordPress could not save the archival demo photograph “%1$s”: %2$s', 'my-family-tree' ), $source['file'], (string) ( $upload['error'] ?? __( 'Unknown upload error.', 'my-family-tree' ) ) ) );
+		}
+		$id = wp_insert_attachment( array(
+			'post_title' => $alt,
+			/* translators: 1: photograph source/creator, 2: licence name. */
+			'post_excerpt' => sprintf( __( 'Archival public-domain photograph used illustratively in the fictional demo. Source: %1$s. Licence: %2$s.', 'my-family-tree' ), $source['credit'], $source['license'] ),
+			'post_mime_type' => 'image/jpeg', 'post_status' => 'inherit', 'post_parent' => absint( $parent ),
+			'meta_input' => array( '_wpmft_demo' => $manifest['token'], '_wpmft_demo_key' => $key, '_wp_attachment_image_alt' => $alt, '_wpmft_demo_source_url' => $url, '_wpmft_demo_credit' => $source['credit'], '_wpmft_demo_license' => $source['license'], '_wpmft_demo_media_kind' => 'archival-public-domain' ),
+		), $upload['file'], $parent, true );
+		if ( is_wp_error( $id ) ) { wp_delete_file( $upload['file'] ); return $id; }
 		$metadata = wp_generate_attachment_metadata( $id, $upload['file'] );
 		if ( is_array( $metadata ) ) { wp_update_attachment_metadata( $id, $metadata ); }
 		$manifest['items'][$key] = (int) $id;
 		update_option( self::MANIFEST_OPTION, $manifest, false );
 		return (int) $id;
+	}
+
+	private static function purge_orphan_demo_media( $manifest ) {
+		$token = isset( $manifest['token'] ) ? (string) $manifest['token'] : '';
+		if ( '' === $token ) { return; }
+		$keep = array_map( 'absint', array_values( (array) ( $manifest['items'] ?? array() ) ) );
+		$ids = get_posts( array(
+			'post_type' => 'attachment', 'post_status' => 'inherit', 'fields' => 'ids', 'posts_per_page' => -1,
+			'meta_key' => '_wpmft_demo', 'meta_value' => $token,
+		) );
+		foreach ( $ids as $id ) {
+			$id = absint( $id );
+			if ( $id && ! in_array( $id, $keep, true ) ) { wp_delete_attachment( $id, true ); }
+		}
+	}
+
+	private static function delete_demo_media_key( &$manifest, $key ) {
+		$id = absint( $manifest['items'][$key] ?? 0 );
+		if ( ! $id ) { return true; }
+		if ( 'attachment' !== get_post_type( $id ) || ! self::is_demo_post( $id ) ) { return false; }
+		if ( ! wp_delete_attachment( $id, true ) ) { return false; }
+		unset( $manifest['items'][$key] );
+		update_option( self::MANIFEST_OPTION, $manifest, false );
+		return true;
+	}
+
+	/** Administrator-only refresh of the realistic fictional family samples and archival demo media. */
+	public static function refresh_samples() {
+		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Only an administrator can refresh demo content.', 'my-family-tree' ) ); }
+		if ( self::guard_required() ) { return new WP_Error( 'demo_enabled', __( 'Disable shared demo mode before refreshing its sample content.', 'my-family-tree' ) ); }
+		$lock = self::acquire_write_lock();
+		if ( ! $lock ) { return self::reset_error(); }
+		try {
+			$manifest = self::manifest();
+			$people = self::people();
+			foreach ( $people as $key => $person ) {
+				$id = absint( $manifest['items'][$key] ?? 0 );
+				if ( ! $id || ! self::is_demo_post( $id ) || 'post' !== get_post_type( $id ) ) { return new WP_Error( 'demo_missing', __( 'Import the demo content before refreshing its sample data and photographs.', 'my-family-tree' ) ); }
+			}
+
+			/* Download every replacement first. A failed remote source leaves the current demo untouched. */
+			$new_media = array();
+			$temp_keys = array();
+			foreach ( $people as $key => $person ) {
+				$temp_key = 'refresh-portrait-' . $key;
+				if ( isset( $manifest['items'][$temp_key] ) ) { self::delete_demo_media_key( $manifest, $temp_key ); }
+				$photo = self::import_demo_photo( $manifest, $temp_key, $key, absint( $manifest['items'][$key] ), $person['name'] . ' — archival public-domain demo portrait' );
+				if ( is_wp_error( $photo ) ) {
+					foreach ( $temp_keys as $cleanup_key ) { self::delete_demo_media_key( $manifest, $cleanup_key ); }
+					return $photo;
+				}
+				$temp_keys[] = $temp_key;
+				$new_media['portrait-' . $key] = absint( $photo );
+			}
+			$old_media = array();
+			foreach ( array_merge( array_map( static function ( $key ) { return 'portrait-' . $key; }, array_keys( $people ) ), array( 'album-1', 'album-2', 'album-3', 'album-4' ) ) as $media_key ) {
+				$old_media[$media_key] = absint( $manifest['items'][$media_key] ?? 0 );
+			}
+
+			foreach ( $people as $key => $person ) {
+				$id = absint( $manifest['items'][$key] );
+				wp_update_post( array( 'ID' => $id, 'post_title' => $person['name'], 'post_content' => self::person_content( $person ), 'post_excerpt' => $person['bio'], 'post_status' => 'publish' ) );
+				foreach ( array( 'gender' => $person['gender'], 'born' => $person['born'], '_wpmft_location' => $person['location'], '_wpmft_occupation' => $person['occupation'], '_wpmft_website' => 'https://example.com/' ) as $meta => $value ) { update_post_meta( $id, $meta, $value ); }
+				foreach ( array( 'father', 'mother', 'spouse' ) as $relation ) {
+					if ( ! empty( $person[$relation] ) ) { update_post_meta( $id, $relation, absint( $manifest['items'][$person[$relation]] ?? 0 ) ); } else { delete_post_meta( $id, $relation ); }
+				}
+				$status = array();
+				if ( ! empty( $person['spouse'] ) ) { $status[absint( $manifest['items'][$person['spouse']] ?? 0 )] = 'together'; }
+				if ( $status ) { update_post_meta( $id, '_wpmft_partner_status', $status ); } else { delete_post_meta( $id, '_wpmft_partner_status' ); }
+				set_post_thumbnail( $id, $new_media['portrait-' . $key] );
+			}
+
+			$gallery_keys = array( 'george', 'lorraine', 'jennifer', 'amelie' );
+			$gallery = array();
+			foreach ( $gallery_keys as $gallery_key ) {
+				$photo_id = absint( $new_media['portrait-' . $gallery_key] ?? 0 );
+				if ( ! $photo_id || ! wp_attachment_is_image( $photo_id ) ) { return new WP_Error( 'demo_gallery_missing', __( 'A validated archival demo portrait is missing, so the sample gallery could not be created.', 'my-family-tree' ) ); }
+				$gallery[] = $photo_id;
+			}
+			$details = array();
+			$stories = array(
+				array( 'date' => 'c. 1840', 'description' => __( 'An archival public-domain portrait used to demonstrate how a family memory can be captioned and dated.', 'my-family-tree' ) ),
+				array( 'date' => 'c. 1845', 'description' => __( 'A second archival portrait used illustratively in this fictional family archive.', 'my-family-tree' ) ),
+				array( 'date' => 'c. 1870', 'description' => __( 'A public-domain portrait used to demonstrate an individual memory inside a person gallery.', 'my-family-tree' ) ),
+				array( 'date' => 'c. 1890', 'description' => __( 'A fourth archival portrait used to demonstrate a larger family-memory gallery.', 'my-family-tree' ) ),
+			);
+			foreach ( $gallery as $index => $photo_id ) { $details[$photo_id] = $stories[$index]; }
+			foreach ( $people as $key => $person ) {
+				$id = absint( $manifest['items'][$key] );
+				update_post_meta( $id, '_wpmft_gallery', $gallery );
+				update_post_meta( $id, '_wpmft_gallery_details', $details );
+				update_post_meta( $id, '_wpmft_demo_seeded', 1 );
+				do_action( 'wpmft_person_saved', $id );
+				clean_post_cache( $id );
+			}
+
+			/* Promote the temporary attachments to their stable manifest keys. */
+			foreach ( $new_media as $media_key => $attachment_id ) {
+				$manifest['items'][$media_key] = absint( $attachment_id );
+				update_post_meta( $attachment_id, '_wpmft_demo_key', $media_key );
+			}
+			foreach ( $temp_keys as $temp_key ) { unset( $manifest['items'][$temp_key] ); }
+			update_option( self::MANIFEST_OPTION, $manifest, false );
+
+			/* Delete superseded placeholders only after every real archival photograph is ready. */
+			foreach ( $old_media as $old_id ) {
+				if ( $old_id && ! in_array( $old_id, $new_media, true ) && 'attachment' === get_post_type( $old_id ) && self::is_demo_post( $old_id ) ) { wp_delete_attachment( $old_id, true ); }
+			}
+			/* Album-only attachments from older releases are no longer part of the manifest. The gallery now reuses validated portrait media. */
+			foreach ( array( 'album-1', 'album-2', 'album-3', 'album-4' ) as $legacy_album_key ) { unset( $manifest['items'][$legacy_album_key] ); }
+			update_option( self::MANIFEST_OPTION, $manifest, false );
+			self::purge_orphan_demo_media( $manifest );
+
+			$pages = self::pages( $manifest );
+			foreach ( $pages as $key => $page ) {
+				$id = absint( $manifest['items'][$key] ?? 0 );
+				if ( $id && self::is_demo_post( $id ) ) { wp_update_post( array( 'ID' => $id, 'post_title' => $page['title'], 'post_content' => $page['content'], 'post_status' => 'publish' ) ); }
+			}
+			$baseline = self::make_baseline( true );
+			if ( is_wp_error( $baseline ) || ! self::valid_baseline( $baseline ) ) { return self::reset_error(); }
+			update_option( self::BASELINE_OPTION, $baseline, false );
+			update_option( 'wpmft_demo_sample_version', 4, false );
+			WPMFT_Data::reset_cache();
+			if ( class_exists( 'WPMFT_Cache' ) ) { WPMFT_Cache::purge(); }
+			return array( 'portraits' => count( $people ), 'gallery' => 4, 'sample_version' => 4 );
+		} finally { self::release_write_lock( $lock ); }
 	}
 
 	public static function enable() {
@@ -752,7 +981,7 @@ final class WPMFT_Demo {
 			// No standard Editor capabilities: this public account can use only our constrained editor.
 			remove_role( self::ROLE );
 			add_role( self::ROLE, __( 'Family Tree Demo Editor', 'my-family-tree' ), array( 'read' => true, self::CAP => true ) );
-			$id = wp_insert_user( array( 'user_login' => 'demo', 'user_pass' => 'Demo@demo123Editor', 'user_email' => '', 'display_name' => 'Cinema Demo Editor', 'role' => self::ROLE, 'show_admin_bar_front' => 'false' ) );
+			$id = wp_insert_user( array( 'user_login' => 'demo', 'user_pass' => 'Demo@demo123Editor', 'user_email' => '', 'display_name' => 'Family Archive Demo Editor', 'role' => self::ROLE, 'show_admin_bar_front' => 'false' ) );
 			if ( is_wp_error( $id ) ) { return $id; }
 			$account_token = wp_generate_uuid4();
 			update_user_meta( $id, '_wpmft_demo_account', $account_token );
@@ -793,11 +1022,12 @@ final class WPMFT_Demo {
 	public static function deactivate() { self::disable(); }
 
 	private static function require_admin( $action ) {
-		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_die( esc_html__( 'A POST request is required.', 'my-family-tree' ), '', array( 'response' => 405 ) ); }
+		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) ) { wp_die( esc_html__( 'A POST request is required.', 'my-family-tree' ), '', array( 'response' => 405 ) ); }
 		if ( ! current_user_can( 'manage_options' ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
 		check_admin_referer( $action );
 		if ( 'wpmft_demo_disable' !== $action && ! self::tools_visible() ) { wp_die( esc_html__( 'Enable the optional demo tools in General settings before using this action.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
-		if ( empty( $_POST['wpmft_demo_confirm'] ) || '1' !== $_POST['wpmft_demo_confirm'] ) { wp_die( esc_html__( 'Read and confirm the demo notice before continuing.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
+		$confirmed = isset( $_POST['wpmft_demo_confirm'] ) && is_string( $_POST['wpmft_demo_confirm'] ) ? sanitize_text_field( wp_unslash( $_POST['wpmft_demo_confirm'] ) ) : '';
+		if ( '1' !== $confirmed ) { wp_die( esc_html__( 'Read and confirm the demo notice before continuing.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
 	}
 
 	private static function finish( $result, $message ) {
@@ -810,6 +1040,8 @@ final class WPMFT_Demo {
 	public static function handle_enable() { self::require_admin( 'wpmft_demo_enable' ); self::finish( self::enable(), __( 'Demo sharing is active. The shared editor can edit demo content only.', 'my-family-tree' ) ); }
 	public static function handle_disable() { self::require_admin( 'wpmft_demo_disable' ); self::finish( self::disable(), __( 'Demo sharing is off. Its sessions and managed account have been revoked. Demo content is retained.', 'my-family-tree' ) ); }
 	public static function handle_reset() { self::require_admin( 'wpmft_demo_reset' ); self::finish( self::reset_now(), __( 'Demo visitor edits have been reset. The next reset is due in 24 hours.', 'my-family-tree' ) ); }
+	public static function handle_refresh() { self::require_admin( 'wpmft_demo_refresh' ); self::finish( self::refresh_samples(), __( 'The demo now uses realistic fictional family data and public-domain archival photographs.', 'my-family-tree' ) ); }
+
 	public static function handle_baseline() { self::require_admin( 'wpmft_demo_baseline' ); self::finish( self::capture_baseline(), __( 'The current demo titles, stories, personal details, contacts and photo stories are saved as the reset baseline.', 'my-family-tree' ) ); }
 
 	/** First-time empty installs offer setup once; established sites opt in from General. */
@@ -844,6 +1076,18 @@ final class WPMFT_Demo {
 		if ( ! empty( self::state()['quarantined'] ) ) { echo '<div class="notice notice-error"><p>' . esc_html__( 'Family Tree demo sharing was locked because its content is no longer isolated. Shared access has been revoked. Disable demo mode in Family Tree settings before configuring normal family access.', 'my-family-tree' ) . '</p></div>'; }
 	}
 
+	private static function demo_media_health( $manifest ) {
+		$keys = array();
+		foreach ( array_keys( self::people() ) as $key ) { $keys[] = 'portrait-' . $key; }
+		$ready = 0;
+		$missing = array();
+		foreach ( $keys as $key ) {
+			$id = absint( $manifest['items'][$key] ?? 0 );
+			if ( $id && 'attachment' === get_post_type( $id ) && 'archival-public-domain' === get_post_meta( $id, '_wpmft_demo_media_kind', true ) && wp_attachment_is_image( $id ) ) { $ready++; } else { $missing[] = $key; }
+		}
+		return array( 'ready' => $ready, 'total' => count( $keys ), 'missing' => $missing );
+	}
+
 	/** Buttons can live in the settings form; each targets its own external action form. */
 	public static function render_panel() {
 		$manifest = self::manifest();
@@ -851,10 +1095,19 @@ final class WPMFT_Demo {
 		$guarded = self::guard_required();
 		?>
 		<h2><?php esc_html_e( 'Demo content & sharing', 'my-family-tree' ); ?></h2>
-		<p><?php esc_html_e( 'Add eight fictional cinema characters, original gallery illustrations and two English pages. The importer adds marked sample content and preserves existing records, pages and settings. Repeating it keeps edits to existing demo items.', 'my-family-tree' ); ?></p>
-		<p><?php esc_html_e( 'All family connections and dates are invented. Character names are illustrative references; no movie stills, celebrity photographs or official character social accounts are included.', 'my-family-tree' ); ?></p>
+		<p><?php esc_html_e( 'Add eight fictional family members, eight realistic archival demo photographs and two English pages. The importer adds marked sample content and preserves existing records, pages and settings. The public-domain photographs are downloaded from Wikimedia Commons only when an administrator imports or refreshes the demo.', 'my-family-tree' ); ?></p>
+		<p><?php esc_html_e( 'All names, dates, biographies and family links are fictional. Archival photographs are public-domain demonstration media and do not depict the named fictional people.', 'my-family-tree' ); ?></p>
+		<?php $media_health = self::demo_media_health( $manifest ); ?>
+		<p><strong><?php esc_html_e( 'Archival demo photos:', 'my-family-tree' ); ?></strong> <?php echo esc_html( $media_health['ready'] . '/' . $media_health['total'] ); ?></p>
+		<?php if ( $media_health['ready'] < $media_health['total'] && ! empty( $manifest['items']['marty'] ) ) : ?>
+		<div class="notice notice-warning inline"><p><?php esc_html_e( 'Some demo records still use older placeholder media. Disable shared demo mode and run “Refresh demo sample data & photos”. The refresh succeeds only after all eight archival photographs have been downloaded and validated.', 'my-family-tree' ); ?></p></div>
+		<?php endif; ?>
 		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-import" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'I understand that demo people will be added alongside existing content. This does not enable public demo access.', 'my-family-tree' ); ?></span></label>
 		<p><button type="submit" form="wpmft-demo-import" class="button button-secondary"><?php esc_html_e( 'Import demo content', 'my-family-tree' ); ?></button></p>
+		<?php if ( ! empty( $manifest['items']['marty'] ) && ! $guarded ) : ?>
+		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-refresh" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Replace only the marked demo samples with the realistic family dataset and public-domain archival photographs. Real family content is never changed.', 'my-family-tree' ); ?></span></label>
+		<p><button type="submit" form="wpmft-demo-refresh" class="button"><?php esc_html_e( 'Refresh demo sample data & photos', 'my-family-tree' ); ?></button></p>
+		<?php endif; ?>
 		<?php if ( ! empty( $manifest['items']['tree-page'] ) && get_post( $manifest['items']['tree-page'] ) ) : ?>
 		<p><a class="button" href="<?php echo esc_url( get_permalink( $manifest['items']['tree-page'] ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Open demo tree page', 'my-family-tree' ); ?></a></p>
 		<?php endif; ?>
@@ -891,7 +1144,7 @@ final class WPMFT_Demo {
 	}
 
 	public static function render_forms() {
-		foreach ( array( 'import', 'enable', 'disable', 'reset', 'baseline' ) as $action ) {
+		foreach ( array( 'import', 'refresh', 'enable', 'disable', 'reset', 'baseline' ) as $action ) {
 			echo '<form id="wpmft-demo-' . esc_attr( $action ) . '" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" method="post"><input type="hidden" name="action" value="wpmft_demo_' . esc_attr( $action ) . '">';
 			wp_nonce_field( 'wpmft_demo_' . $action );
 			echo '</form>';
@@ -910,7 +1163,8 @@ final class WPMFT_Demo {
 		wp_enqueue_script( 'wpmft-demo-admin', wpmft_asset_url( 'demo-admin.js' ), array(), wpmft_asset_version(), true );
 		wp_enqueue_style( 'wpmft-demo-admin', wpmft_asset_url( 'demo-admin.css' ), array(), wpmft_asset_version() );
 		wp_localize_script( 'wpmft-demo-admin', 'WPMFT_DEMO_ADMIN', array(
-			'import' => __( 'Add fictional demo people, gallery illustrations and English pages? Existing content will be kept. Importing does not enable shared demo access.', 'my-family-tree' ),
+			'import' => __( 'Add fictional demo people, public-domain archival photographs and English pages? Existing content will be kept. Importing does not enable shared demo access.', 'my-family-tree' ),
+			'refresh' => __( 'Replace only the marked demo samples with the realistic fictional family dataset and public-domain archival photographs? Shared demo mode must be disabled.', 'my-family-tree' ),
 			'enable' => __( 'Enable a public shared demo login? Anyone given its published credentials can add, edit and remove demo persons and pages. Changes reset every 24 hours. This requires an isolated demo tree.', 'my-family-tree' ),
 			'disable' => __( 'Revoke the shared account and all demo sessions? Demo content will be kept and the normal Privacy settings will apply again.', 'my-family-tree' ),
 			'reset' => __( 'Discard current visitor edits and restore the saved demo starting state? Other site content and settings will be kept.', 'my-family-tree' ),
@@ -986,15 +1240,17 @@ final class WPMFT_Demo {
 	public static function editor_page() {
 		if ( ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { return; }
 		$manifest = self::manifest();
-		$id = isset( $_GET['person'] ) && is_scalar( $_GET['person'] ) ? absint( $_GET['person'] ) : 0;
-		$remove_id = isset( $_GET['remove'] ) && is_scalar( $_GET['remove'] ) ? absint( $_GET['remove'] ) : 0;
+		$id = isset( $_GET['person'] ) && is_scalar( $_GET['person'] ) ? absint( wp_unslash( $_GET['person'] ) ) : 0;
+		$remove_id = isset( $_GET['remove'] ) && is_scalar( $_GET['remove'] ) ? absint( wp_unslash( $_GET['remove'] ) ) : 0;
 		if ( $remove_id ) { $id = $remove_id; }
 		$post = $id && self::is_demo_post( $id ) ? get_post( $id ) : null;
 		if ( $post && ( ! in_array( $post->post_type, array( 'post', 'page' ), true ) || 'publish' !== $post->post_status || self::is_removed( $id ) ) ) { $post = null; }
-		$create_type = ! $post && isset( $_GET['create'] ) && in_array( $_GET['create'], array( 'post', 'page' ), true ) ? $_GET['create'] : '';
+		$create_value = isset( $_GET['create'] ) && is_string( $_GET['create'] ) ? sanitize_key( wp_unslash( $_GET['create'] ) ) : '';
+		$create_type = ! $post && in_array( $create_value, array( 'post', 'page' ), true ) ? $create_value : '';
 		$removing = $post && $remove_id && ! self::removal_protected( $id );
-		$show_pages = $post ? 'page' === $post->post_type : ( $create_type ? 'page' === $create_type : ( isset( $_GET['view'] ) && 'pages' === $_GET['view'] ) );
-		$show_settings = ! $post && ! $create_type && isset( $_GET['view'] ) && 'settings' === $_GET['view'];
+		$view = isset( $_GET['view'] ) && is_string( $_GET['view'] ) ? sanitize_key( wp_unslash( $_GET['view'] ) ) : '';
+		$show_pages = $post ? 'page' === $post->post_type : ( $create_type ? 'page' === $create_type : 'pages' === $view );
+		$show_settings = ! $post && ! $create_type && 'settings' === $view;
 		$list_url = admin_url( 'admin.php?page=wpmft-demo-editor' );
 		$pages_url = add_query_arg( 'view', 'pages', $list_url );
 		$settings_url = add_query_arg( 'view', 'settings', $list_url );
@@ -1031,14 +1287,14 @@ final class WPMFT_Demo {
 		if ( $post && $remove_id && ! $removing ) { echo '<div class="notice notice-info inline"><p>' . esc_html__( 'The starting person and tree page are kept so visitors can always open the demo.', 'my-family-tree' ) . '</p></div>'; }
 		if ( $removing ) {
 			echo '<form class="wpmft-demo-remove-form" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" method="post"><input type="hidden" name="action" value="wpmft_demo_remove"><input type="hidden" name="person" value="' . absint( $id ) . '">';
-			wp_nonce_field( 'wpmft_demo_remove_' . $id );
+			wp_nonce_field( 'wpmft_demo_remove' );
 			echo '<input type="hidden" name="wpmft_demo_reset_cycle" value="' . esc_attr( self::state()['reset_cycle'] ?? '' ) . '">';
 			echo '<p>' . esc_html__( 'This item will disappear from the public demo. The original demo is restored every 24 hours.', 'my-family-tree' ) . '</p><label class="wpmft-demo-setting-check"><input type="checkbox" name="wpmft_demo_confirm" value="1" required><span>' . esc_html__( 'I confirm removal of this demo item.', 'my-family-tree' ) . '</span></label><div class="wpmft-demo-form-actions"><button type="submit" class="button wpmft-demo-remove-button">' . esc_html( $heading ) . '</button><a class="button" href="' . esc_url( $show_pages ? $pages_url : $list_url ) . '">' . esc_html__( 'Cancel', 'my-family-tree' ) . '</a></div></form>';
 		} elseif ( $post || $create_type ) {
 			echo '<form class="wpmft-demo-person-form" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" method="post"><input type="hidden" name="action" value="' . ( $create_type ? 'wpmft_demo_create' : 'wpmft_demo_save' ) . '">';
 			if ( $create_type ) { echo '<input type="hidden" name="demo_type" value="' . esc_attr( $create_type ) . '">'; }
 			else { echo '<input type="hidden" name="person" value="' . absint( $id ) . '">'; }
-			wp_nonce_field( $create_type ? 'wpmft_demo_create_' . $create_type : 'wpmft_demo_save_' . $id );
+			wp_nonce_field( $create_type ? 'wpmft_demo_create' : 'wpmft_demo_save' );
 			echo '<input type="hidden" name="wpmft_demo_reset_cycle" value="' . esc_attr( self::state()['reset_cycle'] ?? '' ) . '">';
 			echo '<div class="wpmft-person-panel"><label class="wpmft-field wpmft-demo-title-field" for="wpmft-demo-title"><span>' . esc_html( $show_pages ? __( 'Name / title', 'my-family-tree' ) : __( 'Person’s full name', 'my-family-tree' ) ) . '</span><input class="large-text" id="wpmft-demo-title" name="demo_title" value="' . esc_attr( $post ? $post->post_title : '' ) . '" maxlength="160" required></label>';
 			if ( ! $show_pages ) { self::editor_person_fields( $post ); }
@@ -1101,7 +1357,7 @@ final class WPMFT_Demo {
 				<label class="wpmft-field"><span><?php esc_html_e( 'Gender', 'my-family-tree' ); ?></span><select name="demo_meta[gender]">
 				<?php foreach ( array( '' => __( 'Not specified', 'my-family-tree' ), 'm' => __( 'Male', 'my-family-tree' ), 'f' => __( 'Female', 'my-family-tree' ), 'x' => __( 'Other', 'my-family-tree' ) ) as $value => $label ) : ?><option value="<?php echo esc_attr( $value ); ?>" <?php selected( $id ? get_post_meta( $id, 'gender', true ) : '', $value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?>
 				</select></label>
-				<?php foreach ( array( 'born' => __( 'Date of birth', 'my-family-tree' ), 'died' => __( 'Date of death (leave blank if living)', 'my-family-tree' ), '_wpmft_maiden_name' => __( 'Birth / maiden name', 'my-family-tree' ), '_wpmft_birth_place' => __( 'Birthplace', 'my-family-tree' ), '_wpmft_death_place' => __( 'Place of death', 'my-family-tree' ), '_wpmft_location' => __( 'Location', 'my-family-tree' ), '_wpmft_occupation' => __( 'Occupation', 'my-family-tree' ) ) as $key => $label ) { self::editor_field( $id, $key, $label ); } ?>
+				<?php foreach ( array( 'born' => __( 'Date of birth', 'my-family-tree' ), 'died' => __( 'Date of death (leave blank if living)', 'my-family-tree' ), '_wpmft_name_day' => __( 'Name day override (MM-DD, optional)', 'my-family-tree' ), '_wpmft_maiden_name' => __( 'Birth / maiden name', 'my-family-tree' ), '_wpmft_birth_place' => __( 'Birthplace', 'my-family-tree' ), '_wpmft_death_place' => __( 'Place of death', 'my-family-tree' ), '_wpmft_location' => __( 'Location', 'my-family-tree' ), '_wpmft_occupation' => __( 'Occupation', 'my-family-tree' ) ) as $key => $label ) { self::editor_field( $id, $key, $label ); } ?>
 			</div>
 			<p class="description"><?php esc_html_e( 'Dates accept YYYY, YYYY-MM or YYYY-MM-DD. Older date text is retained unless you change it.', 'my-family-tree' ); ?></p>
 			<h3><?php esc_html_e( 'Family connections', 'my-family-tree' ); ?></h3>
@@ -1280,26 +1536,28 @@ final class WPMFT_Demo {
 	}
 
 	/** Shared create/save inputs expose only static stories and allowlisted person fields. */
-	private static function editor_values() {
-		$title = isset( $_POST['demo_title'] ) && is_string( $_POST['demo_title'] ) ? sanitize_text_field( wp_unslash( $_POST['demo_title'] ) ) : '';
-		$story = isset( $_POST['demo_story'] ) && is_string( $_POST['demo_story'] ) ? wp_unslash( $_POST['demo_story'] ) : '';
+	private static function editor_values( $request ) {
+		$request = is_array( $request ) ? $request : array();
+		$title = isset( $request['demo_title'] ) && is_string( $request['demo_title'] ) ? sanitize_text_field( $request['demo_title'] ) : '';
+		$story = isset( $request['demo_story'] ) && is_string( $request['demo_story'] ) ? $request['demo_story'] : '';
 		if ( '' === $title || strlen( $title ) > 640 || strlen( $story ) > 48000 ) { return new WP_Error( 'demo_fields', __( 'Enter a title and a story within the displayed length limits.', 'my-family-tree' ) ); }
 		$story = preg_replace( '/<!--.*?-->/s', '', $story );
 		$story = preg_replace( '/\[[^\]]*\]/', '', $story );
 		$story = wp_kses_post( $story );
-		$submitted = isset( $_POST['demo_meta'] ) && is_array( $_POST['demo_meta'] ) ? wp_unslash( $_POST['demo_meta'] ) : array();
-		$person = isset( $_POST['person'] ) && is_scalar( $_POST['person'] ) ? absint( $_POST['person'] ) : 0;
+		$submitted = isset( $request['demo_meta'] ) && is_array( $request['demo_meta'] ) ? $request['demo_meta'] : array();
+		$person = isset( $request['person'] ) && is_scalar( $request['person'] ) ? absint( $request['person'] ) : 0;
 		$meta = self::sanitize_editor_meta( $submitted, $person );
-		$cycle = isset( $_POST['wpmft_demo_reset_cycle'] ) && is_string( $_POST['wpmft_demo_reset_cycle'] ) ? sanitize_text_field( wp_unslash( $_POST['wpmft_demo_reset_cycle'] ) ) : '';
+		$cycle = isset( $request['wpmft_demo_reset_cycle'] ) && is_string( $request['wpmft_demo_reset_cycle'] ) ? sanitize_text_field( $request['wpmft_demo_reset_cycle'] ) : '';
 		return array( 'title' => $title, 'story' => $story, 'meta' => $meta, 'cycle' => $cycle );
 	}
 
 	public static function handle_create() {
-		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
-		$type = isset( $_POST['demo_type'] ) && is_string( $_POST['demo_type'] ) ? wp_unslash( $_POST['demo_type'] ) : '';
+		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
+		check_admin_referer( 'wpmft_demo_create' );
+		$request = wp_unslash( $_POST );
+		$type = isset( $request['demo_type'] ) && is_string( $request['demo_type'] ) ? sanitize_key( $request['demo_type'] ) : '';
 		if ( ! in_array( $type, array( 'post', 'page' ), true ) ) { wp_die( esc_html__( 'Choose a person or a demo page.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
-		check_admin_referer( 'wpmft_demo_create_' . $type );
-		$values = self::editor_values();
+		$values = self::editor_values( $request );
 		if ( is_wp_error( $values ) ) { wp_die( esc_html( $values->get_error_message() ), '', array( 'response' => 400 ) ); }
 		$result = self::create_item( $type, $values['title'], $values['story'], $values['meta'], $values['cycle'] );
 		if ( is_wp_error( $result ) ) { wp_die( esc_html( $result->get_error_message() ), '', array( 'response' => 409 ) ); }
@@ -1356,11 +1614,13 @@ final class WPMFT_Demo {
 	}
 
 	public static function handle_remove() {
-		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
-		$id = isset( $_POST['person'] ) && is_scalar( $_POST['person'] ) ? absint( $_POST['person'] ) : 0;
-		check_admin_referer( 'wpmft_demo_remove_' . $id );
-		if ( ! isset( $_POST['wpmft_demo_confirm'] ) || '1' !== $_POST['wpmft_demo_confirm'] ) { wp_die( esc_html__( 'Confirm removal before continuing.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
-		$cycle = isset( $_POST['wpmft_demo_reset_cycle'] ) && is_string( $_POST['wpmft_demo_reset_cycle'] ) ? sanitize_text_field( wp_unslash( $_POST['wpmft_demo_reset_cycle'] ) ) : '';
+		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
+		check_admin_referer( 'wpmft_demo_remove' );
+		$request = wp_unslash( $_POST );
+		$id = isset( $request['person'] ) && is_scalar( $request['person'] ) ? absint( $request['person'] ) : 0;
+		$confirmed = isset( $request['wpmft_demo_confirm'] ) && is_string( $request['wpmft_demo_confirm'] ) ? sanitize_text_field( $request['wpmft_demo_confirm'] ) : '';
+		if ( '1' !== $confirmed ) { wp_die( esc_html__( 'Confirm removal before continuing.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
+		$cycle = isset( $request['wpmft_demo_reset_cycle'] ) && is_string( $request['wpmft_demo_reset_cycle'] ) ? sanitize_text_field( $request['wpmft_demo_reset_cycle'] ) : '';
 		$result = self::remove_item( $id, $cycle );
 		if ( is_wp_error( $result ) ) { wp_die( esc_html( $result->get_error_message() ), '', array( 'response' => 409 ) ); }
 		$query = array( 'page' => 'wpmft-demo-editor', 'removed' => 1 );
@@ -1395,11 +1655,12 @@ final class WPMFT_Demo {
 	}
 
 	public static function handle_save() {
-		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
-		$id = isset( $_POST['person'] ) && is_scalar( $_POST['person'] ) ? absint( $_POST['person'] ) : 0;
-		check_admin_referer( 'wpmft_demo_save_' . $id );
+		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
+		check_admin_referer( 'wpmft_demo_save' );
+		$request = wp_unslash( $_POST );
+		$id = isset( $request['person'] ) && is_scalar( $request['person'] ) ? absint( $request['person'] ) : 0;
 		if ( ! self::is_demo_post( $id ) || ! in_array( get_post_type( $id ), array( 'post', 'page' ), true ) ) { wp_die( esc_html__( 'This is not editable demo content.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
-		$values = self::editor_values();
+		$values = self::editor_values( $request );
 		if ( is_wp_error( $values ) ) { wp_die( esc_html( $values->get_error_message() ), '', array( 'response' => 400 ) ); }
 		$manifest = self::manifest();
 		if ( $id === absint( $manifest['items']['tree-page'] ?? 0 ) ) { $values['story'] = '[wp_my_family_tree root="' . absint( $manifest['items']['marty'] ?? 0 ) . '"]'; }
@@ -1442,26 +1703,27 @@ final class WPMFT_Demo {
 	}
 
 	private static function person_content( $person ) {
-		return '<p><strong>Fictional cinema crossover demo.</strong> Names are inspired by familiar screen characters. Dates, places and all family links here are invented to demonstrate the plugin, not biographies or film canon.</p><p>' . esc_html( $person['bio'] ) . '</p><h2>A little more about me</h2><p>' . esc_html( $person['story'] ) . '</p><p>Explore the tree, open a relative and swipe through the original sample illustrations in the gallery.</p>';
+		return '<p><strong>Fictional heritage-family demo.</strong> Names, dates, biographies and relationships are invented. Public-domain archival photographs are used illustratively and do not depict the named fictional people.</p><p>' . esc_html( $person['bio'] ) . '</p><h2>A little more about me</h2><p>' . esc_html( $person['story'] ) . '</p><p>Explore relatives, dates, contact fields and the archival family-memory gallery to see how a real family archive can be organised.</p>';
 	}
 
 	private static function pages( $manifest ) {
 		return array(
-			'tree-page' => array( 'title' => 'Cinema Family — Interactive Demo', 'content' => '[wp_my_family_tree root="' . absint( $manifest['items']['marty'] ?? 0 ) . '"]' ),
-			'about-page' => array( 'title' => 'Meet the Cinema Family', 'content' => '<!-- wp:heading --><h2 class="wp-block-heading">Every character has a story</h2><!-- /wp:heading --><!-- wp:paragraph --><p>Welcome to an imaginary family reunion inspired by beloved American and European screen characters. From time-travel adventures to Parisian daydreams, this friendly sample shows how biographies, relationships and photographs come together.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p><strong>This is fictional demonstration content.</strong> Every date and family link is invented. The original monograms and landscape illustrations are supplied with this plugin; no movie stills, celebrity photographs or private family details are included.</p><!-- /wp:paragraph --><!-- wp:heading --><h2 class="wp-block-heading">Try the experience</h2><!-- /wp:heading --><!-- wp:list --><ul class="wp-block-list"><li>Choose a person and explore their relatives.</li><li>Open a biography and swipe through the sample gallery.</li><li>Use fullscreen to focus on the tree, then export a keepsake.</li></ul><!-- /wp:list --><!-- wp:paragraph --><p>Sample social buttons open the social networks themselves and do not claim to be character accounts.</p><!-- /wp:paragraph -->' ),
+			'tree-page' => array( 'title' => 'Morgan Family Archive — Interactive Demo', 'content' => '[wp_my_family_tree root="' . absint( $manifest['items']['marty'] ?? 0 ) . '"]' ),
+			'about-page' => array( 'title' => 'About the Morgan Family Demo', 'content' => '<!-- wp:heading --><h2 class="wp-block-heading">A realistic fictional family archive</h2><!-- /wp:heading --><!-- wp:paragraph --><p>This sample shows how a private family archive can combine people, relationships, biographies, dates, contact details and photographs.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p><strong>All names, dates, biographies and family links are fictional.</strong> The archival photographs are public-domain demonstration media from Wikimedia Commons and the National Library of Wales; they do not depict the named sample people.</p><!-- /wp:paragraph --><!-- wp:heading --><h2 class="wp-block-heading">Try the experience</h2><!-- /wp:heading --><!-- wp:list --><ul class="wp-block-list"><li>Open a person and follow parents, partners, siblings and children.</li><li>Read photo captions and approximate dates in the family-memory gallery.</li><li>Try fullscreen, calendar, search and export.</li></ul><!-- /wp:list --><!-- wp:paragraph --><p>The sample is designed to demonstrate the plugin without publishing private family information.</p><!-- /wp:paragraph -->' ),
 		);
 	}
 
 	private static function people() {
 		return array(
-			'george' => array( 'name' => 'George McFly', 'gender' => 'm', 'born' => '1940-04-01', 'location' => 'Hill Valley — fictional', 'occupation' => 'Story collector', 'spouse' => 'lorraine', 'bio' => 'A gentle daydreamer who turns ordinary family moments into extraordinary stories.', 'story' => 'George keeps the family notebook, asks thoughtful questions and believes every generation deserves to have its adventures remembered.' ),
-			'lorraine' => array( 'name' => 'Lorraine Baines McFly', 'gender' => 'f', 'born' => '1941-05-12', 'location' => 'Hill Valley — fictional', 'occupation' => 'Community organiser', 'spouse' => 'george', 'bio' => 'The lively organiser of movie nights, long lunches and unexpected family reunions.', 'story' => 'Lorraine brings everyone around the table. Her favourite tradition is asking each guest to share one small memory worth keeping.' ),
-			'marty' => array( 'name' => 'Marty McFly', 'gender' => 'm', 'born' => '1968-06-09', 'location' => 'Hill Valley — fictional', 'occupation' => 'Musician and adventurer', 'father' => 'george', 'mother' => 'lorraine', 'spouse' => 'jennifer', 'bio' => 'A guitar-loving explorer with a soft spot for family stories and improbable adventures.', 'story' => 'In this imaginary crossover family, Marty connects generations through music, curiosity and a carefully labelled box of old keepsakes.' ),
-			'jennifer' => array( 'name' => 'Jennifer Parker', 'gender' => 'f', 'born' => '1969-02-14', 'location' => 'Hill Valley — fictional', 'occupation' => 'Travel journal editor', 'spouse' => 'marty', 'bio' => 'A thoughtful traveller who makes room in every itinerary for the people who matter.', 'story' => 'Jennifer collects postcards, sketches memorable places and encourages the family to notice the little things on every journey.' ),
-			'amelie' => array( 'name' => 'Amélie Poulain', 'gender' => 'f', 'born' => '1990-08-23', 'location' => 'Paris — fictional demo address', 'occupation' => 'Collector of everyday wonders', 'father' => 'marty', 'mother' => 'jennifer', 'spouse' => 'nino', 'bio' => 'A Parisian daydreamer who finds wonder in quiet streets, warm cafés and small acts of kindness.', 'story' => 'Amélie turns a family album into a treasure hunt. Every photograph comes with a clue, a kind memory and a reason to call an old friend.' ),
-			'nino' => array( 'name' => 'Nino Quincampoix', 'gender' => 'm', 'born' => '1989-03-18', 'location' => 'Paris — fictional demo address', 'occupation' => 'Picture-book maker', 'spouse' => 'amelie', 'bio' => 'An inventive collector of pictures, patterns and stories waiting to be rediscovered.', 'story' => 'Nino assembles the family scrapbooks. He leaves a blank page at the end of every album because the next chapter is still being written.' ),
-			'paddington' => array( 'name' => 'Paddington Brown', 'gender' => 'm', 'born' => '1994-11-07', 'location' => 'London — fictional demo address', 'occupation' => 'Neighbourhood kindness ambassador', 'father' => 'marty', 'mother' => 'jennifer', 'bio' => 'A good-hearted guest who arrives with a small suitcase, a big smile and marmalade for everyone.', 'story' => 'Paddington reminds this imaginary family that belonging starts with a friendly welcome. His gatherings are famous for handwritten invitations and excellent sandwiches.' ),
-			'matilda' => array( 'name' => 'Matilda Wormwood', 'gender' => 'f', 'born' => '2012-09-15', 'location' => 'A very bookish village — fictional', 'occupation' => 'Young reader and storyteller', 'father' => 'nino', 'mother' => 'amelie', 'bio' => 'A curious young reader who knows that even the smallest person can have a remarkable story.', 'story' => 'Matilda is writing a family encyclopedia, one question at a time. Her favourite chapter is the one about how kindness can travel across generations.' ),
+			'george' => array( 'name' => 'Arthur Morgan', 'gender' => 'm', 'born' => '1842-03-18', 'location' => 'Cardiff, Wales', 'occupation' => 'Railway clerk', 'spouse' => 'lorraine', 'bio' => 'A careful record-keeper who saved letters, receipts and family photographs in labelled boxes.', 'story' => 'Arthur spent most of his working life on the railway. In retirement he began writing down family stories so younger generations would know where the family had lived and worked.' ),
+			'lorraine' => array( 'name' => 'Eleanor Hughes Morgan', 'gender' => 'f', 'born' => '1845-09-02', 'location' => 'Cardiff, Wales', 'occupation' => 'Dressmaker', 'spouse' => 'george', 'bio' => 'A skilled dressmaker remembered for keeping the extended family connected through letters and regular Sunday visits.', 'story' => 'Eleanor kept a small address book containing birthdays, new addresses and notes about family events. Many of the demo archive traditions are inspired by that kind of practical family record.' ),
+			'marty' => array( 'name' => 'William Morgan', 'gender' => 'm', 'born' => '1868-01-14', 'location' => 'Swansea, Wales', 'occupation' => 'Schoolmaster', 'father' => 'george', 'mother' => 'lorraine', 'spouse' => 'jennifer', 'bio' => 'A schoolmaster who collected local history and encouraged his children to label the names and places in old photographs.', 'story' => 'William moved from Cardiff to Swansea as a young teacher. His notebooks mix everyday family details with local history, making him the natural centre of this demonstration tree.' ),
+			'jennifer' => array( 'name' => 'Clara Evans Morgan', 'gender' => 'f', 'born' => '1870-06-23', 'location' => 'Swansea, Wales', 'occupation' => 'Library assistant', 'spouse' => 'marty', 'bio' => 'A library assistant with a love of handwritten catalogues, family recipes and carefully dated photographs.', 'story' => 'Clara organised household papers and family albums by year. Her practical notes are represented here through photo captions, dates and person records.' ),
+			'amelie' => array( 'name' => 'Alice Morgan', 'gender' => 'f', 'born' => '1892-05-07', 'location' => 'Bristol, England', 'occupation' => 'Primary-school teacher', 'father' => 'marty', 'mother' => 'jennifer', 'spouse' => 'nino', 'bio' => 'A teacher who moved to Bristol and continued the family habit of writing names and dates on the backs of photographs.', 'story' => 'Alice exchanged letters with relatives in Wales and collected family photographs from both sides of the family. Her branch demonstrates how a person can connect two households.' ),
+			'nino' => array( 'name' => 'Owen Price', 'gender' => 'm', 'born' => '1890-11-19', 'location' => 'Bristol, England', 'occupation' => 'Printer', 'spouse' => 'amelie', 'bio' => 'A printer whose work made him unusually attentive to names, dates and the small details that make an archive useful.', 'story' => 'Owen printed invitations and local notices. At home he helped Alice organise family correspondence and albums into folders that could be passed down.' ),
+			'paddington' => array( 'name' => 'Edith Morgan', 'gender' => 'f', 'born' => '1895-02-02', 'location' => 'Swansea, Wales', 'occupation' => 'Nurse', 'father' => 'marty', 'mother' => 'jennifer', 'bio' => 'A nurse who remained in Swansea and became the relative everyone contacted when a date, address or family story needed checking.', 'story' => 'Edith kept birthday cards, postcards and short notes from relatives. Her profile demonstrates siblings who share the same parents while following a different life path.' ),
+			'matilda' => array( 'name' => 'Megan Price', 'gender' => 'f', 'born' => '1916-08-21', 'location' => 'Bristol, England', 'occupation' => 'Student', 'father' => 'nino', 'mother' => 'amelie', 'bio' => 'The youngest person in the sample archive, linking the older family records to a new generation.', 'story' => 'Megan represents the next generation of the fictional Morgan-Price family. Her branch demonstrates how children stay visually grouped beneath their parents.' ),
 		);
 	}
+
 }

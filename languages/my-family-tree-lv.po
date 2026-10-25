@@ -86,8 +86,8 @@ msgid "Add a person"
 msgstr "Pievienot personu"
 
 #: includes/class-wpmft-demo.php:854
-msgid "Add eight fictional cinema characters, original gallery illustrations and two English pages. The importer adds marked sample content and preserves existing records, pages and settings. Repeating it keeps edits to existing demo items."
-msgstr "Pievienojiet astoņus izdomātus kino tēlus, oriģinālas galerijas ilustrācijas un divas lapas angļu valodā. Importētājs pievieno marķētu parauga saturu un saglabā esošos ierakstus, lapas un iestatījumus. Atkārtota importēšana saglabā esošo demonstrācijas vienumu labojumus."
+msgid "Add eight fictional family-archive people, archival-style gallery fallbacks and two English pages. The importer adds marked sample content and preserves existing records, pages and settings. Repeating it keeps edits to existing demo items."
+msgstr "Pievienojiet astoņas izdomātas dzimtas arhīva personas, arhīva stila galerijas rezerves attēlus un divas lapas angļu valodā. Importētājs pievieno marķētu parauga saturu un saglabā esošos ierakstus, lapas un iestatījumus. Atkārtota importēšana saglabā esošo demonstrācijas vienumu labojumus."
 
 #: includes/class-wpmft-demo.php:913
 msgid "Add fictional demo people, gallery illustrations and English pages? Existing content will be kept. Importing does not enable shared demo access."
@@ -138,8 +138,8 @@ msgid "After initial setup, demo tools stay hidden until you turn this on and sa
 msgstr "Pēc sākotnējās iestatīšanas demonstrācijas rīki paliek paslēpti, līdz ieslēdzat šo iespēju un saglabājat iestatījumus. Šis slēdzis tikai parāda rīkus; satura importēšanai un koplietotās piekļuves ieslēgšanai ir vajadzīgs atsevišķs apstiprinājums."
 
 #: includes/class-wpmft-demo.php:855
-msgid "All family connections and dates are invented. Character names are illustrative references; no movie stills, celebrity photographs or official character social accounts are included."
-msgstr "Visas radniecības saites un datumi ir izdomāti. Tēlu vārdi izmantoti kā ilustratīvas atsauces; filmu kadri, slavenību fotogrāfijas un oficiālie tēlu sociālo tīklu konti nav iekļauti."
+msgid "All family names, dates, biographies and relationships are invented. Public-domain archival photographs are illustrative and do not depict the named fictional people."
+msgstr "Visi dzimtas vārdi, datumi, dzīvesstāsti un radniecības saites ir izdomātas. Publiskā domēna arhīva fotogrāfijas izmantotas ilustratīvi un neattēlo nosauktās izdomātās personas."
 
 #: includes/class-wpmft-demo.php:980 includes/class-wpmft-demo.php:1013 includes/class-wpmft-admin.php:126
 msgid "All persons"
@@ -323,7 +323,7 @@ msgid "Choose your family category."
 msgstr "Izvēlieties dzimtas kategoriju."
 
 #: includes/class-wpmft-demo.php:632
-msgid "Cinema family demo"
+msgid "Family archive demo"
 msgstr "Kino dzimtas demonstrācija"
 
 #: includes/class-wpmft-toolbar.php:28 includes/class-wpmft-toolbar.php:48 includes/class-wpmft-admin.php:518
@@ -711,7 +711,7 @@ msgid "Female"
 msgstr "Sieviete"
 
 #: includes/class-wpmft-demo.php:633
-msgid "Fictional crossover characters and invented relationships. Visitor edits are public and reset every 24 hours."
+msgid "Fictional family archive with invented people and relationships. Visitor edits are public and reset every 24 hours."
 msgstr "Izdomāti dažādu filmu tēli un radniecības saites. Apmeklētāju labojumi ir publiski un tiek atiestatīti ik pēc 24 stundām."
 
 #: includes/class-wpmft-admin.php:135
@@ -1049,8 +1049,8 @@ msgid "Optional: omit theme styles, global presets and theme fonts. Keep this of
 msgstr "Pēc izvēles: neielādēt motīva stilus, globālos sākumiestatījumus un motīva fontus. Atstājiet izslēgtu, ja dzīvesstāstos vai citā lapas saturā tiek izmantoti motīva stilizēti bloki. WordPress pamata bloku stili paliek pieejami; iegultās lapas saglabā motīva stilus."
 
 #: includes/class-wpmft-demo.php:718
-msgid "Original illustration for the fictional cinema family demo."
-msgstr "Oriģināla ilustrācija izdomātās kino dzimtas demonstrācijai."
+msgid "Archival-style fallback illustration for the fictional family archive demo."
+msgstr "Arhīva stila rezerves ilustrācija izdomātā dzimtas arhīva demonstrācijai."
 
 #: includes/class-wpmft-demo.php:1102 includes/class-wpmft-admin.php:779
 msgid "Other"

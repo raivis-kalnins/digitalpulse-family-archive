@@ -83,7 +83,7 @@ msgid "Add a person"
 msgstr ""
 
 #: includes/class-wpmft-demo.php:854
-msgid "Add eight fictional cinema characters, original gallery illustrations and two English pages. The importer adds marked sample content and preserves existing records, pages and settings. Repeating it keeps edits to existing demo items."
+msgid "Add eight fictional family-archive people, archival-style gallery fallbacks and two English pages. The importer adds marked sample content and preserves existing records, pages and settings. Repeating it keeps edits to existing demo items."
 msgstr ""
 
 #: includes/class-wpmft-demo.php:913
@@ -135,7 +135,7 @@ msgid "After initial setup, demo tools stay hidden until you turn this on and sa
 msgstr ""
 
 #: includes/class-wpmft-demo.php:855
-msgid "All family connections and dates are invented. Character names are illustrative references; no movie stills, celebrity photographs or official character social accounts are included."
+msgid "All family names, dates, biographies and relationships are invented. Public-domain archival photographs are illustrative and do not depict the named fictional people."
 msgstr ""
 
 #: includes/class-wpmft-demo.php:980 includes/class-wpmft-demo.php:1013 includes/class-wpmft-admin.php:126
@@ -320,7 +320,7 @@ msgid "Choose your family category."
 msgstr ""
 
 #: includes/class-wpmft-demo.php:632
-msgid "Cinema family demo"
+msgid "Family archive demo"
 msgstr ""
 
 #: includes/class-wpmft-toolbar.php:28 includes/class-wpmft-toolbar.php:48 includes/class-wpmft-admin.php:518
@@ -708,7 +708,7 @@ msgid "Female"
 msgstr ""
 
 #: includes/class-wpmft-demo.php:633
-msgid "Fictional crossover characters and invented relationships. Visitor edits are public and reset every 24 hours."
+msgid "Fictional family archive with invented people and relationships. Visitor edits are public and reset every 24 hours."
 msgstr ""
 
 #: includes/class-wpmft-admin.php:135
@@ -1046,7 +1046,7 @@ msgid "Optional: omit theme styles, global presets and theme fonts. Keep this of
 msgstr ""
 
 #: includes/class-wpmft-demo.php:718
-msgid "Original illustration for the fictional cinema family demo."
+msgid "Archival-style fallback illustration for the fictional family archive demo."
 msgstr ""
 
 #: includes/class-wpmft-demo.php:1102 includes/class-wpmft-admin.php:779

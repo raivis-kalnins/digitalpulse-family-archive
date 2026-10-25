@@ -23,7 +23,9 @@ final class WPMFT_Security {
 	}
 	public static function protected_mode() { return WPMFT_Demo::guard_required() || ! empty( wpmft_settings()['password_protection'] ); }
 	public static function no_cache() {
-		foreach ( array( 'DONOTCACHEPAGE', 'DONOTCACHEDB', 'DONOTCACHEOBJECT' ) as $constant ) { if ( ! defined( $constant ) ) { define( $constant, true ); } }
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) { define( 'DONOTCACHEPAGE', true ); }
+		if ( ! defined( 'DONOTCACHEDB' ) ) { define( 'DONOTCACHEDB', true ); }
+		if ( ! defined( 'DONOTCACHEOBJECT' ) ) { define( 'DONOTCACHEOBJECT', true ); }
 		if ( ! headers_sent() ) {
 			nocache_headers();
 			header( 'Cache-Control: no-store, no-cache, must-revalidate, private, max-age=0' );
@@ -38,7 +40,7 @@ final class WPMFT_Security {
 		if ( $value === '' ) { unset( $_COOKIE[$name] ); } else { $_COOKIE[$name] = $value; }
 	}
 	public static function device() {
-		$device = isset( $_COOKIE['wpmft_device'] ) && is_string( $_COOKIE['wpmft_device'] ) ? (string) wp_unslash( $_COOKIE['wpmft_device'] ) : '';
+		$device = isset( $_COOKIE['wpmft_device'] ) && is_string( $_COOKIE['wpmft_device'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['wpmft_device'] ) ) : '';
 		if ( ! preg_match( '/^[a-f0-9]{64}$/D', $device ) ) {
 			$device = bin2hex( random_bytes( 32 ) ); self::cookie( 'wpmft_device', $device, time() + 30 * DAY_IN_SECONDS );
 		}
@@ -46,7 +48,7 @@ final class WPMFT_Security {
 	}
 	public static function csrf() { return hash_hmac( 'sha256', 'wpmft-csrf|' . self::device(), wp_salt( 'nonce' ) ); }
 	public static function check_request() {
-		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { return new WP_Error( 'method', __( 'A POST request is required.', 'my-family-tree' ) ); }
+		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) ) { return new WP_Error( 'method', __( 'A POST request is required.', 'my-family-tree' ) ); }
 		$origin = isset( $_SERVER['HTTP_ORIGIN'] ) ? untrailingslashit( esc_url_raw( wp_unslash( $_SERVER['HTTP_ORIGIN'] ) ) ) : '';
 		$origins = array();
 		foreach ( array( home_url(), site_url() ) as $url ) {
@@ -54,7 +56,7 @@ final class WPMFT_Security {
 			$origins[] = $parts['scheme'] . '://' . $parts['host'] . ( isset( $parts['port'] ) ? ':' . $parts['port'] : '' );
 		}
 		if ( $origin && ! in_array( $origin, $origins, true ) ) { return new WP_Error( 'origin', __( 'The request origin could not be verified.', 'my-family-tree' ) ); }
-		$token = isset( $_POST['csrf'] ) && is_string( $_POST['csrf'] ) ? (string) wp_unslash( $_POST['csrf'] ) : '';
+		$token = isset( $_POST['csrf'] ) && is_string( $_POST['csrf'] ) ? sanitize_text_field( wp_unslash( $_POST['csrf'] ) ) : '';
 		if ( strlen( $token ) !== 64 || ! hash_equals( self::csrf(), $token ) ) { return new WP_Error( 'csrf', __( 'Please refresh the page and try again.', 'my-family-tree' ) ); }
 		return true;
 	}
@@ -63,7 +65,7 @@ final class WPMFT_Security {
 		if ( wpmft_staff() ) { return true; }
 		if ( WPMFT_Demo::guard_required() ) { return WPMFT_Demo::front_authorized(); }
 		if ( ! self::protected_mode() ) { return true; }
-		$token = isset( $_COOKIE['wpmft_session'] ) && is_string( $_COOKIE['wpmft_session'] ) ? (string) wp_unslash( $_COOKIE['wpmft_session'] ) : '';
+		$token = isset( $_COOKIE['wpmft_session'] ) && is_string( $_COOKIE['wpmft_session'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['wpmft_session'] ) ) : '';
 		if ( ! preg_match( '/^[a-f0-9]{64}$/D', $token ) ) { return false; }
 		$session = get_transient( 'wpmft_session_' . hash( 'sha256', $token ) );
 		$s = wpmft_settings();
@@ -94,7 +96,7 @@ final class WPMFT_Security {
 	}
 	public static function logout() {
 		WPMFT_Demo::logout();
-		$token = isset( $_COOKIE['wpmft_session'] ) && is_string( $_COOKIE['wpmft_session'] ) ? (string) wp_unslash( $_COOKIE['wpmft_session'] ) : '';
+		$token = isset( $_COOKIE['wpmft_session'] ) && is_string( $_COOKIE['wpmft_session'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['wpmft_session'] ) ) : '';
 		if ( preg_match( '/^[a-f0-9]{64}$/D', $token ) ) { delete_transient( 'wpmft_session_' . hash( 'sha256', $token ) ); }
 		self::cookie( 'wpmft_session', '', time() - HOUR_IN_SECONDS );
 	}

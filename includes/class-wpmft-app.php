@@ -90,7 +90,7 @@ final class WPMFT_App {
 	}
 
 	public static function manifest() {
-		if ( ! isset( $_GET['wpmft_manifest'] ) || ! is_string( $_GET['wpmft_manifest'] ) || '1' !== $_GET['wpmft_manifest'] ) { return; }
+		if ( ! isset( $_GET['wpmft_manifest'] ) || ! is_string( $_GET['wpmft_manifest'] ) || '1' !== sanitize_text_field( wp_unslash( $_GET['wpmft_manifest'] ) ) ) { return; }
 		$s = wpmft_settings();
 		WPMFT_Security::no_cache();
 		if ( empty( $s['enabled'] ) || empty( $s['app_install'] ) ) { status_header( 404 ); exit; }

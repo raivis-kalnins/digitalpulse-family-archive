@@ -22,6 +22,7 @@ require_once WPMFT_DIR . 'includes/class-wpmft-compatibility.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-demo.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-performance.php';
 require_once WPMFT_DIR . 'includes/class-wpmft-output.php';
+require_once WPMFT_DIR . 'includes/class-wpmft-celebrations.php';
 
 function wpmft_activate() {
 	$s = wpmft_settings();
@@ -36,12 +37,13 @@ function wpmft_activate() {
 	}
 	if ( ! $s['session_version'] ) { $s['session_version'] = wp_generate_password( 32, false ); }
 	update_option( 'wpmft_settings', $s, false );
+	WPMFT_Celebrations::ensure_schedule();
 }
 register_activation_hook( WPMFT_FILE, 'wpmft_activate' );
 register_deactivation_hook( WPMFT_FILE, array( 'WPMFT_Demo', 'deactivate' ) );
+register_deactivation_hook( WPMFT_FILE, array( 'WPMFT_Celebrations', 'deactivate' ) );
 
 add_action( 'init', function () {
-	load_plugin_textdomain( 'my-family-tree', false, dirname( plugin_basename( WPMFT_FILE ) ) . '/languages' );
 	wp_register_script( 'wpmft-app', wpmft_asset_url( 'app.js' ), array( 'wp-element' ), wpmft_asset_version(), true );
 	wp_register_style( 'wpmft-app', wpmft_asset_url( 'app.css' ), array(), wpmft_asset_version() );
 	register_block_type( WPMFT_DIR, array( 'render_callback' => 'wpmft_block' ) );
@@ -62,8 +64,9 @@ function wpmft_shortcode( $attributes = array(), $content = null, $tag = 'wp_my_
 	$attributes = shortcode_atts( array( 'root' => 0, 'view' => $tag === 'family-members' ? 'list' : 'tree' ), $attributes, 'wp_my_family_tree' );
 	$root = absint( $attributes['root'] );
 	if ( ! $root && ! empty( $attributes['root'] ) ) {
-		global $wpdb;
-		$root = (int) $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type='post' AND post_status='publish' AND post_title=%s LIMIT 1", $attributes['root'] ) );
+		$title = sanitize_text_field( (string) $attributes['root'] );
+		$matches = get_posts( array( 'post_type' => 'post', 'post_status' => 'publish', 'title' => $title, 'posts_per_page' => 1, 'fields' => 'ids', 'no_found_rows' => true, 'wpmft_internal' => true, 'suppress_filters' => false ) );
+		$root = $matches ? absint( $matches[0] ) : 0;
 	}
 	$root = $root ?: $s['root_id'];
 	wp_enqueue_script( 'wpmft-app' );
@@ -99,3 +102,4 @@ WPMFT_App::init();
 WPMFT_Cache::init();
 WPMFT_Performance::init();
 WPMFT_Output::init();
+WPMFT_Celebrations::init();

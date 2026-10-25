@@ -170,7 +170,7 @@
     "liveStatus": "Familiearkivets status",
     "signIn": "Log ind",
     "dashboard": "Kontrolpanel",
-    "demoNotice": "Fiktive figurer fra forskellige film og opdigtede familieforhold. Besøgendes ændringer er offentlige og nulstilles hver 24. time.",
+    "demoNotice": "Fiktivt familiearkiv med opdigtede personer og relationer. Besøgendes ændringer er offentlige og nulstilles hver 24. time.",
     "parentChild": "Forælder–barn",
     "connectionsFor": "Forbindelser: {name}",
     "photoLoading": "Indlæser fotografi…",

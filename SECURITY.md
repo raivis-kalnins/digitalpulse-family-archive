@@ -41,3 +41,9 @@ https://github.com/raivis-kalnins/wp-my-family-tree
 Include the affected plugin version, WordPress/PHP versions, a minimal reproduction using fictional records, the expected access boundary and the observed result. Do not post live passwords, encryption keys, private family records, unredacted logs or exploitable production URLs in a public issue.
 
 No response-time or security-certification guarantee is made by this document.
+
+## Birthday and Latvian name-day privacy
+
+Birthday reminders are calculated inside WordPress from the saved person records. Birthday email is optional and sends only to the email address saved on that living person's record; the plugin records the last successful birthday-email year to avoid duplicates.
+
+When Latvian name days are enabled, the plugin reads its bundled local Latvian name-day data. No family names, dates, contact details, passwords or visitor identifiers are sent to a remote name-day service. Name days never trigger email.

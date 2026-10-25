@@ -22,34 +22,50 @@ final class WPMFT_Media {
 	}
 	public static function private_ids() {
 		if ( null !== self::$private_ids ) { return self::$private_ids; }
-		global $wpdb;
-		$ids = array_map( 'intval', $wpdb->get_col( "SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key IN ('_wpmft_vault','_wpmft_private','_wpmft_optimized_images')" ) );
+		$ids = get_posts( array(
+			'post_type' => 'attachment', 'post_status' => 'inherit', 'posts_per_page' => -1, 'fields' => 'ids', 'no_found_rows' => true,
+			'meta_query' => array( 'relation' => 'OR', array( 'key' => '_wpmft_vault', 'compare' => 'EXISTS' ), array( 'key' => '_wpmft_private', 'compare' => 'EXISTS' ), array( 'key' => '_wpmft_optimized_images', 'compare' => 'EXISTS' ) ),
+			'wpmft_internal' => true, 'suppress_filters' => false,
+		) ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Small private-media index cached for the request.
 		$people = WPMFT_Data::ids( false );
 		if ( $people ) {
-			$placeholders = implode( ',', array_fill( 0, count( $people ), '%d' ) );
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Only fixed %d tokens are interpolated.
-			$sql = $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type='attachment' AND post_parent IN ({$placeholders})", $people );
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared above; the resulting private index is cached for this request only.
-			$children = $wpdb->get_col( $sql );
-			$ids = array_merge( $ids, array_map( 'intval', $children ) );
+			$children = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'posts_per_page' => -1, 'fields' => 'ids', 'post_parent__in' => $people, 'wpmft_internal' => true, 'suppress_filters' => false ) );
+			$ids = array_merge( $ids, $children );
 		}
-		// Attachment checks inside referenced_image_ids() should hit one primed cache, not a query per photograph.
-		if ( $ids ) { _prime_post_caches( array_unique( $ids ), false, true ); }
+		if ( $ids ) { _prime_post_caches( array_unique( array_map( 'absint', $ids ) ), false, true ); }
 		foreach ( $people as $person ) { $ids = array_merge( $ids, WPMFT_Data::referenced_image_ids( $person, false ) ); }
-		if ( $ids ) { _prime_post_caches( $ids, false, true ); }
-		self::$private_ids = array_values( array_unique( $ids ) );
+		$ids = array_values( array_unique( array_map( 'absint', $ids ) ) );
+		self::$private_ids = array_values( array_filter( $ids, static function ( $id ) { return ! self::is_public_demo_media( $id ); } ) );
 		return self::$private_ids;
 	}
+
+	private static function is_public_demo_media( $id ) {
+		return 'archival-public-domain' === (string) get_post_meta( absint( $id ), '_wpmft_demo_media_kind', true ) && class_exists( 'WPMFT_Demo' ) && WPMFT_Demo::is_demo_post( absint( $id ) ) && ! self::manifest( absint( $id ) );
+	}
+
 	public static function is_private( $id ) {
-		if ( 'attachment' !== get_post_type( $id ) ) { return false; }
+		if ( 'attachment' !== get_post_type( $id ) || self::is_public_demo_media( $id ) ) { return false; }
 		if ( get_post_meta( $id, '_wpmft_private', true ) || self::manifest( $id ) || get_post_meta( $id, '_wpmft_optimized_images', true ) ) { return true; }
 		return in_array( (int) $id, self::private_ids(), true );
 	}
 	public static function url( $id, $size = 'full' ) {
-		return add_query_arg( array( 'action' => 'wpmft_media', 'id' => absint( $id ), 'size' => sanitize_key( $size ) ), admin_url( 'admin-ajax.php' ) );
+		$id = absint( $id );
+		if ( self::is_public_demo_media( $id ) ) {
+			$url = wp_get_attachment_image_url( $id, sanitize_key( $size ) );
+			if ( ! $url ) { $url = wp_get_attachment_url( $id ); }
+			return $url ? $url : '';
+		}
+		return add_query_arg( array( 'action' => 'wpmft_media', 'id' => $id, 'size' => sanitize_key( $size ) ), admin_url( 'admin-ajax.php' ) );
 	}
 	/** Responsive photographs always use the authenticated media endpoint. */
 	public static function image_data( $id ) {
+		if ( self::is_public_demo_media( $id ) ) {
+			$meta = wp_get_attachment_metadata( $id );
+			$full = wp_get_attachment_image_url( $id, 'full' ) ?: '';
+			$medium = wp_get_attachment_image_url( $id, 'medium_large' ) ?: ( wp_get_attachment_image_url( $id, 'medium' ) ?: $full );
+			$srcset = wp_get_attachment_image_srcset( $id, 'large' );
+			return array( 'url' => esc_url_raw( $full ), 'thumb' => esc_url_raw( $medium ), 'display' => esc_url_raw( wp_get_attachment_image_url( $id, 'large' ) ?: $full ), 'width' => absint( $meta['width'] ?? 0 ), 'height' => absint( $meta['height'] ?? 0 ), 'srcset' => is_string( $srcset ) ? $srcset : '', 'sources' => array() );
+		}
 		$meta = wp_get_attachment_metadata( $id ); $vault = self::manifest( $id );
 		$width = absint( $meta['width'] ?? 0 ); $height = absint( $meta['height'] ?? 0 );
 		$candidates = array();
@@ -192,7 +208,7 @@ final class WPMFT_Media {
 	/** Generate at most three sizes away from visitor requests, preserving the source and its existing vault. */
 	public static function optimize_attachment( $id ) {
 		$id = absint( $id );
-		if ( ! $id || ! self::is_private( $id ) || ! self::needs_optimization( $id ) ) { return true; }
+		if ( ! $id || self::is_public_demo_media( $id ) || ! self::is_private( $id ) || ! self::needs_optimization( $id ) ) { return true; }
 		$support = self::optimization_support(); $mime = $support['avif'] ? 'image/avif' : ( $support['webp'] ? 'image/webp' : '' );
 		if ( ! $mime ) { return new WP_Error( 'image_encoder', __( 'This server does not support AVIF or WebP encoding. Existing photographs remain available.', 'my-family-tree' ) ); }
 		if ( ! function_exists( 'openssl_encrypt' ) ) { return new WP_Error( 'openssl', __( 'OpenSSL is required to protect photographs.', 'my-family-tree' ) ); }
@@ -467,6 +483,7 @@ final class WPMFT_Media {
 		if ( ! wpmft_settings()['private_media'] || ! wpmft_is_person( $id ) ) { return; }
 		$errors = array();
 		foreach ( WPMFT_Data::referenced_image_ids( $id ) as $photo ) {
+			if ( self::is_public_demo_media( $photo ) ) { continue; }
 			if ( ! current_user_can( 'edit_post', $photo ) ) { $errors[] = __( 'A photograph could not be protected because you do not have permission to edit it. Ask an administrator to protect it or upload your own copy.', 'my-family-tree' ); continue; }
 			self::record_owner( $photo, $id );
 			if ( ! self::needs_protection( $photo ) ) { continue; }

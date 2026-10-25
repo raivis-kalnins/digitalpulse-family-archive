@@ -19,8 +19,12 @@ final class WPMFT_API {
 		}
 		wp_send_json_success( $payload );
 	}
-	private static function value( $key, $default = '' ) { return isset( $_POST[$key] ) && is_scalar( $_POST[$key] ) ? wp_unslash( $_POST[$key] ) : $default; }
-	public static function bootstrap() {
+	private static function value( $key, $default = '' ) {
+		// Raw scalar input is unslashed here and sanitized by the operation-specific caller.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.NonceVerification.Missing -- CSRF is checked centrally before protected operations.
+		return isset( $_POST[$key] ) && is_scalar( $_POST[$key] ) ? wp_unslash( $_POST[$key] ) : $default;
+	}
+	public static function bootstrap( $lang = '' ) {
 		$s = wpmft_settings(); $authorized = WPMFT_Security::authorized();
 		$demo = WPMFT_Demo::public_config();
 		$result = array(
@@ -31,6 +35,7 @@ final class WPMFT_API {
 			'hcaptcha' => array( 'siteKey' => $s['hcaptcha_enabled'] ? $s['hcaptcha_site_key'] : '', 'login' => (bool) ( $s['hcaptcha_enabled'] && $s['hcaptcha_login'] ), 'contact' => (bool) ( $s['hcaptcha_enabled'] && $s['hcaptcha_contact'] ) ),
 		);
 		if ( $authorized ) {
+			$result['celebrations'] = WPMFT_Celebrations::public_payload( wpmft_language( $lang ) );
 			$index = WPMFT_Data::index(); $families = array();
 			if ( WPMFT_Demo::scoped_request() && ! WPMFT_Demo::validate_payload( array( 'people' => array_map( function ( $id ) { return array( 'id' => (int) $id ); }, array_keys( $index ) ) ), 'search' ) ) { $result['authorized'] = false; return $result; }
 			foreach ( $index as $id => $record ) { if ( $record['children'] ) { $families[$id] = true; } }
@@ -49,8 +54,8 @@ final class WPMFT_API {
 		if ( $lang === 'lv' ) { load_textdomain( 'my-family-tree', WPMFT_DIR . 'languages/my-family-tree-lv.mo' ); }
 		WPMFT_Languages::set_request_language( $lang );
 		if ( $op === 'bootstrap' ) {
-			if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { self::error( new WP_Error( 'method', __( 'A POST request is required.', 'my-family-tree' ) ), 405 ); }
-			wp_send_json_success( self::bootstrap() );
+			if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) ) { self::error( new WP_Error( 'method', __( 'A POST request is required.', 'my-family-tree' ) ), 405 ); }
+			wp_send_json_success( self::bootstrap( $lang ) );
 		}
 		$check = WPMFT_Security::check_request();
 		if ( is_wp_error( $check ) ) { self::error( $check, 403 ); }
@@ -59,9 +64,9 @@ final class WPMFT_API {
 			if ( strlen( self::value( 'password' ) ) > 4096 ) { self::error( new WP_Error( 'password', __( 'The password is too long.', 'my-family-tree' ) ) ); }
 			$check = WPMFT_Security::captcha( 'login' ); if ( is_wp_error( $check ) ) { self::error( $check ); }
 			$check = WPMFT_Security::unlock( self::value( 'password' ), self::value( 'remember' ) === '1' ); if ( is_wp_error( $check ) ) { self::error( $check, $check->get_error_code() === 'rate_limit' ? 429 : 403 ); }
-			wp_send_json_success( self::bootstrap() );
+			wp_send_json_success( self::bootstrap( $lang ) );
 		}
-		if ( $op === 'logout' ) { WPMFT_Security::logout(); wp_send_json_success( self::bootstrap() ); }
+		if ( $op === 'logout' ) { WPMFT_Security::logout(); wp_send_json_success( self::bootstrap( $lang ) ); }
 		if ( $op === 'contact' ) { self::contact(); }
 		if ( ! WPMFT_Security::authorized() ) { self::error( new WP_Error( 'unauthorized', __( 'Your family session has ended. Please unlock the tree again.', 'my-family-tree' ) ), 401 ); }
 		if ( ! WPMFT_Security::rate_limit( 'browse', 600, MINUTE_IN_SECONDS ) ) { self::error( new WP_Error( 'rate_limit', __( 'Please wait a moment before trying again.', 'my-family-tree' ) ), 429 ); }
@@ -72,6 +77,11 @@ final class WPMFT_API {
 			self::send_family_data( $person, 'person' );
 		}
 		if ( $op === 'search' ) { self::send_family_data( WPMFT_Data::search( substr( sanitize_text_field( self::value( 'q' ) ), 0, 200 ), absint( self::value( 'page', 1 ) ), $lang ), 'search' ); }
+		if ( $op === 'calendar' ) {
+			$year = max( 2000, min( 2100, absint( self::value( 'year', wp_date( 'Y' ) ) ) ) );
+			$month = max( 1, min( 12, absint( self::value( 'month', wp_date( 'n' ) ) ) ) );
+			self::send_family_data( WPMFT_Celebrations::public_payload( $lang, $year, $month ), 'calendar' );
+		}
 		self::error( new WP_Error( 'operation', __( 'This action is not available.', 'my-family-tree' ) ), 404 );
 	}
 	private static function contact() {

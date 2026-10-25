@@ -55,7 +55,7 @@ final class WPMFT_Toolbar {
 
 	public static function clear_cache() {
 		nocache_headers();
-		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
+		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) ) {
 			wp_send_json_error( array( 'message' => __( 'A POST request is required.', 'my-family-tree' ) ), 405 );
 		}
 		if ( ! current_user_can( 'manage_options' ) ) {

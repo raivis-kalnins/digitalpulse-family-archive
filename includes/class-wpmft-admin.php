@@ -39,14 +39,21 @@ final class WPMFT_Admin {
 
 	/** Explicit UI choice, then the Polylang person language, then the editor's profile. */
 	public static function language() {
-		foreach ( array( $_POST['wpmft_admin_lang'] ?? '', $_GET['wpmft_admin_lang'] ?? '', $_POST['post_lang_choice'] ?? '', $_GET['new_lang'] ?? '' ) as $candidate ) {
-			if ( is_string( $candidate ) && isset( WPMFT_Languages::registry()[$candidate] ) ) { return $candidate; }
-		}
+		$candidates = array(
+			isset( $_POST['wpmft_admin_lang'] ) && is_string( $_POST['wpmft_admin_lang'] ) ? sanitize_key( wp_unslash( $_POST['wpmft_admin_lang'] ) ) : '',
+			isset( $_GET['wpmft_admin_lang'] ) && is_string( $_GET['wpmft_admin_lang'] ) ? sanitize_key( wp_unslash( $_GET['wpmft_admin_lang'] ) ) : '',
+			isset( $_POST['post_lang_choice'] ) && is_string( $_POST['post_lang_choice'] ) ? sanitize_key( wp_unslash( $_POST['post_lang_choice'] ) ) : '',
+			isset( $_GET['new_lang'] ) && is_string( $_GET['new_lang'] ) ? sanitize_key( wp_unslash( $_GET['new_lang'] ) ) : '',
+		);
+		foreach ( $candidates as $candidate ) { if ( $candidate && isset( WPMFT_Languages::registry()[$candidate] ) ) { return $candidate; } }
 		global $post;
 		$id = $post instanceof WP_Post ? $post->ID : 0;
-		foreach ( array( $_GET['post'] ?? 0, $_POST['post_ID'] ?? 0, $_POST['post_id'] ?? 0 ) as $candidate ) {
-			if ( is_scalar( $candidate ) && absint( $candidate ) ) { $id = absint( $candidate ); break; }
-		}
+		$id_candidates = array(
+			isset( $_GET['post'] ) ? absint( wp_unslash( $_GET['post'] ) ) : 0,
+			isset( $_POST['post_ID'] ) ? absint( wp_unslash( $_POST['post_ID'] ) ) : 0,
+			isset( $_POST['post_id'] ) ? absint( wp_unslash( $_POST['post_id'] ) ) : 0,
+		);
+		foreach ( $id_candidates as $candidate ) { if ( $candidate ) { $id = $candidate; break; } }
 		if ( $id && function_exists( 'pll_get_post_language' ) && 'post' === get_post_type( $id ) ) {
 			$lang = pll_get_post_language( $id, 'slug' );
 			if ( isset( WPMFT_Languages::registry()[$lang] ) ) { return $lang; }
@@ -57,7 +64,8 @@ final class WPMFT_Admin {
 	public static function translate_admin( $translation, $text, $domain ) {
 		if ( ! is_admin() || ! did_action( 'init' ) ) { return $translation; }
 		// Front-end AJAX has its own request language; do not replace it with a user profile.
-		if ( wp_doing_ajax() && ! in_array( $_REQUEST['action'] ?? '', array( 'wpmft_admin_people', 'wpmft_admin_protect_media', 'wpmft_admin_optimize_media' ), true ) ) { return $translation; }
+		$request_action = isset( $_REQUEST['action'] ) && is_string( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '';
+		if ( wp_doing_ajax() && ! in_array( $request_action, array( 'wpmft_admin_people', 'wpmft_admin_protect_media', 'wpmft_admin_optimize_media' ), true ) ) { return $translation; }
 		$labels = WPMFT_Languages::labels( self::language(), 'admin' );
 		return $labels[$text] ?? $text;
 	}
@@ -77,7 +85,7 @@ final class WPMFT_Admin {
 		if ( ! $post instanceof WP_Post || 'post' !== $post->post_type ) { return false; }
 		if ( wpmft_is_person( $post->ID ) ) { return true; }
 		if ( 'auto-draft' !== $post->post_status && 'post-new.php' !== ( $GLOBALS['pagenow'] ?? '' ) ) { return false; }
-		if ( isset( $_GET['wpmft_person'] ) && '1' === $_GET['wpmft_person'] ) { return true; }
+		if ( isset( $_GET['wpmft_person'] ) && is_string( $_GET['wpmft_person'] ) && '1' === sanitize_text_field( wp_unslash( $_GET['wpmft_person'] ) ) ) { return true; }
 		$from = isset( $_GET['from_post'] ) && is_scalar( $_GET['from_post'] ) ? absint( $_GET['from_post'] ) : 0;
 		return $from && wpmft_is_person( $from );
 	}
@@ -364,7 +372,7 @@ final class WPMFT_Admin {
 				</div>
 			</div>
 			<nav class="wpmft-admin-tabs" aria-label="<?php esc_attr_e( 'Family tree settings', 'my-family-tree' ); ?>">
-				<?php foreach ( array( 'general' => __( 'General', 'my-family-tree' ), 'privacy' => __( 'Privacy & access', 'my-family-tree' ), 'appearance' => __( 'Appearance', 'my-family-tree' ), 'contact' => __( 'Contact & hCaptcha', 'my-family-tree' ), 'performance' => __( 'Performance & cache', 'my-family-tree' ), 'languages' => __( 'Languages', 'my-family-tree' ), 'demo' => __( 'Demo', 'my-family-tree' ), 'help' => __( 'Getting started', 'my-family-tree' ) ) as $key => $label ) : ?>
+				<?php foreach ( array( 'general' => __( 'General', 'my-family-tree' ), 'privacy' => __( 'Privacy & access', 'my-family-tree' ), 'appearance' => __( 'Appearance', 'my-family-tree' ), 'contact' => __( 'Contact & hCaptcha', 'my-family-tree' ), 'celebrations' => __( 'Birthdays & calendar', 'my-family-tree' ), 'performance' => __( 'Performance & cache', 'my-family-tree' ), 'languages' => __( 'Languages', 'my-family-tree' ), 'demo' => __( 'Demo', 'my-family-tree' ), 'help' => __( 'Getting started', 'my-family-tree' ) ) as $key => $label ) : ?>
 				<?php if ( 'demo' === $key && ! WPMFT_Demo::tools_visible() ) { continue; } ?>
 				<a href="#wpmft-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></a>
 				<?php endforeach; ?>
@@ -378,6 +386,7 @@ final class WPMFT_Admin {
 				<input type="hidden" name="wpmft[v127_demo_present]" value="1">
 				<input type="hidden" name="wpmft[v127_contact_present]" value="1">
 				<input type="hidden" name="wpmft[v127_media_present]" value="1">
+				<input type="hidden" name="wpmft[v130_present]" value="1">
 				<input type="hidden" name="wpmft_section" value="general">
 				<?php wp_nonce_field( 'wpmft_save_settings' ); ?>
 				<?php self::language_control(); ?>
@@ -399,6 +408,14 @@ final class WPMFT_Admin {
 					<?php self::checkbox( 'demo_tools_enabled', __( 'Show the Demo tab for sample content and demo sharing', 'my-family-tree' ), $s ); ?>
 					<p class="description"><?php esc_html_e( 'After initial setup, demo tools stay hidden until you turn this on and save. This switch only shows the tools; importing content and enabling shared access each require a separate confirmation.', 'my-family-tree' ); ?></p>
 					<?php WPMFT_Demo::render_general_status(); ?>
+				</section>
+				<section id="wpmft-celebrations" class="wpmft-settings-section"><h2><?php esc_html_e( 'Birthdays & calendar', 'my-family-tree' ); ?></h2>
+					<?php self::checkbox( 'celebrations_enabled', __( 'Show the family birthday calendar', 'my-family-tree' ), $s ); ?>
+					<?php self::checkbox( 'celebration_header', __( 'Show today’s birthdays and name days near the top of the family page', 'my-family-tree' ), $s ); ?>
+					<?php self::checkbox( 'birthday_email_enabled', __( 'Send a birthday email to living people who have an email address', 'my-family-tree' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'Birthday mail is sent once per person per year, around 08:00 site time. WordPress scheduled tasks run when the site receives traffic, so a quiet site can send later.', 'my-family-tree' ); ?></p>
+					<?php self::checkbox( 'name_days_lv', __( 'Show Latvian name days when the interface language is Latvian', 'my-family-tree' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'Name days are shown in the calendar and header only; no name-day email is sent. The traditional Latvian list is cached locally and can be overridden per person with an MM-DD date.', 'my-family-tree' ); ?></p>
 				</section>
 				<section id="wpmft-privacy" class="wpmft-settings-section"><h2><?php esc_html_e( 'Privacy & access', 'my-family-tree' ); ?></h2>
 					<?php self::checkbox( 'password_protection', __( 'Require a family password', 'my-family-tree' ), $s ); ?>
@@ -533,7 +550,7 @@ final class WPMFT_Admin {
 		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_send_json_error( array( 'message' => __( 'A POST request is required.', 'my-family-tree' ) ), 405 ); }
 		if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( array( 'message' => __( 'Access denied.', 'my-family-tree' ) ), 403 ); }
 		check_ajax_referer( 'wpmft_optimize_media', 'nonce' );
-		if ( isset( $_POST['op'] ) && 'status' === $_POST['op'] ) { wp_send_json_success( WPMFT_Media::optimization_status() ); }
+		if ( isset( $_POST['op'] ) && is_string( $_POST['op'] ) && 'status' === sanitize_key( wp_unslash( $_POST['op'] ) ) ) { wp_send_json_success( WPMFT_Media::optimization_status() ); }
 		$after = isset( $_POST['after'] ) && is_scalar( $_POST['after'] ) ? absint( $_POST['after'] ) : 0;
 		wp_send_json_success( WPMFT_Media::optimize_batch( 1, $after ) );
 	}
@@ -556,6 +573,9 @@ final class WPMFT_Admin {
 			$raw_whatsapp = isset( $input['whatsapp_phone'] ) && is_string( $input['whatsapp_phone'] ) ? trim( $input['whatsapp_phone'] ) : '';
 			$s['whatsapp_phone'] = wpmft_whatsapp_number( $raw_whatsapp );
 			if ( ( '' !== $raw_whatsapp || $s['whatsapp_enabled'] ) && ! $s['whatsapp_phone'] ) { self::redirect( 'whatsapp', 'contact' ); }
+		}
+		if ( isset( $input['v130_present'] ) && '1' === $input['v130_present'] ) {
+			foreach ( array( 'celebrations_enabled', 'celebration_header', 'birthday_email_enabled', 'name_days_lv' ) as $key ) { $s[$key] = isset( $input[$key] ) && '1' === $input[$key] ? 1 : 0; }
 		}
 		if ( isset( $input['v127_media_present'] ) && '1' === $input['v127_media_present'] ) {
 			$s['image_optimization'] = isset( $input['image_optimization'] ) && 'off' === $input['image_optimization'] ? 'off' : 'auto';
@@ -778,7 +798,7 @@ final class WPMFT_Admin {
 				<label class="wpmft-field"><span><?php esc_html_e( 'Gender', 'my-family-tree' ); ?></span><select name="wpmft_person[gender]">
 				<?php foreach ( array( '' => __( 'Not specified', 'my-family-tree' ), 'm' => __( 'Male', 'my-family-tree' ), 'f' => __( 'Female', 'my-family-tree' ), 'x' => __( 'Other', 'my-family-tree' ) ) as $value => $label ) : ?><option value="<?php echo esc_attr( $value ); ?>" <?php selected( get_post_meta( $post->ID, 'gender', true ), $value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?>
 				</select></label>
-				<?php foreach ( array( 'born' => __( 'Date of birth', 'my-family-tree' ), 'died' => __( 'Date of death (leave blank if living)', 'my-family-tree' ), '_wpmft_maiden_name' => __( 'Birth / maiden name', 'my-family-tree' ), '_wpmft_birth_place' => __( 'Birthplace', 'my-family-tree' ), '_wpmft_death_place' => __( 'Place of death', 'my-family-tree' ), '_wpmft_location' => __( 'Location', 'my-family-tree' ), '_wpmft_occupation' => __( 'Occupation', 'my-family-tree' ) ) as $key => $label ) : ?>
+				<?php foreach ( array( 'born' => __( 'Date of birth', 'my-family-tree' ), 'died' => __( 'Date of death (leave blank if living)', 'my-family-tree' ), '_wpmft_name_day' => __( 'Name day override (MM-DD, optional)', 'my-family-tree' ), '_wpmft_maiden_name' => __( 'Birth / maiden name', 'my-family-tree' ), '_wpmft_birth_place' => __( 'Birthplace', 'my-family-tree' ), '_wpmft_death_place' => __( 'Place of death', 'my-family-tree' ), '_wpmft_location' => __( 'Location', 'my-family-tree' ), '_wpmft_occupation' => __( 'Occupation', 'my-family-tree' ) ) as $key => $label ) : ?>
 				<label class="wpmft-field"><span><?php echo esc_html( $label ); ?></span><input type="text" name="wpmft_person[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( get_post_meta( $post->ID, $key, true ) ); ?>" maxlength="250" <?php echo in_array( $key, array( 'born', 'died' ), true ) ? 'placeholder="YYYY-MM-DD"' : ''; ?>></label>
 				<?php endforeach; ?>
 			</div>
@@ -966,11 +986,15 @@ final class WPMFT_Admin {
 			elseif ( wp_attachment_is_image( $portrait ) && ( current_user_can( 'edit_post', $portrait ) || $portrait === (int) get_post_thumbnail_id( $post_id ) ) ) { set_post_thumbnail( $post_id, $portrait ); }
 		}
 		if ( isset( $input['gender'] ) && is_string( $input['gender'] ) && in_array( $input['gender'], array( '', 'm', 'f', 'x' ), true ) ) { update_post_meta( $post_id, 'gender', $input['gender'] ); }
-		foreach ( array( 'born', 'died', '_wpmft_maiden_name', '_wpmft_birth_place', '_wpmft_death_place', '_wpmft_location', '_wpmft_occupation' ) as $key ) {
+		foreach ( array( 'born', 'died', '_wpmft_name_day', '_wpmft_maiden_name', '_wpmft_birth_place', '_wpmft_death_place', '_wpmft_location', '_wpmft_occupation' ) as $key ) {
 			if ( ! array_key_exists( $key, $input ) || ! is_scalar( $input[$key] ) ) { continue; }
 			$value = self::limit_text( sanitize_text_field( $input[$key] ), 250 );
 			if ( in_array( $key, array( 'born', 'died' ), true ) && $value !== get_post_meta( $post_id, $key, true ) && ! self::valid_date( $value ) ) {
 				self::editor_notice( __( 'A date was not saved. Use YYYY, YYYY-MM or a valid YYYY-MM-DD. The previous value has been retained.', 'my-family-tree' ) );
+				continue;
+			}
+			if ( '_wpmft_name_day' === $key && $value && ( ! preg_match( '/^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/D', $value, $name_day_parts ) || ! checkdate( (int) $name_day_parts[1], (int) $name_day_parts[2], 2000 ) ) ) {
+				self::editor_notice( __( 'The name-day override was not saved. Use MM-DD, for example 05-29.', 'my-family-tree' ) );
 				continue;
 			}
 			update_post_meta( $post_id, $key, $value );

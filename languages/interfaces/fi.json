@@ -170,7 +170,7 @@
     "liveStatus": "Sukuarkiston tila",
     "signIn": "Kirjaudu sisään",
     "dashboard": "Hallintapaneeli",
-    "demoNotice": "Kuvitteellisia hahmoja eri elokuvista ja keksittyjä sukulaisuussuhteita. Vierailijoiden muutokset ovat julkisia ja palautetaan alkutilaan 24 tunnin välein.",
+    "demoNotice": "Kuvitteellinen sukuarkisto, jossa henkilöt ja suhteet ovat keksittyjä. Vierailijoiden muutokset ovat julkisia ja palautetaan 24 tunnin välein.",
     "parentChild": "Vanhempi–lapsi",
     "connectionsFor": "Yhteydet: {name}",
     "photoLoading": "Ladataan valokuvaa…",

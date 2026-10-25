@@ -22,7 +22,7 @@ The plugin has no telemetry, author-operated service or paid feature gate. Polyl
 | --- | --- |
 | Plugin name | My Family Tree |
 | Proposed plugin slug / text domain | my-family-tree |
-| Version / stable tag | 1.2.9 |
+| Version / stable tag | 1.3.2 |
 | Minimum WordPress | 6.5 |
 | Minimum PHP | 7.4 |
 | Tested up to (directory header) | 7.1 |
@@ -44,11 +44,11 @@ Version 1.2.6 makes saved gallery selections authoritative, including empty sele
 
 Version 1.2.7 adds optional outbound WhatsApp links, per-person photo stories and dates, responsive image loading and capability-aware modern display copies. No external image optimizer or embedded chat script is used. Image conversion is queued or administrator-triggered, with encrypted derivatives and ordinary-format fallback. The demo editor uses the regular visual structure while retaining sample-only permissions and daily reset. Demo tools are optional in General after initial setup.
 
-Version 1.2.9 fixes cached portrait loading state, authenticated fallback for missing ordinary thumbnails, and optimizer queue starvation after a failed photo. Manual optimization handles one image per request, reports failed attachment IDs without blocking later images, and refreshes pending counts without performing conversions. Missing optimized files can be rebuilt. Existing original media, gallery membership and authorization remain protected.
+Version 1.2.9 fixed cached portrait loading state, authenticated fallback for missing ordinary thumbnails, and optimizer queue starvation after a failed photo. Manual optimization handles one image per request, reports failed attachment IDs without blocking later images, and refreshes pending counts without performing conversions. Missing optimized files can be rebuilt. Existing original media, gallery membership and authorization remain protected.
 
 ## Name correction for resubmission
 
-Version 1.2.3 changes the PHP `Plugin Name` header and directory readme title to **My Family Tree**, addressing the reviewer's objection to the former leading “WP”. The installable ZIP is `my-family-tree-1.2.9.zip`, with one `my-family-tree/` folder, the `my-family-tree.php` entry point and the matching `my-family-tree` text domain. Directory acceptance and the final permalink remain subject to the Plugins Team's review.
+Version 1.2.3 changes the PHP `Plugin Name` header and directory readme title to **My Family Tree**, addressing the reviewer's objection to the former leading “WP”. The installable ZIP is `my-family-tree-1.3.4.zip`, with one `my-family-tree/` folder, the `my-family-tree.php` entry point and the matching `my-family-tree` text domain. Directory acceptance and the final permalink remain subject to the Plugins Team's review.
 
 The source repository remains at `https://github.com/raivis-kalnins/wp-my-family-tree`. That existing repository URL is not the proposed WordPress.org permalink. Internal `wpmft` data keys, existing shortcodes and the saved block identifier `wp-my-family-tree/tree` are retained for compatibility.
 
@@ -58,7 +58,7 @@ For existing sites, deactivate **WP My Family Tree** before installing and activ
 
 The release contains readable PHP, JavaScript and CSS alongside generated production files. Package metadata and scripts/build-assets.mjs pin esbuild 0.25.5 and describe the build. Run npm ci and npm run build with Node 18 or newer when rebuilding; do not package node_modules.
 
-The frontend uses the React runtime supplied by WordPress. It does not load a runtime from a CDN. Oak artwork, icons, demo monograms and landscapes are original assets distributed under the plugin's GPL license. See assets/demo/README.txt. Fictional character references are illustrative; no movie stills, studio logos, celebrity photographs or real family records are included.
+The frontend uses the React runtime supplied by WordPress. It does not load a runtime from a CDN. Oak artwork and icons are original assets distributed under the plugin's GPL license. Demo import can optionally fetch a fixed set of public-domain archival photographs from Wikimedia Commons; source and licence details are documented in docs/THIRD-PARTY.md. Demo media refresh does not silently substitute placeholder portraits: all allowlisted archival photos must download and validate before replacement. Demo names, dates, biographies and relationships are fictional, and no real family records are included.
 
 The package must exclude local QA fixtures, error logs, database exports, hosting configuration, credentials, backups and private media. The intentionally documented demo password is activated only through the isolated opt-in workflow; it is not a production credential.
 
@@ -87,3 +87,8 @@ screenshot-1.png provides the packaged screenshot for the directory. A maintaine
 - [Readme validator](https://wordpress.org/plugins/developers/readme-validator/)
 - [Plugin Check](https://wordpress.org/plugins/plugin-check/)
 - [Submit a plugin](https://wordpress.org/plugins/developers/add/)
+
+
+## 1.3.2 birthday and calendar update
+
+Version 1.3.2 adds a family birthday calendar, optional once-per-year birthday email for living relatives with an email address, Latvian name-day notices, and clearer sibling grouping in the tree. Name days do not trigger email. The optional Latvian name-day feature uses a bundled local Latvian name-day dataset; no family or visitor data is sent to a remote name-day service.

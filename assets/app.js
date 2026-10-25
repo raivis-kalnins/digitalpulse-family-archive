@@ -13,7 +13,7 @@
             tree: 'Family tree', list: 'People', people: 'family members', families: 'families', search: 'Find someone in your family…', searchLabel: 'Search family members',
             searchHint: 'Type at least 2 characters to search.', noResults: 'No family members found.', close: 'Close', contact: 'Contact us', admin: 'Family administrator',
             roots: 'Connected by our roots', footer: 'Together, we keep our family story growing.', credit: 'Created by', language: 'Language',
-            signIn: 'Sign in', dashboard: 'Dashboard', demoNotice: 'Fictional crossover characters and invented relationships. Visitor edits are public and reset every 24 hours.',
+            signIn: 'Sign in', dashboard: 'Dashboard', demoNotice: 'Fictional family archive with invented people and relationships. Visitor edits are public and reset every 24 hours.',
             parentChild: 'Parent–child', connectionsFor: 'Connections: {name}',
             loading: 'Loading your family…', loadingPerson: 'Opening this life story…', loadingMore: 'Loading more…', loadMore: 'Load more people',
             retry: 'Try again', networkError: 'We could not connect. Please try again.', expired: 'Your session has ended. Please unlock the family archive again.',
@@ -34,6 +34,8 @@
             memories: 'Photographs & memories', gallery: 'Open photograph gallery', photos: 'photographs', photo: 'Photograph', previousPhoto: 'Previous photograph', nextPhoto: 'Next photograph', zoomPhoto: 'Zoom photograph',
             photoLoading: 'Loading photograph…', photoLoadError: 'This photograph could not load.', photoRetry: 'Load photograph again', photoStory: 'Photograph story', photoDate: 'When',
             whatsapp: 'WhatsApp', whatsappAdmin: 'Chat with the family administrator on WhatsApp', whatsappPerson: 'Chat with {name} on WhatsApp',
+            celebrations: 'Family calendar', birthday: 'Birthday', birthdays: 'Birthdays', nameDay: 'Name day', nameDays: 'Name days', calendarOpen: 'Open family calendar', previousMonth: 'Previous month', nextMonth: 'Next month',
+            birthdayToday: 'Happy Birthday, {name}! Wishing you a wonderful day filled with family, warmth and happy memories. 🎂', birthdayTodayMany: 'Happy Birthday to {names}! Wishing you a beautiful day together. 🎂', nameDayToday: 'Happy name day, {names}! 🌿', calendarNameDayToday: 'Today’s Latvian name days: {names}.', birthdayLegend: 'Family birthday', nameDayLegend: 'Family name day', calendarNamesLegend: 'Latvian name days', noCelebrations: 'No family birthdays are recorded for this month.',
             noBiography: 'There is more to this story. Contact the family administrator to share a memory or photograph.', connections: 'Family connections', noConnections: 'No family connections have been added yet.',
             contactHeading: 'Keep the story growing', contactIntro: 'Have a memory, a photograph or a correction to share? Send a message to the family administrator.',
             name: 'Your full name', email: 'Email address', message: 'Your message', messagePlaceholder: 'Tell us what you would like to share…', send: 'Send message', sending: 'Sending…',
@@ -81,6 +83,8 @@
             memories: 'Fotogrāfijas un atmiņas', gallery: 'Atvērt fotogaleriju', photos: 'fotogrāfijas', photo: 'Fotogrāfija', previousPhoto: 'Iepriekšējā fotogrāfija', nextPhoto: 'Nākamā fotogrāfija', zoomPhoto: 'Pietuvināt fotogrāfiju',
             photoLoading: 'Ielādē fotogrāfiju…', photoLoadError: 'Šo fotogrāfiju neizdevās ielādēt.', photoRetry: 'Ielādēt fotogrāfiju vēlreiz', photoStory: 'Fotogrāfijas stāsts', photoDate: 'Kad',
             whatsapp: 'WhatsApp', whatsappAdmin: 'Sazināties ar dzimtas administratoru WhatsApp', whatsappPerson: 'Sazināties ar {name} WhatsApp',
+            celebrations: 'Dzimtas kalendārs', birthday: 'Dzimšanas diena', birthdays: 'Dzimšanas dienas', nameDay: 'Vārda diena', nameDays: 'Vārda dienas', calendarOpen: 'Atvērt dzimtas kalendāru', previousMonth: 'Iepriekšējais mēnesis', nextMonth: 'Nākamais mēnesis',
+            birthdayToday: 'Daudz laimes dzimšanas dienā, {name}! Lai skaista, silta un sirsnīga diena kopā ar savējiem. 🎂', birthdayTodayMany: 'Daudz laimes dzimšanas dienā, {names}! Lai skaista diena kopā ar savējiem. 🎂', nameDayToday: 'Sirsnīgi sveicieni vārda dienā, {names}! 🌿', calendarNameDayToday: 'Šodien vārda dienu svin: {names}.', birthdayLegend: 'Dzimtas dzimšanas diena', nameDayLegend: 'Dzimtas vārda diena', calendarNamesLegend: 'Latviešu vārda dienas', noCelebrations: 'Šajā mēnesī nav reģistrētu dzimšanas dienu.',
             noBiography: 'Šim stāstam vēl ir turpinājums. Sazinies ar dzimtas administratoru, lai pievienotu atmiņu vai fotogrāfiju.', connections: 'Ģimenes saites', noConnections: 'Ģimenes saites vēl nav pievienotas.',
             contactHeading: 'Pieteikties', contactIntro: 'Sazinies ar dzimtas administratoru: nosūti foto un aprakstu par radinieku, atmiņu vai precizējumu.',
             name: 'Vārds Uzvārds', email: 'E-pasta adrese', message: 'Apraksts par radinieku vai ziņa', messagePlaceholder: 'Ieraksti radinieka vārdu, saistību ar dzimtu un informāciju, kuru vēlies papildināt…', send: 'Nosūtīt ziņu', sending: 'Nosūta…',
@@ -407,13 +411,15 @@
     }
     function layoutTree(data) {
         const nodes = Array.isArray(data?.nodes) ? data.nodes.filter(n => n && Number.isFinite(Number(n.id))) : [];
-        const grouped = new Map(), current = new Map(), parents = new Map(), children = new Map();
+        const grouped = new Map(), current = new Map(), parents = new Map(), children = new Map(), parentRoles = new Map();
         const ids = new Set(nodes.map(n => String(n.id)));
         const inputEdges = (Array.isArray(data?.edges) ? data.edges : []).filter(e => e && ids.has(String(e.from)) && ids.has(String(e.to)));
         nodes.forEach(n => { const g = Math.max(-8, Math.min(8, Number(n.generation) || 0)); if (!grouped.has(g)) grouped.set(g, []); grouped.get(g).push(n); });
         inputEdges.filter(e => e.type === 'parent').forEach(e => {
             const from = String(e.from), to = String(e.to);
             if (!parents.has(to)) parents.set(to, new Set()); parents.get(to).add(from);
+            if (!parentRoles.has(to)) parentRoles.set(to, {});
+            if (e.role === 'mother' || e.role === 'father') parentRoles.get(to)[e.role] = from;
             if (!children.has(from)) children.set(from, new Set()); children.get(from).add(to);
         });
         inputEdges.filter(e => e.type === 'spouse' && e.status === 'together').forEach(e => {
@@ -464,6 +470,18 @@
         }
         levels.filter(g => g > 0).forEach(g => orderRow(g, parents));
         levels.filter(g => g < 0).reverse().forEach(g => orderRow(g, children));
+        // Keep brothers and sisters with the same recorded parents next to each other.
+        function siblingBlocks(row) {
+            const used = new Set(), blocks = [];
+            row.forEach(node => {
+                const id = String(node.id); if (used.has(id)) return;
+                const parentKey = [...(parents.get(id) || [])].sort().join(',');
+                const block = parentKey ? row.filter(other => [...(parents.get(String(other.id)) || [])].sort().join(',') === parentKey) : [node];
+                block.forEach(other => used.add(String(other.id))); blocks.push(block);
+            });
+            return blocks;
+        }
+        levels.filter(g => g > 0).forEach(g => rows.set(g, siblingBlocks(rows.get(g)).flat()));
         rows.forEach((row, g) => row.forEach((node, i) => points.set(String(node.id), { ...node, x: width / 2 + (i - (row.length - 1) / 2) * 230, y: 0, level: levels.indexOf(g) })));
 
         // Align actual relatives across rows instead of centering every generation independently.
@@ -499,6 +517,35 @@
         }
         levels.filter(g => g < 0).reverse().forEach(g => alignRow(g, children, 1));
         levels.filter(g => g > 0).forEach(g => alignRow(g, parents, -1));
+        // Keep each sibling family together beneath its recorded parent pair. When several family
+        // groups compete for the same horizontal space, move the whole family onto another row
+        // instead of mixing children from unrelated parent pairs into one long generation.
+        const subrows = new Map(), generationBands = new Map();
+        levels.filter(g => g > 0).forEach(g => {
+            const row = rows.get(g), blocks = siblingBlocks(row);
+            const placedByBand = [];
+            const info = blocks.map((block, order) => {
+                const firstId = String(block[0].id), roles = parentRoles.get(firstId) || {};
+                const parentIds = [...(parents.get(firstId) || [])];
+                const preferredId = roles.mother && points.has(String(roles.mother)) ? String(roles.mother) : (roles.father && points.has(String(roles.father)) ? String(roles.father) : '');
+                const anchors = parentIds.map(id => points.get(String(id))).filter(Boolean);
+                const preferred = preferredId ? points.get(preferredId) : null;
+                const center = preferred ? preferred.x : (anchors.length ? anchors.reduce((sum, point) => sum + point.x, 0) / anchors.length : block.reduce((sum, node) => sum + points.get(String(node.id)).x, 0) / block.length);
+                const spacing = block.length === 1 ? 0 : block.length <= 3 ? 224 : 234;
+                block.forEach((node, index) => { points.get(String(node.id)).x = center + (index - (block.length - 1) / 2) * spacing; });
+                const xs = block.map(node => points.get(String(node.id)).x);
+                return { block, order, center, min: Math.min(...xs) - 120, max: Math.max(...xs) + 120 };
+            }).sort((a,b) => a.center - b.center || a.order - b.order);
+            let maxBand = 0;
+            info.forEach(family => {
+                let band = 0;
+                while (placedByBand[band]?.some(item => !(family.min > item.max + 46 || family.max < item.min - 46))) band++;
+                if (!placedByBand[band]) placedByBand[band] = [];
+                placedByBand[band].push(family); maxBand = Math.max(maxBand, band);
+                family.block.forEach(node => subrows.set(String(node.id), band));
+            });
+            generationBands.set(g, maxBand);
+        });
         if (points.size) {
             const xs = [...points.values()].map(p => p.x), minX = Math.min(...xs), maxX = Math.max(...xs);
             width = Math.max(width, maxX - minX + 370);
@@ -535,19 +582,25 @@
             if (lane < 0) { lane = lanes.length; lanes.push([]); }
             lanes[lane].push(family); family.lane = lane;
         });
-        const levelY = []; let nextY = 120 + (partnerTracks.get(0) || 0) * 14;
+        const levelY = []; let nextY = 120 + (partnerTracks.get(0) || 0) * 14, previousExtra = 0;
         levels.forEach((g, index) => {
             if (index) {
                 const rowFamilies = familyList.filter(family => family.level === index);
                 const compact = rowFamilies.length && rowFamilies.every(family => family.childIds.length === 1);
-                nextY += 162 + (compact ? 20 : 40) + (Math.max(1, tracks.get(index)?.length || 0) + (partnerTracks.get(index) || 0)) * 14;
+                nextY += previousExtra + 162 + (compact ? 20 : 40) + (Math.max(1, tracks.get(index)?.length || 0) + (partnerTracks.get(index) || 0)) * 14;
             }
             levelY.push(nextY);
-            rows.get(g).forEach(node => { points.get(String(node.id)).y = nextY; });
+            const maxBand = generationBands.get(g) || 0;
+            rows.get(g).forEach(node => { const point = points.get(String(node.id)); point.y = nextY + (subrows.get(String(node.id)) || 0) * 212; });
+            previousExtra = maxBand * 212;
         });
-        const height = Math.max(780, nextY + 130), connectors = [];
+        const height = Math.max(780, ...[...points.values()].map(point => point.y + 130)), connectors = [];
         familyList.forEach(family => {
-            family.y = levelY[family.level - 1] + 81 + 20 + family.lane * 14;
+            const parentPoints = family.parentIds.map(id => points.get(id)).filter(Boolean), childPoints = family.childIds.map(id => points.get(id)).filter(Boolean);
+            const parentBottom = parentPoints.length ? Math.max(...parentPoints.map(point => point.y + 81)) : levelY[family.level - 1] + 81;
+            const childTop = childPoints.length ? Math.min(...childPoints.map(point => point.y - 81)) : levelY[family.level] - 81;
+            family.y = Math.min(childTop - 20, parentBottom + 20 + family.lane * 14);
+            if (family.y <= parentBottom + 6) family.y = parentBottom + 20 + family.lane * 14;
             const parentDrops = family.parentIds.map(id => { const p = points.get(id); return 'M' + p.x + ',' + (p.y + 81) + 'V' + family.y; });
             const childDrops = family.childIds.map(id => { const p = points.get(id); return 'M' + p.x + ',' + family.y + 'V' + (p.y - 81); });
             const junctions = [...new Set([...family.parentIds, ...family.childIds].map(id => points.get(id).x))].filter(x => x > family.minX && x < family.maxX).map(x => ({ x, y: family.y }));
@@ -783,6 +836,53 @@
             gallery.length > 1 && h('button', { type: 'button', className: 'wpmft-lightbox-arrow is-previous', onClick: () => next(-1), 'aria-label': tr(lang, 'previousPhoto') }, h(Icon, { name: 'left', size: 30 })),
             gallery.length > 1 && h('button', { type: 'button', className: 'wpmft-lightbox-arrow is-next', onClick: () => next(1), 'aria-label': tr(lang, 'nextPhoto') }, h(Icon, { name: 'right', size: 30 })),
             h('div', { className: 'wpmft-lightbox-caption' }, current.date && h('p', { className: 'wpmft-photo-date' }, h(Icon, { name: 'calendar', size: 14 }), h('span', { 'aria-label': tr(lang, 'photoDate') }, dateLabel(current.date, lang))), photoStory(current) && h('p', { className: 'wpmft-photo-story' }, photoStory(current)), gallery.length > 1 && h('div', { className: 'wpmft-lightbox-dots' }, gallery.map((photo, i) => h('button', { type: 'button', key: photo.id || i, className: i === index ? 'is-active' : '', 'aria-label': tr(lang, 'photo') + ' ' + (i + 1), 'aria-current': i === index ? 'true' : undefined, onClick: () => { setIndex(i); setZoom(false); setOffset(0); } }))), gallery.length > 1 && !zoom && h('p', { className: 'wpmft-swipe-hint' }, tr(lang, 'swipePhoto'))));
+    }
+    function CelebrationBanner({ celebrations, lang, onPerson, onCalendar }) {
+        if (!celebrations?.enabled) return null;
+        const birthdays = Array.isArray(celebrations.todayBirthdays) ? celebrations.todayBirthdays : [];
+        const namedays = Array.isArray(celebrations.todayNamedays) ? celebrations.todayNamedays : [];
+        const calendarNames = lang === 'lv' && Array.isArray(celebrations.todayCalendarNames) ? celebrations.todayCalendarNames : [];
+        if (!birthdays.length && !namedays.length && !calendarNames.length) return null;
+        const birthdayNames = birthdays.map(e => e.name).join(', ');
+        const namedayNames = namedays.length ? namedays.map(e => e.firstName || e.name).join(', ') : '';
+        const calendarOnlyNames = !namedays.length ? calendarNames.join(', ') : '';
+        return h('aside', { className: cls('wpmft-celebration-banner', !birthdays.length && !namedays.length && calendarOnlyNames && 'is-calendar-only'), 'aria-label': tr(lang, 'celebrations') },
+            h('div', { className: 'wpmft-celebration-copy' },
+                birthdays.length > 0 && h('p', null, h('span', { className: 'wpmft-celebration-emoji', 'aria-hidden': true }, '🎂'), h('strong', null, tr(lang, birthdays.length > 1 ? 'birthdayTodayMany' : 'birthdayToday', birthdays.length > 1 ? { names: birthdayNames } : { name: birthdays[0].name }))),
+                lang === 'lv' && namedayNames && h('p', null, h('span', { className: 'wpmft-celebration-emoji', 'aria-hidden': true }, '🌿'), h('strong', null, tr(lang, 'nameDayToday', { names: namedayNames }))),
+                lang === 'lv' && calendarOnlyNames && h('p', null, h('span', { className: 'wpmft-celebration-emoji', 'aria-hidden': true }, '🌿'), h('span', null, tr(lang, 'calendarNameDayToday', { names: calendarOnlyNames })))
+            ),
+            h('div', { className: 'wpmft-celebration-actions' }, birthdays.slice(0, 3).map(event => h('button', { type: 'button', className: 'wpmft-button is-small', key: event.id, onClick: () => onPerson(event.id) }, event.name)), h('button', { type: 'button', className: 'wpmft-icon-button', onClick: onCalendar, 'aria-label': tr(lang, 'calendarOpen'), title: tr(lang, 'calendarOpen') }, h(Icon, { name: 'calendar', size: 18 })))
+        );
+    }
+    function CelebrationCalendar({ lang, api, initial, onClose, onPerson }) {
+        const now = new Date(), initialYear = Number(initial?.year) || now.getFullYear(), initialMonth = Number(initial?.month) || now.getMonth() + 1;
+        const [cursor, setCursor] = useState({ year: initialYear, month: initialMonth }), [data, setData] = useState(initial || null), [busy, setBusy] = useState(false), [error, setError] = useState('');
+        useEffect(() => {
+            if (data && Number(data.year) === cursor.year && Number(data.month) === cursor.month) return;
+            const abort = new AbortController(); setBusy(true); setError('');
+            api('calendar', cursor, abort.signal).then(value => { setData(value); setBusy(false); }).catch(e => { if (e.name !== 'AbortError') { setError(e.message); setBusy(false); } });
+            return () => abort.abort();
+        }, [cursor.year, cursor.month]);
+        const change = delta => setCursor(current => { const d = new Date(current.year, current.month - 1 + delta, 1); return { year: d.getFullYear(), month: d.getMonth() + 1 }; });
+        const date = new Date(cursor.year, cursor.month - 1, 1), first = (date.getDay() + 6) % 7, days = new Date(cursor.year, cursor.month, 0).getDate();
+        const locale = localeFor(lang), monthName = new Intl.DateTimeFormat(locale, { month: 'long' }).format(date), title = lang === 'lv' ? cursor.year + '. gada ' + monthName.toLocaleLowerCase(locale) : new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(date);
+        const todayDate = new Date(), isCurrentMonth = todayDate.getFullYear() === cursor.year && todayDate.getMonth() + 1 === cursor.month;
+        const birthdays = Array.isArray(data?.birthdays) ? data.birthdays : [], namedays = Array.isArray(data?.namedays) ? data.namedays : [];
+        const calendarNameDays = new Map((Array.isArray(data?.calendarNameDays) ? data.calendarNameDays : []).map(row => [Number(row.day), Array.isArray(row.names) ? row.names : []]));
+        const byDay = new Map();
+        [...birthdays, ...namedays].forEach(event => { if (!byDay.has(Number(event.day))) byDay.set(Number(event.day), []); byDay.get(Number(event.day)).push(event); });
+        const weekdays = Array.from({ length: 7 }, (_, i) => new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(new Date(2024, 0, 1 + i)));
+        const cells = Array.from({ length: first }, (_, i) => h('div', { className: 'wpmft-calendar-day is-empty', key: 'e' + i, 'aria-hidden': true }));
+        for (let day = 1; day <= days; day++) {
+            const events = byDay.get(day) || [];
+            const dayNames = calendarNameDays.get(day) || [];
+            cells.push(h('div', { className: cls('wpmft-calendar-day', (events.length || dayNames.length) && 'has-events', isCurrentMonth && todayDate.getDate() === day && 'is-today'), key: day }, h('span', { className: 'wpmft-calendar-number' }, day), events.map((event, index) => h('button', { type: 'button', className: cls('wpmft-calendar-event', event.type === 'birthday' ? 'is-birthday' : 'is-nameday'), key: event.type + '-' + event.id + '-' + index, onClick: () => { onClose(); onPerson(event.id); } }, h('span', { 'aria-hidden': true }, event.type === 'birthday' ? '🎂' : '🌿'), h('span', null, event.name)) ), lang === 'lv' && dayNames.length > 0 && h('div', { className: 'wpmft-calendar-name-list', title: dayNames.join(', ') }, h('span', { 'aria-hidden': true }, '🌿'), h('span', null, dayNames.slice(0, 2).join(', '), dayNames.length > 2 ? ' +' + (dayNames.length - 2) : ''))));
+        }
+        return h(Modal, { title: tr(lang, 'celebrations'), onClose, wide: true, className: 'wpmft-calendar-modal' }, h(CloseButton, { lang, onClick: onClose }),
+            h('div', { className: 'wpmft-calendar-head' }, h('button', { type: 'button', className: 'wpmft-icon-button', onClick: () => change(-1), 'aria-label': tr(lang, 'previousMonth') }, h(Icon, { name: 'left' })), h('h3', null, title), h('button', { type: 'button', className: 'wpmft-icon-button', onClick: () => change(1), 'aria-label': tr(lang, 'nextMonth') }, h(Icon, { name: 'right' }))),
+            !busy && !error && h('div', { className: 'wpmft-calendar-legend' }, h('span', null, '🎂 ', tr(lang, 'birthdayLegend')), lang === 'lv' && h('span', null, '🌿 ', tr(lang, 'nameDayLegend')), lang === 'lv' && h('span', { className: 'is-muted' }, '· ', tr(lang, 'calendarNamesLegend'))),
+            busy && h(Loader, { label: tr(lang, 'loading') }), error && h(Message, null, error), !busy && !error && h('div', { className: 'wpmft-calendar-scroll' }, h('div', { className: 'wpmft-calendar-grid' }, weekdays.map(day => h('div', { className: 'wpmft-calendar-weekday', key: day }, day)), cells)), !busy && !error && !birthdays.length && !namedays.length && h('p', { className: 'wpmft-muted' }, tr(lang, 'noCelebrations')));
     }
     function PersonDialog({ id, lang, api, onClose, onPerson, onRoot }) {
         const [person, setPerson] = useState(null), [error, setError] = useState(''), [retry, setRetry] = useState(0), [lightbox, setLightbox] = useState(null);
@@ -1264,7 +1364,7 @@
         const polylang = CONFIG.i18n?.provider === 'polylang';
         const languages = (CONFIG.i18n?.languages || [{ slug: 'en', name: 'English' }, { slug: 'lv', name: 'Latviešu' }]).filter(item => item && typeof item.slug === 'string' && item.slug.length <= 35 && /^[a-z]{2,3}(?:[-_][a-z0-9]{2,8})*$/i.test(item.slug) && (!polylang || languageUrl(item.url)));
         const urlLanguage = new URLSearchParams(location.search).get('wpmft_lang');
-        const [lang, setLang] = useState(!polylang && languages.some(item => item.slug === urlLanguage) ? urlLanguage : CONFIG.i18n?.current || CONFIG.language || 'en'), [boot, setBoot] = useState(null), [startupError, setStartupError] = useState(''), [reload, setReload] = useState(0), [rootId, setRootId] = useState(Number(element.dataset.root || CONFIG.rootId) || 0), [tree, setTree] = useState(null), [treeBusy, setTreeBusy] = useState(false), [treeError, setTreeError] = useState(''), [view, setView] = useState((element.dataset.view || CONFIG.settings?.defaultView) === 'list' ? 'list' : 'tree'), [personId, setPersonId] = useState(null), [contact, setContact] = useState(false), [exporting, setExporting] = useState(false), [notice, setNotice] = useState('');
+        const [lang, setLang] = useState(!polylang && languages.some(item => item.slug === urlLanguage) ? urlLanguage : CONFIG.i18n?.current || CONFIG.language || 'en'), [boot, setBoot] = useState(null), [startupError, setStartupError] = useState(''), [reload, setReload] = useState(0), [rootId, setRootId] = useState(Number(element.dataset.root || CONFIG.rootId) || 0), [tree, setTree] = useState(null), [treeBusy, setTreeBusy] = useState(false), [treeError, setTreeError] = useState(''), [view, setView] = useState((element.dataset.view || CONFIG.settings?.defaultView) === 'list' ? 'list' : 'tree'), [personId, setPersonId] = useState(null), [contact, setContact] = useState(false), [calendarOpen, setCalendarOpen] = useState(false), [exporting, setExporting] = useState(false), [notice, setNotice] = useState('');
         const csrf = useRef(''), language = useRef(lang), locked = useRef(null), exportLayout = useRef(null), initialRoot = useRef(rootId), alive = useRef(true), bootstrapSeq = useRef(0), didDeepLink = useRef(false), authorization = useRef(false);
         language.current = lang;
         const settings = { ...(CONFIG.settings || {}), ...(boot?.settings || {}) }, authorized = !!boot?.authorized;
@@ -1347,8 +1447,10 @@
             h('a', { className: 'wpmft-skip-link', href: '#wpmft-main' }, tr(lang, 'skip')),
             h('header', { className: 'wpmft-header' }, h('div', { className: 'wpmft-header-inner' }, h('a', { href: '#wpmft-main', className: 'wpmft-brand', onClick: e => { e.preventDefault(); if (authorized) chooseRoot(initialRoot.current); else document.getElementById('wpmft-main')?.focus(); } }, h('span', { className: 'wpmft-brand-mark' }, h(OakMark, { size: 33 })), h('span', null, h('strong', null, title), h('small', null, tr(lang, 'archive')))),
                 h('div', { className: 'wpmft-header-actions' }, enabled(settings.languageSwitch) && languages.length > 1 && h(LanguagePicker, { lang, languages, onChange: choice => { if (polylang) window.location.assign(languageUrl(choice.url)); else setLang(choice.slug); } }),
+                    authorized && boot?.celebrations?.enabled && h('button', { type: 'button', className: 'wpmft-icon-button', onClick: () => setCalendarOpen(true), 'aria-label': tr(lang, 'calendarOpen'), title: tr(lang, 'calendarOpen') }, h(Icon, { name: 'calendar', size: 19 })),
                     authorized && boot?.requiresPassword && h('button', { type: 'button', className: 'wpmft-icon-button wpmft-lock', onClick: logout, title: tr(lang, 'lock'), 'aria-label': tr(lang, 'lock') }, h(Icon, { name: 'lock', size: 19 }))))),
             h('main', { id: 'wpmft-main', className: 'wpmft-main', tabIndex: -1 }, h('section', { className: 'wpmft-intro' }, h('div', null, h('span', { className: 'wpmft-kicker' }, tr(lang, 'roots')), h('h1', null, title), h('p', null, subtitle)), authorized && boot.stats?.people > 0 && h('div', { className: 'wpmft-stat' }, h('strong', null, new Intl.NumberFormat(localeFor(lang)).format(boot.stats.people)), h('span', null, tr(lang, 'people')), h(OakMark, { size: 42 }))),
+                authorized && enabled(settings.celebrationHeader, true) && h(CelebrationBanner, { celebrations: boot?.celebrations, lang, onPerson: setPersonId, onCalendar: () => setCalendarOpen(true) }),
                 settings.demo?.active && h('aside', { className: 'wpmft-demo-notice', 'aria-label': settings.demo.label || 'Demo' }, h(Icon, { name: 'info', size: 20 }), h('div', null, h('strong', null, settings.demo.label || 'Demo'), settings.demo.notice && h('p', null, tr(lang, 'demoNotice')))),
                 !boot ? h('div', { className: 'wpmft-starting' }, startupError ? h('div', null, h(Message, null, startupError), h('button', { type: 'button', className: 'wpmft-button', onClick: () => setReload(v => v + 1) }, tr(lang, 'retry'))) : h(Loader, { label: tr(lang, 'loading') })) :
                     !authorized ? h(Unlock, { boot, lang, onUnlock: unlock, onContact: () => setContact(true), contactEnabled, error: startupError }) : h('div', { className: 'wpmft-explorer' },
@@ -1360,7 +1462,7 @@
                     enabled(settings.showCredit, false) && h('small', { className: 'wpmft-credit' }, tr(lang, 'credit'), ' ', h('a', { href: 'https://digitalpulse.click/', target: '_blank', rel: 'noopener noreferrer' }, 'DigitalPulse · Raivis Kalnins')))),
                 h('div', { className: 'wpmft-footer-actions' }, h('div', { className: 'wpmft-footer-contact' }, false && settings.contactEmail && h('a', { className: 'wpmft-button is-small wpmft-footer-email', href: 'mailto:' + encodeURIComponent(settings.contactEmail).replace(/%40/g, '@') }, h(Icon, { name: 'mail', size: 16 }), h('span', null, settings.contactEmail)), contactEnabled && h('button', { type: 'button', className: 'wpmft-button is-small wpmft-footer-form', 'aria-haspopup': 'dialog', onClick: () => setContact(true) }, h(Icon, { name: 'mail', size: 16 }), h('span', null, tr(lang, 'contact'))), whatsappLink(settings.adminWhatsappUrl) && h('a', { className: 'wpmft-button is-small wpmft-whatsapp', href: whatsappLink(settings.adminWhatsappUrl), target: '_blank', rel: 'noopener noreferrer', 'aria-label': tr(lang, 'newTab', { label: tr(lang, 'whatsappAdmin') }), title: tr(lang, 'whatsappAdmin') }, h(Icon, { name: 'whatsapp', size: 18 }), h('span', null, tr(lang, 'whatsapp')))),
                     enabled(settings.appInstall, false) && h(InstallControls, { lang })))),
-            personId && authorized && h(PersonDialog, { key: lang, id: personId, lang, api, onClose: () => setPersonId(null), onPerson: setPersonId, onRoot: chooseRoot }), contact && boot && contactEnabled && h(ContactDialog, { lang, api, captcha: boot.hcaptcha, upload: settings.contactUpload, onClose: () => setContact(false) }));
+            personId && authorized && h(PersonDialog, { key: lang, id: personId, lang, api, onClose: () => setPersonId(null), onPerson: setPersonId, onRoot: chooseRoot }), calendarOpen && authorized && h(CelebrationCalendar, { lang, api, initial: boot?.celebrations, onClose: () => setCalendarOpen(false), onPerson: setPersonId }), contact && boot && contactEnabled && h(ContactDialog, { lang, api, captcha: boot.hcaptcha, upload: settings.contactUpload, onClose: () => setContact(false) }));
     }
     function mount() {
         document.querySelectorAll('.wpmft-app').forEach(element => {
