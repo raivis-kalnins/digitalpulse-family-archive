@@ -1,7 +1,6 @@
 <?php
 /**
  * Plugin Name: DigitalPulse Family Archive
- * Plugin URI: https://digitalpulse.click/
  * Description: Free, open-source family trees with biographies, photo galleries, multilingual labels, private access and demo tools.
  * Version: 1.4.0
  * Requires at least: 6.5
