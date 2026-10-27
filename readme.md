@@ -2,9 +2,9 @@
 
 A free, open-source WordPress plugin for the stories, photographs and people that connect generations. Explore relatives in a responsive oak-inspired family tree, open a person in a detailed modal, and manage the archive through familiar WordPress posts.
 
-**Version 1.2.8** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
+**Version 1.4.0** · **WordPress 6.5+** · **Tested up to WordPress 7.1** · **PHP 7.4+** · **GPL-3.0-or-later**  
 Developed by **Raivis Kalnins**, web developer at [DigitalPulse](https://digitalpulse.click/).  
-Project: [github.com/raivis-kalnins/wp-my-family-tree](https://digitalpulse.click/)
+Project and support: [DigitalPulse](https://digitalpulse.click/)
 
 **Free plugin:** all included features are available free of charge, with no paid plugin license or subscription required. Source code is included under **GPL-3.0-or-later**. Optional hCaptcha and Polylang integrations are documented separately and follow their providers' terms.
 
@@ -14,14 +14,23 @@ The package is prepared for free distribution through the [WordPress.org Plugin 
 
 *The screenshot contains fictional demonstration records and illustrated portraits. No private family records or photographs are included in this plugin.*
 
-## What is new in 1.2.8
+## What is new in 1.4.0
+
+- **WordPress.org review preparation.** The public plugin identity is now **DigitalPulse Family Archive**, with the installable folder, main plugin file and text domain aligned to `digitalpulse-family-archive`.
+- **Safer rendered titles.** The title-guard callback now escapes the translated replacement before returning content that WordPress may render.
+- **Cleaner WordPress administration.** The optional demo editor no longer forces a top-level menu into position `2`; it uses a normal plugin-area menu position instead.
+- **Directory translation workflow.** Compiled and source gettext translation files are no longer bundled for WordPress.org distribution. The plugin remains internationalized and WordPress.org can provide community translation packages through translate.wordpress.org.
+- **Release metadata synchronized.** The plugin header, stable tag and documentation identify version **1.4.0**, requiring WordPress 6.5+ and PHP 7.4+, and declaring testing through WordPress 7.1.
+- **Existing data remains compatible.** Person posts, relationships, settings, media, shortcodes, saved blocks and the existing internal `wpmft_*` identifiers are retained so the review-focused rename does not require a database migration.
+
+Install the complete `digitalpulse-family-archive-1.4.0.zip` package through WordPress. When updating from an earlier `digitalpulse-family-archive/` release, use **Replace current with uploaded**. When migrating from an older differently named plugin folder, follow the migration instructions below and do not keep both copies active.
+
+## Previous 1.2.8 improvements
 
 - **Portraits stay visible after refresh.** Completed small images keep their loaded state when pages are cached or person panels reopen. Changing or removing a photograph also resets the correct image state.
 - **Missing thumbnails recover safely.** The authenticated media endpoint can use a readable original when an ordinary display copy is missing. Private access and actual image MIME types remain enforced.
 - **Optimization continues past a problem photo.** Each request prepares one photograph. Failed or busy attachments are reported by ID while later photographs can finish; partial completion is clearly distinguished from a fully successful run.
 - **Counts reflect the current archive.** The settings screen reads the actual pending total after reload, without encoding images. Missing optimized files can be detected and rebuilt with **Prepare existing family photographs**.
-
-Install the complete update through WordPress and clear the Family Tree/static-asset caches. Then open **Performance & cache** and run **Prepare existing family photographs** if photos remain pending. Originals, person records and saved gallery selections are retained.
 
 ## Version 1.2.7 improvements
 
@@ -65,7 +74,7 @@ In **General**, enable **Show the Demo tab for sample content and demo sharing**
 
 ## Version 1.2.3 improvements
 
-- **Updated public name.** The plugin is now **DigitalPulse Family Archive**, packaged in `digitalpulse-family-archive/` with a matching translation domain and a `my-family-tree.php` entry point. The new ZIP addresses the directory reviewer's name objection; acceptance and the final directory permalink remain subject to review.
+- **Updated public name.** The plugin is now **DigitalPulse Family Archive**, packaged in `digitalpulse-family-archive/` with a matching translation domain and a `digitalpulse-family-archive.php` entry point. The new ZIP addresses the directory reviewer's name objection; acceptance and the final directory permalink remain subject to review.
 - **Existing archive compatibility.** Family records, settings, shortcodes and saved blocks retain their existing identifiers. Follow the rename migration below once when updating from the old `wp-my-family-tree` folder.
 
 ## Version 1.2.2 improvements
@@ -477,6 +486,16 @@ Keep databases, real family media, Updraft backup sets, passwords, keys, test cr
 Copyright © 2026 **Raivis Kalnins / DigitalPulse**. Licensed under the [GNU General Public License, version 3 or later](LICENSE). Icon artwork is included under the same license. Legacy-data compatibility refers to WP Family Tree by Arvind Shah; this is a separate plugin using compatible existing data.
 
 ## Changelog
+
+### 1.4.0
+
+- Renamed and synchronized the WordPress.org-facing plugin identity as **DigitalPulse Family Archive** / `digitalpulse-family-archive`.
+- Updated the main plugin entry point and text domain to match the proposed directory slug while retaining existing family data and internal compatibility identifiers.
+- Removed bundled gettext `.po`, `.mo` and generated translation files intended to be supplied by WordPress.org translation infrastructure.
+- Corrected escaping in the title-guard callback highlighted during directory review.
+- Moved the optional demo top-level menu away from the reserved high-priority position `2` to a normal plugin menu position.
+- Rechecked administrative mutation handlers for capability and nonce protection and kept the existing protected flows intact.
+- Synchronized release documentation and package metadata to version **1.4.0**, WordPress 6.5+, PHP 7.4+, tested through WordPress 7.1.
 
 ### 1.3.9
 
