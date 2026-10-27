@@ -32,10 +32,10 @@ final class WPMFT_Compatibility {
 		if ( ! current_user_can( 'manage_options' ) || ! self::legacy_active() ) { return; }
 		?>
 		<div class="notice notice-warning">
-			<p><strong><?php esc_html_e( 'Two family tree plugins are active', 'my-family-tree' ); ?></strong></p>
-			<p><?php esc_html_e( 'The older WP Family Tree plugin can still fail on missing parent records or invalid birth dates. Check your tree with My Family Tree, then deactivate the older WP Family Tree plugin. Your existing family posts and relationships are retained.', 'my-family-tree' ); ?></p>
+			<p><strong><?php esc_html_e( 'Two family tree plugins are active', 'digitalpulse-family-archive' ); ?></strong></p>
+			<p><?php esc_html_e( 'The older WP Family Tree plugin can still fail on missing parent records or invalid birth dates. Check your tree with DigitalPulse Family Archive, then deactivate the older WP Family Tree plugin. Your existing family posts and relationships are retained.', 'digitalpulse-family-archive' ); ?></p>
 			<?php if ( current_user_can( 'activate_plugins' ) ) : ?>
-				<p><a href="<?php echo esc_url( admin_url( 'plugins.php' ) ); ?>"><?php esc_html_e( 'Review active plugins', 'my-family-tree' ); ?></a></p>
+				<p><a href="<?php echo esc_url( admin_url( 'plugins.php' ) ); ?>"><?php esc_html_e( 'Review active plugins', 'digitalpulse-family-archive' ); ?></a></p>
 			<?php endif; ?>
 		</div>
 		<?php

@@ -1,16 +1,16 @@
-# My Family Tree
+# DigitalPulse Family Archive
 
 A free, open-source WordPress plugin for the stories, photographs and people that connect generations. Explore relatives in a responsive oak-inspired family tree, open a person in a detailed modal, and manage the archive through familiar WordPress posts.
 
 **Version 1.2.8** · **WordPress 6.5+** · **PHP 7.4+** · **GPL-3.0-or-later**  
 Developed by **Raivis Kalnins**, web developer at [DigitalPulse](https://digitalpulse.click/).  
-Project: [github.com/raivis-kalnins/wp-my-family-tree](https://github.com/raivis-kalnins/wp-my-family-tree)
+Project: [github.com/raivis-kalnins/wp-my-family-tree](https://digitalpulse.click/)
 
 **Free plugin:** all included features are available free of charge, with no paid plugin license or subscription required. Source code is included under **GPL-3.0-or-later**. Optional hCaptcha and Polylang integrations are documented separately and follow their providers' terms.
 
 The package is prepared for free distribution through the [WordPress.org Plugin Directory submission process](https://wordpress.org/plugins/developers/add/). Directory publication remains subject to review. A reusable submission description and reviewer notes are included in [docs/wordpress-org.md](docs/wordpress-org.md).
 
-![My Family Tree with its page title, oak tree, language switch and contact footer](docs/screenshot.png)
+![DigitalPulse Family Archive with its page title, oak tree, language switch and contact footer](docs/screenshot.png)
 
 *The screenshot contains fictional demonstration records and illustrated portraits. No private family records or photographs are included in this plugin.*
 
@@ -65,7 +65,7 @@ In **General**, enable **Show the Demo tab for sample content and demo sharing**
 
 ## Version 1.2.3 improvements
 
-- **Updated public name.** The plugin is now **My Family Tree**, packaged in `my-family-tree/` with a matching translation domain and a `my-family-tree.php` entry point. The new ZIP addresses the directory reviewer's name objection; acceptance and the final directory permalink remain subject to review.
+- **Updated public name.** The plugin is now **DigitalPulse Family Archive**, packaged in `digitalpulse-family-archive/` with a matching translation domain and a `my-family-tree.php` entry point. The new ZIP addresses the directory reviewer's name objection; acceptance and the final directory permalink remain subject to review.
 - **Existing archive compatibility.** Family records, settings, shortcodes and saved blocks retain their existing identifiers. Follow the rename migration below once when updating from the old `wp-my-family-tree` folder.
 
 ## Version 1.2.2 improvements
@@ -110,32 +110,32 @@ The existing private-media, contact-photo, relationship-status, mobile tree-gest
 
 ## Update an existing installation
 
-### Update My Family Tree 1.2.3 or later
+### Update DigitalPulse Family Archive 1.2.3 or later
 
-Back up the site, upload the complete `my-family-tree-1.2.8.zip` through **Plugins → Add New Plugin → Upload Plugin**, and choose **Replace current with uploaded**. Keep the `my-family-tree/` folder name, then verify the tree page, photographs and contact form. Existing data and settings are retained.
+Back up the site, upload the complete `digitalpulse-family-archive-1.4.0.zip` through **Plugins → Add New Plugin → Upload Plugin**, and choose **Replace current with uploaded**. Keep the `digitalpulse-family-archive/` folder name, then verify the tree page, photographs and contact form. Existing data and settings are retained.
 
-### Migrate from WP My Family Tree 1.2.2 or earlier
+### Migrate from WP DigitalPulse Family Archive 1.2.2 or earlier
 
-The package now uses `my-family-tree/`. WordPress treats this folder as a separate plugin; uploading it does not replace the old `wp-my-family-tree/` copy.
+The package now uses `digitalpulse-family-archive/`. WordPress treats this folder as a separate plugin; uploading it does not replace the old `wp-my-family-tree/` copy.
 
 1. Back up the site's database and uploads together. If the archive contains private published content, enable independent site access protection for the switch because deactivating the old plugin stops its access checks.
-2. Open **Plugins** and deactivate **WP My Family Tree**. If it is network-active, deactivate it in Network Admin first.
-3. Open **Plugins → Add New Plugin → Upload Plugin**, select the complete `my-family-tree-1.2.8.zip`, and click **Install Now**.
-4. Activate **My Family Tree**. Keep the old copy inactive; the new entry point blocks activation while the previous copy is active.
+2. Open **Plugins** and deactivate **WP DigitalPulse Family Archive**. If it is network-active, deactivate it in Network Admin first.
+3. Open **Plugins → Add New Plugin → Upload Plugin**, select the complete `digitalpulse-family-archive-1.4.0.zip`, and click **Install Now**.
+4. Activate **DigitalPulse Family Archive**. Keep the old copy inactive; the new entry point blocks activation while the previous copy is active.
 5. Open the tree page and verify the privacy gate, photographs, person editor and **Contact us / Pieteikties** form. Review **Family Tree → Settings & help**, then clear the Family Tree cache and any applicable page cache.
-6. After verifying the new version, delete the inactive **WP My Family Tree** copy from the Plugins screen. Its bundled code has no uninstall data-deletion routine. Leave **My Family Tree** active.
+6. After verifying the new version, delete the inactive **WP DigitalPulse Family Archive** copy from the Plugins screen. Its bundled code has no uninstall data-deletion routine. Leave **DigitalPulse Family Archive** active.
 
-Your person posts, relationships, uploaded photographs, stored password, settings and media-encryption key remain in the site's existing data. Existing `[wp_my_family_tree]`, `[family-tree]` and `[family-members]` shortcodes and saved `wp-my-family-tree/tree` blocks remain valid. No database import, theme replacement or backup restore is required.
+Your person posts, relationships, uploaded photographs, stored password, settings and media-encryption key remain in the site's existing data. Existing `[wp_my_family_tree]`, `[family-tree]` and `[family-members]` shortcodes and saved `wp-digitalpulse-family-archive/tree` blocks remain valid. No database import, theme replacement or backup restore is required.
 
 Deactivating the old plugin revokes the public demo account and sessions. On an isolated demonstration site, explicitly enable shared demo mode again if needed. Imported samples and the saved reset baseline are retained.
 
-### Later updates to My Family Tree
+### Later updates to DigitalPulse Family Archive
 
-Once installed in `my-family-tree/`, subsequent complete packages using that same folder can use WordPress's **Replace current with uploaded** option. Use the complete installable ZIP; a package containing only changed files is not suitable for the WordPress plugin uploader. Keep your usual site backup before updating, particularly when the site uses encrypted photographs.
+Once installed in `digitalpulse-family-archive/`, subsequent complete packages using that same folder can use WordPress's **Replace current with uploaded** option. Use the complete installable ZIP; a package containing only changed files is not suitable for the WordPress plugin uploader. Keep your usual site backup before updating, particularly when the site uses encrypted photographs.
 
 ## First-time setup
 
-1. Install and activate **My Family Tree**.
+1. Install and activate **DigitalPulse Family Archive**.
 2. If the original **WP Family Tree** plugin is active, deactivate it to avoid competing shortcodes and older public endpoints. Retain its people and media.
 3. Open **Family Tree → Settings & help**. Select the category containing family posts and choose a starting person.
 4. Use **Create a tree page**, or put the **Family Tree** block / shortcode on an existing page and select it as the tree page.
@@ -421,7 +421,7 @@ Errors naming `wp-family-tree/family-tree.php`, `class.node.php` or `class.tree.
 
 ## Īsā pamācība latviski
 
-1. Pirms atjaunināšanas dublējiet datubāzi un augšupielādes. Privātai vietnei pārejas laikā nodrošiniet atsevišķu piekļuves aizsardzību. Deaktivizējiet **WP My Family Tree**, pēc tam sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni** instalējiet pilno `my-family-tree-1.2.8.zip` pakotni un aktivizējiet **My Family Tree**. Jaunās mapes dēļ WordPress to uzskata par atsevišķu spraudni; abas versijas reizē neaktivizējiet. Pārbaudiet koku, piekļuvi, fotogrāfijas un kontaktformu, tad veco neaktīvo spraudni var izdzēst. Esošie dati un iestatījumi paliek; datubāzes imports un motīva nomaiņa nav vajadzīga. Demonstrācijas koplietojamo režīmu pēc šīs pārejas ieslēdziet atkārtoti tikai tad, ja tas nepieciešams.
+1. Pirms atjaunināšanas dublējiet datubāzi un augšupielādes. Privātai vietnei pārejas laikā nodrošiniet atsevišķu piekļuves aizsardzību. Deaktivizējiet **WP DigitalPulse Family Archive**, pēc tam sadaļā **Spraudņi → Pievienot jaunu → Augšupielādēt spraudni** instalējiet pilno `digitalpulse-family-archive-1.4.0.zip` pakotni un aktivizējiet **DigitalPulse Family Archive**. Jaunās mapes dēļ WordPress to uzskata par atsevišķu spraudni; abas versijas reizē neaktivizējiet. Pārbaudiet koku, piekļuvi, fotogrāfijas un kontaktformu, tad veco neaktīvo spraudni var izdzēst. Esošie dati un iestatījumi paliek; datubāzes imports un motīva nomaiņa nav vajadzīga. Demonstrācijas koplietojamo režīmu pēc šīs pārejas ieslēdziet atkārtoti tikai tad, ja tas nepieciešams.
 2. Spraudņa iestatījumos izvēlieties dzimtas ierakstu kategoriju, sākuma personu un koka lapu. Lapā ievietojiet bloku **Family Tree** vai īskodu `[wp_my_family_tree]`.
 3. Personas rediģēšanā detalizētā forma atrodas uzreiz zem virsraksta. Virsrakstā norādiet personas pilnu vārdu, izvēlieties portretu, vecākus, partnerus, datumus un galeriju. Dzīvesstāsta redaktors atrodas zem formas. Bloku redaktoru personām pēc vajadzības var ieslēgt spraudņa iestatījumos.
 4. Pievienojiet e-pastu, tālruni, mobilo tālruni, adresi, mājaslapu un sociālo tīklu saites tikai tad, ja persona piekrīt tās kopīgot ar koka apmeklētājiem.
@@ -452,7 +452,7 @@ The build uses esbuild **0.25.5**, pinned in `package-lock.json`, and requires N
 
 | Path | Purpose |
 | --- | --- |
-| `my-family-tree.php` | Plugin header, version and duplicate-activation guard |
+| `digitalpulse-family-archive.php` | Plugin header, version and duplicate-activation guard |
 | `includes/bootstrap.php` | WordPress hooks and retained shortcode/block registration |
 | `includes/` | People, relationships, access, private media, contact uploads, AJAX, app manifest and administration |
 | `assets/app.js`, `assets/app.css` | React tree, dialogs, contact form and responsive styles |
@@ -470,7 +470,7 @@ The build uses esbuild **0.25.5**, pinned in `package-lock.json`, and requires N
 | `readme.md`, `readme.txt`, `LICENSE` | This guide, the WordPress.org directory description and the complete license |
 | `docs/wordpress-org.md`, `SECURITY.md` | Submission/release notes and the security model |
 
-Preserve this folder structure when replacing the public Git repository. Do not flatten includes, assets or language files into the repository root. For an installable ZIP, place these files inside one `my-family-tree/` directory. The Markdown guide serves GitHub and local users; `readme.txt` follows the WordPress.org directory format. Both are included for public distribution.
+Preserve this folder structure when replacing the public Git repository. Do not flatten includes, assets or language files into the repository root. For an installable ZIP, place these files inside one `digitalpulse-family-archive/` directory. The Markdown guide serves GitHub and local users; `readme.txt` follows the WordPress.org directory format. Both are included for public distribution.
 
 Keep databases, real family media, Updraft backup sets, passwords, keys, test credentials and production configuration out of the public repository. The included screenshot and icon artwork are suitable for the public project. Preparing this package does not publish it to GitHub or submit it to the WordPress.org directory.
 
@@ -517,11 +517,11 @@ Fixed gallery additions that could discard earlier photographs while attachment 
 
 ### 1.2.4
 
-Updated the directory compatibility header to WordPress 7.1, with current-core verification on WordPress 7.1.3. Synchronized release metadata and documented ordinary ZIP replacement for installations already using the My Family Tree name. Added explicit free-plugin information, GPL licensing details and reusable submission notes.
+Updated the directory compatibility header to WordPress 7.1, with current-core verification on WordPress 7.1.3. Synchronized release metadata and documented ordinary ZIP replacement for installations already using the DigitalPulse Family Archive name. Added explicit free-plugin information, GPL licensing details and reusable submission notes.
 
 ### 1.2.3
 
-Renamed the public plugin, installable folder, entry point and translation domain to My Family Tree / `my-family-tree`. Updated metadata, language catalogs and release documentation for directory resubmission. Added activation protection and migration guidance for the renamed folder, retaining existing family data, settings, shortcodes and saved blocks.
+Renamed the public plugin, installable folder, entry point and translation domain to `digitalpulse-family-archive`. Updated metadata, language catalogs and release documentation for directory resubmission. Added activation protection and migration guidance for the renamed folder, retaining existing family data, settings, shortcodes and saved blocks.
 
 ### 1.2.2
 
@@ -562,7 +562,7 @@ Initial oak-tree interface, legacy post-data compatibility, person modals and ga
 
 ## Birthdays, calendar and Latvian name days
 
-My Family Tree includes an optional family calendar for living relatives with full `YYYY-MM-DD` birth dates. A small celebration banner appears on the family page on birthdays, and the calendar button opens month-by-month birthdays. Administrators can optionally enable one birthday email per person per year; the email is sent only when the person is living and has a valid email address saved in their person record.
+DigitalPulse Family Archive includes an optional family calendar for living relatives with full `YYYY-MM-DD` birth dates. A small celebration banner appears on the family page on birthdays, and the calendar button opens month-by-month birthdays. Administrators can optionally enable one birthday email per person per year; the email is sent only when the person is living and has a valid email address saved in their person record.
 
 When the public interface is Latvian, the same calendar can also show Latvian name days. Name days never send email. The plugin caches the MIT-licensed `slikts/vardadienas` traditional-name-day dataset from GitHub for up to 30 days and includes a local fallback plus the official traditional-calendar additions effective from 1 January 2026. A person can also use a manual `MM-DD` name-day override.
 

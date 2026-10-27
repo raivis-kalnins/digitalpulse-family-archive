@@ -11,7 +11,7 @@ final class WPMFT_Admin {
 
 	public static function init() {
 		// Override only this plugin's text, never the WordPress dashboard or theme locale.
-		add_filter( 'gettext_my-family-tree', array( __CLASS__, 'translate_admin' ), 10, 3 );
+		add_filter( 'gettext_digitalpulse-family-archive', array( __CLASS__, 'translate_admin' ), 10, 3 );
 		add_filter( 'use_block_editor_for_post', array( __CLASS__, 'block_editor' ), 100, 2 );
 		add_filter( 'wp_insert_post_data', array( __CLASS__, 'preserve_biography' ), 99, 2 );
 		add_filter( 'enter_title_here', array( __CLASS__, 'title_placeholder' ), 10, 2 );
@@ -73,9 +73,9 @@ final class WPMFT_Admin {
 	private static function language_control() {
 		?>
 		<div class="wpmft-admin-language-control">
-			<label for="wpmft-admin-language"><?php esc_html_e( 'Plugin interface language', 'my-family-tree' ); ?></label>
+			<label for="wpmft-admin-language"><?php esc_html_e( 'Plugin interface language', 'digitalpulse-family-archive' ); ?></label>
 			<select id="wpmft-admin-language" class="wpmft-admin-language" name="wpmft_admin_lang"><?php foreach ( WPMFT_Languages::registry() as $slug => $entry ) : ?><option value="<?php echo esc_attr( $slug ); ?>" <?php selected( self::language(), $slug ); ?>><?php echo esc_html( $entry['name'] ); ?></option><?php endforeach; ?></select>
-			<p class="description"><?php esc_html_e( 'Person labels follow the Polylang language. This switch changes plugin labels only; names, biographies and the WordPress dashboard are unchanged.', 'my-family-tree' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Person labels follow the Polylang language. This switch changes plugin labels only; names, biographies and the WordPress dashboard are unchanged.', 'digitalpulse-family-archive' ); ?></p>
 		</div>
 		<?php
 	}
@@ -101,7 +101,7 @@ final class WPMFT_Admin {
 	}
 
 	public static function title_placeholder( $title, $post ) {
-		return self::person_context( $post ) ? __( 'Person’s full name', 'my-family-tree' ) : $title;
+		return self::person_context( $post ) ? __( 'Person’s full name', 'digitalpulse-family-archive' ) : $title;
 	}
 
 	/** Core registers posts early; translate after this plugin and optional Polylang initialize. */
@@ -118,40 +118,40 @@ final class WPMFT_Admin {
 	public static function person_post_labels( $labels ) {
 		if ( ! did_action( 'init' ) || empty( wpmft_settings()['person_admin_labels'] ) || ( ! is_admin() && ! is_user_logged_in() ) ) { return $labels; }
 		$person_labels = array(
-			'name' => __( 'Persons', 'my-family-tree' ),
-			'singular_name' => __( 'Person', 'my-family-tree' ),
-			'menu_name' => __( 'Persons', 'my-family-tree' ),
-			'name_admin_bar' => __( 'Person', 'my-family-tree' ),
-			'add_new' => __( 'Add person', 'my-family-tree' ),
-			'add_new_item' => __( 'Add person', 'my-family-tree' ),
-			'edit_item' => __( 'Edit person', 'my-family-tree' ),
-			'new_item' => __( 'New person', 'my-family-tree' ),
-			'view_item' => __( 'View person', 'my-family-tree' ),
-			'view_items' => __( 'View persons', 'my-family-tree' ),
-			'search_items' => __( 'Search persons', 'my-family-tree' ),
-			'not_found' => __( 'No persons found.', 'my-family-tree' ),
-			'not_found_in_trash' => __( 'No persons found in Trash.', 'my-family-tree' ),
-			'all_items' => __( 'All persons', 'my-family-tree' ),
-			'archives' => __( 'Person archives', 'my-family-tree' ),
-			'attributes' => __( 'Person attributes', 'my-family-tree' ),
-			'insert_into_item' => __( 'Insert into person', 'my-family-tree' ),
-			'uploaded_to_this_item' => __( 'Uploaded to this person', 'my-family-tree' ),
-			'featured_image' => __( 'Portrait', 'my-family-tree' ),
-			'set_featured_image' => __( 'Set portrait', 'my-family-tree' ),
-			'remove_featured_image' => __( 'Remove portrait', 'my-family-tree' ),
-			'use_featured_image' => __( 'Use as portrait', 'my-family-tree' ),
-			'filter_items_list' => __( 'Filter persons list', 'my-family-tree' ),
-			'items_list_navigation' => __( 'Persons list navigation', 'my-family-tree' ),
-			'items_list' => __( 'Persons list', 'my-family-tree' ),
-			'item_published' => __( 'Person published.', 'my-family-tree' ),
-			'item_published_privately' => __( 'Person published privately.', 'my-family-tree' ),
-			'item_reverted_to_draft' => __( 'Person reverted to draft.', 'my-family-tree' ),
-			'item_trashed' => __( 'Person moved to Trash.', 'my-family-tree' ),
-			'item_scheduled' => __( 'Person scheduled.', 'my-family-tree' ),
-			'item_updated' => __( 'Person updated.', 'my-family-tree' ),
-			'item_link' => __( 'Person link', 'my-family-tree' ),
-			'item_link_description' => __( 'A link to a person.', 'my-family-tree' ),
-			'template_name' => __( 'Single person', 'my-family-tree' ),
+			'name' => __( 'Persons', 'digitalpulse-family-archive' ),
+			'singular_name' => __( 'Person', 'digitalpulse-family-archive' ),
+			'menu_name' => __( 'Persons', 'digitalpulse-family-archive' ),
+			'name_admin_bar' => __( 'Person', 'digitalpulse-family-archive' ),
+			'add_new' => __( 'Add person', 'digitalpulse-family-archive' ),
+			'add_new_item' => __( 'Add person', 'digitalpulse-family-archive' ),
+			'edit_item' => __( 'Edit person', 'digitalpulse-family-archive' ),
+			'new_item' => __( 'New person', 'digitalpulse-family-archive' ),
+			'view_item' => __( 'View person', 'digitalpulse-family-archive' ),
+			'view_items' => __( 'View persons', 'digitalpulse-family-archive' ),
+			'search_items' => __( 'Search persons', 'digitalpulse-family-archive' ),
+			'not_found' => __( 'No persons found.', 'digitalpulse-family-archive' ),
+			'not_found_in_trash' => __( 'No persons found in Trash.', 'digitalpulse-family-archive' ),
+			'all_items' => __( 'All persons', 'digitalpulse-family-archive' ),
+			'archives' => __( 'Person archives', 'digitalpulse-family-archive' ),
+			'attributes' => __( 'Person attributes', 'digitalpulse-family-archive' ),
+			'insert_into_item' => __( 'Insert into person', 'digitalpulse-family-archive' ),
+			'uploaded_to_this_item' => __( 'Uploaded to this person', 'digitalpulse-family-archive' ),
+			'featured_image' => __( 'Portrait', 'digitalpulse-family-archive' ),
+			'set_featured_image' => __( 'Set portrait', 'digitalpulse-family-archive' ),
+			'remove_featured_image' => __( 'Remove portrait', 'digitalpulse-family-archive' ),
+			'use_featured_image' => __( 'Use as portrait', 'digitalpulse-family-archive' ),
+			'filter_items_list' => __( 'Filter persons list', 'digitalpulse-family-archive' ),
+			'items_list_navigation' => __( 'Persons list navigation', 'digitalpulse-family-archive' ),
+			'items_list' => __( 'Persons list', 'digitalpulse-family-archive' ),
+			'item_published' => __( 'Person published.', 'digitalpulse-family-archive' ),
+			'item_published_privately' => __( 'Person published privately.', 'digitalpulse-family-archive' ),
+			'item_reverted_to_draft' => __( 'Person reverted to draft.', 'digitalpulse-family-archive' ),
+			'item_trashed' => __( 'Person moved to Trash.', 'digitalpulse-family-archive' ),
+			'item_scheduled' => __( 'Person scheduled.', 'digitalpulse-family-archive' ),
+			'item_updated' => __( 'Person updated.', 'digitalpulse-family-archive' ),
+			'item_link' => __( 'Person link', 'digitalpulse-family-archive' ),
+			'item_link_description' => __( 'A link to a person.', 'digitalpulse-family-archive' ),
+			'template_name' => __( 'Single person', 'digitalpulse-family-archive' ),
 		);
 		foreach ( $person_labels as $key => $value ) { $labels->$key = $value; }
 		return $labels;
@@ -175,20 +175,20 @@ final class WPMFT_Admin {
 	public static function person_updated_messages( $messages ) {
 		$post = get_post();
 		if ( empty( wpmft_settings()['person_admin_labels'] ) || ! $post instanceof WP_Post || 'post' !== $post->post_type ) { return $messages; }
-		$view = ' <a href="' . esc_url( get_permalink( $post ) ) . '">' . esc_html__( 'View person', 'my-family-tree' ) . '</a>';
-		$preview = ' <a target="_blank" rel="noopener" href="' . esc_url( get_preview_post_link( $post ) ) . '">' . esc_html__( 'Preview person', 'my-family-tree' ) . '</a>';
-		$messages['post'][1] = esc_html__( 'Person updated.', 'my-family-tree' ) . $view;
-		$messages['post'][4] = esc_html__( 'Person updated.', 'my-family-tree' );
+		$view = ' <a href="' . esc_url( get_permalink( $post ) ) . '">' . esc_html__( 'View person', 'digitalpulse-family-archive' ) . '</a>';
+		$preview = ' <a target="_blank" rel="noopener" href="' . esc_url( get_preview_post_link( $post ) ) . '">' . esc_html__( 'Preview person', 'digitalpulse-family-archive' ) . '</a>';
+		$messages['post'][1] = esc_html__( 'Person updated.', 'digitalpulse-family-archive' ) . $view;
+		$messages['post'][4] = esc_html__( 'Person updated.', 'digitalpulse-family-archive' );
 		if ( isset( $_GET['revision'] ) && is_scalar( $_GET['revision'] ) ) {
 			/* translators: %s: Date and time of the revision. */
-			$messages['post'][5] = sprintf( esc_html__( 'Person restored to revision from %s.', 'my-family-tree' ), esc_html( wp_post_revision_title( absint( $_GET['revision'] ), false ) ) );
+			$messages['post'][5] = sprintf( esc_html__( 'Person restored to revision from %s.', 'digitalpulse-family-archive' ), esc_html( wp_post_revision_title( absint( $_GET['revision'] ), false ) ) );
 		}
-		$messages['post'][6] = esc_html__( 'Person published.', 'my-family-tree' ) . $view;
-		$messages['post'][7] = esc_html__( 'Person saved.', 'my-family-tree' );
-		$messages['post'][8] = esc_html__( 'Person submitted.', 'my-family-tree' ) . $preview;
+		$messages['post'][6] = esc_html__( 'Person published.', 'digitalpulse-family-archive' ) . $view;
+		$messages['post'][7] = esc_html__( 'Person saved.', 'digitalpulse-family-archive' );
+		$messages['post'][8] = esc_html__( 'Person submitted.', 'digitalpulse-family-archive' ) . $preview;
 		/* translators: %s: Scheduled publication date and time. */
-		$messages['post'][9] = sprintf( esc_html__( 'Person scheduled for: %s.', 'my-family-tree' ), esc_html( get_the_date( '', $post ) . ' ' . get_the_time( '', $post ) ) ) . $preview;
-		$messages['post'][10] = esc_html__( 'Person draft updated.', 'my-family-tree' ) . $preview;
+		$messages['post'][9] = sprintf( esc_html__( 'Person scheduled for: %s.', 'digitalpulse-family-archive' ), esc_html( get_the_date( '', $post ) . ' ' . get_the_time( '', $post ) ) ) . $preview;
+		$messages['post'][10] = esc_html__( 'Person draft updated.', 'digitalpulse-family-archive' ) . $preview;
 		return $messages;
 	}
 
@@ -196,24 +196,24 @@ final class WPMFT_Admin {
 		if ( empty( wpmft_settings()['person_admin_labels'] ) ) { return $messages; }
 		$messages['post'] = array(
 			/* translators: %s: Number of persons. */
-			'updated' => __( 'Persons updated: %s.', 'my-family-tree' ),
+			'updated' => __( 'Persons updated: %s.', 'digitalpulse-family-archive' ),
 			/* translators: %s: Number of persons. */
-			'locked' => __( 'Persons not updated because someone is editing them: %s.', 'my-family-tree' ),
+			'locked' => __( 'Persons not updated because someone is editing them: %s.', 'digitalpulse-family-archive' ),
 			/* translators: %s: Number of persons. */
-			'deleted' => __( 'Persons permanently deleted: %s.', 'my-family-tree' ),
+			'deleted' => __( 'Persons permanently deleted: %s.', 'digitalpulse-family-archive' ),
 			/* translators: %s: Number of persons. */
-			'trashed' => __( 'Persons moved to Trash: %s.', 'my-family-tree' ),
+			'trashed' => __( 'Persons moved to Trash: %s.', 'digitalpulse-family-archive' ),
 			/* translators: %s: Number of persons. */
-			'untrashed' => __( 'Persons restored from Trash: %s.', 'my-family-tree' ),
+			'untrashed' => __( 'Persons restored from Trash: %s.', 'digitalpulse-family-archive' ),
 		);
 		return $messages;
 	}
 
 	public static function person_panel( $post ) {
 		if ( ! self::classic_person_screen( $post ) ) { return; }
-		echo '<section class="wpmft-person-panel" aria-labelledby="wpmft-person-heading"><h2 id="wpmft-person-heading">' . esc_html__( 'Family tree — person details', 'my-family-tree' ) . '</h2>';
+		echo '<section class="wpmft-person-panel" aria-labelledby="wpmft-person-heading"><h2 id="wpmft-person-heading">' . esc_html__( 'Family tree — person details', 'digitalpulse-family-archive' ) . '</h2>';
 		self::person_box( $post );
-		echo '</section><h2 class="wpmft-biography-heading">' . esc_html__( 'Biography', 'my-family-tree' ) . '</h2>';
+		echo '</section><h2 class="wpmft-biography-heading">' . esc_html__( 'Biography', 'digitalpulse-family-archive' ) . '</h2>';
 	}
 
 	/** TinyMCE can normalise block markup on an untouched save. Retain the original bytes. */
@@ -231,12 +231,12 @@ final class WPMFT_Admin {
 		if ( ! empty( wpmft_settings()['person_admin_labels'] ) && isset( $submenu['edit.php'][10][2] ) && 'post-new.php' === $submenu['edit.php'][10][2] ) {
 			$submenu['edit.php'][10][2] = 'post-new.php?wpmft_person=1';
 		}
-		add_menu_page( __( 'My Family Tree', 'my-family-tree' ), __( 'Family Tree', 'my-family-tree' ), 'manage_options', 'wpmft', array( __CLASS__, 'settings_page' ), 'dashicons-networking', 26 );
-		add_submenu_page( 'wpmft', __( 'Settings', 'my-family-tree' ), __( 'Settings & help', 'my-family-tree' ), 'manage_options', 'wpmft', array( __CLASS__, 'settings_page' ) );
+		add_menu_page( __( 'DigitalPulse Family Archive', 'digitalpulse-family-archive' ), __( 'Family Tree', 'digitalpulse-family-archive' ), 'manage_options', 'wpmft', array( __CLASS__, 'settings_page' ), 'dashicons-networking', 26 );
+		add_submenu_page( 'wpmft', __( 'Settings', 'digitalpulse-family-archive' ), __( 'Settings & help', 'digitalpulse-family-archive' ), 'manage_options', 'wpmft', array( __CLASS__, 'settings_page' ) );
 	}
 
 	public static function action_links( $links ) {
-		array_unshift( $links, '<a href="' . esc_url( admin_url( 'admin.php?page=wpmft' ) ) . '">' . esc_html__( 'Settings', 'my-family-tree' ) . '</a>' );
+		array_unshift( $links, '<a href="' . esc_url( admin_url( 'admin.php?page=wpmft' ) ) . '">' . esc_html__( 'Settings', 'digitalpulse-family-archive' ) . '</a>' );
 		return $links;
 	}
 
@@ -259,49 +259,49 @@ final class WPMFT_Admin {
 			'mediaNonce' => wp_create_nonce( 'wpmft_protect_media' ),
 			'optimizationNonce' => wp_create_nonce( 'wpmft_optimize_media' ),
 			'strings' => array(
-				'chooseImages' => __( 'Choose family photographs', 'my-family-tree' ),
-				'useImages' => __( 'Use selected photographs', 'my-family-tree' ),
-				'addImages' => __( 'Add photographs', 'my-family-tree' ),
-				'reorderImages' => __( 'Reorder photographs', 'my-family-tree' ),
-				'loadingImages' => __( 'Loading photographs…', 'my-family-tree' ),
-				'galleryLoadError' => __( 'Could not load all photographs. Your gallery has not changed. Please try again.', 'my-family-tree' ),
-				'photoStory' => __( 'Photo story / description', 'my-family-tree' ),
-				'photoDate' => __( 'When / date', 'my-family-tree' ),
-				'photoDatePlaceholder' => __( 'For example: Summer 1980', 'my-family-tree' ),
-				'optimizingImages' => __( 'Preparing smaller family photographs…', 'my-family-tree' ),
-				'imagesOptimizationChecking' => __( 'Checking photographs waiting for optimization…', 'my-family-tree' ),
-				'imagesOptimizationPending' => __( 'Photographs waiting for optimization:', 'my-family-tree' ),
-				'imagesOptimizationProcessed' => __( 'Photographs processed:', 'my-family-tree' ),
-				'imagesOptimizationSkipped' => __( 'Photographs needing attention:', 'my-family-tree' ),
-				'imagesOptimizationUnscanned' => __( 'Photographs still to scan:', 'my-family-tree' ),
-				'imagesOptimizationPartial' => __( 'The scan finished, but some photographs need attention. Review the errors and try again after fixing them.', 'my-family-tree' ),
-				'imagesOptimizationCheckError' => __( 'Could not calculate photograph counts. You can still start preparation or reload this page.', 'my-family-tree' ),
-				'imagesOptimized' => __( 'Family photograph optimization is complete.', 'my-family-tree' ),
-				'imagesOptimizationPaused' => __( 'Paused after the current batch. You can continue preparing photographs later.', 'my-family-tree' ),
-				'imagesOptimizationError' => __( 'Some photographs could not be optimized. Existing images remain available. Please review the error and try again.', 'my-family-tree' ),
-				'removeImage' => __( 'Remove photograph from gallery', 'my-family-tree' ),
-				'remove' => __( 'Remove', 'my-family-tree' ),
-				'noResults' => __( 'No family members found.', 'my-family-tree' ),
-				'searchError' => __( 'Search could not load. Please try again.', 'my-family-tree' ),
-				'searching' => __( 'Searching…', 'my-family-tree' ),
-				'protecting' => __( 'Protecting family photographs…', 'my-family-tree' ),
-				'protected' => __( 'Family photograph protection is complete.', 'my-family-tree' ),
-				'remaining' => __( 'Photographs remaining:', 'my-family-tree' ),
-				'protectionError' => __( 'Some photographs could not be protected. Keep the original backup and review the error before publishing.', 'my-family-tree' ),
-				'relationshipLimit' => __( 'Add no more than 50 partner relationships for one person.', 'my-family-tree' ),
-				'choosePortrait' => __( 'Choose a portrait', 'my-family-tree' ),
-				'usePortrait' => __( 'Use this portrait', 'my-family-tree' ),
-				'noPortrait' => __( 'No portrait selected', 'my-family-tree' ),
+				'chooseImages' => __( 'Choose family photographs', 'digitalpulse-family-archive' ),
+				'useImages' => __( 'Use selected photographs', 'digitalpulse-family-archive' ),
+				'addImages' => __( 'Add photographs', 'digitalpulse-family-archive' ),
+				'reorderImages' => __( 'Reorder photographs', 'digitalpulse-family-archive' ),
+				'loadingImages' => __( 'Loading photographs…', 'digitalpulse-family-archive' ),
+				'galleryLoadError' => __( 'Could not load all photographs. Your gallery has not changed. Please try again.', 'digitalpulse-family-archive' ),
+				'photoStory' => __( 'Photo story / description', 'digitalpulse-family-archive' ),
+				'photoDate' => __( 'When / date', 'digitalpulse-family-archive' ),
+				'photoDatePlaceholder' => __( 'For example: Summer 1980', 'digitalpulse-family-archive' ),
+				'optimizingImages' => __( 'Preparing smaller family photographs…', 'digitalpulse-family-archive' ),
+				'imagesOptimizationChecking' => __( 'Checking photographs waiting for optimization…', 'digitalpulse-family-archive' ),
+				'imagesOptimizationPending' => __( 'Photographs waiting for optimization:', 'digitalpulse-family-archive' ),
+				'imagesOptimizationProcessed' => __( 'Photographs processed:', 'digitalpulse-family-archive' ),
+				'imagesOptimizationSkipped' => __( 'Photographs needing attention:', 'digitalpulse-family-archive' ),
+				'imagesOptimizationUnscanned' => __( 'Photographs still to scan:', 'digitalpulse-family-archive' ),
+				'imagesOptimizationPartial' => __( 'The scan finished, but some photographs need attention. Review the errors and try again after fixing them.', 'digitalpulse-family-archive' ),
+				'imagesOptimizationCheckError' => __( 'Could not calculate photograph counts. You can still start preparation or reload this page.', 'digitalpulse-family-archive' ),
+				'imagesOptimized' => __( 'Family photograph optimization is complete.', 'digitalpulse-family-archive' ),
+				'imagesOptimizationPaused' => __( 'Paused after the current batch. You can continue preparing photographs later.', 'digitalpulse-family-archive' ),
+				'imagesOptimizationError' => __( 'Some photographs could not be optimized. Existing images remain available. Please review the error and try again.', 'digitalpulse-family-archive' ),
+				'removeImage' => __( 'Remove photograph from gallery', 'digitalpulse-family-archive' ),
+				'remove' => __( 'Remove', 'digitalpulse-family-archive' ),
+				'noResults' => __( 'No family members found.', 'digitalpulse-family-archive' ),
+				'searchError' => __( 'Search could not load. Please try again.', 'digitalpulse-family-archive' ),
+				'searching' => __( 'Searching…', 'digitalpulse-family-archive' ),
+				'protecting' => __( 'Protecting family photographs…', 'digitalpulse-family-archive' ),
+				'protected' => __( 'Family photograph protection is complete.', 'digitalpulse-family-archive' ),
+				'remaining' => __( 'Photographs remaining:', 'digitalpulse-family-archive' ),
+				'protectionError' => __( 'Some photographs could not be protected. Keep the original backup and review the error before publishing.', 'digitalpulse-family-archive' ),
+				'relationshipLimit' => __( 'Add no more than 50 partner relationships for one person.', 'digitalpulse-family-archive' ),
+				'choosePortrait' => __( 'Choose a portrait', 'digitalpulse-family-archive' ),
+				'usePortrait' => __( 'Use this portrait', 'digitalpulse-family-archive' ),
+				'noPortrait' => __( 'No portrait selected', 'digitalpulse-family-archive' ),
 			),
 		) );
 	}
 
 	private static function require_admin( $nonce_action ) {
 		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
-			wp_die( esc_html__( 'A POST request is required.', 'my-family-tree' ), '', array( 'response' => 405 ) );
+			wp_die( esc_html__( 'A POST request is required.', 'digitalpulse-family-archive' ), '', array( 'response' => 405 ) );
 		}
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permission to change family tree settings.', 'my-family-tree' ), '', array( 'response' => 403 ) );
+			wp_die( esc_html__( 'You do not have permission to change family tree settings.', 'digitalpulse-family-archive' ), '', array( 'response' => 403 ) );
 		}
 		check_admin_referer( $nonce_action );
 	}
@@ -331,10 +331,10 @@ final class WPMFT_Admin {
 		}
 		$s = wpmft_settings();
 		if ( ! WPMFT_Demo::guard_required() && ! empty( $s['password_protection'] ) && empty( $s['password_hash'] ) ) {
-			echo '<div class="notice notice-warning"><p>' . esc_html__( 'Your family tree is locked for visitors. Set a family password in Privacy to allow access, or explicitly turn password protection off for a public tree.', 'my-family-tree' ) . '</p></div>';
+			echo '<div class="notice notice-warning"><p>' . esc_html__( 'Your family tree is locked for visitors. Set a family password in Privacy to allow access, or explicitly turn password protection off for a public tree.', 'digitalpulse-family-archive' ) . '</p></div>';
 		}
 		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'wp-family-tree/family-tree.php' ) ) {
-			echo '<div class="notice notice-warning"><p>' . esc_html__( 'Deactivate the original WP Family Tree plugin. Its older public routes can bypass the privacy settings of this replacement. Your posts and photographs are retained.', 'my-family-tree' ) . '</p></div>';
+			echo '<div class="notice notice-warning"><p>' . esc_html__( 'Deactivate the original WP Family Tree plugin. Its older public routes can bypass the privacy settings of this replacement. Your posts and photographs are retained.', 'digitalpulse-family-archive' ) . '</p></div>';
 		}
 	}
 
@@ -345,34 +345,34 @@ final class WPMFT_Admin {
 		$s = wpmft_settings();
 		$notice = isset( $_GET['wpmft_notice'] ) && is_string( $_GET['wpmft_notice'] ) ? sanitize_key( wp_unslash( $_GET['wpmft_notice'] ) ) : '';
 		$messages = array(
-			'saved' => __( 'Settings saved.', 'my-family-tree' ),
-			'created' => __( 'Your family tree page is ready.', 'my-family-tree' ),
-			'revoked' => __( 'All remembered family sessions have been revoked.', 'my-family-tree' ),
-			'password' => __( 'Settings were not saved. Use a family password with at least 12 characters.', 'my-family-tree' ),
-			'hcaptcha' => __( 'Settings were not saved. Add both hCaptcha keys before enabling it.', 'my-family-tree' ),
-			'error' => __( 'The page could not be created. Please try again.', 'my-family-tree' ),
-			'email' => __( 'Settings were not saved. Enter a valid family administrator email address.', 'my-family-tree' ),
-			'whatsapp' => __( 'Settings were not saved. Enter a WhatsApp number with its country code, or clear the number and turn off the administrator WhatsApp button.', 'my-family-tree' ),
-			'media' => __( 'A batch of family photographs has been protected. Continue until no photographs remain.', 'my-family-tree' ),
-			'cache' => __( 'Family Tree cache cleared. Static asset URLs have been refreshed.', 'my-family-tree' ),
+			'saved' => __( 'Settings saved.', 'digitalpulse-family-archive' ),
+			'created' => __( 'Your family tree page is ready.', 'digitalpulse-family-archive' ),
+			'revoked' => __( 'All remembered family sessions have been revoked.', 'digitalpulse-family-archive' ),
+			'password' => __( 'Settings were not saved. Use a family password with at least 12 characters.', 'digitalpulse-family-archive' ),
+			'hcaptcha' => __( 'Settings were not saved. Add both hCaptcha keys before enabling it.', 'digitalpulse-family-archive' ),
+			'error' => __( 'The page could not be created. Please try again.', 'digitalpulse-family-archive' ),
+			'email' => __( 'Settings were not saved. Enter a valid family administrator email address.', 'digitalpulse-family-archive' ),
+			'whatsapp' => __( 'Settings were not saved. Enter a WhatsApp number with its country code, or clear the number and turn off the administrator WhatsApp button.', 'digitalpulse-family-archive' ),
+			'media' => __( 'A batch of family photographs has been protected. Continue until no photographs remain.', 'digitalpulse-family-archive' ),
+			'cache' => __( 'Family Tree cache cleared. Static asset URLs have been refreshed.', 'digitalpulse-family-archive' ),
 		);
 		?>
 		<div class="wrap wpmft-settings">
-			<div class="wpmft-admin-heading"><div><p class="wpmft-eyebrow">DigitalPulse</p><h1><?php esc_html_e( 'My Family Tree', 'my-family-tree' ); ?></h1><p><?php esc_html_e( 'Keep the stories. Connect the generations.', 'my-family-tree' ); ?></p></div><span class="wpmft-version"><?php echo esc_html( WPMFT_VERSION ); ?></span></div>
+			<div class="wpmft-admin-heading"><div><p class="wpmft-eyebrow">DigitalPulse</p><h1><?php esc_html_e( 'DigitalPulse Family Archive', 'digitalpulse-family-archive' ); ?></h1><p><?php esc_html_e( 'Keep the stories. Connect the generations.', 'digitalpulse-family-archive' ); ?></p></div><span class="wpmft-version"><?php echo esc_html( WPMFT_VERSION ); ?></span></div>
 			<?php if ( isset( $messages[ $notice ] ) ) : ?><div class="notice <?php echo in_array( $notice, array( 'password', 'hcaptcha', 'error', 'email', 'whatsapp' ), true ) ? 'notice-error' : 'notice-success'; ?> is-dismissible"><p><?php echo esc_html( $messages[ $notice ] ); ?></p></div><?php endif; ?>
 			<div class="wpmft-quickstart">
-				<strong><?php esc_html_e( 'Your tree, in any theme', 'my-family-tree' ); ?></strong><p><?php esc_html_e( 'Add the Family Tree block or this shortcode to a page:', 'my-family-tree' ); ?> <code>[wp_my_family_tree]</code></p>
+				<strong><?php esc_html_e( 'Your tree, in any theme', 'digitalpulse-family-archive' ); ?></strong><p><?php esc_html_e( 'Add the Family Tree block or this shortcode to a page:', 'digitalpulse-family-archive' ); ?> <code>[wp_my_family_tree]</code></p>
 				<div class="wpmft-admin-actions">
 					<?php if ( ! empty( $s['page_id'] ) && get_post( $s['page_id'] ) ) : ?>
-						<a class="button button-primary" href="<?php echo esc_url( get_permalink( $s['page_id'] ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View tree', 'my-family-tree' ); ?></a>
-						<a class="button" href="<?php echo esc_url( get_edit_post_link( $s['page_id'], 'raw' ) ); ?>"><?php esc_html_e( 'Edit tree page', 'my-family-tree' ); ?></a>
+						<a class="button button-primary" href="<?php echo esc_url( get_permalink( $s['page_id'] ) ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'View tree', 'digitalpulse-family-archive' ); ?></a>
+						<a class="button" href="<?php echo esc_url( get_edit_post_link( $s['page_id'], 'raw' ) ); ?>"><?php esc_html_e( 'Edit tree page', 'digitalpulse-family-archive' ); ?></a>
 					<?php endif; ?>
-					<a class="button" href="<?php echo esc_url( admin_url( 'post-new.php?wpmft_person=1' ) ); ?>"><?php esc_html_e( 'Add a person', 'my-family-tree' ); ?></a>
-					<a class="button" href="<?php echo esc_url( add_query_arg( array( 'cat' => absint( $s['category_id'] ) ), admin_url( 'edit.php' ) ) ); ?>"><?php esc_html_e( 'Manage family posts', 'my-family-tree' ); ?></a>
+					<a class="button" href="<?php echo esc_url( admin_url( 'post-new.php?wpmft_person=1' ) ); ?>"><?php esc_html_e( 'Add a person', 'digitalpulse-family-archive' ); ?></a>
+					<a class="button" href="<?php echo esc_url( add_query_arg( array( 'cat' => absint( $s['category_id'] ) ), admin_url( 'edit.php' ) ) ); ?>"><?php esc_html_e( 'Manage family posts', 'digitalpulse-family-archive' ); ?></a>
 				</div>
 			</div>
-			<nav class="wpmft-admin-tabs" aria-label="<?php esc_attr_e( 'Family tree settings', 'my-family-tree' ); ?>">
-				<?php foreach ( array( 'general' => __( 'General', 'my-family-tree' ), 'privacy' => __( 'Privacy & access', 'my-family-tree' ), 'appearance' => __( 'Appearance', 'my-family-tree' ), 'contact' => __( 'Contact & hCaptcha', 'my-family-tree' ), 'celebrations' => __( 'Birthdays & calendar', 'my-family-tree' ), 'performance' => __( 'Performance & cache', 'my-family-tree' ), 'languages' => __( 'Languages', 'my-family-tree' ), 'demo' => __( 'Demo', 'my-family-tree' ), 'help' => __( 'Getting started', 'my-family-tree' ) ) as $key => $label ) : ?>
+			<nav class="wpmft-admin-tabs" aria-label="<?php esc_attr_e( 'Family tree settings', 'digitalpulse-family-archive' ); ?>">
+				<?php foreach ( array( 'general' => __( 'General', 'digitalpulse-family-archive' ), 'privacy' => __( 'Privacy & access', 'digitalpulse-family-archive' ), 'appearance' => __( 'Appearance', 'digitalpulse-family-archive' ), 'contact' => __( 'Contact & hCaptcha', 'digitalpulse-family-archive' ), 'celebrations' => __( 'Birthdays & calendar', 'digitalpulse-family-archive' ), 'performance' => __( 'Performance & cache', 'digitalpulse-family-archive' ), 'languages' => __( 'Languages', 'digitalpulse-family-archive' ), 'demo' => __( 'Demo', 'digitalpulse-family-archive' ), 'help' => __( 'Getting started', 'digitalpulse-family-archive' ) ) as $key => $label ) : ?>
 				<?php if ( 'demo' === $key && ! WPMFT_Demo::tools_visible() ) { continue; } ?>
 				<a href="#wpmft-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></a>
 				<?php endforeach; ?>
@@ -390,91 +390,91 @@ final class WPMFT_Admin {
 				<input type="hidden" name="wpmft_section" value="general">
 				<?php wp_nonce_field( 'wpmft_save_settings' ); ?>
 				<?php self::language_control(); ?>
-				<section id="wpmft-general" class="wpmft-settings-section"><h2><?php esc_html_e( 'General', 'my-family-tree' ); ?></h2>
-					<?php self::checkbox( 'enabled', __( 'Enable the family tree', 'my-family-tree' ), $s ); ?>
-					<?php self::checkbox( 'person_admin_labels', __( 'Use Persons labels for the WordPress Posts section', 'my-family-tree' ), $s ); ?>
-					<p class="description"><?php esc_html_e( 'Turn this off if this site also uses posts for news or a blog. Existing content and URLs are unchanged.', 'my-family-tree' ); ?></p>
-					<?php self::checkbox( 'person_block_editor', __( 'Enable the WordPress block editor for family people', 'my-family-tree' ), $s ); ?>
-					<p class="description"><?php esc_html_e( 'By default, people open with their details form above the biography editor. Other posts and pages keep their usual editor. Existing biographies are preserved when only person details change.', 'my-family-tree' ); ?></p>
-					<label class="wpmft-field"><span><?php esc_html_e( 'Family member category', 'my-family-tree' ); ?></span><?php wp_dropdown_categories( array( 'name' => 'wpmft[category_id]', 'selected' => absint( $s['category_id'] ), 'hide_empty' => false, 'show_option_none' => esc_html__( 'Select a category', 'my-family-tree' ), 'option_none_value' => 0, 'hierarchical' => true ) ); ?><small><?php esc_html_e( 'Existing WP Family Tree posts remain ordinary WordPress posts in this category.', 'my-family-tree' ); ?></small></label>
-					<label class="wpmft-field"><span><?php esc_html_e( 'Tree page', 'my-family-tree' ); ?></span><?php wp_dropdown_pages( array( 'name' => 'wpmft[page_id]', 'selected' => absint( $s['page_id'] ), 'show_option_none' => esc_html__( 'Choose a page', 'my-family-tree' ), 'option_none_value' => 0 ) ); ?></label>
-					<?php self::person_picker( 'wpmft-root-person', 'wpmft[root_id]', $s['root_id'], __( 'Starting person', 'my-family-tree' ) ); ?>
-					<?php self::checkbox( 'standalone', __( 'Use the full-window layout without the theme header and footer', 'my-family-tree' ), $s ); ?>
-					<p class="description"><?php esc_html_e( 'The plugin provides its own title, header and contact footer. This applies to pages containing the tree shortcode or block.', 'my-family-tree' ); ?></p>
-					<label class="wpmft-field"><span><?php esc_html_e( 'Default interface language', 'my-family-tree' ); ?></span><select name="wpmft[language]"><?php foreach ( WPMFT_Languages::registry() as $slug => $entry ) : ?><option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $s['language'], $slug ); ?>><?php echo esc_html( $entry['name'] ); ?></option><?php endforeach; ?></select></label>
-					<?php self::checkbox( 'language_switch', __( 'Show the language switch', 'my-family-tree' ), $s ); ?>
-					<p class="description"><?php esc_html_e( 'Open the Languages tab to enable preset languages, add languages or review optional Polylang for translated people and pages.', 'my-family-tree' ); ?></p>
-					<h3><?php esc_html_e( 'Optional demo tools', 'my-family-tree' ); ?></h3>
-					<?php self::checkbox( 'demo_tools_enabled', __( 'Show the Demo tab for sample content and demo sharing', 'my-family-tree' ), $s ); ?>
-					<p class="description"><?php esc_html_e( 'After initial setup, demo tools stay hidden until you turn this on and save. This switch only shows the tools; importing content and enabling shared access each require a separate confirmation.', 'my-family-tree' ); ?></p>
+				<section id="wpmft-general" class="wpmft-settings-section"><h2><?php esc_html_e( 'General', 'digitalpulse-family-archive' ); ?></h2>
+					<?php self::checkbox( 'enabled', __( 'Enable the family tree', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::checkbox( 'person_admin_labels', __( 'Use Persons labels for the WordPress Posts section', 'digitalpulse-family-archive' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'Turn this off if this site also uses posts for news or a blog. Existing content and URLs are unchanged.', 'digitalpulse-family-archive' ); ?></p>
+					<?php self::checkbox( 'person_block_editor', __( 'Enable the WordPress block editor for family people', 'digitalpulse-family-archive' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'By default, people open with their details form above the biography editor. Other posts and pages keep their usual editor. Existing biographies are preserved when only person details change.', 'digitalpulse-family-archive' ); ?></p>
+					<label class="wpmft-field"><span><?php esc_html_e( 'Family member category', 'digitalpulse-family-archive' ); ?></span><?php wp_dropdown_categories( array( 'name' => 'wpmft[category_id]', 'selected' => absint( $s['category_id'] ), 'hide_empty' => false, 'show_option_none' => esc_html__( 'Select a category', 'digitalpulse-family-archive' ), 'option_none_value' => 0, 'hierarchical' => true ) ); ?><small><?php esc_html_e( 'Existing WP Family Tree posts remain ordinary WordPress posts in this category.', 'digitalpulse-family-archive' ); ?></small></label>
+					<label class="wpmft-field"><span><?php esc_html_e( 'Tree page', 'digitalpulse-family-archive' ); ?></span><?php wp_dropdown_pages( array( 'name' => 'wpmft[page_id]', 'selected' => absint( $s['page_id'] ), 'show_option_none' => esc_html__( 'Choose a page', 'digitalpulse-family-archive' ), 'option_none_value' => 0 ) ); ?></label>
+					<?php self::person_picker( 'wpmft-root-person', 'wpmft[root_id]', $s['root_id'], __( 'Starting person', 'digitalpulse-family-archive' ) ); ?>
+					<?php self::checkbox( 'standalone', __( 'Use the full-window layout without the theme header and footer', 'digitalpulse-family-archive' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'The plugin provides its own title, header and contact footer. This applies to pages containing the tree shortcode or block.', 'digitalpulse-family-archive' ); ?></p>
+					<label class="wpmft-field"><span><?php esc_html_e( 'Default interface language', 'digitalpulse-family-archive' ); ?></span><select name="wpmft[language]"><?php foreach ( WPMFT_Languages::registry() as $slug => $entry ) : ?><option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $s['language'], $slug ); ?>><?php echo esc_html( $entry['name'] ); ?></option><?php endforeach; ?></select></label>
+					<?php self::checkbox( 'language_switch', __( 'Show the language switch', 'digitalpulse-family-archive' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'Open the Languages tab to enable preset languages, add languages or review optional Polylang for translated people and pages.', 'digitalpulse-family-archive' ); ?></p>
+					<h3><?php esc_html_e( 'Optional demo tools', 'digitalpulse-family-archive' ); ?></h3>
+					<?php self::checkbox( 'demo_tools_enabled', __( 'Show the Demo tab for sample content and demo sharing', 'digitalpulse-family-archive' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'After initial setup, demo tools stay hidden until you turn this on and save. This switch only shows the tools; importing content and enabling shared access each require a separate confirmation.', 'digitalpulse-family-archive' ); ?></p>
 					<?php WPMFT_Demo::render_general_status(); ?>
 				</section>
-				<section id="wpmft-celebrations" class="wpmft-settings-section"><h2><?php esc_html_e( 'Birthdays & calendar', 'my-family-tree' ); ?></h2>
-					<?php self::checkbox( 'celebrations_enabled', __( 'Show the family birthday calendar', 'my-family-tree' ), $s ); ?>
-					<?php self::checkbox( 'celebration_header', __( 'Show today’s birthdays and name days near the top of the family page', 'my-family-tree' ), $s ); ?>
-					<?php self::checkbox( 'birthday_email_enabled', __( 'Send a birthday email to living people who have an email address', 'my-family-tree' ), $s ); ?>
-					<p class="description"><?php esc_html_e( 'Birthday mail is sent once per person per year, around 08:00 site time. WordPress scheduled tasks run when the site receives traffic, so a quiet site can send later.', 'my-family-tree' ); ?></p>
-					<?php self::checkbox( 'name_days_lv', __( 'Show Latvian name days when the interface language is Latvian', 'my-family-tree' ), $s ); ?>
-					<p class="description"><?php esc_html_e( 'Name days are shown in the calendar and header only; no name-day email is sent. The traditional Latvian list is cached locally and can be overridden per person with an MM-DD date.', 'my-family-tree' ); ?></p>
+				<section id="wpmft-celebrations" class="wpmft-settings-section"><h2><?php esc_html_e( 'Birthdays & calendar', 'digitalpulse-family-archive' ); ?></h2>
+					<?php self::checkbox( 'celebrations_enabled', __( 'Show the family birthday calendar', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::checkbox( 'celebration_header', __( 'Show today’s birthdays and name days near the top of the family page', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::checkbox( 'birthday_email_enabled', __( 'Send a birthday email to living people who have an email address', 'digitalpulse-family-archive' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'Birthday mail is sent once per person per year, around 08:00 site time. WordPress scheduled tasks run when the site receives traffic, so a quiet site can send later.', 'digitalpulse-family-archive' ); ?></p>
+					<?php self::checkbox( 'name_days_lv', __( 'Show Latvian name days when the interface language is Latvian', 'digitalpulse-family-archive' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'Name days are shown in the calendar and header only; no name-day email is sent. The traditional Latvian list is cached locally and can be overridden per person with an MM-DD date.', 'digitalpulse-family-archive' ); ?></p>
 				</section>
-				<section id="wpmft-privacy" class="wpmft-settings-section"><h2><?php esc_html_e( 'Privacy & access', 'my-family-tree' ); ?></h2>
-					<?php self::checkbox( 'password_protection', __( 'Require a family password', 'my-family-tree' ), $s ); ?>
-					<label class="wpmft-field"><span><?php esc_html_e( 'Set a new family password', 'my-family-tree' ); ?></span><input type="password" name="wpmft[new_password]" autocomplete="new-password" minlength="12" maxlength="256" value=""><small><?php esc_html_e( 'At least 12 characters. Leave blank to keep the current password. The password is stored as a one-way hash.', 'my-family-tree' ); ?></small></label>
-					<?php self::field( 'remember_days', __( 'Maximum remembered access (days)', 'my-family-tree' ), $s, 'number', array( 'min' => 1, 'max' => 30 ) ); ?>
-					<?php self::checkbox( 'hide_living_dates', __( 'Hide the birth dates of living people in the tree and person dialogs', 'my-family-tree' ), $s ); ?>
-					<?php self::checkbox( 'private_media', __( 'Automatically encrypt family photograph files when people are saved', 'my-family-tree' ), $s ); ?>
-					<p class="description"><?php esc_html_e( 'Encrypted photographs are served through the family access check. This switch controls protection of new files; disabling it does not make already encrypted photographs public. Use “Protect existing family photos” below to process older files.', 'my-family-tree' ); ?></p>
-					<div class="wpmft-admin-note"><p><?php esc_html_e( 'Private pages and family API responses use no-store headers. Exclude the tree page, admin-ajax.php and protected media from host/CDN page caching. Purge older public caches after migration.', 'my-family-tree' ); ?></p><p><?php esc_html_e( 'Keep a full backup before protecting files. Protection replaces public family image files with an encrypted vault. The database encryption key and encrypted uploads must be backed up together. Older cached or externally copied photographs cannot be recalled.', 'my-family-tree' ); ?></p></div>
+				<section id="wpmft-privacy" class="wpmft-settings-section"><h2><?php esc_html_e( 'Privacy & access', 'digitalpulse-family-archive' ); ?></h2>
+					<?php self::checkbox( 'password_protection', __( 'Require a family password', 'digitalpulse-family-archive' ), $s ); ?>
+					<label class="wpmft-field"><span><?php esc_html_e( 'Set a new family password', 'digitalpulse-family-archive' ); ?></span><input type="password" name="wpmft[new_password]" autocomplete="new-password" minlength="12" maxlength="256" value=""><small><?php esc_html_e( 'At least 12 characters. Leave blank to keep the current password. The password is stored as a one-way hash.', 'digitalpulse-family-archive' ); ?></small></label>
+					<?php self::field( 'remember_days', __( 'Maximum remembered access (days)', 'digitalpulse-family-archive' ), $s, 'number', array( 'min' => 1, 'max' => 30 ) ); ?>
+					<?php self::checkbox( 'hide_living_dates', __( 'Hide the birth dates of living people in the tree and person dialogs', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::checkbox( 'private_media', __( 'Automatically encrypt family photograph files when people are saved', 'digitalpulse-family-archive' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'Encrypted photographs are served through the family access check. This switch controls protection of new files; disabling it does not make already encrypted photographs public. Use “Protect existing family photos” below to process older files.', 'digitalpulse-family-archive' ); ?></p>
+					<div class="wpmft-admin-note"><p><?php esc_html_e( 'Private pages and family API responses use no-store headers. Exclude the tree page, admin-ajax.php and protected media from host/CDN page caching. Purge older public caches after migration.', 'digitalpulse-family-archive' ); ?></p><p><?php esc_html_e( 'Keep a full backup before protecting files. Protection replaces public family image files with an encrypted vault. The database encryption key and encrypted uploads must be backed up together. Older cached or externally copied photographs cannot be recalled.', 'digitalpulse-family-archive' ); ?></p></div>
 				</section>
-				<section id="wpmft-appearance" class="wpmft-settings-section"><h2><?php esc_html_e( 'Appearance', 'my-family-tree' ); ?></h2>
-					<?php self::field( 'title', __( 'Title (English)', 'my-family-tree' ), $s ); ?>
-					<?php self::field( 'title_lv', __( 'Title (Latvian)', 'my-family-tree' ), $s ); ?>
-					<?php self::field( 'subtitle', __( 'Introduction (English)', 'my-family-tree' ), $s ); ?>
-					<?php self::field( 'subtitle_lv', __( 'Introduction (Latvian)', 'my-family-tree' ), $s ); ?>
-					<div class="wpmft-field-row"><?php self::field( 'accent', __( 'Accent colour', 'my-family-tree' ), $s, 'color' ); ?><?php self::field( 'background', __( 'Background colour', 'my-family-tree' ), $s, 'color' ); ?></div>
-					<?php self::field( 'tree_height', __( 'Tree canvas height on large screens (px)', 'my-family-tree' ), $s, 'number', array( 'min' => 480, 'max' => 1400 ) ); ?>
-					<?php self::checkbox( 'allow_export', __( 'Allow signed-in family visitors to save a tree image and print', 'my-family-tree' ), $s ); ?>
-					<?php self::checkbox( 'show_credit', __( 'Show an optional “Built by DigitalPulse” footer link', 'my-family-tree' ), $s ); ?>
-					<?php self::checkbox( 'app_install', __( 'Show Android and Apple installation options in the footer', 'my-family-tree' ), $s ); ?>
-					<?php self::checkbox( 'app_icons', __( 'Use the included oak leaf favicon and touch icons on the tree page', 'my-family-tree' ), $s ); ?>
+				<section id="wpmft-appearance" class="wpmft-settings-section"><h2><?php esc_html_e( 'Appearance', 'digitalpulse-family-archive' ); ?></h2>
+					<?php self::field( 'title', __( 'Title (English)', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::field( 'title_lv', __( 'Title (Latvian)', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::field( 'subtitle', __( 'Introduction (English)', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::field( 'subtitle_lv', __( 'Introduction (Latvian)', 'digitalpulse-family-archive' ), $s ); ?>
+					<div class="wpmft-field-row"><?php self::field( 'accent', __( 'Accent colour', 'digitalpulse-family-archive' ), $s, 'color' ); ?><?php self::field( 'background', __( 'Background colour', 'digitalpulse-family-archive' ), $s, 'color' ); ?></div>
+					<?php self::field( 'tree_height', __( 'Tree canvas height on large screens (px)', 'digitalpulse-family-archive' ), $s, 'number', array( 'min' => 480, 'max' => 1400 ) ); ?>
+					<?php self::checkbox( 'allow_export', __( 'Allow signed-in family visitors to save a tree image and print', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::checkbox( 'show_credit', __( 'Show an optional “Built by DigitalPulse” footer link', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::checkbox( 'app_install', __( 'Show Android and Apple installation options in the footer', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::checkbox( 'app_icons', __( 'Use the included oak leaf favicon and touch icons on the tree page', 'digitalpulse-family-archive' ), $s ); ?>
 				</section>
-				<section id="wpmft-contact" class="wpmft-settings-section"><h2><?php esc_html_e( 'Contact & hCaptcha', 'my-family-tree' ); ?></h2>
-					<?php self::checkbox( 'contact_enabled', __( 'Enable the Contact Us form', 'my-family-tree' ), $s ); ?>
-					<?php self::field( 'contact_name', __( 'Family administrator name', 'my-family-tree' ), $s ); ?>
-					<?php self::field( 'contact_email', __( 'Family administrator email', 'my-family-tree' ), $s, 'email' ); ?>
-					<?php self::checkbox( 'show_email', __( 'Display the contact email button in the footer', 'my-family-tree' ), $s ); ?>
-					<p class="description"><?php esc_html_e( 'Contact messages use WordPress mail delivery. The form does not save message contents to the family tree database. Your mail provider may retain delivered messages.', 'my-family-tree' ); ?></p>
-					<h3><?php esc_html_e( 'WhatsApp chat', 'my-family-tree' ); ?></h3>
-					<?php self::checkbox( 'whatsapp_enabled', __( 'Show a WhatsApp chat button for the family administrator', 'my-family-tree' ), $s ); ?>
-					<?php self::field( 'whatsapp_phone', __( 'Administrator WhatsApp number', 'my-family-tree' ), $s, 'tel', array( 'maxlength' => 64, 'placeholder' => '+44…' ) ); ?>
-					<p class="description"><?php esc_html_e( 'Use the full international number with country code. This optional button is visible on the tree and sign-in page. WhatsApp opens only when a visitor clicks; no chat script is loaded.', 'my-family-tree' ); ?></p>
-					<h3><?php esc_html_e( 'Contact photo uploads', 'my-family-tree' ); ?></h3>
-					<?php self::checkbox( 'contact_upload_enabled', __( 'Allow one photograph with a contact message', 'my-family-tree' ), $s ); ?>
-					<?php self::field( 'contact_upload_max_mb', __( 'Maximum photograph size (MB)', 'my-family-tree' ), $s, 'number', array( 'min' => 1, 'max' => 100, 'step' => 1 ) ); ?>
-					<p class="description"><?php esc_html_e( 'The default is 10 MB. Choose 1–100 MB; a lower server upload limit still applies. Photographs are emailed to the administrator and are not added to the public media library.', 'my-family-tree' ); ?></p>
-					<fieldset class="wpmft-upload-formats"><legend><?php esc_html_e( 'Allowed photograph formats', 'my-family-tree' ); ?></legend>
+				<section id="wpmft-contact" class="wpmft-settings-section"><h2><?php esc_html_e( 'Contact & hCaptcha', 'digitalpulse-family-archive' ); ?></h2>
+					<?php self::checkbox( 'contact_enabled', __( 'Enable the Contact Us form', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::field( 'contact_name', __( 'Family administrator name', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::field( 'contact_email', __( 'Family administrator email', 'digitalpulse-family-archive' ), $s, 'email' ); ?>
+					<?php self::checkbox( 'show_email', __( 'Display the contact email button in the footer', 'digitalpulse-family-archive' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'Contact messages use WordPress mail delivery. The form does not save message contents to the family tree database. Your mail provider may retain delivered messages.', 'digitalpulse-family-archive' ); ?></p>
+					<h3><?php esc_html_e( 'WhatsApp chat', 'digitalpulse-family-archive' ); ?></h3>
+					<?php self::checkbox( 'whatsapp_enabled', __( 'Show a WhatsApp chat button for the family administrator', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::field( 'whatsapp_phone', __( 'Administrator WhatsApp number', 'digitalpulse-family-archive' ), $s, 'tel', array( 'maxlength' => 64, 'placeholder' => '+44…' ) ); ?>
+					<p class="description"><?php esc_html_e( 'Use the full international number with country code. This optional button is visible on the tree and sign-in page. WhatsApp opens only when a visitor clicks; no chat script is loaded.', 'digitalpulse-family-archive' ); ?></p>
+					<h3><?php esc_html_e( 'Contact photo uploads', 'digitalpulse-family-archive' ); ?></h3>
+					<?php self::checkbox( 'contact_upload_enabled', __( 'Allow one photograph with a contact message', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::field( 'contact_upload_max_mb', __( 'Maximum photograph size (MB)', 'digitalpulse-family-archive' ), $s, 'number', array( 'min' => 1, 'max' => 100, 'step' => 1 ) ); ?>
+					<p class="description"><?php esc_html_e( 'The default is 10 MB. Choose 1–100 MB; a lower server upload limit still applies. Photographs are emailed to the administrator and are not added to the public media library.', 'digitalpulse-family-archive' ); ?></p>
+					<fieldset class="wpmft-upload-formats"><legend><?php esc_html_e( 'Allowed photograph formats', 'digitalpulse-family-archive' ); ?></legend>
 					<?php foreach ( array( 'jpg', 'jpeg', 'png', 'webp', 'gif', 'avif' ) as $format ) : ?><label class="wpmft-check"><input type="checkbox" name="wpmft[contact_upload_formats][]" value="<?php echo esc_attr( $format ); ?>" <?php checked( in_array( $format, (array) $s['contact_upload_formats'], true ) ); ?>><span><?php echo esc_html( strtoupper( $format ) ); ?></span></label><?php endforeach; ?>
 					</fieldset>
-					<p class="description"><?php esc_html_e( 'JPG, JPEG, PNG and WebP are selected by default. GIF and AVIF are optional when the server supports them. At least one format is required; selecting none restores the defaults.', 'my-family-tree' ); ?></p>
-					<?php self::checkbox( 'hcaptcha_enabled', __( 'Enable hCaptcha (external anti-spam service)', 'my-family-tree' ), $s ); ?>
-					<?php self::field( 'hcaptcha_site_key', __( 'hCaptcha site key', 'my-family-tree' ), $s ); ?>
-					<label class="wpmft-field"><span><?php esc_html_e( 'hCaptcha secret key', 'my-family-tree' ); ?></span><input type="password" name="wpmft[hcaptcha_secret]" autocomplete="new-password" value=""><small><?php esc_html_e( 'Leave blank to keep the stored secret. It is never included in the public page.', 'my-family-tree' ); ?></small></label>
-					<?php self::checkbox( 'hcaptcha_login', __( 'Use hCaptcha on the family password form', 'my-family-tree' ), $s ); ?>
-					<?php self::checkbox( 'hcaptcha_contact', __( 'Use hCaptcha on the contact form', 'my-family-tree' ), $s ); ?>
-					<p class="description"><?php esc_html_e( 'When enabled, hCaptcha receives technical browser information and verifies form tokens. Review its service terms and add it to your privacy notice.', 'my-family-tree' ); ?> <a href="https://www.hcaptcha.com/privacy" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Privacy policy', 'my-family-tree' ); ?></a> · <a href="https://www.hcaptcha.com/terms" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Terms', 'my-family-tree' ); ?></a></p>
+					<p class="description"><?php esc_html_e( 'JPG, JPEG, PNG and WebP are selected by default. GIF and AVIF are optional when the server supports them. At least one format is required; selecting none restores the defaults.', 'digitalpulse-family-archive' ); ?></p>
+					<?php self::checkbox( 'hcaptcha_enabled', __( 'Enable hCaptcha (external anti-spam service)', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::field( 'hcaptcha_site_key', __( 'hCaptcha site key', 'digitalpulse-family-archive' ), $s ); ?>
+					<label class="wpmft-field"><span><?php esc_html_e( 'hCaptcha secret key', 'digitalpulse-family-archive' ); ?></span><input type="password" name="wpmft[hcaptcha_secret]" autocomplete="new-password" value=""><small><?php esc_html_e( 'Leave blank to keep the stored secret. It is never included in the public page.', 'digitalpulse-family-archive' ); ?></small></label>
+					<?php self::checkbox( 'hcaptcha_login', __( 'Use hCaptcha on the family password form', 'digitalpulse-family-archive' ), $s ); ?>
+					<?php self::checkbox( 'hcaptcha_contact', __( 'Use hCaptcha on the contact form', 'digitalpulse-family-archive' ), $s ); ?>
+					<p class="description"><?php esc_html_e( 'When enabled, hCaptcha receives technical browser information and verifies form tokens. Review its service terms and add it to your privacy notice.', 'digitalpulse-family-archive' ); ?> <a href="https://www.hcaptcha.com/privacy" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Privacy policy', 'digitalpulse-family-archive' ); ?></a> · <a href="https://www.hcaptcha.com/terms" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Terms', 'digitalpulse-family-archive' ); ?></a></p>
 				</section>
-				<section id="wpmft-performance" class="wpmft-settings-section"><h2><?php esc_html_e( 'Performance & cache', 'my-family-tree' ); ?></h2><?php self::performance_panel( $s ); ?></section>
-				<section id="wpmft-languages" class="wpmft-settings-section"><h2><?php esc_html_e( 'Languages', 'my-family-tree' ); ?></h2><?php WPMFT_Languages::render_panel(); ?></section>
-				<?php if ( WPMFT_Demo::tools_visible() ) : ?><section id="wpmft-demo" class="wpmft-settings-section"><h2><?php esc_html_e( 'Demo', 'my-family-tree' ); ?></h2><?php WPMFT_Demo::render_panel(); ?></section><?php endif; ?>
-				<section id="wpmft-help" class="wpmft-settings-section"><h2><?php esc_html_e( 'Getting started', 'my-family-tree' ); ?></h2><?php self::help(); ?></section>
-				<div class="wpmft-save-bar"><?php submit_button( __( 'Save settings', 'my-family-tree' ), 'primary', 'submit', false ); ?><span><?php esc_html_e( 'Settings belong to the plugin and work independently of your theme.', 'my-family-tree' ); ?></span></div>
+				<section id="wpmft-performance" class="wpmft-settings-section"><h2><?php esc_html_e( 'Performance & cache', 'digitalpulse-family-archive' ); ?></h2><?php self::performance_panel( $s ); ?></section>
+				<section id="wpmft-languages" class="wpmft-settings-section"><h2><?php esc_html_e( 'Languages', 'digitalpulse-family-archive' ); ?></h2><?php WPMFT_Languages::render_panel(); ?></section>
+				<?php if ( WPMFT_Demo::tools_visible() ) : ?><section id="wpmft-demo" class="wpmft-settings-section"><h2><?php esc_html_e( 'Demo', 'digitalpulse-family-archive' ); ?></h2><?php WPMFT_Demo::render_panel(); ?></section><?php endif; ?>
+				<section id="wpmft-help" class="wpmft-settings-section"><h2><?php esc_html_e( 'Getting started', 'digitalpulse-family-archive' ); ?></h2><?php self::help(); ?></section>
+				<div class="wpmft-save-bar"><?php submit_button( __( 'Save settings', 'digitalpulse-family-archive' ), 'primary', 'submit', false ); ?><span><?php esc_html_e( 'Settings belong to the plugin and work independently of your theme.', 'digitalpulse-family-archive' ); ?></span></div>
 			</form>
 			<?php WPMFT_Languages::render_form(); WPMFT_Demo::render_forms(); ?>
 			<form id="wpmft-cache-tool" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"><input type="hidden" name="action" value="wpmft_clear_cache"><?php wp_nonce_field( 'wpmft_clear_cache' ); ?></form>
 			<div class="wpmft-secondary-actions">
-				<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"><input type="hidden" name="action" value="wpmft_create_page"><?php wp_nonce_field( 'wpmft_create_page' ); ?><button class="button" type="submit"><?php esc_html_e( 'Create a tree page', 'my-family-tree' ); ?></button></form>
-				<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"><input type="hidden" name="action" value="wpmft_revoke_sessions"><?php wp_nonce_field( 'wpmft_revoke_sessions' ); ?><button class="button" type="submit"><?php esc_html_e( 'Revoke all remembered access', 'my-family-tree' ); ?></button></form>
-				<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post" id="wpmft-protect-media-form"><input type="hidden" name="action" value="wpmft_protect_media"><?php wp_nonce_field( 'wpmft_protect_media' ); ?><button class="button" type="submit"><?php esc_html_e( 'Protect existing family photos', 'my-family-tree' ); ?></button></form>
+				<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"><input type="hidden" name="action" value="wpmft_create_page"><?php wp_nonce_field( 'wpmft_create_page' ); ?><button class="button" type="submit"><?php esc_html_e( 'Create a tree page', 'digitalpulse-family-archive' ); ?></button></form>
+				<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"><input type="hidden" name="action" value="wpmft_revoke_sessions"><?php wp_nonce_field( 'wpmft_revoke_sessions' ); ?><button class="button" type="submit"><?php esc_html_e( 'Revoke all remembered access', 'digitalpulse-family-archive' ); ?></button></form>
+				<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post" id="wpmft-protect-media-form"><input type="hidden" name="action" value="wpmft_protect_media"><?php wp_nonce_field( 'wpmft_protect_media' ); ?><button class="button" type="submit"><?php esc_html_e( 'Protect existing family photos', 'digitalpulse-family-archive' ); ?></button></form>
 			</div>
 			<p id="wpmft-media-progress" role="status" aria-live="polite"></p>
 		</div>
@@ -488,67 +488,67 @@ final class WPMFT_Admin {
 	private static function performance_panel( $s ) {
 		$status = WPMFT_Cache::status();
 		$cleared = (int) get_option( 'wpmft_cache_cleared_at', 0 );
-		self::checkbox( 'performance_cache', __( 'Cache the internal relationship index', 'my-family-tree' ), $s );
-		self::field( 'cache_ttl', __( 'Cache lifetime (minutes)', 'my-family-tree' ), $s, 'number', array( 'min' => 1, 'max' => 60, 'step' => 1 ) );
+		self::checkbox( 'performance_cache', __( 'Cache the internal relationship index', 'digitalpulse-family-archive' ), $s );
+		self::field( 'cache_ttl', __( 'Cache lifetime (minutes)', 'digitalpulse-family-archive' ), $s, 'number', array( 'min' => 1, 'max' => 60, 'step' => 1 ) );
 		?>
-		<label class="wpmft-field"><span><?php esc_html_e( 'Cache storage', 'my-family-tree' ); ?></span><select name="wpmft[cache_backend]">
-			<?php foreach ( array( 'auto' => __( 'Automatic', 'my-family-tree' ), 'object' => __( 'Persistent object cache', 'my-family-tree' ), 'transient' => __( 'WordPress transients', 'my-family-tree' ) ) as $backend => $label ) : ?><option value="<?php echo esc_attr( $backend ); ?>" <?php selected( $s['cache_backend'], $backend ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?>
-		</select><small><?php esc_html_e( 'Automatic uses the host’s persistent object cache when available. Redis or Memcached must be configured separately by your host; otherwise this plugin uses WordPress transients. No global cache flush is performed.', 'my-family-tree' ); ?></small></label>
-		<?php if ( ! empty( $status['backend_fallback'] ) ) : ?><p class="wpmft-admin-note"><?php esc_html_e( 'A persistent object cache was requested but is not available. WordPress transients are being used safely until a host object cache is active.', 'my-family-tree' ); ?></p><?php endif; ?>
-		<p class="description"><?php esc_html_e( 'The default is 15 minutes. Person and relationship edits refresh the index automatically. Only numeric relationships are stored on the server; personal profiles, photographs and access tokens are not cached by this feature.', 'my-family-tree' ); ?></p>
-		<h3><?php esc_html_e( 'Image quality & modern formats', 'my-family-tree' ); ?></h3>
-		<label class="wpmft-field"><span><?php esc_html_e( 'Family photograph optimization', 'my-family-tree' ); ?></span><select name="wpmft[image_optimization]">
-			<option value="auto" <?php selected( $s['image_optimization'], 'auto' ); ?>><?php esc_html_e( 'Automatic AVIF / WebP when supported', 'my-family-tree' ); ?></option>
-			<option value="off" <?php selected( $s['image_optimization'], 'off' ); ?>><?php esc_html_e( 'Use existing WordPress image sizes', 'my-family-tree' ); ?></option>
+		<label class="wpmft-field"><span><?php esc_html_e( 'Cache storage', 'digitalpulse-family-archive' ); ?></span><select name="wpmft[cache_backend]">
+			<?php foreach ( array( 'auto' => __( 'Automatic', 'digitalpulse-family-archive' ), 'object' => __( 'Persistent object cache', 'digitalpulse-family-archive' ), 'transient' => __( 'WordPress transients', 'digitalpulse-family-archive' ) ) as $backend => $label ) : ?><option value="<?php echo esc_attr( $backend ); ?>" <?php selected( $s['cache_backend'], $backend ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?>
+		</select><small><?php esc_html_e( 'Automatic uses the host’s persistent object cache when available. Redis or Memcached must be configured separately by your host; otherwise this plugin uses WordPress transients. No global cache flush is performed.', 'digitalpulse-family-archive' ); ?></small></label>
+		<?php if ( ! empty( $status['backend_fallback'] ) ) : ?><p class="wpmft-admin-note"><?php esc_html_e( 'A persistent object cache was requested but is not available. WordPress transients are being used safely until a host object cache is active.', 'digitalpulse-family-archive' ); ?></p><?php endif; ?>
+		<p class="description"><?php esc_html_e( 'The default is 15 minutes. Person and relationship edits refresh the index automatically. Only numeric relationships are stored on the server; personal profiles, photographs and access tokens are not cached by this feature.', 'digitalpulse-family-archive' ); ?></p>
+		<h3><?php esc_html_e( 'Image quality & modern formats', 'digitalpulse-family-archive' ); ?></h3>
+		<label class="wpmft-field"><span><?php esc_html_e( 'Family photograph optimization', 'digitalpulse-family-archive' ); ?></span><select name="wpmft[image_optimization]">
+			<option value="auto" <?php selected( $s['image_optimization'], 'auto' ); ?>><?php esc_html_e( 'Automatic AVIF / WebP when supported', 'digitalpulse-family-archive' ); ?></option>
+			<option value="off" <?php selected( $s['image_optimization'], 'off' ); ?>><?php esc_html_e( 'Use existing WordPress image sizes', 'digitalpulse-family-archive' ); ?></option>
 		</select></label>
-		<?php self::field( 'image_quality', __( 'Optimized image quality', 'my-family-tree' ), $s, 'number', array( 'min' => 60, 'max' => 92, 'step' => 1 ) ); ?>
-		<p class="description"><?php esc_html_e( 'The default quality is 82. Smaller display copies are prepared in the background after person edits; full-size originals are retained. Galleries load responsive previews first and the large image when opened. Animated images keep their original format.', 'my-family-tree' ); ?></p>
+		<?php self::field( 'image_quality', __( 'Optimized image quality', 'digitalpulse-family-archive' ), $s, 'number', array( 'min' => 60, 'max' => 92, 'step' => 1 ) ); ?>
+		<p class="description"><?php esc_html_e( 'The default quality is 82. Smaller display copies are prepared in the background after person edits; full-size originals are retained. Galleries load responsive previews first and the large image when opened. Animated images keep their original format.', 'digitalpulse-family-archive' ); ?></p>
 		<?php $image_support = WPMFT_Media::optimization_support(); ?>
-		<p class="wpmft-admin-note"><strong><?php esc_html_e( 'Available server encoders:', 'my-family-tree' ); ?></strong> <?php echo esc_html( implode( ', ', array_keys( array_filter( array( 'AVIF' => $image_support['avif'], 'WebP' => $image_support['webp'] ) ) ) ) ?: __( 'No modern image encoder is available; existing image sizes are used.', 'my-family-tree' ) ); ?></p>
+		<p class="wpmft-admin-note"><strong><?php esc_html_e( 'Available server encoders:', 'digitalpulse-family-archive' ); ?></strong> <?php echo esc_html( implode( ', ', array_keys( array_filter( array( 'AVIF' => $image_support['avif'], 'WebP' => $image_support['webp'] ) ) ) ) ?: __( 'No modern image encoder is available; existing image sizes are used.', 'digitalpulse-family-archive' ) ); ?></p>
 		<div class="wpmft-admin-actions">
-			<button type="button" class="button" id="wpmft-optimize-images" <?php disabled( 'off' === $s['image_optimization'] || ! array_filter( $image_support ) ); ?>><?php esc_html_e( 'Prepare existing family photographs', 'my-family-tree' ); ?></button>
-			<button type="button" class="button" id="wpmft-pause-image-optimization" hidden><?php esc_html_e( 'Pause', 'my-family-tree' ); ?></button>
+			<button type="button" class="button" id="wpmft-optimize-images" <?php disabled( 'off' === $s['image_optimization'] || ! array_filter( $image_support ) ); ?>><?php esc_html_e( 'Prepare existing family photographs', 'digitalpulse-family-archive' ); ?></button>
+			<button type="button" class="button" id="wpmft-pause-image-optimization" hidden><?php esc_html_e( 'Pause', 'digitalpulse-family-archive' ); ?></button>
 		</div>
 		<p id="wpmft-image-optimization-status" class="wpmft-gallery-status" role="status" aria-live="polite"></p>
-		<p class="description"><?php esc_html_e( 'Save settings before preparing existing photographs. The tool processes small batches and can be paused. Optimized private photographs use the same protected delivery as the originals; no external image service is used.', 'my-family-tree' ); ?></p>
-		<h3><?php esc_html_e( 'WordPress cleanup', 'my-family-tree' ); ?></h3>
-		<?php self::checkbox( 'disable_comments', __( 'Disable comments and pingbacks on posts, pages and media', 'my-family-tree' ), $s ); ?>
-		<p class="description"><?php esc_html_e( 'Existing comments are retained for administrators. Custom post type reviews and order notes are unaffected.', 'my-family-tree' ); ?></p>
-		<?php self::checkbox( 'disable_emojis', __( 'Remove WordPress emoji scripts and styles', 'my-family-tree' ), $s ); ?>
-		<p class="description"><?php esc_html_e( 'Native device emoji still work. WordPress fallback detection, styles and external emoji hints are removed.', 'my-family-tree' ); ?></p>
-		<?php self::checkbox( 'clean_head', __( 'Remove unnecessary WordPress head tags', 'my-family-tree' ), $s ); ?>
-		<p class="description"><?php esc_html_e( 'Removes generator, RSD, Windows Live Writer and shortlink tags. Full-window family pages also omit feed and embed discovery links. Canonical URLs, language links and privacy directives are kept.', 'my-family-tree' ); ?></p>
-		<h3><?php esc_html_e( 'Page source and assets', 'my-family-tree' ); ?></h3>
-		<?php self::checkbox( 'minify_assets', __( 'Use minified plugin JavaScript and CSS', 'my-family-tree' ), $s ); ?>
-		<p class="description"><?php esc_html_e( 'Readable source files remain included. SCRIPT_DEBUG uses the readable files automatically.', 'my-family-tree' ); ?></p>
-		<?php self::checkbox( 'minify_html', __( 'Compact the full-window page HTML', 'my-family-tree' ), $s ); ?>
-		<p class="description"><?php esc_html_e( 'Reduces whitespace between tags while preserving inline spacing, scripts, styles and preformatted content. Admin pages and API responses are excluded.', 'my-family-tree' ); ?></p>
-		<?php self::checkbox( 'lean_standalone', __( 'Use lean styles on full-window tree pages', 'my-family-tree' ), $s ); ?>
-		<p class="description"><?php esc_html_e( 'Optional: omit theme styles, global presets and theme fonts. Keep this off when biographies or other page content use theme-styled blocks. Core block styles remain available; embedded pages retain their theme styling.', 'my-family-tree' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Save settings before preparing existing photographs. The tool processes small batches and can be paused. Optimized private photographs use the same protected delivery as the originals; no external image service is used.', 'digitalpulse-family-archive' ); ?></p>
+		<h3><?php esc_html_e( 'WordPress cleanup', 'digitalpulse-family-archive' ); ?></h3>
+		<?php self::checkbox( 'disable_comments', __( 'Disable comments and pingbacks on posts, pages and media', 'digitalpulse-family-archive' ), $s ); ?>
+		<p class="description"><?php esc_html_e( 'Existing comments are retained for administrators. Custom post type reviews and order notes are unaffected.', 'digitalpulse-family-archive' ); ?></p>
+		<?php self::checkbox( 'disable_emojis', __( 'Remove WordPress emoji scripts and styles', 'digitalpulse-family-archive' ), $s ); ?>
+		<p class="description"><?php esc_html_e( 'Native device emoji still work. WordPress fallback detection, styles and external emoji hints are removed.', 'digitalpulse-family-archive' ); ?></p>
+		<?php self::checkbox( 'clean_head', __( 'Remove unnecessary WordPress head tags', 'digitalpulse-family-archive' ), $s ); ?>
+		<p class="description"><?php esc_html_e( 'Removes generator, RSD, Windows Live Writer and shortlink tags. Full-window family pages also omit feed and embed discovery links. Canonical URLs, language links and privacy directives are kept.', 'digitalpulse-family-archive' ); ?></p>
+		<h3><?php esc_html_e( 'Page source and assets', 'digitalpulse-family-archive' ); ?></h3>
+		<?php self::checkbox( 'minify_assets', __( 'Use minified plugin JavaScript and CSS', 'digitalpulse-family-archive' ), $s ); ?>
+		<p class="description"><?php esc_html_e( 'Readable source files remain included. SCRIPT_DEBUG uses the readable files automatically.', 'digitalpulse-family-archive' ); ?></p>
+		<?php self::checkbox( 'minify_html', __( 'Compact the full-window page HTML', 'digitalpulse-family-archive' ), $s ); ?>
+		<p class="description"><?php esc_html_e( 'Reduces whitespace between tags while preserving inline spacing, scripts, styles and preformatted content. Admin pages and API responses are excluded.', 'digitalpulse-family-archive' ); ?></p>
+		<?php self::checkbox( 'lean_standalone', __( 'Use lean styles on full-window tree pages', 'digitalpulse-family-archive' ), $s ); ?>
+		<p class="description"><?php esc_html_e( 'Optional: omit theme styles, global presets and theme fonts. Keep this off when biographies or other page content use theme-styled blocks. Core block styles remain available; embedded pages retain their theme styling.', 'digitalpulse-family-archive' ); ?></p>
 		<div class="wpmft-cache-panel">
-			<h3><?php esc_html_e( 'Cache tools', 'my-family-tree' ); ?></h3>
+			<h3><?php esc_html_e( 'Cache tools', 'digitalpulse-family-archive' ); ?></h3>
 			<dl class="wpmft-cache-status">
-				<dt><?php esc_html_e( 'Index cache', 'my-family-tree' ); ?></dt><dd><?php echo esc_html( ! $status['enabled'] ? __( 'Disabled', 'my-family-tree' ) : ( $status['warm'] ? __( 'Ready', 'my-family-tree' ) : __( 'Builds on the next tree request', 'my-family-tree' ) ) ); ?></dd>
-				<dt><?php esc_html_e( 'Storage', 'my-family-tree' ); ?></dt><dd><?php echo esc_html( $status['persistent_object_cache'] ? __( 'Persistent WordPress object cache', 'my-family-tree' ) : __( 'WordPress database transients', 'my-family-tree' ) ); ?></dd>
-				<dt><?php esc_html_e( 'Last manual clear', 'my-family-tree' ); ?></dt><dd><?php echo esc_html( $cleared ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $cleared ) : __( 'Not cleared yet', 'my-family-tree' ) ); ?></dd>
+				<dt><?php esc_html_e( 'Index cache', 'digitalpulse-family-archive' ); ?></dt><dd><?php echo esc_html( ! $status['enabled'] ? __( 'Disabled', 'digitalpulse-family-archive' ) : ( $status['warm'] ? __( 'Ready', 'digitalpulse-family-archive' ) : __( 'Builds on the next tree request', 'digitalpulse-family-archive' ) ) ); ?></dd>
+				<dt><?php esc_html_e( 'Storage', 'digitalpulse-family-archive' ); ?></dt><dd><?php echo esc_html( $status['persistent_object_cache'] ? __( 'Persistent WordPress object cache', 'digitalpulse-family-archive' ) : __( 'WordPress database transients', 'digitalpulse-family-archive' ) ); ?></dd>
+				<dt><?php esc_html_e( 'Last manual clear', 'digitalpulse-family-archive' ); ?></dt><dd><?php echo esc_html( $cleared ? wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $cleared ) : __( 'Not cleared yet', 'digitalpulse-family-archive' ) ); ?></dd>
 			</dl>
-			<button class="button button-secondary" type="submit" form="wpmft-cache-tool"><?php esc_html_e( 'Clear Family Tree cache', 'my-family-tree' ); ?></button>
-			<p><?php esc_html_e( 'Clears this plugin’s index and refreshes its static asset URLs. Passwords, remembered access, anti-spam limits and protected media are retained. Host, CDN and other plugins’ caches are managed separately.', 'my-family-tree' ); ?></p>
-			<p class="description"><?php esc_html_e( 'Save changed settings before using the cache tool. Private family pages and API responses continue to use no-store headers.', 'my-family-tree' ); ?></p>
+			<button class="button button-secondary" type="submit" form="wpmft-cache-tool"><?php esc_html_e( 'Clear Family Tree cache', 'digitalpulse-family-archive' ); ?></button>
+			<p><?php esc_html_e( 'Clears this plugin’s index and refreshes its static asset URLs. Passwords, remembered access, anti-spam limits and protected media are retained. Host, CDN and other plugins’ caches are managed separately.', 'digitalpulse-family-archive' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Save changed settings before using the cache tool. Private family pages and API responses continue to use no-store headers.', 'digitalpulse-family-archive' ); ?></p>
 		</div>
 		<?php
 	}
 
 	public static function clear_cache() {
-		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_die( esc_html__( 'A POST request is required.', 'my-family-tree' ), '', array( 'response' => 405 ) ); }
+		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_die( esc_html__( 'A POST request is required.', 'digitalpulse-family-archive' ), '', array( 'response' => 405 ) ); }
 		self::require_admin( 'wpmft_clear_cache' );
 		WPMFT_Cache::purge();
 		self::redirect( 'cache', 'performance' );
 	}
 
 	public static function optimize_media_ajax() {
-		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_send_json_error( array( 'message' => __( 'A POST request is required.', 'my-family-tree' ) ), 405 ); }
-		if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( array( 'message' => __( 'Access denied.', 'my-family-tree' ) ), 403 ); }
+		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_send_json_error( array( 'message' => __( 'A POST request is required.', 'digitalpulse-family-archive' ) ), 405 ); }
+		if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( array( 'message' => __( 'Access denied.', 'digitalpulse-family-archive' ) ), 403 ); }
 		check_ajax_referer( 'wpmft_optimize_media', 'nonce' );
 		if ( isset( $_POST['op'] ) && is_string( $_POST['op'] ) && 'status' === sanitize_key( wp_unslash( $_POST['op'] ) ) ) { wp_send_json_success( WPMFT_Media::optimization_status() ); }
 		$after = isset( $_POST['after'] ) && is_scalar( $_POST['after'] ) ? absint( $_POST['after'] ) : 0;
@@ -682,10 +682,10 @@ final class WPMFT_Admin {
 	}
 
 	public static function protect_media_ajax() {
-		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_send_json_error( array( 'message' => __( 'A POST request is required.', 'my-family-tree' ) ), 405 ); }
-		if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( array( 'message' => __( 'Access denied.', 'my-family-tree' ) ), 403 ); }
+		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) { wp_send_json_error( array( 'message' => __( 'A POST request is required.', 'digitalpulse-family-archive' ) ), 405 ); }
+		if ( ! current_user_can( 'manage_options' ) ) { wp_send_json_error( array( 'message' => __( 'Access denied.', 'digitalpulse-family-archive' ) ), 403 ); }
 		check_ajax_referer( 'wpmft_protect_media', 'nonce' );
-		if ( ! class_exists( 'WPMFT_Media' ) ) { wp_send_json_error( array( 'message' => __( 'The protected media service is not available.', 'my-family-tree' ) ), 500 ); }
+		if ( ! class_exists( 'WPMFT_Media' ) ) { wp_send_json_error( array( 'message' => __( 'The protected media service is not available.', 'digitalpulse-family-archive' ) ), 500 ); }
 		$result = WPMFT_Media::protect_batch( 10 );
 		wp_send_json_success( array(
 			'processed' => isset( $result['processed'] ) ? absint( $result['processed'] ) : 0,
@@ -699,7 +699,7 @@ final class WPMFT_Admin {
 			remove_meta_box( 'postimagediv', 'post', 'side' );
 			return;
 		}
-		add_meta_box( 'wpmft-person', __( 'Family tree — person details', 'my-family-tree' ), array( __CLASS__, 'person_box' ), 'post', 'normal', 'high', array( '__block_editor_compatible_meta_box' => true ) );
+		add_meta_box( 'wpmft-person', __( 'Family tree — person details', 'digitalpulse-family-archive' ), array( __CLASS__, 'person_box' ), 'post', 'normal', 'high', array( '__block_editor_compatible_meta_box' => true ) );
 	}
 
 	private static function person_picker( $id, $name, $value, $label, $multiple = false ) {
@@ -707,30 +707,30 @@ final class WPMFT_Admin {
 		if ( ! $multiple ) { $values = array_slice( $values, 0, 1 ); }
 		echo '<div class="wpmft-person-picker" data-multiple="' . ( $multiple ? '1' : '0' ) . '"><label for="' . esc_attr( $id ) . '-search">' . esc_html( $label ) . '</label><input type="hidden" name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( implode( ',', $values ) ) . '"><div class="wpmft-person-selection">';
 		foreach ( $values as $person_id ) {
-			echo '<span class="wpmft-person-chip" data-id="' . absint( $person_id ) . '"><span>' . esc_html( get_the_title( $person_id ) ) . ' <small>#' . absint( $person_id ) . '</small></span><button type="button" class="wpmft-remove-person" aria-label="' . esc_attr__( 'Remove selected person', 'my-family-tree' ) . '">×</button></span>';
+			echo '<span class="wpmft-person-chip" data-id="' . absint( $person_id ) . '"><span>' . esc_html( get_the_title( $person_id ) ) . ' <small>#' . absint( $person_id ) . '</small></span><button type="button" class="wpmft-remove-person" aria-label="' . esc_attr__( 'Remove selected person', 'digitalpulse-family-archive' ) . '">×</button></span>';
 		}
-		echo '</div><input type="search" id="' . esc_attr( $id ) . '-search" class="wpmft-person-search" autocomplete="off" placeholder="' . esc_attr__( 'Search by name…', 'my-family-tree' ) . '" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="' . esc_attr( $id ) . '-results"><div class="wpmft-person-results" id="' . esc_attr( $id ) . '-results" role="listbox" hidden></div><span class="wpmft-search-status screen-reader-text" aria-live="polite"></span></div>';
+		echo '</div><input type="search" id="' . esc_attr( $id ) . '-search" class="wpmft-person-search" autocomplete="off" placeholder="' . esc_attr__( 'Search by name…', 'digitalpulse-family-archive' ) . '" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="' . esc_attr( $id ) . '-results"><div class="wpmft-person-results" id="' . esc_attr( $id ) . '-results" role="listbox" hidden></div><span class="wpmft-search-status screen-reader-text" aria-live="polite"></span></div>';
 	}
 
 	private static function partner_labels() {
 		return array(
-			'' => __( 'Not specified', 'my-family-tree' ),
-			'together' => __( 'Together / current partners', 'my-family-tree' ),
-			'divorced' => __( 'Divorced', 'my-family-tree' ),
-			'separated' => __( 'Separated', 'my-family-tree' ),
-			'former' => __( 'Former partners', 'my-family-tree' ),
+			'' => __( 'Not specified', 'digitalpulse-family-archive' ),
+			'together' => __( 'Together / current partners', 'digitalpulse-family-archive' ),
+			'divorced' => __( 'Divorced', 'digitalpulse-family-archive' ),
+			'separated' => __( 'Separated', 'digitalpulse-family-archive' ),
+			'former' => __( 'Former partners', 'digitalpulse-family-archive' ),
 		);
 	}
 
 	private static function partner_row( $slot, $person = 0, $status = '', $note = '' ) {
 		$prefix = 'wpmft_person[partners][' . $slot . ']';
 		echo '<div class="wpmft-partner-row">';
-		self::person_picker( 'wpmft-partner-' . $slot, $prefix . '[person]', $person, __( 'Partner / co-parent', 'my-family-tree' ) );
-		echo '<label class="wpmft-field"><span>' . esc_html__( 'Relationship status', 'my-family-tree' ) . '</span><select name="' . esc_attr( $prefix . '[status]' ) . '">';
+		self::person_picker( 'wpmft-partner-' . $slot, $prefix . '[person]', $person, __( 'Partner / co-parent', 'digitalpulse-family-archive' ) );
+		echo '<label class="wpmft-field"><span>' . esc_html__( 'Relationship status', 'digitalpulse-family-archive' ) . '</span><select name="' . esc_attr( $prefix . '[status]' ) . '">';
 		foreach ( self::partner_labels() as $value => $label ) { echo '<option value="' . esc_attr( $value ) . '" ' . selected( $status, $value, false ) . '>' . esc_html( $label ) . '</option>'; }
-		echo '</select></label><button type="button" class="button wpmft-remove-partner">' . esc_html__( 'Remove relationship row', 'my-family-tree' ) . '</button>';
+		echo '</select></label><button type="button" class="button wpmft-remove-partner">' . esc_html__( 'Remove relationship row', 'digitalpulse-family-archive' ) . '</button>';
 		if ( $note ) { echo '<p class="description wpmft-partner-note">' . esc_html( $note ) . '</p>'; }
-		if ( $person && current_user_can( 'edit_post', $person ) ) { echo '<a class="wpmft-partner-edit" href="' . esc_url( get_edit_post_link( $person, 'raw' ) ) . '">' . esc_html__( 'Edit the other person’s record', 'my-family-tree' ) . '</a>'; }
+		if ( $person && current_user_can( 'edit_post', $person ) ) { echo '<a class="wpmft-partner-edit" href="' . esc_url( get_edit_post_link( $person, 'raw' ) ) . '">' . esc_html__( 'Edit the other person’s record', 'digitalpulse-family-archive' ) . '</a>'; }
 		echo '</div>';
 	}
 
@@ -748,24 +748,24 @@ final class WPMFT_Admin {
 			if ( ! in_array( $status, array( 'together', 'divorced', 'separated', 'former' ), true ) ) { $status = ''; }
 			$note = '';
 			if ( $status && ! isset( $own[$person] ) ) {
-				$note = __( 'This status comes from the other person’s record. Removing this row does not change their record.', 'my-family-tree' );
+				$note = __( 'This status comes from the other person’s record. Removing this row does not change their record.', 'digitalpulse-family-archive' );
 			} elseif ( $status && isset( $effective[$person] ) && $status !== $effective[$person] ) {
-				$note = __( 'The two records have different statuses. A former relationship takes priority; update both records to resolve the difference.', 'my-family-tree' );
+				$note = __( 'The two records have different statuses. A former relationship takes priority; update both records to resolve the difference.', 'digitalpulse-family-archive' );
 			}
 			$rows[$person] = array( 'status' => $status, 'note' => $note );
 		}
 		?>
 		<section class="wpmft-partner-editor" data-next-index="<?php echo count( $rows ); ?>">
-			<h3><?php esc_html_e( 'Partner relationships', 'my-family-tree' ); ?></h3>
-			<p class="description"><?php esc_html_e( 'Choose Together for a current partner and rings in the tree. Shared children alone never imply a current relationship.', 'my-family-tree' ); ?></p>
-			<p class="description"><?php esc_html_e( 'Divorced, separated and former partners are hidden from each other’s own tree. Both recorded parents remain visible when their child is selected.', 'my-family-tree' ); ?></p>
+			<h3><?php esc_html_e( 'Partner relationships', 'digitalpulse-family-archive' ); ?></h3>
+			<p class="description"><?php esc_html_e( 'Choose Together for a current partner and rings in the tree. Shared children alone never imply a current relationship.', 'digitalpulse-family-archive' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Divorced, separated and former partners are hidden from each other’s own tree. Both recorded parents remain visible when their child is selected.', 'digitalpulse-family-archive' ); ?></p>
 			<input type="hidden" name="wpmft_person[partner_status_present]" value="1">
 			<div class="wpmft-partner-rows">
 				<?php $slot = 0; foreach ( $rows as $person => $row ) { self::partner_row( $slot++, $person, $row['status'], $row['note'] ); } ?>
 			</div>
-			<button type="button" class="button wpmft-add-partner"><?php esc_html_e( 'Add partner relationship', 'my-family-tree' ); ?></button>
+			<button type="button" class="button wpmft-add-partner"><?php esc_html_e( 'Add partner relationship', 'digitalpulse-family-archive' ); ?></button>
 			<p class="wpmft-partner-status screen-reader-text" role="status"></p>
-			<p class="description"><?php esc_html_e( 'Only this person’s record is saved. To change a status stored on both records, update both people. Choosing Not specified removes this record’s status without removing a partner or parent selected above.', 'my-family-tree' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Only this person’s record is saved. To change a status stored on both records, update both people. Choosing Not specified removes this record’s status without removing a partner or parent selected above.', 'digitalpulse-family-archive' ); ?></p>
 			<template class="wpmft-partner-template"><?php self::partner_row( '__ROW__' ); ?></template>
 		</section>
 		<?php
@@ -778,54 +778,54 @@ final class WPMFT_Admin {
 		?>
 		<div class="wpmft-person-editor" data-classic-person="<?php echo $is_classic ? '1' : '0'; ?>">
 			<?php self::language_control(); ?>
-			<label class="wpmft-check"><input type="checkbox" name="wpmft_person[enabled]" value="1" <?php checked( $is_person ); ?>><span><?php esc_html_e( 'Include this post as a person in the family tree', 'my-family-tree' ); ?></span></label>
-			<p class="description"><?php esc_html_e( 'Use the post title for the person’s full name and the biography editor for their story. Parent, partner and date fields reuse your existing WP Family Tree data.', 'my-family-tree' ); ?></p>
+			<label class="wpmft-check"><input type="checkbox" name="wpmft_person[enabled]" value="1" <?php checked( $is_person ); ?>><span><?php esc_html_e( 'Include this post as a person in the family tree', 'digitalpulse-family-archive' ); ?></span></label>
+			<p class="description"><?php esc_html_e( 'Use the post title for the person’s full name and the biography editor for their story. Parent, partner and date fields reuse your existing WP Family Tree data.', 'digitalpulse-family-archive' ); ?></p>
 			<?php if ( $is_classic ) : $portrait = get_post_thumbnail_id( $post->ID ); ?>
 			<div class="wpmft-portrait-editor">
 				<input type="hidden" id="wpmft-portrait-id" name="wpmft_person[_thumbnail_id]" value="<?php echo absint( $portrait ); ?>">
 				<div id="wpmft-portrait-preview" class="wpmft-portrait-preview"><?php if ( $portrait ) { echo wp_get_attachment_image( $portrait, 'medium' ); } else { echo '<span class="dashicons dashicons-admin-users" aria-hidden="true"></span>'; } ?></div>
-				<div><h3><?php esc_html_e( 'Portrait', 'my-family-tree' ); ?></h3><p class="description"><?php esc_html_e( 'The portrait is the post’s featured image. Faces stay at the top of photo frames.', 'my-family-tree' ); ?></p>
+				<div><h3><?php esc_html_e( 'Portrait', 'digitalpulse-family-archive' ); ?></h3><p class="description"><?php esc_html_e( 'The portrait is the post’s featured image. Faces stay at the top of photo frames.', 'digitalpulse-family-archive' ); ?></p>
 					<div class="wpmft-portrait-actions">
-						<button type="button" class="button" id="wpmft-choose-portrait"><?php esc_html_e( 'Choose a portrait', 'my-family-tree' ); ?></button>
-						<button type="button" class="button wpmft-remove-portrait" id="wpmft-remove-portrait" <?php echo $portrait ? '' : 'hidden'; ?>><span class="dashicons dashicons-no-alt" aria-hidden="true"></span><?php esc_html_e( 'Remove portrait', 'my-family-tree' ); ?></button>
+						<button type="button" class="button" id="wpmft-choose-portrait"><?php esc_html_e( 'Choose a portrait', 'digitalpulse-family-archive' ); ?></button>
+						<button type="button" class="button wpmft-remove-portrait" id="wpmft-remove-portrait" <?php echo $portrait ? '' : 'hidden'; ?>><span class="dashicons dashicons-no-alt" aria-hidden="true"></span><?php esc_html_e( 'Remove portrait', 'digitalpulse-family-archive' ); ?></button>
 					</div>
 					<p id="wpmft-portrait-status" class="screen-reader-text" role="status"></p>
 				</div>
 			</div>
 			<?php endif; ?>
-			<h3><?php esc_html_e( 'Personal details', 'my-family-tree' ); ?></h3>
+			<h3><?php esc_html_e( 'Personal details', 'digitalpulse-family-archive' ); ?></h3>
 			<div class="wpmft-person-grid">
-				<label class="wpmft-field"><span><?php esc_html_e( 'Gender', 'my-family-tree' ); ?></span><select name="wpmft_person[gender]">
-				<?php foreach ( array( '' => __( 'Not specified', 'my-family-tree' ), 'm' => __( 'Male', 'my-family-tree' ), 'f' => __( 'Female', 'my-family-tree' ), 'x' => __( 'Other', 'my-family-tree' ) ) as $value => $label ) : ?><option value="<?php echo esc_attr( $value ); ?>" <?php selected( get_post_meta( $post->ID, 'gender', true ), $value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?>
+				<label class="wpmft-field"><span><?php esc_html_e( 'Gender', 'digitalpulse-family-archive' ); ?></span><select name="wpmft_person[gender]">
+				<?php foreach ( array( '' => __( 'Not specified', 'digitalpulse-family-archive' ), 'm' => __( 'Male', 'digitalpulse-family-archive' ), 'f' => __( 'Female', 'digitalpulse-family-archive' ), 'x' => __( 'Other', 'digitalpulse-family-archive' ) ) as $value => $label ) : ?><option value="<?php echo esc_attr( $value ); ?>" <?php selected( get_post_meta( $post->ID, 'gender', true ), $value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?>
 				</select></label>
-				<?php foreach ( array( 'born' => __( 'Date of birth', 'my-family-tree' ), 'died' => __( 'Date of death (leave blank if living)', 'my-family-tree' ), '_wpmft_name_day' => __( 'Name day override (MM-DD, optional)', 'my-family-tree' ), '_wpmft_maiden_name' => __( 'Birth / maiden name', 'my-family-tree' ), '_wpmft_birth_place' => __( 'Birthplace', 'my-family-tree' ), '_wpmft_death_place' => __( 'Place of death', 'my-family-tree' ), '_wpmft_location' => __( 'Location', 'my-family-tree' ), '_wpmft_occupation' => __( 'Occupation', 'my-family-tree' ) ) as $key => $label ) : ?>
+				<?php foreach ( array( 'born' => __( 'Date of birth', 'digitalpulse-family-archive' ), 'died' => __( 'Date of death (leave blank if living)', 'digitalpulse-family-archive' ), '_wpmft_name_day' => __( 'Name day override (MM-DD, optional)', 'digitalpulse-family-archive' ), '_wpmft_maiden_name' => __( 'Birth / maiden name', 'digitalpulse-family-archive' ), '_wpmft_birth_place' => __( 'Birthplace', 'digitalpulse-family-archive' ), '_wpmft_death_place' => __( 'Place of death', 'digitalpulse-family-archive' ), '_wpmft_location' => __( 'Location', 'digitalpulse-family-archive' ), '_wpmft_occupation' => __( 'Occupation', 'digitalpulse-family-archive' ) ) as $key => $label ) : ?>
 				<label class="wpmft-field"><span><?php echo esc_html( $label ); ?></span><input type="text" name="wpmft_person[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( get_post_meta( $post->ID, $key, true ) ); ?>" maxlength="250" <?php echo in_array( $key, array( 'born', 'died' ), true ) ? 'placeholder="YYYY-MM-DD"' : ''; ?>></label>
 				<?php endforeach; ?>
 			</div>
-			<p class="description"><?php esc_html_e( 'Dates accept YYYY, YYYY-MM or YYYY-MM-DD. Older date text is retained unless you change it.', 'my-family-tree' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Dates accept YYYY, YYYY-MM or YYYY-MM-DD. Older date text is retained unless you change it.', 'digitalpulse-family-archive' ); ?></p>
 			<div class="wpmft-person-grid">
-			<?php foreach ( array( 'father' => __( 'Father / parent 1', 'my-family-tree' ), 'mother' => __( 'Mother / parent 2', 'my-family-tree' ), 'spouse' => __( 'Primary spouse / partner', 'my-family-tree' ) ) as $key => $label ) { self::person_picker( 'wpmft-' . $key, 'wpmft_person[' . $key . ']', get_post_meta( $post->ID, $key, true ), $label ); } ?>
-			<?php self::person_picker( 'wpmft-spouses', 'wpmft_person[_wpmft_spouses]', get_post_meta( $post->ID, '_wpmft_spouses', true ), __( 'Other spouses / partners', 'my-family-tree' ), true ); ?>
+			<?php foreach ( array( 'father' => __( 'Father / parent 1', 'digitalpulse-family-archive' ), 'mother' => __( 'Mother / parent 2', 'digitalpulse-family-archive' ), 'spouse' => __( 'Primary spouse / partner', 'digitalpulse-family-archive' ) ) as $key => $label ) { self::person_picker( 'wpmft-' . $key, 'wpmft_person[' . $key . ']', get_post_meta( $post->ID, $key, true ), $label ); } ?>
+			<?php self::person_picker( 'wpmft-spouses', 'wpmft_person[_wpmft_spouses]', get_post_meta( $post->ID, '_wpmft_spouses', true ), __( 'Other spouses / partners', 'digitalpulse-family-archive' ), true ); ?>
 			</div>
 			<?php self::partner_editor( $post->ID ); ?>
-			<section class="wpmft-contact-details"><h3><?php esc_html_e( 'Contact details', 'my-family-tree' ); ?></h3>
-				<p class="description"><?php esc_html_e( 'Only add details this person is comfortable sharing with everyone who can access the family tree.', 'my-family-tree' ); ?></p>
+			<section class="wpmft-contact-details"><h3><?php esc_html_e( 'Contact details', 'digitalpulse-family-archive' ); ?></h3>
+				<p class="description"><?php esc_html_e( 'Only add details this person is comfortable sharing with everyone who can access the family tree.', 'digitalpulse-family-archive' ); ?></p>
 				<div class="wpmft-person-grid">
-				<?php foreach ( array( '_wpmft_email' => array( __( 'Email address', 'my-family-tree' ), 'email', 254 ), '_wpmft_phone' => array( __( 'Telephone', 'my-family-tree' ), 'tel', 64 ), '_wpmft_mobile' => array( __( 'Mobile phone', 'my-family-tree' ), 'tel', 64 ), '_wpmft_website' => array( __( 'Website', 'my-family-tree' ), 'url', 2048 ) ) as $key => $field ) : ?>
+				<?php foreach ( array( '_wpmft_email' => array( __( 'Email address', 'digitalpulse-family-archive' ), 'email', 254 ), '_wpmft_phone' => array( __( 'Telephone', 'digitalpulse-family-archive' ), 'tel', 64 ), '_wpmft_mobile' => array( __( 'Mobile phone', 'digitalpulse-family-archive' ), 'tel', 64 ), '_wpmft_website' => array( __( 'Website', 'digitalpulse-family-archive' ), 'url', 2048 ) ) as $key => $field ) : ?>
 					<label class="wpmft-field"><span><?php echo esc_html( $field[0] ); ?></span><input type="<?php echo esc_attr( $field[1] ); ?>" name="wpmft_person[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( get_post_meta( $post->ID, $key, true ) ); ?>" maxlength="<?php echo absint( $field[2] ); ?>" <?php echo 'url' === $field[1] ? 'placeholder="https://"' : ''; ?>></label>
 				<?php endforeach; ?>
-					<label class="wpmft-field wpmft-field-wide"><span><?php esc_html_e( 'Postal address', 'my-family-tree' ); ?></span><textarea name="wpmft_person[_wpmft_address]" rows="3" maxlength="500"><?php echo esc_textarea( get_post_meta( $post->ID, '_wpmft_address', true ) ); ?></textarea></label>
-					<label class="wpmft-field"><span><?php esc_html_e( 'WhatsApp number', 'my-family-tree' ); ?></span><input type="tel" name="wpmft_person[_wpmft_whatsapp]" value="<?php echo esc_attr( WPMFT_Data::whatsapp_number( $post->ID ) ); ?>" maxlength="64" placeholder="+44…"><small><?php esc_html_e( 'Optional. Include the country code. Leave blank to hide this person’s WhatsApp button.', 'my-family-tree' ); ?></small></label>
+					<label class="wpmft-field wpmft-field-wide"><span><?php esc_html_e( 'Postal address', 'digitalpulse-family-archive' ); ?></span><textarea name="wpmft_person[_wpmft_address]" rows="3" maxlength="500"><?php echo esc_textarea( get_post_meta( $post->ID, '_wpmft_address', true ) ); ?></textarea></label>
+					<label class="wpmft-field"><span><?php esc_html_e( 'WhatsApp number', 'digitalpulse-family-archive' ); ?></span><input type="tel" name="wpmft_person[_wpmft_whatsapp]" value="<?php echo esc_attr( WPMFT_Data::whatsapp_number( $post->ID ) ); ?>" maxlength="64" placeholder="+44…"><small><?php esc_html_e( 'Optional. Include the country code. Leave blank to hide this person’s WhatsApp button.', 'digitalpulse-family-archive' ); ?></small></label>
 				</div>
-				<h3><?php esc_html_e( 'Social profiles', 'my-family-tree' ); ?></h3>
+				<h3><?php esc_html_e( 'Social profiles', 'digitalpulse-family-archive' ); ?></h3>
 				<div class="wpmft-person-grid">
 				<?php foreach ( array( 'facebook' => 'Facebook', 'instagram' => 'Instagram', 'linkedin' => 'LinkedIn', 'x' => 'X / Twitter', 'youtube' => 'YouTube', 'tiktok' => 'TikTok' ) as $network => $label ) : ?>
 					<label class="wpmft-field"><span><?php echo esc_html( $label ); ?></span><input type="url" name="wpmft_person[_wpmft_social_<?php echo esc_attr( $network ); ?>]" value="<?php echo esc_attr( get_post_meta( $post->ID, '_wpmft_social_' . $network, true ) ); ?>" maxlength="2048" placeholder="https://"></label>
 				<?php endforeach; ?>
 				</div>
-				<p class="description"><?php esc_html_e( 'Use a complete public profile URL beginning with https:// or http://.', 'my-family-tree' ); ?></p>
+				<p class="description"><?php esc_html_e( 'Use a complete public profile URL beginning with https:// or http://.', 'digitalpulse-family-archive' ); ?></p>
 			</section>
-			<h3><?php esc_html_e( 'Photo gallery', 'my-family-tree' ); ?></h3>
+			<h3><?php esc_html_e( 'Photo gallery', 'digitalpulse-family-archive' ); ?></h3>
 			<?php $gallery = WPMFT_Data::gallery_ids( $post->ID ); $gallery_details = WPMFT_Data::gallery_details( $post->ID ); ?>
 			<input type="hidden" id="wpmft-gallery-ids" name="wpmft_person[_wpmft_gallery]" value="<?php echo esc_attr( implode( ',', $gallery ) ); ?>">
 			<input type="hidden" name="wpmft_person[gallery_details_present]" value="1">
@@ -833,28 +833,28 @@ final class WPMFT_Admin {
 				<?php foreach ( $gallery as $image_id ) : $details = $gallery_details[$image_id]; ?>
 				<figure data-id="<?php echo absint( $image_id ); ?>">
 					<div class="wpmft-gallery-image"><?php echo wp_get_attachment_image( $image_id, 'medium', false, array( 'loading' => 'lazy', 'decoding' => 'async' ) ); ?></div>
-					<button type="button" class="wpmft-remove-image" aria-label="<?php esc_attr_e( 'Remove photograph from gallery', 'my-family-tree' ); ?>">×</button>
+					<button type="button" class="wpmft-remove-image" aria-label="<?php esc_attr_e( 'Remove photograph from gallery', 'digitalpulse-family-archive' ); ?>">×</button>
 					<figcaption class="wpmft-gallery-details">
-						<label class="wpmft-field"><span><?php esc_html_e( 'When / date', 'my-family-tree' ); ?></span><input type="text" data-gallery-detail="date" name="wpmft_person[_wpmft_gallery_details][<?php echo absint( $image_id ); ?>][date]" value="<?php echo esc_attr( $details['date'] ); ?>" maxlength="100" placeholder="<?php esc_attr_e( 'For example: Summer 1980', 'my-family-tree' ); ?>"></label>
-						<label class="wpmft-field"><span><?php esc_html_e( 'Photo story / description', 'my-family-tree' ); ?></span><textarea data-gallery-detail="description" name="wpmft_person[_wpmft_gallery_details][<?php echo absint( $image_id ); ?>][description]" rows="3" maxlength="2000"><?php echo esc_textarea( $details['description'] ); ?></textarea></label>
+						<label class="wpmft-field"><span><?php esc_html_e( 'When / date', 'digitalpulse-family-archive' ); ?></span><input type="text" data-gallery-detail="date" name="wpmft_person[_wpmft_gallery_details][<?php echo absint( $image_id ); ?>][date]" value="<?php echo esc_attr( $details['date'] ); ?>" maxlength="100" placeholder="<?php esc_attr_e( 'For example: Summer 1980', 'digitalpulse-family-archive' ); ?>"></label>
+						<label class="wpmft-field"><span><?php esc_html_e( 'Photo story / description', 'digitalpulse-family-archive' ); ?></span><textarea data-gallery-detail="description" name="wpmft_person[_wpmft_gallery_details][<?php echo absint( $image_id ); ?>][description]" rows="3" maxlength="2000"><?php echo esc_textarea( $details['description'] ); ?></textarea></label>
 					</figcaption>
 				</figure>
 				<?php endforeach; ?>
 			</div>
 			<div class="wpmft-gallery-actions">
-				<button type="button" class="button" id="wpmft-add-gallery"><?php esc_html_e( 'Add photographs', 'my-family-tree' ); ?></button>
-				<button type="button" class="button" id="wpmft-edit-gallery" <?php disabled( empty( $gallery ) ); ?>><?php esc_html_e( 'Reorder photographs', 'my-family-tree' ); ?></button>
+				<button type="button" class="button" id="wpmft-add-gallery"><?php esc_html_e( 'Add photographs', 'digitalpulse-family-archive' ); ?></button>
+				<button type="button" class="button" id="wpmft-edit-gallery" <?php disabled( empty( $gallery ) ); ?>><?php esc_html_e( 'Reorder photographs', 'digitalpulse-family-archive' ); ?></button>
 			</div>
 			<p id="wpmft-gallery-status" class="wpmft-gallery-status" role="status" aria-live="polite"></p>
-			<p class="description"><?php esc_html_e( 'Removing a photograph here only removes it from this gallery. It does not delete the original media file.', 'my-family-tree' ); ?></p>
-			<p class="description"><?php esc_html_e( 'Add the people, place, occasion or an approximate date for each photograph. These stories belong to this person’s gallery and do not change captions on other pages.', 'my-family-tree' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Removing a photograph here only removes it from this gallery. It does not delete the original media file.', 'digitalpulse-family-archive' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Add the people, place, occasion or an approximate date for each photograph. These stories belong to this person’s gallery and do not change captions on other pages.', 'digitalpulse-family-archive' ); ?></p>
 		</div>
 		<?php
 	}
 
 	public static function people_search() {
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access denied.', 'my-family-tree' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'Access denied.', 'digitalpulse-family-archive' ) ), 403 );
 		}
 		check_ajax_referer( 'wpmft_admin_people', 'nonce' );
 		$q = isset( $_POST['q'] ) && is_string( $_POST['q'] ) ? substr( sanitize_text_field( wp_unslash( $_POST['q'] ) ), 0, 100 ) : '';
@@ -936,7 +936,7 @@ final class WPMFT_Admin {
 			$raw = trim( $input['_wpmft_whatsapp'] );
 			$number = wpmft_whatsapp_number( $raw );
 			if ( '' === $raw || $number ) { update_post_meta( $post_id, '_wpmft_whatsapp', $number ); }
-			else { self::editor_notice( __( 'The WhatsApp number was not saved. Include the country code; the previous number has been retained.', 'my-family-tree' ) ); }
+			else { self::editor_notice( __( 'The WhatsApp number was not saved. Include the country code; the previous number has been retained.', 'digitalpulse-family-archive' ) ); }
 		}
 		if ( array_key_exists( '_wpmft_email', $input ) && is_string( $input['_wpmft_email'] ) ) {
 			$email = trim( $input['_wpmft_email'] );
@@ -957,7 +957,7 @@ final class WPMFT_Admin {
 			if ( strlen( $value ) > 2048 || ! $url || ! is_array( $parts ) || empty( $parts['host'] ) || ! in_array( strtolower( $parts['scheme'] ?? '' ), array( 'http', 'https' ), true ) || isset( $parts['user'] ) || isset( $parts['pass'] ) ) { $invalid = true; continue; }
 			update_post_meta( $post_id, $key, $url );
 		}
-		if ( $invalid ) { self::editor_notice( __( 'A contact field was not saved. Use a valid email address and complete http:// or https:// links. The previous value has been retained.', 'my-family-tree' ) ); }
+		if ( $invalid ) { self::editor_notice( __( 'A contact field was not saved. Use a valid email address and complete http:// or https:// links. The previous value has been retained.', 'digitalpulse-family-archive' ) ); }
 	}
 
 	public static function save_person( $post_id, $post, $update ) {
@@ -990,11 +990,11 @@ final class WPMFT_Admin {
 			if ( ! array_key_exists( $key, $input ) || ! is_scalar( $input[$key] ) ) { continue; }
 			$value = self::limit_text( sanitize_text_field( $input[$key] ), 250 );
 			if ( in_array( $key, array( 'born', 'died' ), true ) && $value !== get_post_meta( $post_id, $key, true ) && ! self::valid_date( $value ) ) {
-				self::editor_notice( __( 'A date was not saved. Use YYYY, YYYY-MM or a valid YYYY-MM-DD. The previous value has been retained.', 'my-family-tree' ) );
+				self::editor_notice( __( 'A date was not saved. Use YYYY, YYYY-MM or a valid YYYY-MM-DD. The previous value has been retained.', 'digitalpulse-family-archive' ) );
 				continue;
 			}
 			if ( '_wpmft_name_day' === $key && $value && ( ! preg_match( '/^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/D', $value, $name_day_parts ) || ! checkdate( (int) $name_day_parts[1], (int) $name_day_parts[2], 2000 ) ) ) {
-				self::editor_notice( __( 'The name-day override was not saved. Use MM-DD, for example 05-29.', 'my-family-tree' ) );
+				self::editor_notice( __( 'The name-day override was not saved. Use MM-DD, for example 05-29.', 'digitalpulse-family-archive' ) );
 				continue;
 			}
 			update_post_meta( $post_id, $key, $value );
@@ -1003,7 +1003,7 @@ final class WPMFT_Admin {
 			if ( ! array_key_exists( $key, $input ) || ! is_scalar( $input[$key] ) ) { continue; }
 			$id = self::valid_relation( $input[$key], $post_id );
 			if ( in_array( $key, array( 'father', 'mother' ), true ) && $id && self::parent_cycle( $post_id, $id ) ) {
-				self::editor_notice( __( 'A parent relationship was not saved because it would make a person their own ancestor.', 'my-family-tree' ) );
+				self::editor_notice( __( 'A parent relationship was not saved because it would make a person their own ancestor.', 'digitalpulse-family-archive' ) );
 				continue;
 			}
 			update_post_meta( $post_id, $key, $id ? $id : '' );
@@ -1055,23 +1055,23 @@ final class WPMFT_Admin {
 	private static function help() {
 		?>
 		<ol class="wpmft-help-steps">
-			<li><strong><?php esc_html_e( 'Choose your family category.', 'my-family-tree' ); ?></strong> <?php esc_html_e( 'An existing WP Family Tree category is detected during setup. Keep it selected to reuse your people and relationships.', 'my-family-tree' ); ?></li>
-			<li><strong><?php esc_html_e( 'Create or edit the tree page.', 'my-family-tree' ); ?></strong> <?php esc_html_e( 'Insert the Family Tree block, or a Shortcode block containing [wp_my_family_tree]. Choose a starting person in General.', 'my-family-tree' ); ?></li>
-			<li><strong><?php esc_html_e( 'Set access and contact details.', 'my-family-tree' ); ?></strong> <?php esc_html_e( 'Private access starts locked until you set a password. Set the family administrator email and optionally enable hCaptcha.', 'my-family-tree' ); ?></li>
-			<li><strong><?php esc_html_e( 'Add people as WordPress posts.', 'my-family-tree' ); ?></strong> <?php esc_html_e( 'Choose Add a person, enter the full name as the title, then add a portrait, dates, parents, partners, contact details and photographs in the form at the top. Write the biography below. Children and siblings come from parent links.', 'my-family-tree' ); ?></li>
-			<li><strong><?php esc_html_e( 'Check privacy while signed out.', 'my-family-tree' ); ?></strong> <?php esc_html_e( 'Open a private window. Test the tree, a person’s old URL, a feed and an old direct photograph URL. Clear previous caches. The original plugin should be inactive.', 'my-family-tree' ); ?></li>
+			<li><strong><?php esc_html_e( 'Choose your family category.', 'digitalpulse-family-archive' ); ?></strong> <?php esc_html_e( 'An existing WP Family Tree category is detected during setup. Keep it selected to reuse your people and relationships.', 'digitalpulse-family-archive' ); ?></li>
+			<li><strong><?php esc_html_e( 'Create or edit the tree page.', 'digitalpulse-family-archive' ); ?></strong> <?php esc_html_e( 'Insert the Family Tree block, or a Shortcode block containing [wp_my_family_tree]. Choose a starting person in General.', 'digitalpulse-family-archive' ); ?></li>
+			<li><strong><?php esc_html_e( 'Set access and contact details.', 'digitalpulse-family-archive' ); ?></strong> <?php esc_html_e( 'Private access starts locked until you set a password. Set the family administrator email and optionally enable hCaptcha.', 'digitalpulse-family-archive' ); ?></li>
+			<li><strong><?php esc_html_e( 'Add people as WordPress posts.', 'digitalpulse-family-archive' ); ?></strong> <?php esc_html_e( 'Choose Add a person, enter the full name as the title, then add a portrait, dates, parents, partners, contact details and photographs in the form at the top. Write the biography below. Children and siblings come from parent links.', 'digitalpulse-family-archive' ); ?></li>
+			<li><strong><?php esc_html_e( 'Check privacy while signed out.', 'digitalpulse-family-archive' ); ?></strong> <?php esc_html_e( 'Open a private window. Test the tree, a person’s old URL, a feed and an old direct photograph URL. Clear previous caches. The original plugin should be inactive.', 'digitalpulse-family-archive' ); ?></li>
 		</ol>
-		<h3><?php esc_html_e( 'Shortcodes', 'my-family-tree' ); ?></h3>
+		<h3><?php esc_html_e( 'Shortcodes', 'digitalpulse-family-archive' ); ?></h3>
 		<p><code>[wp_my_family_tree]</code><br><code>[wp_my_family_tree root="123"]</code></p>
-		<p><?php esc_html_e( 'The root is a WordPress post ID. Legacy [family-tree] and [family-members] shortcodes are supported for migration.', 'my-family-tree' ); ?></p>
-		<h3><?php esc_html_e( 'Languages', 'my-family-tree' ); ?></h3>
-		<p><?php esc_html_e( 'Fourteen front-end language presets are included. Add more languages and translation overrides in the Languages tab. Names and biographies are never automatically translated. With optional Polylang, configure your content languages and link translated pages and people.', 'my-family-tree' ); ?></p>
-		<p><?php esc_html_e( 'In the default person editor, plugin labels follow the selected Polylang language without reloading or discarding unsaved edits. Other plugin screens start in your WordPress profile language when available and include an extensible interface language switch. With the optional block editor, Polylang may save and reload when its content language changes.', 'my-family-tree' ); ?></p>
-		<h3><?php esc_html_e( 'Person editor', 'my-family-tree' ); ?></h3>
-		<p><?php esc_html_e( 'Family people use a details-first classic editor by default. Enable the block editor in General if you prefer it. This setting does not change other posts, pages or saved biography content.', 'my-family-tree' ); ?></p>
-		<h3><?php esc_html_e( 'Restore backups safely', 'my-family-tree' ); ?></h3>
-		<p><?php esc_html_e( 'Restore a matching UpdraftPlus set on staging first. Preserve every filename exactly, including its date, site name, 12-character identifier and -db.gz / -plugins.zip / -themes.zip / -uploads.zip suffix. A standalone plugin ZIP is installed using Plugins → Add New → Upload Plugin, not the Updraft restore screen.', 'my-family-tree' ); ?></p>
-		<h3><?php esc_html_e( 'Developer', 'my-family-tree' ); ?></h3>
+		<p><?php esc_html_e( 'The root is a WordPress post ID. Legacy [family-tree] and [family-members] shortcodes are supported for migration.', 'digitalpulse-family-archive' ); ?></p>
+		<h3><?php esc_html_e( 'Languages', 'digitalpulse-family-archive' ); ?></h3>
+		<p><?php esc_html_e( 'Fourteen front-end language presets are included. Add more languages and translation overrides in the Languages tab. Names and biographies are never automatically translated. With optional Polylang, configure your content languages and link translated pages and people.', 'digitalpulse-family-archive' ); ?></p>
+		<p><?php esc_html_e( 'In the default person editor, plugin labels follow the selected Polylang language without reloading or discarding unsaved edits. Other plugin screens start in your WordPress profile language when available and include an extensible interface language switch. With the optional block editor, Polylang may save and reload when its content language changes.', 'digitalpulse-family-archive' ); ?></p>
+		<h3><?php esc_html_e( 'Person editor', 'digitalpulse-family-archive' ); ?></h3>
+		<p><?php esc_html_e( 'Family people use a details-first classic editor by default. Enable the block editor in General if you prefer it. This setting does not change other posts, pages or saved biography content.', 'digitalpulse-family-archive' ); ?></p>
+		<h3><?php esc_html_e( 'Restore backups safely', 'digitalpulse-family-archive' ); ?></h3>
+		<p><?php esc_html_e( 'Restore a matching UpdraftPlus set on staging first. Preserve every filename exactly, including its date, site name, 12-character identifier and -db.gz / -plugins.zip / -themes.zip / -uploads.zip suffix. A standalone plugin ZIP is installed using Plugins → Add New → Upload Plugin, not the Updraft restore screen.', 'digitalpulse-family-archive' ); ?></p>
+		<h3><?php esc_html_e( 'Developer', 'digitalpulse-family-archive' ); ?></h3>
 		<p>Raivis Kalnins · <a href="https://digitalpulse.click/" target="_blank" rel="noopener noreferrer">DigitalPulse</a></p>
 		<?php
 	}

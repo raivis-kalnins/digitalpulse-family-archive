@@ -2,7 +2,7 @@
 
 ## Latvian name-day calendar
 
-My Family Tree can optionally retrieve the traditional Latvian name-day calendar from:
+DigitalPulse Family Archive can optionally retrieve the traditional Latvian name-day calendar from:
 
 - Project: `slikts/vardadienas`
 - Source: https://github.com/slikts/vardadienas
@@ -14,7 +14,7 @@ The server request contains no family names, birthdays, contact details, passwor
 
 ## Optional demo photographs from Wikimedia Commons
 
-When an administrator explicitly imports or refreshes demo content, My Family Tree downloads a fixed allowlist of public-domain archival photographs from Wikimedia Commons. No real family record is sent to Wikimedia. All twelve photographs must download and validate before a refresh replaces existing demo media; failed sources are reported to the administrator and no placeholder portrait is silently substituted.
+When an administrator explicitly imports or refreshes demo content, DigitalPulse Family Archive downloads a fixed allowlist of public-domain archival photographs from Wikimedia Commons. No real family record is sent to Wikimedia. All twelve photographs must download and validate before a refresh replaces existing demo media; failed sources are reported to the administrator and no placeholder portrait is silently substituted.
 
 The demo uses these files illustratively; the photographs do not depict the named fictional demo people.
 

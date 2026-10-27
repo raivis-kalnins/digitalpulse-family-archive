@@ -1,6 +1,6 @@
 # Security and privacy
 
-My Family Tree stores family stories and relationships in the site's WordPress database. It is designed to keep viewing access separate from editing permission.
+DigitalPulse Family Archive stores family stories and relationships in the site's WordPress database. It is designed to keep viewing access separate from editing permission.
 
 ## Access model
 
@@ -36,7 +36,7 @@ The relationship cache holds numeric relationships and translation/status metada
 
 Use the repository's private vulnerability-reporting option if it is available. Otherwise, contact the maintainer through the public project profile and request a private reporting channel before sending sensitive details:
 
-https://github.com/raivis-kalnins/wp-my-family-tree
+https://digitalpulse.click/
 
 Include the affected plugin version, WordPress/PHP versions, a minimal reproduction using fictional records, the expected access boundary and the observed result. Do not post live passwords, encryption keys, private family records, unredacted logs or exploitable production URLs in a public issue.
 

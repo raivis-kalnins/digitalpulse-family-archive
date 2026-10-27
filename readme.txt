@@ -1,9 +1,9 @@
-=== My Family Tree ===
+=== DigitalPulse Family Archive ===
 Tags: family tree, genealogy, family, privacy, shortcode
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.3.9
+Stable tag: 1.4.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -11,7 +11,7 @@ Free, open-source family tree with biographies, touch galleries, multilingual la
 
 == Description ==
 
-My Family Tree is a free, open-source WordPress plugin that turns ordinary posts into an interactive family archive. An oak-inspired tree, leaf-shaped portraits and personal stories help visitors explore relationships across generations.
+DigitalPulse Family Archive is a free, open-source WordPress plugin that turns ordinary posts into an interactive family archive. An oak-inspired tree, leaf-shaped portraits and personal stories help visitors explore relationships across generations.
 
 Add a Family Tree block or the [wp_my_family_tree] shortcode to a page. Choose a full-window layout or embed the tree in your theme. People remain WordPress posts, and compatible records from the older WP Family Tree plugin can be reused.
 
@@ -110,14 +110,14 @@ Normal family viewing uses a server-validated cookie. Demo sharing uses a separa
 Readable PHP, JavaScript and CSS are included. Minified assets are built with esbuild 0.25.5; package.json, package-lock.json and scripts/build-assets.mjs are supplied. Developers can run npm ci followed by npm run build with Node 18 or newer. Node and npm are not needed on the WordPress server.
 
 Source and ordinary bug reports:
-https://github.com/raivis-kalnins/wp-my-family-tree
+https://digitalpulse.click/
 
 See readme.md for the complete administration, privacy, backup and troubleshooting guide. See SECURITY.md before reporting a security issue. Do not include real family records, photographs, passwords, keys or private logs in public issues.
 
 == Installation ==
 
-1. Upload the complete my-family-tree-1.3.9.zip through Plugins > Add New Plugin > Upload Plugin, or place the my-family-tree directory in wp-content/plugins.
-2. Activate My Family Tree. If migrating from WP My Family Tree, follow the rename instructions below before activation.
+1. Upload the complete digitalpulse-family-archive-1.4.0.zip through Plugins > Add New Plugin > Upload Plugin, or place the digitalpulse-family-archive directory in wp-content/plugins.
+2. Activate DigitalPulse Family Archive. If migrating from WP DigitalPulse Family Archive, follow the rename instructions below before activation.
 3. Deactivate the older WP Family Tree plugin if it is still active. Keep its existing posts and media.
 4. Open Family Tree settings, select the family category and starting person, and create or select a tree page.
 5. Insert the Family Tree block or [wp_my_family_tree] shortcode on the page.
@@ -127,21 +127,21 @@ See readme.md for the complete administration, privacy, backup and troubleshooti
 
 The shortcode accepts root="123" for a starting person or view="list" for the directory. Legacy [family-tree] and [family-members] shortcodes are supported for migration.
 
-= Updating My Family Tree 1.2.3 or later =
+= Updating DigitalPulse Family Archive 1.2.3 or later =
 
-Back up the site, then upload the complete new ZIP through Plugins > Add New Plugin > Upload Plugin and choose Replace current with uploaded. Keep the my-family-tree folder name and verify the tree after updating. Existing family data and settings are retained.
+Back up the site, then upload the complete new ZIP through Plugins > Add New Plugin > Upload Plugin and choose Replace current with uploaded. Keep the digitalpulse-family-archive folder name and verify the tree after updating. Existing family data and settings are retained.
 
-= Upgrading from WP My Family Tree 1.2.2 or earlier =
+= Upgrading from WP DigitalPulse Family Archive 1.2.2 or earlier =
 
-Version 1.2.3 changes the public plugin name and folder to My Family Tree / my-family-tree. WordPress treats it as a separate plugin, so its uploader will not replace the old wp-my-family-tree folder.
+Version 1.2.3 changes the public plugin name and folder to DigitalPulse Family Archive / digitalpulse-family-archive. WordPress treats it as a separate plugin, so its uploader will not replace the old wp-digitalpulse-family-archive folder.
 
 1. Back up the database and uploads together. For a private archive, enable independent site access protection during the switch because the old plugin's access checks stop when it is deactivated.
-2. Deactivate WP My Family Tree, including its network activation if applicable.
-3. Upload the complete new ZIP and activate My Family Tree. Do not activate both copies together.
+2. Deactivate WP DigitalPulse Family Archive, including its network activation if applicable.
+3. Upload the complete new ZIP and activate DigitalPulse Family Archive. Do not activate both copies together.
 4. Verify the tree page, privacy settings, contact form, photographs and person editing. Existing people, relationships, settings, media-encryption keys, shortcodes and saved blocks are retained; no database import is required.
-5. After verification, remove the inactive old plugin through Plugins. Its bundled code has no uninstall data-deletion routine. Keep the new My Family Tree plugin active.
+5. After verification, remove the inactive old plugin through Plugins. Its bundled code has no uninstall data-deletion routine. Keep the new DigitalPulse Family Archive plugin active.
 
-Deactivation revokes shared demo access. On an isolated demonstration site, re-enable shared demo mode explicitly if needed; imported samples and their saved reset baseline remain available. Future updates within the my-family-tree folder can use WordPress's normal replacement workflow.
+Deactivation revokes shared demo access. On an isolated demonstration site, re-enable shared demo mode explicitly if needed; imported samples and their saved reset baseline remain available. Future updates within the digitalpulse-family-archive folder can use WordPress's normal replacement workflow.
 
 == Frequently Asked Questions ==
 
@@ -153,9 +153,9 @@ Yes. Enable the optional administrator button in Contact & hCaptcha and enter an
 
 Each gallery photograph has a description and a flexible When / date field in the person editor. These are saved for that person, without changing a shared attachment’s captions elsewhere. Performance & cache can prepare smaller AVIF or WebP display copies where the server’s WordPress image editor supports them. Original files are retained. Existing archives use the manual batch tool; later person edits queue background preparation. Protected copies remain encrypted and use authenticated delivery. Animated images keep their existing format, and unavailable encoders fall back to ordinary WordPress image sizes.
 
-= Is My Family Tree free to use? =
+= Is DigitalPulse Family Archive free to use? =
 
-Yes. My Family Tree is a free, open-source WordPress plugin licensed under GPL-3.0-or-later. All included features are available without a paid plugin license or subscription. Optional third-party integrations remain subject to their providers' terms.
+Yes. DigitalPulse Family Archive is a free, open-source WordPress plugin licensed under GPL-3.0-or-later. All included features are available without a paid plugin license or subscription. Optional third-party integrations remain subject to their providers' terms.
 
 = Does it work without Polylang? =
 
@@ -218,6 +218,12 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 1. Fictional family records with realistic public-domain archival demonstration photographs in the interactive oak-inspired tree.
 
 == Changelog ==
+
+= 1.4.0 =
+* Renamed the WordPress.org package identity and text domain to DigitalPulse Family Archive / digitalpulse-family-archive.
+* Removed bundled gettext translation artifacts so WordPress.org can distribute community translations.
+* Hardened title-filter output escaping and moved the restricted demo menu away from the top core-menu positions.
+* Rechecked privileged write handlers for capability and nonce protection.
 
 = 1.3.9 =
 * Fixed demo gallery delivery by keeping public-domain demo media public while real family media remains protected.
@@ -286,9 +292,9 @@ Demo sharing is revoked on deactivation. Person posts, settings and media are re
 
 = 1.2.3 =
 
-* Renamed the public plugin to My Family Tree, with the my-family-tree folder and matching translation domain, for directory resubmission.
+* Renamed the public plugin to DigitalPulse Family Archive, with the digitalpulse-family-archive folder and matching translation domain, for directory resubmission.
 * Updated plugin metadata, translation filenames and release documentation while preserving family data, settings, existing shortcodes and saved blocks.
-* Added guidance and activation protection for switching from the old wp-my-family-tree folder.
+* Added guidance and activation protection for switching from the old wp-digitalpulse-family-archive folder.
 
 = 1.2.2 =
 
@@ -356,15 +362,15 @@ Fixes extra frontend gallery photos absent from the editor. Saved selections, in
 
 = 1.2.5 =
 
-Fixes gallery retention and improves portrait, language and person controls. Replace the existing My Family Tree plugin with the complete ZIP and clear cached assets. Existing person data and media are retained.
+Fixes gallery retention and improves portrait, language and person controls. Replace the existing DigitalPulse Family Archive plugin with the complete ZIP and clear cached assets. Existing person data and media are retained.
 
 = 1.2.4 =
 
-Updates WordPress compatibility metadata to 7.1. Replace My Family Tree 1.2.3 with this complete ZIP. Existing data and settings are retained. For the older WP My Family Tree name, follow Installation migration steps.
+Updates WordPress compatibility metadata to 7.1. Replace DigitalPulse Family Archive 1.2.3 with this complete ZIP. Existing data and settings are retained. For the older WP DigitalPulse Family Archive name, follow Installation migration steps.
 
 = 1.2.3 =
 
-Renamed to My Family Tree. Back up, deactivate WP My Family Tree, install this ZIP, then activate My Family Tree. The new folder is a separate plugin. Family data and settings are retained. See Installation for migration steps.
+Renamed to DigitalPulse Family Archive. Back up, deactivate WP DigitalPulse Family Archive, install this ZIP, then activate DigitalPulse Family Archive. The new folder is a separate plugin. Family data and settings are retained. See Installation for migration steps.
 
 = 1.2.2 =
 

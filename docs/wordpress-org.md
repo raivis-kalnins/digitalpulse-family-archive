@@ -4,11 +4,11 @@ This package includes a WordPress.org-format readme.txt, a detailed Markdown gui
 
 ## Free plugin distribution
 
-My Family Tree is prepared for free distribution through the [WordPress.org Plugin Directory submission form](https://wordpress.org/plugins/developers/add/). All included plugin features are available free of charge, with no paid plugin license or subscription required. The complete source is distributed under GPL-3.0-or-later. Optional integrations remain subject to their providers' terms.
+DigitalPulse Family Archive is prepared for free distribution through the [WordPress.org Plugin Directory submission form](https://wordpress.org/plugins/developers/add/). All included plugin features are available free of charge, with no paid plugin license or subscription required. The complete source is distributed under GPL-3.0-or-later. Optional integrations remain subject to their providers' terms.
 
 ### Submission description
 
-My Family Tree is a free, open-source WordPress plugin for creating interactive family trees and preserving family stories. It provides person profiles, biographies, photo galleries with mobile swipe navigation, relationship browsing, multilingual interface labels, optional password-protected viewing, a contact form with photo attachments, fullscreen tree viewing and optional demonstration content. Add a Family Tree block or shortcode to a page and manage people through ordinary WordPress posts. All included plugin features are available free of charge under GPL-3.0-or-later, with no paid plugin license or subscription required.
+DigitalPulse Family Archive is a free, open-source WordPress plugin for creating interactive family trees and preserving family stories. It provides person profiles, biographies, photo galleries with mobile swipe navigation, relationship browsing, multilingual interface labels, optional password-protected viewing, a contact form with photo attachments, fullscreen tree viewing and optional demonstration content. Add a Family Tree block or shortcode to a page and manage people through ordinary WordPress posts. All included plugin features are available free of charge under GPL-3.0-or-later, with no paid plugin license or subscription required.
 
 ### Reviewer notes
 
@@ -20,8 +20,8 @@ The plugin has no telemetry, author-operated service or paid feature gate. Polyl
 
 | Item | Value |
 | --- | --- |
-| Plugin name | My Family Tree |
-| Proposed plugin slug / text domain | my-family-tree |
+| Plugin name | DigitalPulse Family Archive |
+| Proposed plugin slug / text domain | digitalpulse-family-archive |
 | Version / stable tag | 1.3.2 |
 | Minimum WordPress | 6.5 |
 | Minimum PHP | 7.4 |
@@ -48,11 +48,11 @@ Version 1.2.9 fixed cached portrait loading state, authenticated fallback for mi
 
 ## Name correction for resubmission
 
-Version 1.2.3 changes the PHP `Plugin Name` header and directory readme title to **My Family Tree**, addressing the reviewer's objection to the former leading “WP”. The installable ZIP is `my-family-tree-1.3.4.zip`, with one `my-family-tree/` folder, the `my-family-tree.php` entry point and the matching `my-family-tree` text domain. Directory acceptance and the final permalink remain subject to the Plugins Team's review.
+Version 1.2.3 changes the PHP `Plugin Name` header and directory readme title to **DigitalPulse Family Archive**, addressing the reviewer's objection to the former leading “WP”. The installable ZIP is `digitalpulse-family-archive-1.4.0.zip`, with one `digitalpulse-family-archive/` folder, the `my-family-tree.php` entry point and the matching `my-family-tree` text domain. Directory acceptance and the final permalink remain subject to the Plugins Team's review.
 
-The source repository remains at `https://github.com/raivis-kalnins/wp-my-family-tree`. That existing repository URL is not the proposed WordPress.org permalink. Internal `wpmft` data keys, existing shortcodes and the saved block identifier `wp-my-family-tree/tree` are retained for compatibility.
+The source repository remains at `https://digitalpulse.click/`. That existing repository URL is not the proposed WordPress.org permalink. Internal `wpmft` data keys, existing shortcodes and the saved block identifier `wp-digitalpulse-family-archive/tree` are retained for compatibility.
 
-For existing sites, deactivate **WP My Family Tree** before installing and activating **My Family Tree**. The changed folder is a separate WordPress plugin, so it is not an in-place uploader replacement. See the detailed migration steps in readme.md, including backups, private-site access during the switch, verification and optional removal of the old inactive copy. Deactivation revokes shared demo access; re-enable it only when appropriate after migration.
+For existing sites, deactivate **WP DigitalPulse Family Archive** before installing and activating **DigitalPulse Family Archive**. The changed folder is a separate WordPress plugin, so it is not an in-place uploader replacement. See the detailed migration steps in readme.md, including backups, private-site access during the switch, verification and optional removal of the old inactive copy. Deactivation revokes shared demo access; re-enable it only when appropriate after migration.
 
 ## Public-source and license review
 
@@ -70,7 +70,7 @@ Email uses WordPress's configured mail transport. Social/website/author links ar
 
 ## Before submitting
 
-1. Add the verified WordPress.org contributor username and confirm the intended repository/name. For this resubmission, verify that both plugin headers use My Family Tree and that the ZIP root, entry point and text domain use my-family-tree.
+1. Add the verified WordPress.org contributor username and confirm the intended repository/name. For this resubmission, verify that the plugin header uses DigitalPulse Family Archive and that the ZIP root, entry point and text domain use digitalpulse-family-archive.
 2. Run the official readme validator and current Plugin Check, review findings and keep the actual results with the release process.
 3. Test activation, updating, signed-out privacy, protected media, demo isolation, language changes, gallery gestures and fullscreen on the intended WordPress/PHP versions.
 4. Keep the main PHP version, Stable tag, package metadata, block metadata and generated assets synchronized.

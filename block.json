@@ -8,7 +8,7 @@
   "icon": "networking",
   "description": "An interactive oak family tree with person dialogs and optional private access.",
   "keywords": ["family", "genealogy", "oak"],
-  "textdomain": "my-family-tree",
+  "textdomain": "digitalpulse-family-archive",
   "attributes": {
     "rootId": {"type": "number", "default": 0}
   },

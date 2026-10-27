@@ -315,9 +315,9 @@ final class WPMFT_Data {
 
 	public static function person( $id, $lang ) {
 		$id = self::canonical( $id ); $index = self::index();
-		if ( ! isset( $index[$id] ) ) { return new WP_Error( 'not_found', __( 'This person could not be found.', 'my-family-tree' ) ); }
+		if ( ! isset( $index[$id] ) ) { return new WP_Error( 'not_found', __( 'This person could not be found.', 'digitalpulse-family-archive' ) ); }
 		$result = self::summary( $id, $lang ); $display = self::display_id( $id, $lang ); $p = get_post( $display );
-		if ( ! $p instanceof WP_Post ) { return new WP_Error( 'not_found', __( 'This person could not be found.', 'my-family-tree' ) ); }
+		if ( ! $p instanceof WP_Post ) { return new WP_Error( 'not_found', __( 'This person could not be found.', 'digitalpulse-family-archive' ) ); }
 		foreach ( array( 'birthPlace' => '_wpmft_birth_place', 'deathPlace' => '_wpmft_death_place', 'location' => '_wpmft_location', 'occupation' => '_wpmft_occupation', 'maidenName' => '_wpmft_maiden_name', 'nameDay' => '_wpmft_name_day' ) as $key => $meta ) {
 			$result[$key] = (string) ( get_post_meta( $display, $meta, true ) ?: get_post_meta( $id, $meta, true ) );
 		}

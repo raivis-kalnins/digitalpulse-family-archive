@@ -48,16 +48,16 @@ final class WPMFT_Security {
 	}
 	public static function csrf() { return hash_hmac( 'sha256', 'wpmft-csrf|' . self::device(), wp_salt( 'nonce' ) ); }
 	public static function check_request() {
-		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) ) { return new WP_Error( 'method', __( 'A POST request is required.', 'my-family-tree' ) ); }
+		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) ) { return new WP_Error( 'method', __( 'A POST request is required.', 'digitalpulse-family-archive' ) ); }
 		$origin = isset( $_SERVER['HTTP_ORIGIN'] ) ? untrailingslashit( esc_url_raw( wp_unslash( $_SERVER['HTTP_ORIGIN'] ) ) ) : '';
 		$origins = array();
 		foreach ( array( home_url(), site_url() ) as $url ) {
 			$parts = wp_parse_url( $url );
 			$origins[] = $parts['scheme'] . '://' . $parts['host'] . ( isset( $parts['port'] ) ? ':' . $parts['port'] : '' );
 		}
-		if ( $origin && ! in_array( $origin, $origins, true ) ) { return new WP_Error( 'origin', __( 'The request origin could not be verified.', 'my-family-tree' ) ); }
+		if ( $origin && ! in_array( $origin, $origins, true ) ) { return new WP_Error( 'origin', __( 'The request origin could not be verified.', 'digitalpulse-family-archive' ) ); }
 		$token = isset( $_POST['csrf'] ) && is_string( $_POST['csrf'] ) ? sanitize_text_field( wp_unslash( $_POST['csrf'] ) ) : '';
-		if ( strlen( $token ) !== 64 || ! hash_equals( self::csrf(), $token ) ) { return new WP_Error( 'csrf', __( 'Please refresh the page and try again.', 'my-family-tree' ) ); }
+		if ( strlen( $token ) !== 64 || ! hash_equals( self::csrf(), $token ) ) { return new WP_Error( 'csrf', __( 'Please refresh the page and try again.', 'digitalpulse-family-archive' ) ); }
 		return true;
 	}
 	public static function authorized() {
@@ -83,10 +83,10 @@ final class WPMFT_Security {
 		return true;
 	}
 	public static function unlock( $password, $remember ) {
-		if ( ! self::rate_limit( 'unlock', 10, 15 * MINUTE_IN_SECONDS ) ) { return new WP_Error( 'rate_limit', __( 'Too many attempts. Please try again in 15 minutes.', 'my-family-tree' ) ); }
+		if ( ! self::rate_limit( 'unlock', 10, 15 * MINUTE_IN_SECONDS ) ) { return new WP_Error( 'rate_limit', __( 'Too many attempts. Please try again in 15 minutes.', 'digitalpulse-family-archive' ) ); }
 		if ( WPMFT_Demo::guard_required() ) { return WPMFT_Demo::unlock( $password, $remember ); }
 		$s = wpmft_settings();
-		if ( ! $s['password_hash'] || ! wp_check_password( $password, $s['password_hash'] ) ) { return new WP_Error( 'password', __( 'The password is incorrect or family access has not been configured.', 'my-family-tree' ) ); }
+		if ( ! $s['password_hash'] || ! wp_check_password( $password, $s['password_hash'] ) ) { return new WP_Error( 'password', __( 'The password is incorrect or family access has not been configured.', 'digitalpulse-family-archive' ) ); }
 		self::logout();
 		$token = bin2hex( random_bytes( 32 ) );
 		$ttl = $remember ? max( 1, min( 30, (int) $s['remember_days'] ) ) * DAY_IN_SECONDS : 12 * HOUR_IN_SECONDS;
@@ -103,14 +103,14 @@ final class WPMFT_Security {
 	public static function captcha( $scope ) {
 		$s = wpmft_settings();
 		if ( ! $s['hcaptcha_enabled'] || empty( $s['hcaptcha_' . $scope] ) ) { return true; }
-		if ( ! $s['hcaptcha_site_key'] || ! $s['hcaptcha_secret'] ) { return new WP_Error( 'captcha_config', __( 'The security challenge is not configured. Please contact the site administrator.', 'my-family-tree' ) ); }
+		if ( ! $s['hcaptcha_site_key'] || ! $s['hcaptcha_secret'] ) { return new WP_Error( 'captcha_config', __( 'The security challenge is not configured. Please contact the site administrator.', 'digitalpulse-family-archive' ) ); }
 		$token = isset( $_POST['h-captcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['h-captcha-response'] ) ) : '';
-		if ( ! $token || strlen( $token ) > 8192 ) { return new WP_Error( 'captcha', __( 'Please complete the security challenge.', 'my-family-tree' ) ); }
+		if ( ! $token || strlen( $token ) > 8192 ) { return new WP_Error( 'captcha', __( 'Please complete the security challenge.', 'digitalpulse-family-archive' ) ); }
 		$ip = isset( $_SERVER['REMOTE_ADDR'] ) && is_string( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 		$response = wp_remote_post( 'https://api.hcaptcha.com/siteverify', array( 'timeout' => 15, 'body' => array( 'secret' => $s['hcaptcha_secret'], 'sitekey' => $s['hcaptcha_site_key'], 'response' => $token, 'remoteip' => $ip ) ) );
-		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) { return new WP_Error( 'captcha_unavailable', __( 'The security challenge could not be verified. Please try again.', 'my-family-tree' ) ); }
+		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) { return new WP_Error( 'captcha_unavailable', __( 'The security challenge could not be verified. Please try again.', 'digitalpulse-family-archive' ) ); }
 		$data = json_decode( wp_remote_retrieve_body( $response ), true );
-		if ( empty( $data['success'] ) ) { return new WP_Error( 'captcha', __( 'The security challenge expired or failed. Please try again.', 'my-family-tree' ) ); }
+		if ( empty( $data['success'] ) ) { return new WP_Error( 'captcha', __( 'The security challenge expired or failed. Please try again.', 'digitalpulse-family-archive' ) ); }
 		return true;
 	}
 	public static function protect_page() {
@@ -160,15 +160,15 @@ final class WPMFT_Security {
 		if ( ! self::protected_mode() || wpmft_staff() ) { return $result; }
 		$route = $request->get_route();
 		if ( preg_match( '#^/wp/v2/(?:posts|media)/(\d+)(?:/|$)#', $route, $m ) && in_array( (int) $m[1], self::private_ids(), true ) && ! current_user_can( 'edit_post', (int) $m[1] ) ) {
-			self::no_cache(); return new WP_Error( 'rest_not_found', __( 'Content not found.', 'my-family-tree' ), array( 'status' => 404 ) );
+			self::no_cache(); return new WP_Error( 'rest_not_found', __( 'Content not found.', 'digitalpulse-family-archive' ), array( 'status' => 404 ) );
 		}
 		if ( preg_match( '#^/wp/v2/comments/(\d+)(?:/|$)#', $route, $m ) ) {
 			$comment = get_comment( (int) $m[1] );
-			if ( $comment && in_array( (int) $comment->comment_post_ID, self::private_ids(), true ) && ! current_user_can( 'edit_post', $comment->comment_post_ID ) ) { self::no_cache(); return new WP_Error( 'rest_not_found', __( 'Content not found.', 'my-family-tree' ), array( 'status' => 404 ) ); }
+			if ( $comment && in_array( (int) $comment->comment_post_ID, self::private_ids(), true ) && ! current_user_can( 'edit_post', $comment->comment_post_ID ) ) { self::no_cache(); return new WP_Error( 'rest_not_found', __( 'Content not found.', 'digitalpulse-family-archive' ), array( 'status' => 404 ) ); }
 		}
 		if ( strpos( $route, '/oembed/' ) !== false ) {
 			$url = $request->get_param( 'url' ); $id = $url ? url_to_postid( $url ) : 0;
-			if ( $id && in_array( (int) $id, self::private_ids(), true ) ) { return new WP_Error( 'rest_not_found', __( 'Content not found.', 'my-family-tree' ), array( 'status' => 404 ) ); }
+			if ( $id && in_array( (int) $id, self::private_ids(), true ) ) { return new WP_Error( 'rest_not_found', __( 'Content not found.', 'digitalpulse-family-archive' ), array( 'status' => 404 ) ); }
 		}
 		return $result;
 	}
@@ -188,8 +188,10 @@ final class WPMFT_Security {
 		return $content;
 	}
 	public static function guard_title( $title, $id = 0 ) {
-		if ( self::protected_mode() && ! wpmft_staff() && $id && ! current_user_can( 'edit_post', $id ) && ( wpmft_is_person( $id ) || WPMFT_Media::is_private( $id ) ) ) { return __( 'Private family record', 'my-family-tree' ); }
-		return $title;
+		if ( self::protected_mode() && ! wpmft_staff() && $id && ! current_user_can( 'edit_post', $id ) && ( wpmft_is_person( $id ) || WPMFT_Media::is_private( $id ) ) ) {
+			return esc_html__( 'Private family record', 'digitalpulse-family-archive' );
+		}
+		return wp_kses_post( $title );
 	}
 	public static function guard_oembed( $data, $post ) { return self::protected_mode() && ( wpmft_is_person( $post->ID ) || WPMFT_Media::is_private( $post->ID ) ) ? array() : $data; }
 	public static function xmlrpc( $enabled ) { return self::protected_mode() ? false : $enabled; }

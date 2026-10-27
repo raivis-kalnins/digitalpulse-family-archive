@@ -84,10 +84,10 @@ final class WPMFT_Demo {
 			$gallery[] = $id;
 		}
 		$stories = array(
-			array( 'date' => 'c. 1840', 'description' => __( 'An archival public-domain portrait used to demonstrate how a family memory can be captioned and dated.', 'my-family-tree' ) ),
-			array( 'date' => 'c. 1845', 'description' => __( 'A second archival portrait used illustratively in this fictional family archive.', 'my-family-tree' ) ),
-			array( 'date' => 'c. 1870', 'description' => __( 'A public-domain portrait used to demonstrate an individual memory inside a person gallery.', 'my-family-tree' ) ),
-			array( 'date' => 'c. 1890', 'description' => __( 'A fourth archival portrait used to demonstrate a larger family-memory gallery.', 'my-family-tree' ) ),
+			array( 'date' => 'c. 1840', 'description' => __( 'An archival public-domain portrait used to demonstrate how a family memory can be captioned and dated.', 'digitalpulse-family-archive' ) ),
+			array( 'date' => 'c. 1845', 'description' => __( 'A second archival portrait used illustratively in this fictional family archive.', 'digitalpulse-family-archive' ) ),
+			array( 'date' => 'c. 1870', 'description' => __( 'A public-domain portrait used to demonstrate an individual memory inside a person gallery.', 'digitalpulse-family-archive' ) ),
+			array( 'date' => 'c. 1890', 'description' => __( 'A fourth archival portrait used to demonstrate a larger family-memory gallery.', 'digitalpulse-family-archive' ) ),
 		);
 		$details = array();
 		foreach ( $gallery as $index => $photo_id ) { $details[$photo_id] = $stories[$index]; }
@@ -168,7 +168,7 @@ final class WPMFT_Demo {
 
 	private static function owns_write_lock( $lock ) { return is_string( $lock ) && hash_equals( $lock, (string) self::fresh_option( self::WRITE_LOCK, '' ) ); }
 
-	private static function reset_error() { return new WP_Error( 'demo_reset', __( 'The demo is resetting or its reset could not finish. Please try again shortly.', 'my-family-tree' ) ); }
+	private static function reset_error() { return new WP_Error( 'demo_reset', __( 'The demo is resetting or its reset could not finish. Please try again shortly.', 'digitalpulse-family-archive' ) ); }
 
 	private static function revision_ids( $id ) {
 		global $wpdb;
@@ -354,13 +354,13 @@ final class WPMFT_Demo {
 
 	/** Replacing a known baseline is an explicit administrator action while sharing is off. */
 	public static function capture_baseline() {
-		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Access denied.', 'my-family-tree' ) ); }
+		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Access denied.', 'digitalpulse-family-archive' ) ); }
 		$lock = self::acquire_write_lock();
 		if ( ! $lock ) { return self::reset_error(); }
 		try {
 			$state = self::fresh_option( self::STATE_OPTION );
 			if ( false === $state ) { return self::reset_error(); }
-			if ( ! empty( $state['enabled'] ) ) { return new WP_Error( 'demo_enabled', __( 'Disable demo sharing before saving a new reset baseline.', 'my-family-tree' ) ); }
+			if ( ! empty( $state['enabled'] ) ) { return new WP_Error( 'demo_enabled', __( 'Disable demo sharing before saving a new reset baseline.', 'digitalpulse-family-archive' ) ); }
 			$baseline = self::make_baseline();
 			if ( is_wp_error( $baseline ) || ! self::valid_baseline( $baseline ) || ! self::owns_write_lock( $lock ) ) { return self::reset_error(); }
 			update_option( self::BASELINE_OPTION, $baseline, false );
@@ -476,7 +476,7 @@ final class WPMFT_Demo {
 	}
 
 	public static function reset_now() {
-		return current_user_can( 'manage_options' ) ? self::reset_if_due( true ) : new WP_Error( 'permission', __( 'Access denied.', 'my-family-tree' ) );
+		return current_user_can( 'manage_options' ) ? self::reset_if_due( true ) : new WP_Error( 'permission', __( 'Access denied.', 'digitalpulse-family-archive' ) );
 	}
 
 	/** Public saves/restores do not create a second retained copy of visitor edits. */
@@ -652,9 +652,9 @@ final class WPMFT_Demo {
 	}
 
 	public static function unlock( $password, $remember = false ) {
-		if ( ! self::active() ) { return new WP_Error( 'demo_locked', __( 'Demo sharing is unavailable. Please contact the site administrator.', 'my-family-tree' ) ); }
-		if ( ! WPMFT_Security::rate_limit( 'demo_unlock', 10, 15 * MINUTE_IN_SECONDS ) ) { return new WP_Error( 'rate_limit', __( 'Too many attempts. Please try again in 15 minutes.', 'my-family-tree' ) ); }
-		if ( ! is_string( $password ) || ! hash_equals( 'demo', $password ) ) { return new WP_Error( 'password', __( 'The demo password is incorrect.', 'my-family-tree' ) ); }
+		if ( ! self::active() ) { return new WP_Error( 'demo_locked', __( 'Demo sharing is unavailable. Please contact the site administrator.', 'digitalpulse-family-archive' ) ); }
+		if ( ! WPMFT_Security::rate_limit( 'demo_unlock', 10, 15 * MINUTE_IN_SECONDS ) ) { return new WP_Error( 'rate_limit', __( 'Too many attempts. Please try again in 15 minutes.', 'digitalpulse-family-archive' ) ); }
+		if ( ! is_string( $password ) || ! hash_equals( 'demo', $password ) ) { return new WP_Error( 'password', __( 'The demo password is incorrect.', 'digitalpulse-family-archive' ) ); }
 		self::logout();
 		$token = bin2hex( random_bytes( 32 ) );
 		$ttl = $remember ? DAY_IN_SECONDS : HOUR_IN_SECONDS;
@@ -675,8 +675,8 @@ final class WPMFT_Demo {
 		$manifest = self::manifest();
 		return array(
 			'active' => $active, 'guarded' => self::guard_required(),
-			'label' => $active ? __( 'Family archive demo', 'my-family-tree' ) : '',
-			'notice' => $active ? __( 'Fictional family archive with invented people and relationships. Visitor edits are public and reset every 24 hours.', 'my-family-tree' ) : '',
+			'label' => $active ? __( 'Family archive demo', 'digitalpulse-family-archive' ) : '',
+			'notice' => $active ? __( 'Fictional family archive with invented people and relationships. Visitor edits are public and reset every 24 hours.', 'digitalpulse-family-archive' ) : '',
 			'password' => $active ? 'demo' : '',
 			'rootId' => $active ? absint( $manifest['items']['marty'] ?? 0 ) : 0,
 			'treeUrl' => $active && ! empty( $manifest['items']['tree-page'] ) ? get_permalink( $manifest['items']['tree-page'] ) : '',
@@ -685,10 +685,10 @@ final class WPMFT_Demo {
 
 	/** Administrator-only additive import. Existing records, pages and settings are left intact. */
 	public static function import() {
-		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Only an administrator can import demo content.', 'my-family-tree' ) ); }
+		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Only an administrator can import demo content.', 'digitalpulse-family-archive' ) ); }
 		$lock = get_option( 'wpmft_demo_import_lock', 0 );
 		if ( $lock && (int) $lock < time() - 10 * MINUTE_IN_SECONDS ) { delete_option( 'wpmft_demo_import_lock' ); }
-		if ( ! add_option( 'wpmft_demo_import_lock', time(), '', false ) ) { return new WP_Error( 'busy', __( 'Another demo import is running. Please try again shortly.', 'my-family-tree' ) ); }
+		if ( ! add_option( 'wpmft_demo_import_lock', time(), '', false ) ) { return new WP_Error( 'busy', __( 'Another demo import is running. Please try again shortly.', 'digitalpulse-family-archive' ) ); }
 		$write_lock = self::acquire_write_lock();
 		if ( ! $write_lock ) { delete_option( 'wpmft_demo_import_lock' ); return self::reset_error(); }
 		try {
@@ -700,7 +700,7 @@ final class WPMFT_Demo {
 			foreach ( $people as $key => $person ) {
 				$existing = self::existing_item( $manifest, $key );
 				if ( $existing ) {
-					if ( ! self::is_demo_post( $existing ) ) { return new WP_Error( 'demo_changed', __( 'A previous demo record was repurposed. The importer stopped without changing it; restore its demo marker or use a separate demo site.', 'my-family-tree' ) ); }
+					if ( ! self::is_demo_post( $existing ) ) { return new WP_Error( 'demo_changed', __( 'A previous demo record was repurposed. The importer stopped without changing it; restore its demo marker or use a separate demo site.', 'digitalpulse-family-archive' ) ); }
 					if ( ! get_post_meta( $existing, '_wpmft_demo_seeded', true ) ) { $created[$key] = $existing; }
 					continue;
 				}
@@ -727,15 +727,15 @@ final class WPMFT_Demo {
 			$gallery = array();
 			foreach ( $gallery_keys as $gallery_key ) {
 				$photo_id = absint( $manifest['items']['portrait-' . $gallery_key] ?? 0 );
-				if ( ! $photo_id || ! wp_attachment_is_image( $photo_id ) ) { return new WP_Error( 'demo_gallery_missing', __( 'A validated archival demo portrait is missing, so the sample gallery could not be created.', 'my-family-tree' ) ); }
+				if ( ! $photo_id || ! wp_attachment_is_image( $photo_id ) ) { return new WP_Error( 'demo_gallery_missing', __( 'A validated archival demo portrait is missing, so the sample gallery could not be created.', 'digitalpulse-family-archive' ) ); }
 				$gallery[] = $photo_id;
 			}
 			$gallery_details = array();
 			$gallery_copy = array(
-				array( 'date' => 'c. 1840', 'description' => __( 'An archival public-domain portrait used to demonstrate how a family memory can be captioned and dated.', 'my-family-tree' ) ),
-				array( 'date' => 'c. 1845', 'description' => __( 'A second archival portrait used illustratively in this fictional family archive.', 'my-family-tree' ) ),
-				array( 'date' => 'c. 1870', 'description' => __( 'A public-domain portrait used to demonstrate an individual memory inside a person gallery.', 'my-family-tree' ) ),
-				array( 'date' => 'c. 1890', 'description' => __( 'A fourth archival portrait used to demonstrate a larger family-memory gallery.', 'my-family-tree' ) ),
+				array( 'date' => 'c. 1840', 'description' => __( 'An archival public-domain portrait used to demonstrate how a family memory can be captioned and dated.', 'digitalpulse-family-archive' ) ),
+				array( 'date' => 'c. 1845', 'description' => __( 'A second archival portrait used illustratively in this fictional family archive.', 'digitalpulse-family-archive' ) ),
+				array( 'date' => 'c. 1870', 'description' => __( 'A public-domain portrait used to demonstrate an individual memory inside a person gallery.', 'digitalpulse-family-archive' ) ),
+				array( 'date' => 'c. 1890', 'description' => __( 'A fourth archival portrait used to demonstrate a larger family-memory gallery.', 'digitalpulse-family-archive' ) ),
 			);
 			foreach ( $gallery as $index => $photo_id ) { $gallery_details[$photo_id] = $gallery_copy[$index] ?? array( 'date' => '', 'description' => '' ); }
 			foreach ( $created as $id ) { update_post_meta( $id, '_wpmft_gallery', $gallery ); update_post_meta( $id, '_wpmft_gallery_details', $gallery_details ); do_action( 'wpmft_person_saved', $id ); update_post_meta( $id, '_wpmft_demo_seeded', 1 ); }
@@ -790,33 +790,33 @@ final class WPMFT_Demo {
 		if ( $existing ) { return $existing; }
 		$sources = self::media_sources();
 		$source = $sources[$source_key] ?? null;
-		if ( ! $source ) { return new WP_Error( 'demo_image', __( 'A demo photograph source is missing.', 'my-family-tree' ) ); }
+		if ( ! $source ) { return new WP_Error( 'demo_image', __( 'A demo photograph source is missing.', 'digitalpulse-family-archive' ) ); }
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 		$url = self::commons_file_url( $source['file'] );
 		$tmp = download_url( $url, 25 );
 		if ( is_wp_error( $tmp ) ) {
 			/* translators: 1: archival photograph filename, 2: download error message. */
-			return new WP_Error( 'demo_image_download', sprintf( __( 'Could not download the archival demo photograph “%1$s”: %2$s', 'my-family-tree' ), $source['file'], $tmp->get_error_message() ) );
+			return new WP_Error( 'demo_image_download', sprintf( __( 'Could not download the archival demo photograph “%1$s”: %2$s', 'digitalpulse-family-archive' ), $source['file'], $tmp->get_error_message() ) );
 		}
 		$size = is_file( $tmp ) ? filesize( $tmp ) : 0;
 		$mime = is_file( $tmp ) && function_exists( 'wp_get_image_mime' ) ? wp_get_image_mime( $tmp ) : false;
 		if ( ! $size || $size > 5 * MB_IN_BYTES || 'image/jpeg' !== $mime ) {
 			if ( is_file( $tmp ) ) { wp_delete_file( $tmp ); }
 			/* translators: %s: archival photograph filename. */
-			return new WP_Error( 'demo_image_invalid', sprintf( __( 'The archival demo photograph “%s” was unavailable or was not a valid JPEG image.', 'my-family-tree' ), $source['file'] ) );
+			return new WP_Error( 'demo_image_invalid', sprintf( __( 'The archival demo photograph “%s” was unavailable or was not a valid JPEG image.', 'digitalpulse-family-archive' ), $source['file'] ) );
 		}
 		$file = array( 'name' => sanitize_file_name( $source['file'] ), 'tmp_name' => $tmp );
 		$upload = wp_handle_sideload( $file, array( 'test_form' => false, 'mimes' => array( 'jpg|jpeg' => 'image/jpeg' ) ) );
 		if ( ! empty( $upload['error'] ) || empty( $upload['file'] ) ) {
 			if ( is_file( $tmp ) ) { wp_delete_file( $tmp ); }
 			/* translators: 1: archival photograph filename, 2: WordPress upload error message. */
-			return new WP_Error( 'demo_image_upload', sprintf( __( 'WordPress could not save the archival demo photograph “%1$s”: %2$s', 'my-family-tree' ), $source['file'], (string) ( $upload['error'] ?? __( 'Unknown upload error.', 'my-family-tree' ) ) ) );
+			return new WP_Error( 'demo_image_upload', sprintf( __( 'WordPress could not save the archival demo photograph “%1$s”: %2$s', 'digitalpulse-family-archive' ), $source['file'], (string) ( $upload['error'] ?? __( 'Unknown upload error.', 'digitalpulse-family-archive' ) ) ) );
 		}
 		$id = wp_insert_attachment( array(
 			'post_title' => $alt,
 			/* translators: 1: photograph source/creator, 2: licence name. */
-			'post_excerpt' => sprintf( __( 'Archival public-domain photograph used illustratively in the fictional demo. Source: %1$s. Licence: %2$s.', 'my-family-tree' ), $source['credit'], $source['license'] ),
+			'post_excerpt' => sprintf( __( 'Archival public-domain photograph used illustratively in the fictional demo. Source: %1$s. Licence: %2$s.', 'digitalpulse-family-archive' ), $source['credit'], $source['license'] ),
 			'post_mime_type' => 'image/jpeg', 'post_status' => 'inherit', 'post_parent' => absint( $parent ),
 			'meta_input' => array( '_wpmft_demo' => $manifest['token'], '_wpmft_demo_key' => $key, '_wp_attachment_image_alt' => $alt, '_wpmft_demo_source_url' => $url, '_wpmft_demo_credit' => $source['credit'], '_wpmft_demo_license' => $source['license'], '_wpmft_demo_media_kind' => 'archival-public-domain' ),
 		), $upload['file'], $parent, true );
@@ -854,8 +854,8 @@ final class WPMFT_Demo {
 
 	/** Administrator-only refresh of the realistic fictional family samples and archival demo media. */
 	public static function refresh_samples() {
-		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Only an administrator can refresh demo content.', 'my-family-tree' ) ); }
-		if ( self::guard_required() ) { return new WP_Error( 'demo_enabled', __( 'Disable shared demo mode before refreshing its sample content.', 'my-family-tree' ) ); }
+		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Only an administrator can refresh demo content.', 'digitalpulse-family-archive' ) ); }
+		if ( self::guard_required() ) { return new WP_Error( 'demo_enabled', __( 'Disable shared demo mode before refreshing its sample content.', 'digitalpulse-family-archive' ) ); }
 		$lock = self::acquire_write_lock();
 		if ( ! $lock ) { return self::reset_error(); }
 		try {
@@ -863,7 +863,7 @@ final class WPMFT_Demo {
 			$people = self::people();
 			foreach ( $people as $key => $person ) {
 				$id = absint( $manifest['items'][$key] ?? 0 );
-				if ( ! $id || ! self::is_demo_post( $id ) || 'post' !== get_post_type( $id ) ) { return new WP_Error( 'demo_missing', __( 'Import the demo content before refreshing its sample data and photographs.', 'my-family-tree' ) ); }
+				if ( ! $id || ! self::is_demo_post( $id ) || 'post' !== get_post_type( $id ) ) { return new WP_Error( 'demo_missing', __( 'Import the demo content before refreshing its sample data and photographs.', 'digitalpulse-family-archive' ) ); }
 			}
 
 			/* Download every replacement first. A failed remote source leaves the current demo untouched. */
@@ -902,15 +902,15 @@ final class WPMFT_Demo {
 			$gallery = array();
 			foreach ( $gallery_keys as $gallery_key ) {
 				$photo_id = absint( $new_media['portrait-' . $gallery_key] ?? 0 );
-				if ( ! $photo_id || ! wp_attachment_is_image( $photo_id ) ) { return new WP_Error( 'demo_gallery_missing', __( 'A validated archival demo portrait is missing, so the sample gallery could not be created.', 'my-family-tree' ) ); }
+				if ( ! $photo_id || ! wp_attachment_is_image( $photo_id ) ) { return new WP_Error( 'demo_gallery_missing', __( 'A validated archival demo portrait is missing, so the sample gallery could not be created.', 'digitalpulse-family-archive' ) ); }
 				$gallery[] = $photo_id;
 			}
 			$details = array();
 			$stories = array(
-				array( 'date' => 'c. 1840', 'description' => __( 'An archival public-domain portrait used to demonstrate how a family memory can be captioned and dated.', 'my-family-tree' ) ),
-				array( 'date' => 'c. 1845', 'description' => __( 'A second archival portrait used illustratively in this fictional family archive.', 'my-family-tree' ) ),
-				array( 'date' => 'c. 1870', 'description' => __( 'A public-domain portrait used to demonstrate an individual memory inside a person gallery.', 'my-family-tree' ) ),
-				array( 'date' => 'c. 1890', 'description' => __( 'A fourth archival portrait used to demonstrate a larger family-memory gallery.', 'my-family-tree' ) ),
+				array( 'date' => 'c. 1840', 'description' => __( 'An archival public-domain portrait used to demonstrate how a family memory can be captioned and dated.', 'digitalpulse-family-archive' ) ),
+				array( 'date' => 'c. 1845', 'description' => __( 'A second archival portrait used illustratively in this fictional family archive.', 'digitalpulse-family-archive' ) ),
+				array( 'date' => 'c. 1870', 'description' => __( 'A public-domain portrait used to demonstrate an individual memory inside a person gallery.', 'digitalpulse-family-archive' ) ),
+				array( 'date' => 'c. 1890', 'description' => __( 'A fourth archival portrait used to demonstrate a larger family-memory gallery.', 'digitalpulse-family-archive' ) ),
 			);
 			foreach ( $gallery as $index => $photo_id ) { $details[$photo_id] = $stories[$index]; }
 			foreach ( $people as $key => $person ) {
@@ -955,18 +955,18 @@ final class WPMFT_Demo {
 	}
 
 	public static function enable() {
-		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Only an administrator can enable demo sharing.', 'my-family-tree' ) ); }
+		if ( ! current_user_can( 'manage_options' ) ) { return new WP_Error( 'permission', __( 'Only an administrator can enable demo sharing.', 'digitalpulse-family-archive' ) ); }
 		$lock = self::acquire_write_lock();
 		if ( ! $lock ) { return self::reset_error(); }
 		try {
 			$before_state = self::fresh_option( self::STATE_OPTION );
 			if ( false === $before_state ) { return self::reset_error(); }
-			if ( is_multisite() ) { return new WP_Error( 'multisite', __( 'Shared demo accounts are available on single-site installations only. Demo content can still be imported on this network.', 'my-family-tree' ) ); }
+			if ( is_multisite() ) { return new WP_Error( 'multisite', __( 'Shared demo accounts are available on single-site installations only. Demo content can still be imported on this network.', 'digitalpulse-family-archive' ) ); }
 			$manifest = self::manifest();
-			if ( empty( $manifest['items']['marty'] ) || ! self::is_demo_post( $manifest['items']['marty'] ) || 'publish' !== get_post_status( $manifest['items']['marty'] ) ) { return new WP_Error( 'demo_missing', __( 'Import the demo first and keep its starting person published.', 'my-family-tree' ) ); }
-			if ( self::real_family_count() ) { return new WP_Error( 'real_content', __( 'Demo sharing is blocked because real family records exist, including unpublished or trashed records. Use a separate demo site.', 'my-family-tree' ) ); }
-			if ( self::guard_required() ) { return new WP_Error( 'already_enabled', __( 'Disable the existing demo session before enabling it again.', 'my-family-tree' ) ); }
-			if ( username_exists( 'demo' ) ) { return new WP_Error( 'username_exists', __( 'The username demo already exists. No existing account has been changed. Use a separate demo site or rename that account yourself.', 'my-family-tree' ) ); }
+			if ( empty( $manifest['items']['marty'] ) || ! self::is_demo_post( $manifest['items']['marty'] ) || 'publish' !== get_post_status( $manifest['items']['marty'] ) ) { return new WP_Error( 'demo_missing', __( 'Import the demo first and keep its starting person published.', 'digitalpulse-family-archive' ) ); }
+			if ( self::real_family_count() ) { return new WP_Error( 'real_content', __( 'Demo sharing is blocked because real family records exist, including unpublished or trashed records. Use a separate demo site.', 'digitalpulse-family-archive' ) ); }
+			if ( self::guard_required() ) { return new WP_Error( 'already_enabled', __( 'Disable the existing demo session before enabling it again.', 'digitalpulse-family-archive' ) ); }
+			if ( username_exists( 'demo' ) ) { return new WP_Error( 'username_exists', __( 'The username demo already exists. No existing account has been changed. Use a separate demo site or rename that account yourself.', 'digitalpulse-family-archive' ) ); }
 			$baseline = self::fresh_option( self::BASELINE_OPTION );
 			if ( false === $baseline ) { return self::reset_error(); }
 			if ( ! $baseline ) {
@@ -976,11 +976,11 @@ final class WPMFT_Demo {
 				update_option( self::BASELINE_OPTION, $baseline, false );
 				if ( self::fresh_option( self::BASELINE_OPTION ) !== $baseline ) { return self::reset_error(); }
 			}
-			if ( ! self::valid_baseline( $baseline ) ) { return new WP_Error( 'demo_baseline', __( 'The saved demo baseline no longer matches the marked samples. Review the demo content and save a new baseline before sharing.', 'my-family-tree' ) ); }
+			if ( ! self::valid_baseline( $baseline ) ) { return new WP_Error( 'demo_baseline', __( 'The saved demo baseline no longer matches the marked samples. Review the demo content and save a new baseline before sharing.', 'digitalpulse-family-archive' ) ); }
 			if ( ! self::owns_write_lock( $lock ) || self::fresh_option( self::STATE_OPTION ) !== $before_state ) { return self::reset_error(); }
 			// No standard Editor capabilities: this public account can use only our constrained editor.
 			remove_role( self::ROLE );
-			add_role( self::ROLE, __( 'Family Tree Demo Editor', 'my-family-tree' ), array( 'read' => true, self::CAP => true ) );
+			add_role( self::ROLE, __( 'Family Tree Demo Editor', 'digitalpulse-family-archive' ), array( 'read' => true, self::CAP => true ) );
 			$id = wp_insert_user( array( 'user_login' => 'demo', 'user_pass' => 'Demo@demo123Editor', 'user_email' => '', 'display_name' => 'Family Archive Demo Editor', 'role' => self::ROLE, 'show_admin_bar_front' => 'false' ) );
 			if ( is_wp_error( $id ) ) { return $id; }
 			$account_token = wp_generate_uuid4();
@@ -1022,12 +1022,12 @@ final class WPMFT_Demo {
 	public static function deactivate() { self::disable(); }
 
 	private static function require_admin( $action ) {
-		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) ) { wp_die( esc_html__( 'A POST request is required.', 'my-family-tree' ), '', array( 'response' => 405 ) ); }
-		if ( ! current_user_can( 'manage_options' ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
+		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) ) { wp_die( esc_html__( 'A POST request is required.', 'digitalpulse-family-archive' ), '', array( 'response' => 405 ) ); }
+		if ( ! current_user_can( 'manage_options' ) ) { wp_die( esc_html__( 'Access denied.', 'digitalpulse-family-archive' ), '', array( 'response' => 403 ) ); }
 		check_admin_referer( $action );
-		if ( 'wpmft_demo_disable' !== $action && ! self::tools_visible() ) { wp_die( esc_html__( 'Enable the optional demo tools in General settings before using this action.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
+		if ( 'wpmft_demo_disable' !== $action && ! self::tools_visible() ) { wp_die( esc_html__( 'Enable the optional demo tools in General settings before using this action.', 'digitalpulse-family-archive' ), '', array( 'response' => 403 ) ); }
 		$confirmed = isset( $_POST['wpmft_demo_confirm'] ) && is_string( $_POST['wpmft_demo_confirm'] ) ? sanitize_text_field( wp_unslash( $_POST['wpmft_demo_confirm'] ) ) : '';
-		if ( '1' !== $confirmed ) { wp_die( esc_html__( 'Read and confirm the demo notice before continuing.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
+		if ( '1' !== $confirmed ) { wp_die( esc_html__( 'Read and confirm the demo notice before continuing.', 'digitalpulse-family-archive' ), '', array( 'response' => 400 ) ); }
 	}
 
 	private static function finish( $result, $message ) {
@@ -1036,13 +1036,13 @@ final class WPMFT_Demo {
 		exit;
 	}
 
-	public static function handle_import() { self::require_admin( 'wpmft_demo_import' ); self::finish( self::import(), __( 'Demo content is ready. Existing content and settings were preserved. Sharing remains off until you explicitly enable it.', 'my-family-tree' ) ); }
-	public static function handle_enable() { self::require_admin( 'wpmft_demo_enable' ); self::finish( self::enable(), __( 'Demo sharing is active. The shared editor can edit demo content only.', 'my-family-tree' ) ); }
-	public static function handle_disable() { self::require_admin( 'wpmft_demo_disable' ); self::finish( self::disable(), __( 'Demo sharing is off. Its sessions and managed account have been revoked. Demo content is retained.', 'my-family-tree' ) ); }
-	public static function handle_reset() { self::require_admin( 'wpmft_demo_reset' ); self::finish( self::reset_now(), __( 'Demo visitor edits have been reset. The next reset is due in 24 hours.', 'my-family-tree' ) ); }
-	public static function handle_refresh() { self::require_admin( 'wpmft_demo_refresh' ); self::finish( self::refresh_samples(), __( 'The demo now uses realistic fictional family data and public-domain archival photographs.', 'my-family-tree' ) ); }
+	public static function handle_import() { self::require_admin( 'wpmft_demo_import' ); self::finish( self::import(), __( 'Demo content is ready. Existing content and settings were preserved. Sharing remains off until you explicitly enable it.', 'digitalpulse-family-archive' ) ); }
+	public static function handle_enable() { self::require_admin( 'wpmft_demo_enable' ); self::finish( self::enable(), __( 'Demo sharing is active. The shared editor can edit demo content only.', 'digitalpulse-family-archive' ) ); }
+	public static function handle_disable() { self::require_admin( 'wpmft_demo_disable' ); self::finish( self::disable(), __( 'Demo sharing is off. Its sessions and managed account have been revoked. Demo content is retained.', 'digitalpulse-family-archive' ) ); }
+	public static function handle_reset() { self::require_admin( 'wpmft_demo_reset' ); self::finish( self::reset_now(), __( 'Demo visitor edits have been reset. The next reset is due in 24 hours.', 'digitalpulse-family-archive' ) ); }
+	public static function handle_refresh() { self::require_admin( 'wpmft_demo_refresh' ); self::finish( self::refresh_samples(), __( 'The demo now uses realistic fictional family data and public-domain archival photographs.', 'digitalpulse-family-archive' ) ); }
 
-	public static function handle_baseline() { self::require_admin( 'wpmft_demo_baseline' ); self::finish( self::capture_baseline(), __( 'The current demo titles, stories, personal details, contacts and photo stories are saved as the reset baseline.', 'my-family-tree' ) ); }
+	public static function handle_baseline() { self::require_admin( 'wpmft_demo_baseline' ); self::finish( self::capture_baseline(), __( 'The current demo titles, stories, personal details, contacts and photo stories are saved as the reset baseline.', 'digitalpulse-family-archive' ) ); }
 
 	/** First-time empty installs offer setup once; established sites opt in from General. */
 	public static function tools_visible() {
@@ -1054,14 +1054,14 @@ final class WPMFT_Demo {
 	/** Hiding tools never hides an active shared account or silently changes its access. */
 	public static function render_general_status() {
 		if ( ! self::guard_required() ) {
-			if ( self::tools_visible() && empty( wpmft_settings()['demo_tools_enabled'] ) ) { echo '<p class="description">' . esc_html__( 'The Demo tab is available for this initial setup. Save General settings to finish setup.', 'my-family-tree' ) . '</p>'; }
+			if ( self::tools_visible() && empty( wpmft_settings()['demo_tools_enabled'] ) ) { echo '<p class="description">' . esc_html__( 'The Demo tab is available for this initial setup. Save General settings to finish setup.', 'digitalpulse-family-archive' ) . '</p>'; }
 			return;
 		}
-		echo '<div class="wpmft-admin-note"><p><strong>' . esc_html__( 'Shared demo access is active or locked.', 'my-family-tree' ) . '</strong> ' . esc_html__( 'Hiding the Demo tab does not stop shared access or its daily reset.', 'my-family-tree' ) . '</p>';
+		echo '<div class="wpmft-admin-note"><p><strong>' . esc_html__( 'Shared demo access is active or locked.', 'digitalpulse-family-archive' ) . '</strong> ' . esc_html__( 'Hiding the Demo tab does not stop shared access or its daily reset.', 'digitalpulse-family-archive' ) . '</p>';
 		if ( self::tools_visible() ) {
-			echo '<p><a class="button" href="#wpmft-demo">' . esc_html__( 'Manage or disable demo sharing', 'my-family-tree' ) . '</a></p>';
+			echo '<p><a class="button" href="#wpmft-demo">' . esc_html__( 'Manage or disable demo sharing', 'digitalpulse-family-archive' ) . '</a></p>';
 		} else {
-			echo '<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-disable" name="wpmft_demo_confirm" value="1" required><span>' . esc_html__( 'Revoke the shared account and demo sessions, keep demo content, and restore the normal Privacy settings.', 'my-family-tree' ) . '</span></label><p><button type="submit" form="wpmft-demo-disable" class="button">' . esc_html__( 'Disable demo mode', 'my-family-tree' ) . '</button></p>';
+			echo '<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-disable" name="wpmft_demo_confirm" value="1" required><span>' . esc_html__( 'Revoke the shared account and demo sessions, keep demo content, and restore the normal Privacy settings.', 'digitalpulse-family-archive' ) . '</span></label><p><button type="submit" form="wpmft-demo-disable" class="button">' . esc_html__( 'Disable demo mode', 'digitalpulse-family-archive' ) . '</button></p>';
 		}
 		echo '</div>';
 	}
@@ -1073,7 +1073,7 @@ final class WPMFT_Demo {
 			delete_transient( 'wpmft_demo_notice_' . get_current_user_id() );
 			echo '<div class="notice ' . ( ! empty( $notice['error'] ) ? 'notice-error' : 'notice-success' ) . ' is-dismissible"><p>' . esc_html( $notice['message'] ) . '</p></div>';
 		}
-		if ( ! empty( self::state()['quarantined'] ) ) { echo '<div class="notice notice-error"><p>' . esc_html__( 'Family Tree demo sharing was locked because its content is no longer isolated. Shared access has been revoked. Disable demo mode in Family Tree settings before configuring normal family access.', 'my-family-tree' ) . '</p></div>'; }
+		if ( ! empty( self::state()['quarantined'] ) ) { echo '<div class="notice notice-error"><p>' . esc_html__( 'Family Tree demo sharing was locked because its content is no longer isolated. Shared access has been revoked. Disable demo mode in Family Tree settings before configuring normal family access.', 'digitalpulse-family-archive' ) . '</p></div>'; }
 	}
 
 	private static function demo_media_health( $manifest ) {
@@ -1094,51 +1094,51 @@ final class WPMFT_Demo {
 		$active = self::active();
 		$guarded = self::guard_required();
 		?>
-		<h2><?php esc_html_e( 'Demo content & sharing', 'my-family-tree' ); ?></h2>
-		<p><?php esc_html_e( 'Add eight fictional family members, eight realistic archival demo photographs and two English pages. The importer adds marked sample content and preserves existing records, pages and settings. The public-domain photographs are downloaded from Wikimedia Commons only when an administrator imports or refreshes the demo.', 'my-family-tree' ); ?></p>
-		<p><?php esc_html_e( 'All names, dates, biographies and family links are fictional. Archival photographs are public-domain demonstration media and do not depict the named fictional people.', 'my-family-tree' ); ?></p>
+		<h2><?php esc_html_e( 'Demo content & sharing', 'digitalpulse-family-archive' ); ?></h2>
+		<p><?php esc_html_e( 'Add eight fictional family members, eight realistic archival demo photographs and two English pages. The importer adds marked sample content and preserves existing records, pages and settings. The public-domain photographs are downloaded from Wikimedia Commons only when an administrator imports or refreshes the demo.', 'digitalpulse-family-archive' ); ?></p>
+		<p><?php esc_html_e( 'All names, dates, biographies and family links are fictional. Archival photographs are public-domain demonstration media and do not depict the named fictional people.', 'digitalpulse-family-archive' ); ?></p>
 		<?php $media_health = self::demo_media_health( $manifest ); ?>
-		<p><strong><?php esc_html_e( 'Archival demo photos:', 'my-family-tree' ); ?></strong> <?php echo esc_html( $media_health['ready'] . '/' . $media_health['total'] ); ?></p>
+		<p><strong><?php esc_html_e( 'Archival demo photos:', 'digitalpulse-family-archive' ); ?></strong> <?php echo esc_html( $media_health['ready'] . '/' . $media_health['total'] ); ?></p>
 		<?php if ( $media_health['ready'] < $media_health['total'] && ! empty( $manifest['items']['marty'] ) ) : ?>
-		<div class="notice notice-warning inline"><p><?php esc_html_e( 'Some demo records still use older placeholder media. Disable shared demo mode and run “Refresh demo sample data & photos”. The refresh succeeds only after all eight archival photographs have been downloaded and validated.', 'my-family-tree' ); ?></p></div>
+		<div class="notice notice-warning inline"><p><?php esc_html_e( 'Some demo records still use older placeholder media. Disable shared demo mode and run “Refresh demo sample data & photos”. The refresh succeeds only after all eight archival photographs have been downloaded and validated.', 'digitalpulse-family-archive' ); ?></p></div>
 		<?php endif; ?>
-		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-import" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'I understand that demo people will be added alongside existing content. This does not enable public demo access.', 'my-family-tree' ); ?></span></label>
-		<p><button type="submit" form="wpmft-demo-import" class="button button-secondary"><?php esc_html_e( 'Import demo content', 'my-family-tree' ); ?></button></p>
+		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-import" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'I understand that demo people will be added alongside existing content. This does not enable public demo access.', 'digitalpulse-family-archive' ); ?></span></label>
+		<p><button type="submit" form="wpmft-demo-import" class="button button-secondary"><?php esc_html_e( 'Import demo content', 'digitalpulse-family-archive' ); ?></button></p>
 		<?php if ( ! empty( $manifest['items']['marty'] ) && ! $guarded ) : ?>
-		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-refresh" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Replace only the marked demo samples with the realistic family dataset and public-domain archival photographs. Real family content is never changed.', 'my-family-tree' ); ?></span></label>
-		<p><button type="submit" form="wpmft-demo-refresh" class="button"><?php esc_html_e( 'Refresh demo sample data & photos', 'my-family-tree' ); ?></button></p>
+		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-refresh" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Replace only the marked demo samples with the realistic family dataset and public-domain archival photographs. Real family content is never changed.', 'digitalpulse-family-archive' ); ?></span></label>
+		<p><button type="submit" form="wpmft-demo-refresh" class="button"><?php esc_html_e( 'Refresh demo sample data & photos', 'digitalpulse-family-archive' ); ?></button></p>
 		<?php endif; ?>
 		<?php if ( ! empty( $manifest['items']['tree-page'] ) && get_post( $manifest['items']['tree-page'] ) ) : ?>
-		<p><a class="button" href="<?php echo esc_url( get_permalink( $manifest['items']['tree-page'] ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Open demo tree page', 'my-family-tree' ); ?></a></p>
+		<p><a class="button" href="<?php echo esc_url( get_permalink( $manifest['items']['tree-page'] ) ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Open demo tree page', 'digitalpulse-family-archive' ); ?></a></p>
 		<?php endif; ?>
 		<hr>
-		<h3><?php esc_html_e( 'Optional shared demo mode', 'my-family-tree' ); ?></h3>
-		<p><?php esc_html_e( 'Use this on a separate demonstration site containing only demo family records. The restricted Family Tree Demo Editor can add, edit and remove demo persons and pages, and view a read-only settings overview. Contact sending is disabled during demo mode. Visitor edits are public and reset every 24 hours.', 'my-family-tree' ); ?></p>
+		<h3><?php esc_html_e( 'Optional shared demo mode', 'digitalpulse-family-archive' ); ?></h3>
+		<p><?php esc_html_e( 'Use this on a separate demonstration site containing only demo family records. The restricted Family Tree Demo Editor can add, edit and remove demo persons and pages, and view a read-only settings overview. Contact sending is disabled during demo mode. Visitor edits are public and reset every 24 hours.', 'digitalpulse-family-archive' ); ?></p>
 		<?php if ( $active ) : ?>
-		<p><strong><?php esc_html_e( 'Demo mode is active.', 'my-family-tree' ); ?></strong></p>
-		<dl><dt><?php esc_html_e( 'WordPress demo login', 'my-family-tree' ); ?></dt><dd><code>demo</code></dd><dt><?php esc_html_e( 'WordPress demo password', 'my-family-tree' ); ?></dt><dd><code>Demo@demo123Editor</code></dd><dt><?php esc_html_e( 'Front-end demo password', 'my-family-tree' ); ?></dt><dd><code>demo</code></dd></dl>
+		<p><strong><?php esc_html_e( 'Demo mode is active.', 'digitalpulse-family-archive' ); ?></strong></p>
+		<dl><dt><?php esc_html_e( 'WordPress demo login', 'digitalpulse-family-archive' ); ?></dt><dd><code>demo</code></dd><dt><?php esc_html_e( 'WordPress demo password', 'digitalpulse-family-archive' ); ?></dt><dd><code>Demo@demo123Editor</code></dd><dt><?php esc_html_e( 'Front-end demo password', 'digitalpulse-family-archive' ); ?></dt><dd><code>demo</code></dd></dl>
 		<?php elseif ( $guarded ) : ?>
-		<p><strong><?php esc_html_e( 'Demo sharing is locked. Its isolation check failed; shared sessions have been revoked.', 'my-family-tree' ); ?></strong></p>
+		<p><strong><?php esc_html_e( 'Demo sharing is locked. Its isolation check failed; shared sessions have been revoked.', 'digitalpulse-family-archive' ); ?></strong></p>
 		<?php else : ?>
-		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-enable" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'I understand that this creates a shared public demo account with a published password, on an isolated demo tree only.', 'my-family-tree' ); ?></span></label>
-		<p><button type="submit" form="wpmft-demo-enable" class="button"><?php esc_html_e( 'Enable shared demo mode', 'my-family-tree' ); ?></button></p>
+		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-enable" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'I understand that this creates a shared public demo account with a published password, on an isolated demo tree only.', 'digitalpulse-family-archive' ); ?></span></label>
+		<p><button type="submit" form="wpmft-demo-enable" class="button"><?php esc_html_e( 'Enable shared demo mode', 'digitalpulse-family-archive' ); ?></button></p>
 		<?php endif; ?>
 		<?php if ( $guarded ) : ?>
-		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-disable" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Revoke the shared account and demo sessions, keep demo content, and restore the normal Privacy settings.', 'my-family-tree' ); ?></span></label>
-		<p><button type="submit" form="wpmft-demo-disable" class="button"><?php esc_html_e( 'Disable demo mode', 'my-family-tree' ); ?></button></p>
+		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-disable" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Revoke the shared account and demo sessions, keep demo content, and restore the normal Privacy settings.', 'digitalpulse-family-archive' ); ?></span></label>
+		<p><button type="submit" form="wpmft-demo-disable" class="button"><?php esc_html_e( 'Disable demo mode', 'digitalpulse-family-archive' ); ?></button></p>
 		<?php endif; ?>
 		<hr>
-		<h3><?php esc_html_e( 'Automatic demo reset', 'my-family-tree' ); ?></h3>
-		<p><?php esc_html_e( 'Every 24 hours the plugin restores original demo titles, stories, publication status, personal details, contacts and photo stories. Removed original samples return, and visitor-created records are deleted. Settings, relationships, media and unrelated content are kept. No backup plugin is required.', 'my-family-tree' ); ?></p>
-		<p class="description"><?php esc_html_e( 'WordPress runs scheduled tasks when the site receives a request. An overdue reset also runs before the next demo visit or save. An editor opened before a reset must be reloaded before saving.', 'my-family-tree' ); ?></p>
+		<h3><?php esc_html_e( 'Automatic demo reset', 'digitalpulse-family-archive' ); ?></h3>
+		<p><?php esc_html_e( 'Every 24 hours the plugin restores original demo titles, stories, publication status, personal details, contacts and photo stories. Removed original samples return, and visitor-created records are deleted. Settings, relationships, media and unrelated content are kept. No backup plugin is required.', 'digitalpulse-family-archive' ); ?></p>
+		<p class="description"><?php esc_html_e( 'WordPress runs scheduled tasks when the site receives a request. An overdue reset also runs before the next demo visit or save. An editor opened before a reset must be reloaded before saving.', 'digitalpulse-family-archive' ); ?></p>
 		<?php if ( $active ) : $reset_state = self::state(); ?>
-		<p><strong><?php esc_html_e( 'Next reset:', 'my-family-tree' ); ?></strong> <?php echo esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $reset_state['next_reset_at'] ) ); ?></p>
-		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-reset" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Restore the saved demo starting state now and discard current visitor edits.', 'my-family-tree' ); ?></span></label>
-		<p><button type="submit" form="wpmft-demo-reset" class="button"><?php esc_html_e( 'Reset demo now', 'my-family-tree' ); ?></button></p>
+		<p><strong><?php esc_html_e( 'Next reset:', 'digitalpulse-family-archive' ); ?></strong> <?php echo esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $reset_state['next_reset_at'] ) ); ?></p>
+		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-reset" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Restore the saved demo starting state now and discard current visitor edits.', 'digitalpulse-family-archive' ); ?></span></label>
+		<p><button type="submit" form="wpmft-demo-reset" class="button"><?php esc_html_e( 'Reset demo now', 'digitalpulse-family-archive' ); ?></button></p>
 		<?php elseif ( ! $guarded && ! empty( $manifest['items']['marty'] ) ) : ?>
-		<p><?php esc_html_e( 'The first activation saves the imported demo samples as their starting state. That baseline is retained when sharing is disabled and enabled again. To change it, edit those original samples as an administrator while sharing is off, then save a new baseline below.', 'my-family-tree' ); ?></p>
-		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-baseline" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Use the current original demo samples, including their publication status, for future resets. Visitor-created records are still removed at reset.', 'my-family-tree' ); ?></span></label>
-		<p><button type="submit" form="wpmft-demo-baseline" class="button"><?php esc_html_e( 'Save current demo as reset baseline', 'my-family-tree' ); ?></button></p>
+		<p><?php esc_html_e( 'The first activation saves the imported demo samples as their starting state. That baseline is retained when sharing is disabled and enabled again. To change it, edit those original samples as an administrator while sharing is off, then save a new baseline below.', 'digitalpulse-family-archive' ); ?></p>
+		<label class="wpmft-check"><input type="checkbox" form="wpmft-demo-baseline" name="wpmft_demo_confirm" value="1" required> <span><?php esc_html_e( 'Use the current original demo samples, including their publication status, for future resets. Visitor-created records are still removed at reset.', 'digitalpulse-family-archive' ); ?></span></label>
+		<p><button type="submit" form="wpmft-demo-baseline" class="button"><?php esc_html_e( 'Save current demo as reset baseline', 'digitalpulse-family-archive' ); ?></button></p>
 		<?php endif; ?>
 		<?php
 	}
@@ -1163,12 +1163,12 @@ final class WPMFT_Demo {
 		wp_enqueue_script( 'wpmft-demo-admin', wpmft_asset_url( 'demo-admin.js' ), array(), wpmft_asset_version(), true );
 		wp_enqueue_style( 'wpmft-demo-admin', wpmft_asset_url( 'demo-admin.css' ), array(), wpmft_asset_version() );
 		wp_localize_script( 'wpmft-demo-admin', 'WPMFT_DEMO_ADMIN', array(
-			'import' => __( 'Add fictional demo people, public-domain archival photographs and English pages? Existing content will be kept. Importing does not enable shared demo access.', 'my-family-tree' ),
-			'refresh' => __( 'Replace only the marked demo samples with the realistic fictional family dataset and public-domain archival photographs? Shared demo mode must be disabled.', 'my-family-tree' ),
-			'enable' => __( 'Enable a public shared demo login? Anyone given its published credentials can add, edit and remove demo persons and pages. Changes reset every 24 hours. This requires an isolated demo tree.', 'my-family-tree' ),
-			'disable' => __( 'Revoke the shared account and all demo sessions? Demo content will be kept and the normal Privacy settings will apply again.', 'my-family-tree' ),
-			'reset' => __( 'Discard current visitor edits and restore the saved demo starting state? Other site content and settings will be kept.', 'my-family-tree' ),
-			'baseline' => __( 'Replace the saved starting state with the current original demo samples? Daily resets will restore these values and remove visitor-created records.', 'my-family-tree' ),
+			'import' => __( 'Add fictional demo people, public-domain archival photographs and English pages? Existing content will be kept. Importing does not enable shared demo access.', 'digitalpulse-family-archive' ),
+			'refresh' => __( 'Replace only the marked demo samples with the realistic fictional family dataset and public-domain archival photographs? Shared demo mode must be disabled.', 'digitalpulse-family-archive' ),
+			'enable' => __( 'Enable a public shared demo login? Anyone given its published credentials can add, edit and remove demo persons and pages. Changes reset every 24 hours. This requires an isolated demo tree.', 'digitalpulse-family-archive' ),
+			'disable' => __( 'Revoke the shared account and all demo sessions? Demo content will be kept and the normal Privacy settings will apply again.', 'digitalpulse-family-archive' ),
+			'reset' => __( 'Discard current visitor edits and restore the saved demo starting state? Other site content and settings will be kept.', 'digitalpulse-family-archive' ),
+			'baseline' => __( 'Replace the saved starting state with the current original demo samples? Daily resets will restore these values and remove visitor-created records.', 'digitalpulse-family-archive' ),
 		) );
 	}
 
@@ -1193,14 +1193,14 @@ final class WPMFT_Demo {
 	}
 
 	public static function authenticate( $user, $password ) {
-		if ( $user instanceof WP_User && self::is_demo_user( $user->ID ) && ! self::active() ) { return new WP_Error( 'demo_disabled', __( 'Demo sharing is not active.', 'my-family-tree' ) ); }
+		if ( $user instanceof WP_User && self::is_demo_user( $user->ID ) && ! self::active() ) { return new WP_Error( 'demo_disabled', __( 'Demo sharing is not active.', 'digitalpulse-family-archive' ) ); }
 		return $user;
 	}
 
 	public static function application_passwords( $available, $user ) { return $user instanceof WP_User && self::is_demo_user( $user->ID ) ? false : $available; }
 	public static function allow_password_reset( $allow, $user_id ) { return self::is_demo_user( $user_id ) ? false : $allow; }
 	public static function guard_xmlrpc( $enabled ) { return self::guard_required() ? false : $enabled; }
-	public static function guard_rest( $result, $server, $request ) { return self::is_demo_user() ? new WP_Error( 'demo_rest', __( 'Use the restricted demo editor for sample content.', 'my-family-tree' ), array( 'status' => 403 ) ) : $result; }
+	public static function guard_rest( $result, $server, $request ) { return self::is_demo_user() ? new WP_Error( 'demo_rest', __( 'Use the restricted demo editor for sample content.', 'digitalpulse-family-archive' ), array( 'status' => 403 ) ) : $result; }
 
 	public static function restrict_queries( $where, $query ) {
 		if ( ! self::is_demo_user() ) { return $where; }
@@ -1213,11 +1213,11 @@ final class WPMFT_Demo {
 	public static function guard_admin() {
 		if ( ! self::is_demo_user() ) { return; }
 		WPMFT_Security::no_cache();
-		if ( ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Demo sharing is not active.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
+		if ( ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Demo sharing is not active.', 'digitalpulse-family-archive' ), '', array( 'response' => 403 ) ); }
 		$action = isset( $_REQUEST['action'] ) && is_string( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '';
 		if ( wp_doing_ajax() ) {
 			if ( in_array( $action, array( 'wpmft_api', 'wpmft_media' ), true ) ) { return; }
-			wp_send_json_error( array( 'message' => __( 'This action is not available to the demo editor.', 'my-family-tree' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'This action is not available to the demo editor.', 'digitalpulse-family-archive' ) ), 403 );
 		}
 		if ( 'admin-post.php' === ( $GLOBALS['pagenow'] ?? '' ) && in_array( $action, array( 'wpmft_demo_save', 'wpmft_demo_create', 'wpmft_demo_remove' ), true ) ) { return; }
 		$page = isset( $_GET['page'] ) && is_string( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
@@ -1230,11 +1230,11 @@ final class WPMFT_Demo {
 		if ( ! self::is_demo_user() ) { return; }
 		global $menu;
 		$menu = array();
-		add_menu_page( __( 'Family Tree Demo', 'my-family-tree' ), __( 'Persons', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor', array( __CLASS__, 'editor_page' ), 'dashicons-groups', 2 );
-		add_submenu_page( 'wpmft-demo-editor', __( 'Persons', 'my-family-tree' ), __( 'All persons', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor', array( __CLASS__, 'editor_page' ) );
-		add_submenu_page( 'wpmft-demo-editor', __( 'Add person', 'my-family-tree' ), __( 'Add person', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor&create=post', array( __CLASS__, 'editor_page' ) );
-		add_submenu_page( 'wpmft-demo-editor', __( 'Pages', 'my-family-tree' ), __( 'Pages', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor&view=pages', array( __CLASS__, 'editor_page' ) );
-		add_submenu_page( 'wpmft-demo-editor', __( 'Family tree settings', 'my-family-tree' ), __( 'Family tree settings', 'my-family-tree' ), self::CAP, 'wpmft-demo-editor&view=settings', array( __CLASS__, 'editor_page' ) );
+		add_menu_page( __( 'Family Tree Demo', 'digitalpulse-family-archive' ), __( 'Persons', 'digitalpulse-family-archive' ), self::CAP, 'wpmft-demo-editor', array( __CLASS__, 'editor_page' ), 'dashicons-groups', 65 );
+		add_submenu_page( 'wpmft-demo-editor', __( 'Persons', 'digitalpulse-family-archive' ), __( 'All persons', 'digitalpulse-family-archive' ), self::CAP, 'wpmft-demo-editor', array( __CLASS__, 'editor_page' ) );
+		add_submenu_page( 'wpmft-demo-editor', __( 'Add person', 'digitalpulse-family-archive' ), __( 'Add person', 'digitalpulse-family-archive' ), self::CAP, 'wpmft-demo-editor&create=post', array( __CLASS__, 'editor_page' ) );
+		add_submenu_page( 'wpmft-demo-editor', __( 'Pages', 'digitalpulse-family-archive' ), __( 'Pages', 'digitalpulse-family-archive' ), self::CAP, 'wpmft-demo-editor&view=pages', array( __CLASS__, 'editor_page' ) );
+		add_submenu_page( 'wpmft-demo-editor', __( 'Family tree settings', 'digitalpulse-family-archive' ), __( 'Family tree settings', 'digitalpulse-family-archive' ), self::CAP, 'wpmft-demo-editor&view=settings', array( __CLASS__, 'editor_page' ) );
 	}
 
 	public static function editor_page() {
@@ -1257,66 +1257,66 @@ final class WPMFT_Demo {
 		$tree_id = absint( $manifest['items']['tree-page'] ?? 0 );
 		$tree_url = $tree_id && self::is_demo_post( $tree_id ) ? get_permalink( $tree_id ) : '';
 		$next_reset = (int) ( self::state()['next_reset_at'] ?? 0 );
-		$heading = $post ? ( $show_pages ? __( 'Edit demo page', 'my-family-tree' ) : __( 'Edit person', 'my-family-tree' ) ) : ( $show_settings ? __( 'Settings overview', 'my-family-tree' ) : ( $show_pages ? __( 'Demo pages', 'my-family-tree' ) : __( 'Persons', 'my-family-tree' ) ) );
-		if ( $create_type ) { $heading = $show_pages ? __( 'Add page', 'my-family-tree' ) : __( 'Add person', 'my-family-tree' ); }
-		if ( $removing ) { $heading = $show_pages ? __( 'Remove page', 'my-family-tree' ) : __( 'Remove person', 'my-family-tree' ); }
+		$heading = $post ? ( $show_pages ? __( 'Edit demo page', 'digitalpulse-family-archive' ) : __( 'Edit person', 'digitalpulse-family-archive' ) ) : ( $show_settings ? __( 'Settings overview', 'digitalpulse-family-archive' ) : ( $show_pages ? __( 'Demo pages', 'digitalpulse-family-archive' ) : __( 'Persons', 'digitalpulse-family-archive' ) ) );
+		if ( $create_type ) { $heading = $show_pages ? __( 'Add page', 'digitalpulse-family-archive' ) : __( 'Add person', 'digitalpulse-family-archive' ); }
+		if ( $removing ) { $heading = $show_pages ? __( 'Remove page', 'digitalpulse-family-archive' ) : __( 'Remove person', 'digitalpulse-family-archive' ); }
 		?>
 		<div class="wrap wpmft-settings wpmft-demo-editor">
 			<header class="wpmft-demo-header">
-				<div class="wpmft-admin-heading"><div><p class="wpmft-eyebrow">DigitalPulse · <?php esc_html_e( 'Family Tree Demo', 'my-family-tree' ); ?></p><h1><?php echo esc_html( $heading ); ?></h1></div><span class="wpmft-version"><?php echo esc_html( WPMFT_VERSION ); ?></span></div>
+				<div class="wpmft-admin-heading"><div><p class="wpmft-eyebrow">DigitalPulse · <?php esc_html_e( 'Family Tree Demo', 'digitalpulse-family-archive' ); ?></p><h1><?php echo esc_html( $heading ); ?></h1></div><span class="wpmft-version"><?php echo esc_html( WPMFT_VERSION ); ?></span></div>
 				<?php if ( $post ) : ?><p class="wpmft-demo-selected-name"><?php echo esc_html( $post->post_title ); ?></p><?php endif; ?>
-				<nav class="wpmft-demo-nav" aria-label="<?php esc_attr_e( 'Demo navigation', 'my-family-tree' ); ?>">
-					<a class="button" href="<?php echo esc_url( $list_url ); ?>" <?php echo ! $post && ! $create_type && ! $show_pages && ! $show_settings ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'All persons', 'my-family-tree' ); ?></a>
-					<a class="button" href="<?php echo esc_url( $pages_url ); ?>" <?php echo ! $post && ! $create_type && $show_pages ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'Demo pages', 'my-family-tree' ); ?></a>
-					<a class="button" href="<?php echo esc_url( $settings_url ); ?>" <?php echo $show_settings ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'Settings overview', 'my-family-tree' ); ?></a>
-					<?php if ( $tree_url ) : ?><a class="button" href="<?php echo esc_url( $tree_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'View tree', 'my-family-tree' ); ?></a><?php endif; ?>
-					<a class="button wpmft-demo-logout" href="<?php echo esc_url( wp_logout_url( home_url( '/' ) ) ); ?>"><?php esc_html_e( 'Log out', 'my-family-tree' ); ?></a>
+				<nav class="wpmft-demo-nav" aria-label="<?php esc_attr_e( 'Demo navigation', 'digitalpulse-family-archive' ); ?>">
+					<a class="button" href="<?php echo esc_url( $list_url ); ?>" <?php echo ! $post && ! $create_type && ! $show_pages && ! $show_settings ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'All persons', 'digitalpulse-family-archive' ); ?></a>
+					<a class="button" href="<?php echo esc_url( $pages_url ); ?>" <?php echo ! $post && ! $create_type && $show_pages ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'Demo pages', 'digitalpulse-family-archive' ); ?></a>
+					<a class="button" href="<?php echo esc_url( $settings_url ); ?>" <?php echo $show_settings ? 'aria-current="page"' : ''; ?>><?php esc_html_e( 'Settings overview', 'digitalpulse-family-archive' ); ?></a>
+					<?php if ( $tree_url ) : ?><a class="button" href="<?php echo esc_url( $tree_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'View tree', 'digitalpulse-family-archive' ); ?></a><?php endif; ?>
+					<a class="button wpmft-demo-logout" href="<?php echo esc_url( wp_logout_url( home_url( '/' ) ) ); ?>"><?php esc_html_e( 'Log out', 'digitalpulse-family-archive' ); ?></a>
 				</nav>
 			</header>
 			<div class="wpmft-demo-reset-note">
-				<p><?php esc_html_e( 'You can add, edit and remove demo persons and pages. Changes are public. Every 24 hours the original demo returns and visitor-created items are removed. Do not enter personal or confidential information.', 'my-family-tree' ); ?></p>
+				<p><?php esc_html_e( 'You can add, edit and remove demo persons and pages. Changes are public. Every 24 hours the original demo returns and visitor-created items are removed. Do not enter personal or confidential information.', 'digitalpulse-family-archive' ); ?></p>
 				<?php if ( $next_reset ) : ?><p class="wpmft-demo-reset-time"><?php
 					/* translators: %s: The next automatic reset date and time in the site timezone. */
-					echo esc_html( sprintf( __( 'Next reset: %s.', 'my-family-tree' ), wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) . ' T', $next_reset ) ) );
+					echo esc_html( sprintf( __( 'Next reset: %s.', 'digitalpulse-family-archive' ), wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) . ' T', $next_reset ) ) );
 				?></p><?php endif; ?>
 			</div>
 			<?php
-		if ( $post && isset( $_GET['saved'] ) ) { echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Demo changes saved.', 'my-family-tree' ) . '</p></div>'; }
-		if ( $post && isset( $_GET['created'] ) ) { echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Demo item added. It will be removed at the next daily reset.', 'my-family-tree' ) . '</p></div>'; }
-		if ( isset( $_GET['removed'] ) ) { echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Demo item removed. The original demo will return at the next daily reset.', 'my-family-tree' ) . '</p></div>'; }
-		if ( $post && $remove_id && ! $removing ) { echo '<div class="notice notice-info inline"><p>' . esc_html__( 'The starting person and tree page are kept so visitors can always open the demo.', 'my-family-tree' ) . '</p></div>'; }
+		if ( $post && isset( $_GET['saved'] ) ) { echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Demo changes saved.', 'digitalpulse-family-archive' ) . '</p></div>'; }
+		if ( $post && isset( $_GET['created'] ) ) { echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Demo item added. It will be removed at the next daily reset.', 'digitalpulse-family-archive' ) . '</p></div>'; }
+		if ( isset( $_GET['removed'] ) ) { echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Demo item removed. The original demo will return at the next daily reset.', 'digitalpulse-family-archive' ) . '</p></div>'; }
+		if ( $post && $remove_id && ! $removing ) { echo '<div class="notice notice-info inline"><p>' . esc_html__( 'The starting person and tree page are kept so visitors can always open the demo.', 'digitalpulse-family-archive' ) . '</p></div>'; }
 		if ( $removing ) {
 			echo '<form class="wpmft-demo-remove-form" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" method="post"><input type="hidden" name="action" value="wpmft_demo_remove"><input type="hidden" name="person" value="' . absint( $id ) . '">';
 			wp_nonce_field( 'wpmft_demo_remove' );
 			echo '<input type="hidden" name="wpmft_demo_reset_cycle" value="' . esc_attr( self::state()['reset_cycle'] ?? '' ) . '">';
-			echo '<p>' . esc_html__( 'This item will disappear from the public demo. The original demo is restored every 24 hours.', 'my-family-tree' ) . '</p><label class="wpmft-demo-setting-check"><input type="checkbox" name="wpmft_demo_confirm" value="1" required><span>' . esc_html__( 'I confirm removal of this demo item.', 'my-family-tree' ) . '</span></label><div class="wpmft-demo-form-actions"><button type="submit" class="button wpmft-demo-remove-button">' . esc_html( $heading ) . '</button><a class="button" href="' . esc_url( $show_pages ? $pages_url : $list_url ) . '">' . esc_html__( 'Cancel', 'my-family-tree' ) . '</a></div></form>';
+			echo '<p>' . esc_html__( 'This item will disappear from the public demo. The original demo is restored every 24 hours.', 'digitalpulse-family-archive' ) . '</p><label class="wpmft-demo-setting-check"><input type="checkbox" name="wpmft_demo_confirm" value="1" required><span>' . esc_html__( 'I confirm removal of this demo item.', 'digitalpulse-family-archive' ) . '</span></label><div class="wpmft-demo-form-actions"><button type="submit" class="button wpmft-demo-remove-button">' . esc_html( $heading ) . '</button><a class="button" href="' . esc_url( $show_pages ? $pages_url : $list_url ) . '">' . esc_html__( 'Cancel', 'digitalpulse-family-archive' ) . '</a></div></form>';
 		} elseif ( $post || $create_type ) {
 			echo '<form class="wpmft-demo-person-form" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" method="post"><input type="hidden" name="action" value="' . ( $create_type ? 'wpmft_demo_create' : 'wpmft_demo_save' ) . '">';
 			if ( $create_type ) { echo '<input type="hidden" name="demo_type" value="' . esc_attr( $create_type ) . '">'; }
 			else { echo '<input type="hidden" name="person" value="' . absint( $id ) . '">'; }
 			wp_nonce_field( $create_type ? 'wpmft_demo_create' : 'wpmft_demo_save' );
 			echo '<input type="hidden" name="wpmft_demo_reset_cycle" value="' . esc_attr( self::state()['reset_cycle'] ?? '' ) . '">';
-			echo '<div class="wpmft-person-panel"><label class="wpmft-field wpmft-demo-title-field" for="wpmft-demo-title"><span>' . esc_html( $show_pages ? __( 'Name / title', 'my-family-tree' ) : __( 'Person’s full name', 'my-family-tree' ) ) . '</span><input class="large-text" id="wpmft-demo-title" name="demo_title" value="' . esc_attr( $post ? $post->post_title : '' ) . '" maxlength="160" required></label>';
+			echo '<div class="wpmft-person-panel"><label class="wpmft-field wpmft-demo-title-field" for="wpmft-demo-title"><span>' . esc_html( $show_pages ? __( 'Name / title', 'digitalpulse-family-archive' ) : __( 'Person’s full name', 'digitalpulse-family-archive' ) ) . '</span><input class="large-text" id="wpmft-demo-title" name="demo_title" value="' . esc_attr( $post ? $post->post_title : '' ) . '" maxlength="160" required></label>';
 			if ( ! $show_pages ) { self::editor_person_fields( $post ); }
-			echo '</div><section class="wpmft-person-panel"><h2 class="wpmft-biography-heading">' . esc_html__( 'Biography / page story', 'my-family-tree' ) . '</h2>';
+			echo '</div><section class="wpmft-person-panel"><h2 class="wpmft-biography-heading">' . esc_html__( 'Biography / page story', 'digitalpulse-family-archive' ) . '</h2>';
 			if ( $id === $tree_id ) {
-				echo '<textarea class="large-text" rows="3" id="wpmft-demo-story" name="demo_story" readonly>' . esc_textarea( $post->post_content ) . '</textarea><p class="description">' . esc_html__( 'This page displays the demo family tree. Its shortcode is preserved; you can edit the page title.', 'my-family-tree' ) . '</p>';
+				echo '<textarea class="large-text" rows="3" id="wpmft-demo-story" name="demo_story" readonly>' . esc_textarea( $post->post_content ) . '</textarea><p class="description">' . esc_html__( 'This page displays the demo family tree. Its shortcode is preserved; you can edit the page title.', 'digitalpulse-family-archive' ) . '</p>';
 			} else {
 				wp_editor( $post ? $post->post_content : '', 'wpmft-demo-story', array( 'textarea_name' => 'demo_story', 'media_buttons' => false, 'textarea_rows' => 14, 'teeny' => true, 'tinymce' => array( 'toolbar1' => 'formatselect,bold,italic,bullist,numlist,blockquote,undo,redo,removeformat', 'toolbar2' => '' ), 'quicktags' => array( 'buttons' => 'strong,em,block,del,ins,ul,ol,li,close' ) ) );
-				echo '<p class="description">' . esc_html__( 'Write a story with simple formatting. Shared demo pages do not run shortcodes or embedded scripts.', 'my-family-tree' ) . '</p>';
+				echo '<p class="description">' . esc_html__( 'Write a story with simple formatting. Shared demo pages do not run shortcodes or embedded scripts.', 'digitalpulse-family-archive' ) . '</p>';
 			}
 			echo '</section>';
 			echo '<div class="wpmft-demo-form-actions">';
-			submit_button( $create_type ? $heading : ( $show_pages ? __( 'Save demo page', 'my-family-tree' ) : __( 'Save person', 'my-family-tree' ) ), 'primary', 'submit', false );
-			echo '<a class="button" href="' . esc_url( $show_pages ? $pages_url : $list_url ) . '">' . esc_html__( 'Cancel', 'my-family-tree' ) . '</a></div></form>';
-			if ( $post && ! self::removal_protected( $id ) ) { echo '<p><a class="wpmft-demo-remove-link" href="' . esc_url( add_query_arg( 'remove', $id, $list_url ) ) . '">' . esc_html( $show_pages ? __( 'Remove page', 'my-family-tree' ) : __( 'Remove person', 'my-family-tree' ) ) . '</a></p>'; }
+			submit_button( $create_type ? $heading : ( $show_pages ? __( 'Save demo page', 'digitalpulse-family-archive' ) : __( 'Save person', 'digitalpulse-family-archive' ) ), 'primary', 'submit', false );
+			echo '<a class="button" href="' . esc_url( $show_pages ? $pages_url : $list_url ) . '">' . esc_html__( 'Cancel', 'digitalpulse-family-archive' ) . '</a></div></form>';
+			if ( $post && ! self::removal_protected( $id ) ) { echo '<p><a class="wpmft-demo-remove-link" href="' . esc_url( add_query_arg( 'remove', $id, $list_url ) ) . '">' . esc_html( $show_pages ? __( 'Remove page', 'digitalpulse-family-archive' ) : __( 'Remove person', 'digitalpulse-family-archive' ) ) . '</a></p>'; }
 		} elseif ( $show_settings ) {
 			self::editor_settings_overview( $manifest, $tree_url, $list_url );
 		} else {
-			echo '<p class="wpmft-demo-content-actions"><a class="button button-primary" href="' . esc_url( add_query_arg( 'create', $show_pages ? 'page' : 'post', $list_url ) ) . '">' . esc_html( $show_pages ? __( 'Add page', 'my-family-tree' ) : __( 'Add person', 'my-family-tree' ) ) . '</a></p>';
+			echo '<p class="wpmft-demo-content-actions"><a class="button button-primary" href="' . esc_url( add_query_arg( 'create', $show_pages ? 'page' : 'post', $list_url ) ) . '">' . esc_html( $show_pages ? __( 'Add page', 'digitalpulse-family-archive' ) : __( 'Add person', 'digitalpulse-family-archive' ) ) . '</a></p>';
 			if ( ! $show_pages ) {
-				echo '<p class="wpmft-demo-intro">' . esc_html__( 'Choose Edit person to try personal details, contact fields, WhatsApp and photo stories in the same layout as the family editor. Use View person to see the public profile.', 'my-family-tree' ) . '</p>';
-				echo '<div class="wpmft-demo-search"><label for="wpmft-demo-search">' . esc_html__( 'Search persons', 'my-family-tree' ) . '</label><input type="search" id="wpmft-demo-search" aria-controls="wpmft-demo-person-list" autocomplete="off"></div>';
+				echo '<p class="wpmft-demo-intro">' . esc_html__( 'Choose Edit person to try personal details, contact fields, WhatsApp and photo stories in the same layout as the family editor. Use View person to see the public profile.', 'digitalpulse-family-archive' ) . '</p>';
+				echo '<div class="wpmft-demo-search"><label for="wpmft-demo-search">' . esc_html__( 'Search persons', 'digitalpulse-family-archive' ) . '</label><input type="search" id="wpmft-demo-search" aria-controls="wpmft-demo-person-list" autocomplete="off"></div>';
 			}
 			echo '<ul class="wpmft-demo-cards" id="wpmft-demo-person-list">';
 			foreach ( $manifest['items'] ?? array() as $item ) {
@@ -1329,14 +1329,14 @@ final class WPMFT_Demo {
 				if ( $portrait && self::is_demo_post( $portrait ) ) { echo wp_get_attachment_image( $portrait, 'thumbnail', false, array( 'class' => 'wpmft-demo-card-portrait', 'alt' => '', 'loading' => 'lazy' ) ); }
 				echo '<div><h2>' . esc_html( $sample->post_title ) . '</h2>';
 				if ( ! $show_pages ) { echo '<p>' . esc_html( get_post_meta( $item, '_wpmft_occupation', true ) ) . '</p>'; }
-				echo '</div></div><div class="wpmft-demo-card-actions"><a class="button button-primary" href="' . esc_url( $edit_url ) . '">' . esc_html( $show_pages ? __( 'Edit demo page', 'my-family-tree' ) : __( 'Edit person', 'my-family-tree' ) ) . '<span class="screen-reader-text">: ' . esc_html( $sample->post_title ) . '</span></a>';
-				if ( $view_url ) { echo '<a class="button" href="' . esc_url( $view_url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $show_pages ? __( 'View page', 'my-family-tree' ) : __( 'View person', 'my-family-tree' ) ) . '<span class="screen-reader-text">: ' . esc_html( $sample->post_title ) . '</span></a>'; }
+				echo '</div></div><div class="wpmft-demo-card-actions"><a class="button button-primary" href="' . esc_url( $edit_url ) . '">' . esc_html( $show_pages ? __( 'Edit demo page', 'digitalpulse-family-archive' ) : __( 'Edit person', 'digitalpulse-family-archive' ) ) . '<span class="screen-reader-text">: ' . esc_html( $sample->post_title ) . '</span></a>';
+				if ( $view_url ) { echo '<a class="button" href="' . esc_url( $view_url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $show_pages ? __( 'View page', 'digitalpulse-family-archive' ) : __( 'View person', 'digitalpulse-family-archive' ) ) . '<span class="screen-reader-text">: ' . esc_html( $sample->post_title ) . '</span></a>'; }
 				echo '</div>';
-				if ( ! self::removal_protected( $item ) ) { echo '<a class="wpmft-demo-remove-link" href="' . esc_url( add_query_arg( 'remove', absint( $item ), $list_url ) ) . '">' . esc_html( $show_pages ? __( 'Remove page', 'my-family-tree' ) : __( 'Remove person', 'my-family-tree' ) ) . '<span class="screen-reader-text">: ' . esc_html( $sample->post_title ) . '</span></a>'; }
-				else { echo '<small class="wpmft-demo-protected-note">' . esc_html__( 'Required for the demo tree.', 'my-family-tree' ) . '</small>'; }
+				if ( ! self::removal_protected( $item ) ) { echo '<a class="wpmft-demo-remove-link" href="' . esc_url( add_query_arg( 'remove', absint( $item ), $list_url ) ) . '">' . esc_html( $show_pages ? __( 'Remove page', 'digitalpulse-family-archive' ) : __( 'Remove person', 'digitalpulse-family-archive' ) ) . '<span class="screen-reader-text">: ' . esc_html( $sample->post_title ) . '</span></a>'; }
+				else { echo '<small class="wpmft-demo-protected-note">' . esc_html__( 'Required for the demo tree.', 'digitalpulse-family-archive' ) . '</small>'; }
 				echo '</li>';
 			}
-			echo '</ul><p id="wpmft-demo-empty" role="status" hidden>' . esc_html__( 'No persons found.', 'my-family-tree' ) . '</p>';
+			echo '</ul><p id="wpmft-demo-empty" role="status" hidden>' . esc_html__( 'No persons found.', 'digitalpulse-family-archive' ) . '</p>';
 		}
 		echo '</div>';
 	}
@@ -1347,47 +1347,47 @@ final class WPMFT_Demo {
 		$portrait = $id ? get_post_thumbnail_id( $id ) : 0;
 		?>
 		<div class="wpmft-person-editor">
-			<label class="wpmft-check"><input type="checkbox" checked disabled><span><?php esc_html_e( 'Include this post as a person in the family tree', 'my-family-tree' ); ?></span></label>
+			<label class="wpmft-check"><input type="checkbox" checked disabled><span><?php esc_html_e( 'Include this post as a person in the family tree', 'digitalpulse-family-archive' ); ?></span></label>
 			<div class="wpmft-portrait-editor">
 				<div class="wpmft-portrait-preview"><?php if ( $portrait && self::allows_media( $portrait ) ) { echo wp_get_attachment_image( $portrait, 'medium' ); } else { echo '<span class="dashicons dashicons-admin-users" aria-hidden="true"></span>'; } ?></div>
-				<div><h3><?php esc_html_e( 'Portrait', 'my-family-tree' ); ?></h3><p class="description"><?php esc_html_e( 'The portrait is the post’s featured image. Faces stay at the top of photo frames.', 'my-family-tree' ); ?></p><p class="description"><?php esc_html_e( 'Sample portraits, gallery selection and family links are protected in the shared demo. Personal details, contacts and photo stories below are editable.', 'my-family-tree' ); ?></p></div>
+				<div><h3><?php esc_html_e( 'Portrait', 'digitalpulse-family-archive' ); ?></h3><p class="description"><?php esc_html_e( 'The portrait is the post’s featured image. Faces stay at the top of photo frames.', 'digitalpulse-family-archive' ); ?></p><p class="description"><?php esc_html_e( 'Sample portraits, gallery selection and family links are protected in the shared demo. Personal details, contacts and photo stories below are editable.', 'digitalpulse-family-archive' ); ?></p></div>
 			</div>
-			<h3><?php esc_html_e( 'Personal details', 'my-family-tree' ); ?></h3>
+			<h3><?php esc_html_e( 'Personal details', 'digitalpulse-family-archive' ); ?></h3>
 			<div class="wpmft-person-grid">
-				<label class="wpmft-field"><span><?php esc_html_e( 'Gender', 'my-family-tree' ); ?></span><select name="demo_meta[gender]">
-				<?php foreach ( array( '' => __( 'Not specified', 'my-family-tree' ), 'm' => __( 'Male', 'my-family-tree' ), 'f' => __( 'Female', 'my-family-tree' ), 'x' => __( 'Other', 'my-family-tree' ) ) as $value => $label ) : ?><option value="<?php echo esc_attr( $value ); ?>" <?php selected( $id ? get_post_meta( $id, 'gender', true ) : '', $value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?>
+				<label class="wpmft-field"><span><?php esc_html_e( 'Gender', 'digitalpulse-family-archive' ); ?></span><select name="demo_meta[gender]">
+				<?php foreach ( array( '' => __( 'Not specified', 'digitalpulse-family-archive' ), 'm' => __( 'Male', 'digitalpulse-family-archive' ), 'f' => __( 'Female', 'digitalpulse-family-archive' ), 'x' => __( 'Other', 'digitalpulse-family-archive' ) ) as $value => $label ) : ?><option value="<?php echo esc_attr( $value ); ?>" <?php selected( $id ? get_post_meta( $id, 'gender', true ) : '', $value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?>
 				</select></label>
-				<?php foreach ( array( 'born' => __( 'Date of birth', 'my-family-tree' ), 'died' => __( 'Date of death (leave blank if living)', 'my-family-tree' ), '_wpmft_name_day' => __( 'Name day override (MM-DD, optional)', 'my-family-tree' ), '_wpmft_maiden_name' => __( 'Birth / maiden name', 'my-family-tree' ), '_wpmft_birth_place' => __( 'Birthplace', 'my-family-tree' ), '_wpmft_death_place' => __( 'Place of death', 'my-family-tree' ), '_wpmft_location' => __( 'Location', 'my-family-tree' ), '_wpmft_occupation' => __( 'Occupation', 'my-family-tree' ) ) as $key => $label ) { self::editor_field( $id, $key, $label ); } ?>
+				<?php foreach ( array( 'born' => __( 'Date of birth', 'digitalpulse-family-archive' ), 'died' => __( 'Date of death (leave blank if living)', 'digitalpulse-family-archive' ), '_wpmft_name_day' => __( 'Name day override (MM-DD, optional)', 'digitalpulse-family-archive' ), '_wpmft_maiden_name' => __( 'Birth / maiden name', 'digitalpulse-family-archive' ), '_wpmft_birth_place' => __( 'Birthplace', 'digitalpulse-family-archive' ), '_wpmft_death_place' => __( 'Place of death', 'digitalpulse-family-archive' ), '_wpmft_location' => __( 'Location', 'digitalpulse-family-archive' ), '_wpmft_occupation' => __( 'Occupation', 'digitalpulse-family-archive' ) ) as $key => $label ) { self::editor_field( $id, $key, $label ); } ?>
 			</div>
-			<p class="description"><?php esc_html_e( 'Dates accept YYYY, YYYY-MM or YYYY-MM-DD. Older date text is retained unless you change it.', 'my-family-tree' ); ?></p>
-			<h3><?php esc_html_e( 'Family connections', 'my-family-tree' ); ?></h3>
+			<p class="description"><?php esc_html_e( 'Dates accept YYYY, YYYY-MM or YYYY-MM-DD. Older date text is retained unless you change it.', 'digitalpulse-family-archive' ); ?></p>
+			<h3><?php esc_html_e( 'Family connections', 'digitalpulse-family-archive' ); ?></h3>
 			<div class="wpmft-person-grid">
-			<?php foreach ( array( 'father' => __( 'Father / parent 1', 'my-family-tree' ), 'mother' => __( 'Mother / parent 2', 'my-family-tree' ), 'spouse' => __( 'Primary spouse / partner', 'my-family-tree' ) ) as $key => $label ) : $related = $id ? absint( get_post_meta( $id, $key, true ) ) : 0; ?>
+			<?php foreach ( array( 'father' => __( 'Father / parent 1', 'digitalpulse-family-archive' ), 'mother' => __( 'Mother / parent 2', 'digitalpulse-family-archive' ), 'spouse' => __( 'Primary spouse / partner', 'digitalpulse-family-archive' ) ) as $key => $label ) : $related = $id ? absint( get_post_meta( $id, $key, true ) ) : 0; ?>
 				<label class="wpmft-field"><span><?php echo esc_html( $label ); ?></span><input type="text" readonly value="<?php echo esc_attr( $related && self::allows_person( $related ) ? get_the_title( $related ) : '' ); ?>"></label>
 			<?php endforeach; ?>
 			</div>
-			<section class="wpmft-contact-details"><h3><?php esc_html_e( 'Contact details', 'my-family-tree' ); ?></h3>
-				<p class="description"><?php esc_html_e( 'Use fictional contact information in this public demo. Changes are visible to other visitors until the daily reset.', 'my-family-tree' ); ?></p>
+			<section class="wpmft-contact-details"><h3><?php esc_html_e( 'Contact details', 'digitalpulse-family-archive' ); ?></h3>
+				<p class="description"><?php esc_html_e( 'Use fictional contact information in this public demo. Changes are visible to other visitors until the daily reset.', 'digitalpulse-family-archive' ); ?></p>
 				<div class="wpmft-person-grid">
-				<?php foreach ( array( '_wpmft_email' => array( __( 'Email address', 'my-family-tree' ), 'email' ), '_wpmft_phone' => array( __( 'Telephone', 'my-family-tree' ), 'tel' ), '_wpmft_mobile' => array( __( 'Mobile phone', 'my-family-tree' ), 'tel' ), '_wpmft_whatsapp' => array( __( 'WhatsApp number', 'my-family-tree' ), 'tel' ), '_wpmft_website' => array( __( 'Website', 'my-family-tree' ), 'url' ) ) as $key => $field ) { self::editor_field( $id, $key, $field[0], $field[1] ); } ?>
-				<label class="wpmft-field wpmft-field-wide"><span><?php esc_html_e( 'Postal address', 'my-family-tree' ); ?></span><textarea name="demo_meta[_wpmft_address]" rows="3" maxlength="500"><?php echo esc_textarea( $id ? get_post_meta( $id, '_wpmft_address', true ) : '' ); ?></textarea></label>
+				<?php foreach ( array( '_wpmft_email' => array( __( 'Email address', 'digitalpulse-family-archive' ), 'email' ), '_wpmft_phone' => array( __( 'Telephone', 'digitalpulse-family-archive' ), 'tel' ), '_wpmft_mobile' => array( __( 'Mobile phone', 'digitalpulse-family-archive' ), 'tel' ), '_wpmft_whatsapp' => array( __( 'WhatsApp number', 'digitalpulse-family-archive' ), 'tel' ), '_wpmft_website' => array( __( 'Website', 'digitalpulse-family-archive' ), 'url' ) ) as $key => $field ) { self::editor_field( $id, $key, $field[0], $field[1] ); } ?>
+				<label class="wpmft-field wpmft-field-wide"><span><?php esc_html_e( 'Postal address', 'digitalpulse-family-archive' ); ?></span><textarea name="demo_meta[_wpmft_address]" rows="3" maxlength="500"><?php echo esc_textarea( $id ? get_post_meta( $id, '_wpmft_address', true ) : '' ); ?></textarea></label>
 				</div>
-				<p class="description"><?php esc_html_e( 'For WhatsApp, include the country code, for example +371 or +44. Leave it blank to hide the chat icon.', 'my-family-tree' ); ?></p>
-				<h3><?php esc_html_e( 'Social profiles', 'my-family-tree' ); ?></h3><div class="wpmft-person-grid">
+				<p class="description"><?php esc_html_e( 'For WhatsApp, include the country code, for example +371 or +44. Leave it blank to hide the chat icon.', 'digitalpulse-family-archive' ); ?></p>
+				<h3><?php esc_html_e( 'Social profiles', 'digitalpulse-family-archive' ); ?></h3><div class="wpmft-person-grid">
 				<?php foreach ( array( 'facebook' => 'Facebook', 'instagram' => 'Instagram', 'linkedin' => 'LinkedIn', 'x' => 'X / Twitter', 'youtube' => 'YouTube', 'tiktok' => 'TikTok' ) as $key => $label ) { self::editor_field( $id, '_wpmft_social_' . $key, $label, 'url' ); } ?>
 				</div>
 			</section>
-			<h3><?php esc_html_e( 'Photo gallery', 'my-family-tree' ); ?></h3>
+			<h3><?php esc_html_e( 'Photo gallery', 'digitalpulse-family-archive' ); ?></h3>
 			<?php $gallery = $id ? array_values( array_filter( WPMFT_Data::gallery_ids( $id ), array( __CLASS__, 'allows_media' ) ) ) : array(); $details = $id ? WPMFT_Data::gallery_details( $id ) : array(); ?>
 			<?php if ( $gallery ) : ?><div class="wpmft-demo-gallery">
 			<?php foreach ( $gallery as $photo ) : $detail = $details[$photo] ?? array( 'description' => '', 'date' => '' ); ?>
 				<article class="wpmft-demo-gallery-card">
 					<?php echo wp_get_attachment_image( $photo, 'medium', false, array( 'loading' => 'lazy', 'decoding' => 'async' ) ); ?>
-					<div><label class="wpmft-field"><span><?php esc_html_e( 'When was it taken?', 'my-family-tree' ); ?></span><input type="text" name="demo_meta[_wpmft_gallery_details][<?php echo absint( $photo ); ?>][date]" value="<?php echo esc_attr( $detail['date'] ); ?>" maxlength="100"></label>
-					<label class="wpmft-field"><span><?php esc_html_e( 'Photo story / description', 'my-family-tree' ); ?></span><textarea name="demo_meta[_wpmft_gallery_details][<?php echo absint( $photo ); ?>][description]" rows="3" maxlength="2000"><?php echo esc_textarea( $detail['description'] ); ?></textarea></label></div>
+					<div><label class="wpmft-field"><span><?php esc_html_e( 'When was it taken?', 'digitalpulse-family-archive' ); ?></span><input type="text" name="demo_meta[_wpmft_gallery_details][<?php echo absint( $photo ); ?>][date]" value="<?php echo esc_attr( $detail['date'] ); ?>" maxlength="100"></label>
+					<label class="wpmft-field"><span><?php esc_html_e( 'Photo story / description', 'digitalpulse-family-archive' ); ?></span><textarea name="demo_meta[_wpmft_gallery_details][<?php echo absint( $photo ); ?>][description]" rows="3" maxlength="2000"><?php echo esc_textarea( $detail['description'] ); ?></textarea></label></div>
 				</article>
 			<?php endforeach; ?>
-			</div><?php else : ?><p class="description"><?php esc_html_e( 'The administrator can assign sample photographs to this person. Existing sample galleries let you try photo stories and dates.', 'my-family-tree' ); ?></p><?php endif; ?>
+			</div><?php else : ?><p class="description"><?php esc_html_e( 'The administrator can assign sample photographs to this person. Existing sample galleries let you try photo stories and dates.', 'digitalpulse-family-archive' ); ?></p><?php endif; ?>
 		</div>
 		<?php
 	}
@@ -1424,53 +1424,53 @@ final class WPMFT_Demo {
 		$accent = sanitize_hex_color( $s['accent'] ) ?: '#315a42';
 		$background = sanitize_hex_color( $s['background'] ) ?: '#f5f4ed';
 		?>
-		<p class="wpmft-demo-intro" id="wpmft-demo-settings-help"><?php esc_html_e( 'These settings explain how My Family Tree works. Only the site administrator can change them.', 'my-family-tree' ); ?></p>
-		<nav class="wpmft-admin-tabs wpmft-demo-settings-tabs" aria-label="<?php esc_attr_e( 'Family tree settings', 'my-family-tree' ); ?>">
-			<?php foreach ( array( 'general' => __( 'General', 'my-family-tree' ), 'privacy' => __( 'Privacy & access', 'my-family-tree' ), 'appearance' => __( 'Appearance', 'my-family-tree' ), 'contact' => __( 'Contact & hCaptcha', 'my-family-tree' ), 'performance' => __( 'Performance & cache', 'my-family-tree' ), 'languages' => __( 'Languages', 'my-family-tree' ) ) as $key => $label ) : ?><a href="#wpmft-demo-settings-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></a><?php endforeach; ?>
+		<p class="wpmft-demo-intro" id="wpmft-demo-settings-help"><?php esc_html_e( 'These settings explain how DigitalPulse Family Archive works. Only the site administrator can change them.', 'digitalpulse-family-archive' ); ?></p>
+		<nav class="wpmft-admin-tabs wpmft-demo-settings-tabs" aria-label="<?php esc_attr_e( 'Family tree settings', 'digitalpulse-family-archive' ); ?>">
+			<?php foreach ( array( 'general' => __( 'General', 'digitalpulse-family-archive' ), 'privacy' => __( 'Privacy & access', 'digitalpulse-family-archive' ), 'appearance' => __( 'Appearance', 'digitalpulse-family-archive' ), 'contact' => __( 'Contact & hCaptcha', 'digitalpulse-family-archive' ), 'performance' => __( 'Performance & cache', 'digitalpulse-family-archive' ), 'languages' => __( 'Languages', 'digitalpulse-family-archive' ) ) as $key => $label ) : ?><a href="#wpmft-demo-settings-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></a><?php endforeach; ?>
 		</nav>
 		<div class="wpmft-settings-form wpmft-demo-settings-panels" aria-describedby="wpmft-demo-settings-help">
 			<section id="wpmft-demo-settings-general" class="wpmft-settings-section wpmft-demo-settings-group">
-				<h2><?php esc_html_e( 'General', 'my-family-tree' ); ?></h2>
+				<h2><?php esc_html_e( 'General', 'digitalpulse-family-archive' ); ?></h2>
 				<dl>
-					<dt><?php esc_html_e( 'Tree page', 'my-family-tree' ); ?></dt><dd><?php if ( $tree_url ) : ?><a href="<?php echo esc_url( $tree_url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( get_the_title( $tree_id ) ); ?></a><?php endif; ?></dd>
-					<dt><?php esc_html_e( 'Starting person', 'my-family-tree' ); ?></dt><dd><?php if ( $root ) : ?><a href="<?php echo esc_url( add_query_arg( 'person', $root_id, $list_url ) ); ?>"><?php echo esc_html( $root->post_title ); ?></a><?php endif; ?></dd>
+					<dt><?php esc_html_e( 'Tree page', 'digitalpulse-family-archive' ); ?></dt><dd><?php if ( $tree_url ) : ?><a href="<?php echo esc_url( $tree_url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( get_the_title( $tree_id ) ); ?></a><?php endif; ?></dd>
+					<dt><?php esc_html_e( 'Starting person', 'digitalpulse-family-archive' ); ?></dt><dd><?php if ( $root ) : ?><a href="<?php echo esc_url( add_query_arg( 'person', $root_id, $list_url ) ); ?>"><?php echo esc_html( $root->post_title ); ?></a><?php endif; ?></dd>
 				</dl>
-				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Shortcodes', 'my-family-tree' ); ?></span><input type="text" readonly value="[wp_my_family_tree]"></label>
-				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['demo_tools_enabled'] ) ); ?>><span><?php esc_html_e( 'Show the Demo tab for sample content and demo sharing', 'my-family-tree' ); ?></span></label>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Shortcodes', 'digitalpulse-family-archive' ); ?></span><input type="text" readonly value="[wp_my_family_tree]"></label>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['demo_tools_enabled'] ) ); ?>><span><?php esc_html_e( 'Show the Demo tab for sample content and demo sharing', 'digitalpulse-family-archive' ); ?></span></label>
 			</section>
 			<section id="wpmft-demo-settings-appearance" class="wpmft-settings-section wpmft-demo-settings-group">
-				<h2><?php esc_html_e( 'Appearance', 'my-family-tree' ); ?></h2>
-				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['standalone'] ) ); ?>><span><?php esc_html_e( 'Use the full-window layout without the theme header and footer', 'my-family-tree' ); ?></span></label>
-				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Accent colour', 'my-family-tree' ); ?></span><input type="text" readonly value="<?php echo esc_attr( $accent ); ?>"></label>
-				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Background colour', 'my-family-tree' ); ?></span><input type="text" readonly value="<?php echo esc_attr( $background ); ?>"></label>
-				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Tree canvas height on large screens (px)', 'my-family-tree' ); ?></span><input type="number" readonly value="<?php echo absint( $s['tree_height'] ); ?>"></label>
+				<h2><?php esc_html_e( 'Appearance', 'digitalpulse-family-archive' ); ?></h2>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['standalone'] ) ); ?>><span><?php esc_html_e( 'Use the full-window layout without the theme header and footer', 'digitalpulse-family-archive' ); ?></span></label>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Accent colour', 'digitalpulse-family-archive' ); ?></span><input type="text" readonly value="<?php echo esc_attr( $accent ); ?>"></label>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Background colour', 'digitalpulse-family-archive' ); ?></span><input type="text" readonly value="<?php echo esc_attr( $background ); ?>"></label>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Tree canvas height on large screens (px)', 'digitalpulse-family-archive' ); ?></span><input type="number" readonly value="<?php echo absint( $s['tree_height'] ); ?>"></label>
 			</section>
 			<section id="wpmft-demo-settings-languages" class="wpmft-settings-section wpmft-demo-settings-group">
-				<h2><?php esc_html_e( 'Languages', 'my-family-tree' ); ?></h2>
-				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Default interface language', 'my-family-tree' ); ?></span><input type="text" readonly value="<?php echo esc_attr( $default_language_name ); ?>"></label>
-				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['language_switch'] ) ); ?>><span><?php esc_html_e( 'Show the language switch', 'my-family-tree' ); ?></span></label>
+				<h2><?php esc_html_e( 'Languages', 'digitalpulse-family-archive' ); ?></h2>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Default interface language', 'digitalpulse-family-archive' ); ?></span><input type="text" readonly value="<?php echo esc_attr( $default_language_name ); ?>"></label>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['language_switch'] ) ); ?>><span><?php esc_html_e( 'Show the language switch', 'digitalpulse-family-archive' ); ?></span></label>
 				<ul class="wpmft-demo-language-list"><?php foreach ( $languages['languages'] as $language ) : ?><li><?php echo esc_html( $language['name'] ); ?></li><?php endforeach; ?></ul>
-				<p><?php echo esc_html( 'polylang' === $languages['provider'] ? __( 'Polylang is active. Its configured languages and translated page links control the public language menu. These presets supply interface labels.', 'my-family-tree' ) : __( 'Polylang is optional and free to install. The tree and its interface languages work without it. Installing it does not automatically translate your content.', 'my-family-tree' ) ); ?></p>
+				<p><?php echo esc_html( 'polylang' === $languages['provider'] ? __( 'Polylang is active. Its configured languages and translated page links control the public language menu. These presets supply interface labels.', 'digitalpulse-family-archive' ) : __( 'Polylang is optional and free to install. The tree and its interface languages work without it. Installing it does not automatically translate your content.', 'digitalpulse-family-archive' ) ); ?></p>
 			</section>
 			<section id="wpmft-demo-settings-privacy" class="wpmft-settings-section wpmft-demo-settings-group">
-				<h2><?php esc_html_e( 'Privacy & access', 'my-family-tree' ); ?></h2>
-				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled checked><span><?php esc_html_e( 'Optional shared demo mode', 'my-family-tree' ); ?></span></label>
-				<p><?php esc_html_e( 'Demo access is separate from the private-family password. The shared account can manage demo persons and pages only. Original content returns and new items are removed every 24 hours.', 'my-family-tree' ); ?></p>
+				<h2><?php esc_html_e( 'Privacy & access', 'digitalpulse-family-archive' ); ?></h2>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled checked><span><?php esc_html_e( 'Optional shared demo mode', 'digitalpulse-family-archive' ); ?></span></label>
+				<p><?php esc_html_e( 'Demo access is separate from the private-family password. The shared account can manage demo persons and pages only. Original content returns and new items are removed every 24 hours.', 'digitalpulse-family-archive' ); ?></p>
 			</section>
 			<section id="wpmft-demo-settings-contact" class="wpmft-settings-section wpmft-demo-settings-group">
-				<h2><?php esc_html_e( 'Contact & hCaptcha', 'my-family-tree' ); ?></h2>
-				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled><span><?php esc_html_e( 'Contact messages', 'my-family-tree' ); ?></span></label>
-				<p><?php esc_html_e( 'Family visitors can send a message, a relative’s description and an optional photograph to the administrator. Sending is disabled during shared demo mode.', 'my-family-tree' ); ?></p>
-				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['hcaptcha_enabled'] ) ); ?>><span><?php esc_html_e( 'Enable hCaptcha (external anti-spam service)', 'my-family-tree' ); ?></span></label>
-				<p><?php esc_html_e( 'Optional WhatsApp buttons can connect visitors with the administrator or individual persons. Administrator contact details and service keys are not shown in this shared settings view.', 'my-family-tree' ); ?></p>
+				<h2><?php esc_html_e( 'Contact & hCaptcha', 'digitalpulse-family-archive' ); ?></h2>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled><span><?php esc_html_e( 'Contact messages', 'digitalpulse-family-archive' ); ?></span></label>
+				<p><?php esc_html_e( 'Family visitors can send a message, a relative’s description and an optional photograph to the administrator. Sending is disabled during shared demo mode.', 'digitalpulse-family-archive' ); ?></p>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['hcaptcha_enabled'] ) ); ?>><span><?php esc_html_e( 'Enable hCaptcha (external anti-spam service)', 'digitalpulse-family-archive' ); ?></span></label>
+				<p><?php esc_html_e( 'Optional WhatsApp buttons can connect visitors with the administrator or individual persons. Administrator contact details and service keys are not shown in this shared settings view.', 'digitalpulse-family-archive' ); ?></p>
 			</section>
 			<section id="wpmft-demo-settings-performance" class="wpmft-settings-section wpmft-demo-settings-group">
-				<h2><?php esc_html_e( 'Performance & cache', 'my-family-tree' ); ?></h2>
-				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( $cache['enabled'] ); ?>><span><?php esc_html_e( 'Cache the internal relationship index', 'my-family-tree' ); ?></span></label>
-				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Cache storage', 'my-family-tree' ); ?></span><input type="text" readonly value="<?php echo esc_attr( 'object' === $cache['backend'] ? __( 'Persistent WordPress object cache', 'my-family-tree' ) : __( 'WordPress database transients', 'my-family-tree' ) ); ?>"></label>
-				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Cache lifetime (minutes)', 'my-family-tree' ); ?></span><input type="number" readonly value="<?php echo absint( $cache['ttl'] ); ?>"></label>
-				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['minify_assets'] ) ); ?>><span><?php esc_html_e( 'Use minified plugin JavaScript and CSS', 'my-family-tree' ); ?></span></label>
-				<p><?php esc_html_e( 'A persistent object cache requires support from the host. Private family responses remain uncached.', 'my-family-tree' ); ?></p>
+				<h2><?php esc_html_e( 'Performance & cache', 'digitalpulse-family-archive' ); ?></h2>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( $cache['enabled'] ); ?>><span><?php esc_html_e( 'Cache the internal relationship index', 'digitalpulse-family-archive' ); ?></span></label>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Cache storage', 'digitalpulse-family-archive' ); ?></span><input type="text" readonly value="<?php echo esc_attr( 'object' === $cache['backend'] ? __( 'Persistent WordPress object cache', 'digitalpulse-family-archive' ) : __( 'WordPress database transients', 'digitalpulse-family-archive' ) ); ?>"></label>
+				<label class="wpmft-demo-setting"><span><?php esc_html_e( 'Cache lifetime (minutes)', 'digitalpulse-family-archive' ); ?></span><input type="number" readonly value="<?php echo absint( $cache['ttl'] ); ?>"></label>
+				<label class="wpmft-demo-setting-check"><input type="checkbox" disabled <?php checked( ! empty( $s['minify_assets'] ) ); ?>><span><?php esc_html_e( 'Use minified plugin JavaScript and CSS', 'digitalpulse-family-archive' ); ?></span></label>
+				<p><?php esc_html_e( 'A persistent object cache requires support from the host. Private family responses remain uncached.', 'digitalpulse-family-archive' ); ?></p>
 			</section>
 		</div>
 		<?php
@@ -1480,7 +1480,7 @@ final class WPMFT_Demo {
 	private static function mutation_state( $cycle, $lock ) {
 		$state = self::fresh_option( self::STATE_OPTION );
 		if ( ! is_array( $state ) || empty( $state['enabled'] ) || ! empty( $state['quarantined'] ) || ! empty( $state['reset_pending'] ) || (int) ( $state['next_reset_at'] ?? 0 ) <= time() || get_current_user_id() !== absint( $state['user_id'] ?? 0 ) || ! self::owns_write_lock( $lock ) || self::real_family_count() ) { return self::reset_error(); }
-		if ( ! is_string( $cycle ) || empty( $state['reset_cycle'] ) || ! hash_equals( (string) $state['reset_cycle'], $cycle ) ) { return new WP_Error( 'demo_stale', __( 'The demo has reset since this page was opened. Reload it before making changes.', 'my-family-tree' ) ); }
+		if ( ! is_string( $cycle ) || empty( $state['reset_cycle'] ) || ! hash_equals( (string) $state['reset_cycle'], $cycle ) ) { return new WP_Error( 'demo_stale', __( 'The demo has reset since this page was opened. Reload it before making changes.', 'digitalpulse-family-archive' ) ); }
 		$baseline = self::fresh_option( self::BASELINE_OPTION );
 		if ( ! is_array( $baseline ) || 3 !== ( $baseline['version'] ?? 0 ) || ! self::valid_baseline( $baseline ) || ! self::valid_visitor_ledger( self::fresh_option( self::MANIFEST_OPTION ) ) ) { return self::reset_error(); }
 		return $state;
@@ -1540,7 +1540,7 @@ final class WPMFT_Demo {
 		$request = is_array( $request ) ? $request : array();
 		$title = isset( $request['demo_title'] ) && is_string( $request['demo_title'] ) ? sanitize_text_field( $request['demo_title'] ) : '';
 		$story = isset( $request['demo_story'] ) && is_string( $request['demo_story'] ) ? $request['demo_story'] : '';
-		if ( '' === $title || strlen( $title ) > 640 || strlen( $story ) > 48000 ) { return new WP_Error( 'demo_fields', __( 'Enter a title and a story within the displayed length limits.', 'my-family-tree' ) ); }
+		if ( '' === $title || strlen( $title ) > 640 || strlen( $story ) > 48000 ) { return new WP_Error( 'demo_fields', __( 'Enter a title and a story within the displayed length limits.', 'digitalpulse-family-archive' ) ); }
 		$story = preg_replace( '/<!--.*?-->/s', '', $story );
 		$story = preg_replace( '/\[[^\]]*\]/', '', $story );
 		$story = wp_kses_post( $story );
@@ -1552,11 +1552,11 @@ final class WPMFT_Demo {
 	}
 
 	public static function handle_create() {
-		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
+		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'digitalpulse-family-archive' ), '', array( 'response' => 403 ) ); }
 		check_admin_referer( 'wpmft_demo_create' );
 		$request = wp_unslash( $_POST );
 		$type = isset( $request['demo_type'] ) && is_string( $request['demo_type'] ) ? sanitize_key( $request['demo_type'] ) : '';
-		if ( ! in_array( $type, array( 'post', 'page' ), true ) ) { wp_die( esc_html__( 'Choose a person or a demo page.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
+		if ( ! in_array( $type, array( 'post', 'page' ), true ) ) { wp_die( esc_html__( 'Choose a person or a demo page.', 'digitalpulse-family-archive' ), '', array( 'response' => 400 ) ); }
 		$values = self::editor_values( $request );
 		if ( is_wp_error( $values ) ) { wp_die( esc_html( $values->get_error_message() ), '', array( 'response' => 400 ) ); }
 		$result = self::create_item( $type, $values['title'], $values['story'], $values['meta'], $values['cycle'] );
@@ -1575,7 +1575,7 @@ final class WPMFT_Demo {
 			$manifest = self::fresh_option( self::MANIFEST_OPTION );
 			if ( count( $manifest['visitors'] ?? array() ) >= self::MAX_VISITOR_ITEMS ) {
 				/* translators: %d: Maximum number of visitor-created persons and pages before the next demo reset. */
-				return new WP_Error( 'demo_limit', sprintf( __( 'The shared demo allows up to %d new persons and pages before the next reset.', 'my-family-tree' ), self::MAX_VISITOR_ITEMS ) );
+				return new WP_Error( 'demo_limit', sprintf( __( 'The shared demo allows up to %d new persons and pages before the next reset.', 'digitalpulse-family-archive' ), self::MAX_VISITOR_ITEMS ) );
 			}
 			$owner = absint( $state['owner_id'] ?? 0 );
 			if ( ! $owner || ! get_userdata( $owner ) ) { return self::reset_error(); }
@@ -1614,12 +1614,12 @@ final class WPMFT_Demo {
 	}
 
 	public static function handle_remove() {
-		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
+		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'digitalpulse-family-archive' ), '', array( 'response' => 403 ) ); }
 		check_admin_referer( 'wpmft_demo_remove' );
 		$request = wp_unslash( $_POST );
 		$id = isset( $request['person'] ) && is_scalar( $request['person'] ) ? absint( $request['person'] ) : 0;
 		$confirmed = isset( $request['wpmft_demo_confirm'] ) && is_string( $request['wpmft_demo_confirm'] ) ? sanitize_text_field( $request['wpmft_demo_confirm'] ) : '';
-		if ( '1' !== $confirmed ) { wp_die( esc_html__( 'Confirm removal before continuing.', 'my-family-tree' ), '', array( 'response' => 400 ) ); }
+		if ( '1' !== $confirmed ) { wp_die( esc_html__( 'Confirm removal before continuing.', 'digitalpulse-family-archive' ), '', array( 'response' => 400 ) ); }
 		$cycle = isset( $request['wpmft_demo_reset_cycle'] ) && is_string( $request['wpmft_demo_reset_cycle'] ) ? sanitize_text_field( $request['wpmft_demo_reset_cycle'] ) : '';
 		$result = self::remove_item( $id, $cycle );
 		if ( is_wp_error( $result ) ) { wp_die( esc_html( $result->get_error_message() ), '', array( 'response' => 409 ) ); }
@@ -1637,9 +1637,9 @@ final class WPMFT_Demo {
 			$state = self::mutation_state( $cycle, $lock );
 			if ( is_wp_error( $state ) ) { return $state; }
 			$manifest = self::fresh_option( self::MANIFEST_OPTION );
-			if ( in_array( (int) $id, array( absint( $manifest['items']['marty'] ?? 0 ), absint( $manifest['items']['tree-page'] ?? 0 ) ), true ) ) { return new WP_Error( 'demo_protected', __( 'The demo starting person and tree page stay available and cannot be removed.', 'my-family-tree' ) ); }
+			if ( in_array( (int) $id, array( absint( $manifest['items']['marty'] ?? 0 ), absint( $manifest['items']['tree-page'] ?? 0 ) ), true ) ) { return new WP_Error( 'demo_protected', __( 'The demo starting person and tree page stay available and cannot be removed.', 'digitalpulse-family-archive' ) ); }
 			$post = self::editable_demo_post( $id );
-			if ( ! $post ) { return new WP_Error( 'demo_content', __( 'This is not editable demo content.', 'my-family-tree' ) ); }
+			if ( ! $post ) { return new WP_Error( 'demo_content', __( 'This is not editable demo content.', 'digitalpulse-family-archive' ) ); }
 			// Never call wp_trash_post(): EMPTY_TRASH_DAYS=0 would permanently delete an original ID.
 			self::$mutating_post = (int) $id;
 			$result = wp_update_post( array( 'ID' => $id, 'post_status' => 'draft' ), true );
@@ -1655,11 +1655,11 @@ final class WPMFT_Demo {
 	}
 
 	public static function handle_save() {
-		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
+		if ( 'POST' !== strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ?? '' ) ) ) || ! self::is_demo_user() || ! self::active() || ! current_user_can( self::CAP ) ) { wp_die( esc_html__( 'Access denied.', 'digitalpulse-family-archive' ), '', array( 'response' => 403 ) ); }
 		check_admin_referer( 'wpmft_demo_save' );
 		$request = wp_unslash( $_POST );
 		$id = isset( $request['person'] ) && is_scalar( $request['person'] ) ? absint( $request['person'] ) : 0;
-		if ( ! self::is_demo_post( $id ) || ! in_array( get_post_type( $id ), array( 'post', 'page' ), true ) ) { wp_die( esc_html__( 'This is not editable demo content.', 'my-family-tree' ), '', array( 'response' => 403 ) ); }
+		if ( ! self::is_demo_post( $id ) || ! in_array( get_post_type( $id ), array( 'post', 'page' ), true ) ) { wp_die( esc_html__( 'This is not editable demo content.', 'digitalpulse-family-archive' ), '', array( 'response' => 403 ) ); }
 		$values = self::editor_values( $request );
 		if ( is_wp_error( $values ) ) { wp_die( esc_html( $values->get_error_message() ), '', array( 'response' => 400 ) ); }
 		$manifest = self::manifest();
@@ -1679,7 +1679,7 @@ final class WPMFT_Demo {
 			$state = self::mutation_state( $cycle, $lock );
 			if ( is_wp_error( $state ) ) { return $state; }
 			$post = self::editable_demo_post( $id );
-			if ( ! $post ) { return new WP_Error( 'demo_content', __( 'This is not editable demo content.', 'my-family-tree' ) ); }
+			if ( ! $post ) { return new WP_Error( 'demo_content', __( 'This is not editable demo content.', 'digitalpulse-family-archive' ) ); }
 			$type = $post['post_type'];
 			self::$mutating_post = (int) $id;
 			$result = wp_update_post( wp_slash( array( 'ID' => $id, 'post_title' => $title, 'post_content' => $story ) ), true );

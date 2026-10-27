@@ -171,7 +171,7 @@ final class WPMFT_Media {
 	private static function encode_previews( $source, $directory, $mime, $quality, $original_bytes ) {
 		$editor = wp_get_image_editor( $source, array( 'output_mime_type' => $mime ) );
 		if ( is_wp_error( $editor ) ) { return $editor; }
-		if ( ! $editor->supports_mime_type( $mime ) ) { return new WP_Error( 'image_format', __( 'The image editor returned an unexpected image format.', 'my-family-tree' ) ); }
+		if ( ! $editor->supports_mime_type( $mime ) ) { return new WP_Error( 'image_format', __( 'The image editor returned an unexpected image format.', 'digitalpulse-family-archive' ) ); }
 		$editor->set_quality( $quality ); $previews = array(); $seen = array();
 		foreach ( array( 1600, 960, 384 ) as $target ) {
 			$size = $editor->get_size();
@@ -190,15 +190,15 @@ final class WPMFT_Media {
 			} );
 			try { $saved = $editor->save( $directory . '/preview-' . $target . ( 'image/avif' === $mime ? '.avif' : '.webp' ), $mime ); }
 			finally { restore_error_handler(); }
-			if ( $encoder_warning ) { return new WP_Error( 'image_format', __( 'The image editor returned an unexpected image format.', 'my-family-tree' ) ); }
+			if ( $encoder_warning ) { return new WP_Error( 'image_format', __( 'The image editor returned an unexpected image format.', 'digitalpulse-family-archive' ) ); }
 			if ( is_wp_error( $saved ) ) { return $saved; }
-			if ( ( $saved['mime-type'] ?? '' ) !== $mime || realpath( dirname( $saved['path'] ) ) !== realpath( $directory ) ) { return new WP_Error( 'image_format', __( 'The image editor returned an unexpected image format.', 'my-family-tree' ) ); }
+			if ( ( $saved['mime-type'] ?? '' ) !== $mime || realpath( dirname( $saved['path'] ) ) !== realpath( $directory ) ) { return new WP_Error( 'image_format', __( 'The image editor returned an unexpected image format.', 'digitalpulse-family-archive' ) ); }
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- Encoded plaintext remains private until encrypted.
-			if ( ! chmod( $saved['path'], 0600 ) ) { return new WP_Error( 'image_temp', __( 'The temporary photograph could not be prepared.', 'my-family-tree' ) ); }
+			if ( ! chmod( $saved['path'], 0600 ) ) { return new WP_Error( 'image_temp', __( 'The temporary photograph could not be prepared.', 'digitalpulse-family-archive' ) ); }
 			clearstatcache( true, $saved['path'] );
 			$length = filesize( $saved['path'] );
 			$dimensions = $length && wp_get_image_mime( $saved['path'] ) === $mime ? wp_getimagesize( $saved['path'] ) : false;
-			if ( ! $dimensions || (int) $dimensions[0] !== (int) $saved['width'] || (int) $dimensions[1] !== (int) $saved['height'] ) { return new WP_Error( 'image_format', __( 'The image editor returned an unexpected image format.', 'my-family-tree' ) ); }
+			if ( ! $dimensions || (int) $dimensions[0] !== (int) $saved['width'] || (int) $dimensions[1] !== (int) $saved['height'] ) { return new WP_Error( 'image_format', __( 'The image editor returned an unexpected image format.', 'digitalpulse-family-archive' ) ); }
 			if ( $length + 35 >= $original_bytes ) { continue; }
 			$previews[absint( $saved['width'] )] = array( 'path' => $saved['path'], 'width' => absint( $saved['width'] ), 'height' => absint( $saved['height'] ), 'bytes' => $length, 'mime' => $mime );
 		}
@@ -210,8 +210,8 @@ final class WPMFT_Media {
 		$id = absint( $id );
 		if ( ! $id || self::is_public_demo_media( $id ) || ! self::is_private( $id ) || ! self::needs_optimization( $id ) ) { return true; }
 		$support = self::optimization_support(); $mime = $support['avif'] ? 'image/avif' : ( $support['webp'] ? 'image/webp' : '' );
-		if ( ! $mime ) { return new WP_Error( 'image_encoder', __( 'This server does not support AVIF or WebP encoding. Existing photographs remain available.', 'my-family-tree' ) ); }
-		if ( ! function_exists( 'openssl_encrypt' ) ) { return new WP_Error( 'openssl', __( 'OpenSSL is required to protect photographs.', 'my-family-tree' ) ); }
+		if ( ! $mime ) { return new WP_Error( 'image_encoder', __( 'This server does not support AVIF or WebP encoding. Existing photographs remain available.', 'digitalpulse-family-archive' ) ); }
+		if ( ! function_exists( 'openssl_encrypt' ) ) { return new WP_Error( 'openssl', __( 'OpenSSL is required to protect photographs.', 'digitalpulse-family-archive' ) ); }
 		$lock_name = 'wpmft_image_lock_' . $id; $token = time() . ':' . wp_generate_uuid4(); $previous = (string) get_option( $lock_name, '' );
 		global $wpdb;
 		if ( $previous && (int) $previous < time() - 600 ) {
@@ -219,32 +219,32 @@ final class WPMFT_Media {
 			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name=%s AND option_value=%s", $lock_name, $previous ) );
 			wp_cache_delete( $lock_name, 'options' );
 		}
-		if ( ! add_option( $lock_name, $token, '', false ) ) { return new WP_Error( 'image_busy', __( 'This photograph is already being optimized. Please try again shortly.', 'my-family-tree' ) ); }
+		if ( ! add_option( $lock_name, $token, '', false ) ) { return new WP_Error( 'image_busy', __( 'This photograph is already being optimized. Please try again shortly.', 'digitalpulse-family-archive' ) ); }
 		$directory = false; $created = array(); $committed = false; $quality_filter = null;
 		try {
 			$signature = self::optimization_signature( $id ); $vault = self::manifest( $id );
 			$source = get_attached_file( $id, true ); $uploads = wp_upload_dir(); $base = realpath( $uploads['basedir'] );
 			$path = $source ? realpath( $source ) : false;
 			$bytes = isset( $vault['full']['file'] ) ? self::decrypt( $vault['full']['file'] ) : ( $base && $path && strpos( $path, $base . DIRECTORY_SEPARATOR ) === 0 && is_readable( $path ) ? file_get_contents( $path ) : false ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local image, never a remote URL.
-			if ( false === $bytes ) { return new WP_Error( 'image_source', __( 'The source photograph is unavailable. Existing previews are retained.', 'my-family-tree' ) ); }
+			if ( false === $bytes ) { return new WP_Error( 'image_source', __( 'The source photograph is unavailable. Existing previews are retained.', 'digitalpulse-family-archive' ) ); }
 			$meta = wp_get_attachment_metadata( $id );
-			if ( strlen( $bytes ) > 32 * MB_IN_BYTES || (int) ( $meta['width'] ?? 0 ) * (int) ( $meta['height'] ?? 0 ) > 40000000 ) { return new WP_Error( 'image_size', __( 'This photograph exceeds the safe optimization size. Its existing images remain available.', 'my-family-tree' ) ); }
+			if ( strlen( $bytes ) > 32 * MB_IN_BYTES || (int) ( $meta['width'] ?? 0 ) * (int) ( $meta['height'] ?? 0 ) > 40000000 ) { return new WP_Error( 'image_size', __( 'This photograph exceeds the safe optimization size. Its existing images remain available.', 'digitalpulse-family-archive' ) ); }
 			$old = get_post_meta( $id, '_wpmft_optimized_images', true );
 			// Animated PNG remains untouched, as do GIF/WebP/AVIF files excluded above.
 			if ( 'image/png' === get_post_mime_type( $id ) && false !== strpos( $bytes, 'acTL' ) ) {
-				if ( self::optimization_signature( $id ) !== $signature ) { return new WP_Error( 'image_changed', __( 'This photograph changed during optimization. Please try again.', 'my-family-tree' ) ); }
+				if ( self::optimization_signature( $id ) !== $signature ) { return new WP_Error( 'image_changed', __( 'This photograph changed during optimization. Please try again.', 'digitalpulse-family-archive' ) ); }
 				$record = array( 'signature' => $signature, 'variants' => array() );
 				update_post_meta( $id, '_wpmft_optimized_images', $record );
-				if ( get_post_meta( $id, '_wpmft_optimized_images', true ) !== $record ) { return new WP_Error( 'image_metadata', __( 'The optimized photograph index could not be saved.', 'my-family-tree' ) ); }
+				if ( get_post_meta( $id, '_wpmft_optimized_images', true ) !== $record ) { return new WP_Error( 'image_metadata', __( 'The optimized photograph index could not be saved.', 'digitalpulse-family-archive' ) ); }
 				self::delete_variants( $old['variants'] ?? array() );
 				return true;
 			}
 			$directory = self::temporary_directory();
-			if ( ! $directory ) { return new WP_Error( 'image_temp', __( 'Image optimization needs a private temporary directory outside the website folder.', 'my-family-tree' ) ); }
+			if ( ! $directory ) { return new WP_Error( 'image_temp', __( 'Image optimization needs a private temporary directory outside the website folder.', 'digitalpulse-family-archive' ) ); }
 			$source_file = $directory . '/source.' . ( 'image/png' === get_post_mime_type( $id ) ? 'png' : 'jpg' );
-			if ( file_put_contents( $source_file, $bytes, LOCK_EX ) !== strlen( $bytes ) ) { return new WP_Error( 'image_temp', __( 'The temporary photograph could not be prepared.', 'my-family-tree' ) ); }
+			if ( file_put_contents( $source_file, $bytes, LOCK_EX ) !== strlen( $bytes ) ) { return new WP_Error( 'image_temp', __( 'The temporary photograph could not be prepared.', 'digitalpulse-family-archive' ) ); }
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- Plaintext is readable only by the private temporary directory owner.
-			if ( ! chmod( $source_file, 0600 ) ) { return new WP_Error( 'image_temp', __( 'The temporary photograph could not be prepared.', 'my-family-tree' ) ); }
+			if ( ! chmod( $source_file, 0600 ) ) { return new WP_Error( 'image_temp', __( 'The temporary photograph could not be prepared.', 'digitalpulse-family-archive' ) ); }
 			$quality = max( 60, min( 92, (int) ( wpmft_settings()['image_quality'] ?? 82 ) ) );
 			// Core resets quality when converting formats; keep the chosen quality through every save.
 			$quality_filter = static function ( $value ) use ( $quality ) { return $quality; };
@@ -254,27 +254,27 @@ final class WPMFT_Media {
 			if ( is_wp_error( $previews ) && 'image/avif' === $mime && $support['webp'] ) { $previews = self::encode_previews( $source_file, $directory, 'image/webp', $quality, strlen( $bytes ) ); }
 			if ( is_wp_error( $previews ) ) { return $previews; }
 			$key = self::key( true );
-			if ( ! $key || ! wp_mkdir_p( trailingslashit( $uploads['basedir'] ) . 'wpmft-private' ) ) { return new WP_Error( 'image_vault', __( 'The optimized photograph could not be stored privately.', 'my-family-tree' ) ); }
+			if ( ! $key || ! wp_mkdir_p( trailingslashit( $uploads['basedir'] ) . 'wpmft-private' ) ) { return new WP_Error( 'image_vault', __( 'The optimized photograph could not be stored privately.', 'digitalpulse-family-archive' ) ); }
 			foreach ( $previews as $preview ) {
 				$plain = file_get_contents( $preview['path'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Private temporary image.
-				if ( false === $plain ) { return new WP_Error( 'image_read', __( 'The optimized photograph could not be read.', 'my-family-tree' ) ); }
+				if ( false === $plain ) { return new WP_Error( 'image_read', __( 'The optimized photograph could not be read.', 'digitalpulse-family-archive' ) ); }
 				$variant = 'wpmft-opt-' . substr( $signature, 0, 12 ) . '-' . $preview['width'];
 				$iv = random_bytes( 12 ); $tag = ''; $cipher = openssl_encrypt( $plain, 'aes-256-gcm', $key, OPENSSL_RAW_DATA, $iv, $tag );
-				if ( false === $cipher ) { return new WP_Error( 'image_encrypt', __( 'The optimized photograph could not be encrypted.', 'my-family-tree' ) ); }
+				if ( false === $cipher ) { return new WP_Error( 'image_encrypt', __( 'The optimized photograph could not be encrypted.', 'digitalpulse-family-archive' ) ); }
 				$file = 'wpmft-private/' . bin2hex( random_bytes( 24 ) ) . '.bin'; $destination = trailingslashit( $uploads['basedir'] ) . $file;
 				$created[$variant] = array( 'file' => $file, 'width' => $preview['width'], 'height' => $preview['height'], 'bytes' => strlen( $plain ), 'mime' => $preview['mime'] );
 				$container = "WPMFT1\0" . $iv . $tag . $cipher;
-				if ( file_put_contents( $destination, $container, LOCK_EX ) !== strlen( $container ) || self::decrypt( $file ) !== $plain ) { return new WP_Error( 'image_verify', __( 'The optimized photograph could not be verified.', 'my-family-tree' ) ); }
+				if ( file_put_contents( $destination, $container, LOCK_EX ) !== strlen( $container ) || self::decrypt( $file ) !== $plain ) { return new WP_Error( 'image_verify', __( 'The optimized photograph could not be verified.', 'digitalpulse-family-archive' ) ); }
 			}
-			if ( self::optimization_signature( $id ) !== $signature ) { return new WP_Error( 'image_changed', __( 'This photograph changed during optimization. Please try again.', 'my-family-tree' ) ); }
+			if ( self::optimization_signature( $id ) !== $signature ) { return new WP_Error( 'image_changed', __( 'This photograph changed during optimization. Please try again.', 'digitalpulse-family-archive' ) ); }
 			$record = array( 'signature' => $signature, 'variants' => $created );
 			update_post_meta( $id, '_wpmft_optimized_images', $record );
-			if ( get_post_meta( $id, '_wpmft_optimized_images', true ) !== $record ) { return new WP_Error( 'image_metadata', __( 'The optimized photograph index could not be saved.', 'my-family-tree' ) ); }
+			if ( get_post_meta( $id, '_wpmft_optimized_images', true ) !== $record ) { return new WP_Error( 'image_metadata', __( 'The optimized photograph index could not be saved.', 'digitalpulse-family-archive' ) ); }
 			$committed = true;
 			self::delete_variants( $old['variants'] ?? array() );
 			return true;
 		} catch ( Throwable $error ) {
-			return new WP_Error( 'image_processing', __( 'The photograph could not be optimized. Existing images are retained.', 'my-family-tree' ) );
+			return new WP_Error( 'image_processing', __( 'The photograph could not be optimized. Existing images are retained.', 'digitalpulse-family-archive' ) );
 		} finally {
 			if ( $quality_filter ) { remove_filter( 'wp_editor_set_quality', $quality_filter, PHP_INT_MAX ); }
 			if ( ! $committed ) { self::delete_variants( $created ); }
@@ -298,9 +298,9 @@ final class WPMFT_Media {
 
 	public static function optimize_batch( $limit = 1, $after = 0 ) {
 		$result = array( 'processed' => 0, 'attempted' => 0, 'cursor' => absint( $after ), 'remaining' => 0, 'errors' => array() );
-		if ( ! current_user_can( 'manage_options' ) ) { $result['errors'][] = __( 'Access denied.', 'my-family-tree' ); return $result; }
-		if ( 'off' === ( wpmft_settings()['image_optimization'] ?? 'auto' ) ) { $result['errors'][] = __( 'Image optimization is disabled. Enable automatic optimization and save the settings first.', 'my-family-tree' ); return $result; }
-		if ( ! array_filter( self::optimization_support() ) ) { $result['errors'][] = __( 'This server does not support AVIF or WebP encoding. Existing photographs remain available.', 'my-family-tree' ); return $result; }
+		if ( ! current_user_can( 'manage_options' ) ) { $result['errors'][] = __( 'Access denied.', 'digitalpulse-family-archive' ); return $result; }
+		if ( 'off' === ( wpmft_settings()['image_optimization'] ?? 'auto' ) ) { $result['errors'][] = __( 'Image optimization is disabled. Enable automatic optimization and save the settings first.', 'digitalpulse-family-archive' ); return $result; }
+		if ( ! array_filter( self::optimization_support() ) ) { $result['errors'][] = __( 'This server does not support AVIF or WebP encoding. Existing photographs remain available.', 'digitalpulse-family-archive' ); return $result; }
 		$pending = array_values( array_filter( self::private_ids(), static function ( $id ) use ( $result ) { return $id > $result['cursor'] && self::needs_optimization( $id ); } ) );
 		sort( $pending, SORT_NUMERIC );
 		foreach ( array_slice( $pending, 0, max( 1, min( 3, (int) $limit ) ) ) as $id ) {
@@ -309,7 +309,7 @@ final class WPMFT_Media {
 			// Failed or busy files advance this pass, but remain pending for an explicit retry later.
 			if ( is_wp_error( $optimized ) ) {
 				/* translators: 1: WordPress attachment ID, 2: the reason its optimization failed. */
-				$result['errors'][] = sprintf( __( 'Attachment %1$d: %2$s', 'my-family-tree' ), $id, $optimized->get_error_message() );
+				$result['errors'][] = sprintf( __( 'Attachment %1$d: %2$s', 'digitalpulse-family-archive' ), $id, $optimized->get_error_message() );
 			} else { $result['processed']++; }
 		}
 		$result['remaining'] = max( 0, count( $pending ) - $result['attempted'] );
@@ -416,21 +416,21 @@ final class WPMFT_Media {
 		if ( ! in_array( (int) $person, $owners, true ) ) { $owners[] = (int) $person; update_post_meta( $photo, '_wpmft_media_people', $owners ); }
 	}
 	public static function protect_attachment( $id ) {
-		if ( ! function_exists( 'openssl_encrypt' ) ) { return new WP_Error( 'openssl', __( 'OpenSSL is required to protect photographs.', 'my-family-tree' ) ); }
+		if ( ! function_exists( 'openssl_encrypt' ) ) { return new WP_Error( 'openssl', __( 'OpenSSL is required to protect photographs.', 'digitalpulse-family-archive' ) ); }
 		$uploads = wp_upload_dir();
 		if ( ! empty( $uploads['error'] ) ) { return new WP_Error( 'uploads', $uploads['error'] ); }
 		$key = self::key( true );
-		if ( ! $key ) { return new WP_Error( 'key', __( 'The private media key could not be created.', 'my-family-tree' ) ); }
+		if ( ! $key ) { return new WP_Error( 'key', __( 'The private media key could not be created.', 'digitalpulse-family-archive' ) ); }
 		update_post_meta( $id, '_wpmft_vault_complete', 0 );
 		$relative = (string) get_post_meta( $id, '_wp_attached_file', true );
-		if ( ! $relative ) { return new WP_Error( 'missing_file', __( 'An attachment has no source file.', 'my-family-tree' ) ); }
+		if ( ! $relative ) { return new WP_Error( 'missing_file', __( 'An attachment has no source file.', 'digitalpulse-family-archive' ) ); }
 		$meta = wp_get_attachment_metadata( $id ); $dir = dirname( $relative );
 		$files = array( 'full' => $relative );
 		foreach ( (array) ( $meta['sizes'] ?? array() ) as $size => $info ) { if ( ! empty( $info['file'] ) ) { $files[$size] = $dir . '/' . $info['file']; } }
 		if ( ! empty( $meta['original_image'] ) ) { $files['original'] = $dir . '/' . $meta['original_image']; }
 		foreach ( (array) get_post_meta( $id, '_wp_attachment_backup_sizes', true ) as $size => $info ) { if ( is_array( $info ) && ! empty( $info['file'] ) ) { $files['backup_' . $size] = $dir . '/' . $info['file']; } }
 		$vault = trailingslashit( $uploads['basedir'] ) . 'wpmft-private';
-		if ( ! wp_mkdir_p( $vault ) ) { return new WP_Error( 'directory', __( 'The private media folder could not be created.', 'my-family-tree' ) ); }
+		if ( ! wp_mkdir_p( $vault ) ) { return new WP_Error( 'directory', __( 'The private media folder could not be created.', 'digitalpulse-family-archive' ) ); }
 		// The ciphertext is safe even where these extra web-server rules are not supported.
 		if ( ! file_exists( $vault . '/.htaccess' ) ) { file_put_contents( $vault . '/.htaccess', "<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nDeny from all\n</IfModule>\n" ); }
 		if ( ! file_exists( $vault . '/index.php' ) ) { file_put_contents( $vault . '/index.php', '<?php http_response_code(404); exit;' ); }
@@ -438,19 +438,19 @@ final class WPMFT_Media {
 		foreach ( $files as $size => $rel ) {
 			$path = realpath( trailingslashit( $uploads['basedir'] ) . $rel );
 			if ( ! $path || ! $base || strpos( $path, $base . DIRECTORY_SEPARATOR ) !== 0 ) {
-				if ( $size === 'full' && ! isset( $manifest['full'] ) ) { return new WP_Error( 'missing_file', __( 'A source photograph is missing. Restore the matching uploads backup.', 'my-family-tree' ) ); }
+				if ( $size === 'full' && ! isset( $manifest['full'] ) ) { return new WP_Error( 'missing_file', __( 'A source photograph is missing. Restore the matching uploads backup.', 'digitalpulse-family-archive' ) ); }
 				continue;
 			}
 			$plain = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-			if ( false === $plain ) { return new WP_Error( 'read', __( 'A photograph could not be read.', 'my-family-tree' ) ); }
+			if ( false === $plain ) { return new WP_Error( 'read', __( 'A photograph could not be read.', 'digitalpulse-family-archive' ) ); }
 			if ( isset( $manifest[$size] ) && self::decrypt( $manifest[$size]['file'] ) === $plain ) { $remove[] = $path; continue; }
 			$iv = random_bytes( 12 ); $tag = '';
 			$cipher = openssl_encrypt( $plain, 'aes-256-gcm', $key, OPENSSL_RAW_DATA, $iv, $tag );
-			if ( false === $cipher ) { return new WP_Error( 'encrypt', __( 'A photograph could not be encrypted.', 'my-family-tree' ) ); }
+			if ( false === $cipher ) { return new WP_Error( 'encrypt', __( 'A photograph could not be encrypted.', 'digitalpulse-family-archive' ) ); }
 			$file = 'wpmft-private/' . bin2hex( random_bytes( 24 ) ) . '.bin';
 			$destination = trailingslashit( $uploads['basedir'] ) . $file;
 			$container = "WPMFT1\0" . $iv . $tag . $cipher;
-			if ( file_put_contents( $destination, $container, LOCK_EX ) !== strlen( $container ) || self::decrypt( $file ) !== $plain ) { wp_delete_file( $destination ); return new WP_Error( 'write', __( 'The encrypted photograph could not be verified.', 'my-family-tree' ) ); }
+			if ( file_put_contents( $destination, $container, LOCK_EX ) !== strlen( $container ) || self::decrypt( $file ) !== $plain ) { wp_delete_file( $destination ); return new WP_Error( 'write', __( 'The encrypted photograph could not be verified.', 'digitalpulse-family-archive' ) ); }
 			if ( ! class_exists( 'WP_Filesystem_Base' ) ) { require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php'; }
 			if ( ! class_exists( 'WP_Filesystem_Direct' ) ) { require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php'; }
 			$filesystem = new WP_Filesystem_Direct( null );
@@ -458,10 +458,10 @@ final class WPMFT_Media {
 			$manifest[$size] = array( 'file' => $file, 'original' => $rel, 'bytes' => strlen( $plain ) );
 			$remove[] = $path;
 		}
-		if ( ! $manifest ) { return new WP_Error( 'empty', __( 'There are no photograph files to protect.', 'my-family-tree' ) ); }
+		if ( ! $manifest ) { return new WP_Error( 'empty', __( 'There are no photograph files to protect.', 'digitalpulse-family-archive' ) ); }
 		update_post_meta( $id, '_wpmft_vault', $manifest ); update_post_meta( $id, '_wpmft_private', 1 );
-		if ( self::manifest( $id ) !== $manifest ) { return new WP_Error( 'metadata', __( 'The private file index could not be saved. Originals were retained.', 'my-family-tree' ) ); }
-		foreach ( array_unique( $remove ) as $path ) { wp_delete_file( $path ); if ( file_exists( $path ) ) { return new WP_Error( 'delete_original', __( 'An original photograph could not be removed. Check file permissions before sharing the site.', 'my-family-tree' ) ); } }
+		if ( self::manifest( $id ) !== $manifest ) { return new WP_Error( 'metadata', __( 'The private file index could not be saved. Originals were retained.', 'digitalpulse-family-archive' ) ); }
+		foreach ( array_unique( $remove ) as $path ) { wp_delete_file( $path ); if ( file_exists( $path ) ) { return new WP_Error( 'delete_original', __( 'An original photograph could not be removed. Check file permissions before sharing the site.', 'digitalpulse-family-archive' ) ); } }
 		update_post_meta( $id, '_wpmft_vault_complete', 1 );
 		self::$private_ids = null;
 		return true;
@@ -484,7 +484,7 @@ final class WPMFT_Media {
 		$errors = array();
 		foreach ( WPMFT_Data::referenced_image_ids( $id ) as $photo ) {
 			if ( self::is_public_demo_media( $photo ) ) { continue; }
-			if ( ! current_user_can( 'edit_post', $photo ) ) { $errors[] = __( 'A photograph could not be protected because you do not have permission to edit it. Ask an administrator to protect it or upload your own copy.', 'my-family-tree' ); continue; }
+			if ( ! current_user_can( 'edit_post', $photo ) ) { $errors[] = __( 'A photograph could not be protected because you do not have permission to edit it. Ask an administrator to protect it or upload your own copy.', 'digitalpulse-family-archive' ); continue; }
 			self::record_owner( $photo, $id );
 			if ( ! self::needs_protection( $photo ) ) { continue; }
 			$result = self::protect_attachment( $photo ); if ( is_wp_error( $result ) ) { $errors[] = $result->get_error_message(); }
@@ -499,7 +499,7 @@ final class WPMFT_Media {
 		foreach ( array_slice( $pending, 0, max( 1, min( 20, $limit ) ) ) as $id ) {
 			$result = self::protect_attachment( $id );
 			/* translators: 1: WordPress attachment ID, 2: the reason its protection failed. */
-			if ( is_wp_error( $result ) ) { $errors[] = sprintf( __( 'Attachment %1$d: %2$s', 'my-family-tree' ), $id, $result->get_error_message() ); } else { $processed++; }
+			if ( is_wp_error( $result ) ) { $errors[] = sprintf( __( 'Attachment %1$d: %2$s', 'digitalpulse-family-archive' ), $id, $result->get_error_message() ); } else { $processed++; }
 		}
 		return array( 'processed' => $processed, 'remaining' => max( 0, count( $pending ) - $processed ), 'errors' => $errors );
 	}
@@ -529,6 +529,6 @@ final class WPMFT_Media {
 	}
 	public static function guard_image_editor() {
 		$id = isset( $_POST['postid'] ) ? absint( $_POST['postid'] ) : 0;
-		if ( $id && self::manifest( $id ) && current_user_can( 'edit_post', $id ) ) { check_ajax_referer( 'image_editor-' . $id ); wp_send_json_error( array( 'message' => __( 'This photograph is encrypted. Download it from the family gallery, edit it on your device, and upload the revised photograph.', 'my-family-tree' ) ), 409 ); }
+		if ( $id && self::manifest( $id ) && current_user_can( 'edit_post', $id ) ) { check_ajax_referer( 'image_editor-' . $id ); wp_send_json_error( array( 'message' => __( 'This photograph is encrypted. Download it from the family gallery, edit it on your device, and upload the revised photograph.', 'digitalpulse-family-archive' ) ), 409 ); }
 	}
 }

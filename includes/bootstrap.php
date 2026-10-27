@@ -47,12 +47,12 @@ add_action( 'init', function () {
 	wp_register_script( 'wpmft-app', wpmft_asset_url( 'app.js' ), array( 'wp-element' ), wpmft_asset_version(), true );
 	wp_register_style( 'wpmft-app', wpmft_asset_url( 'app.css' ), array(), wpmft_asset_version() );
 	register_block_type( WPMFT_DIR, array( 'render_callback' => 'wpmft_block' ) );
-	wp_set_script_translations( 'wp-my-family-tree-tree-editor-script', 'my-family-tree', WPMFT_DIR . 'languages' );
+	wp_set_script_translations( 'wp-my-family-tree-tree-editor-script', 'digitalpulse-family-archive', WPMFT_DIR . 'languages' );
 	foreach ( array( 'wp_my_family_tree', 'family-tree', 'family-members' ) as $tag ) { add_shortcode( $tag, 'wpmft_shortcode' ); }
 	if ( function_exists( 'pll_register_string' ) ) {
 		$s = wpmft_settings();
-		pll_register_string( 'wpmft-title', $s['title'], 'My Family Tree' );
-		pll_register_string( 'wpmft-subtitle', $s['subtitle'], 'My Family Tree' );
+		pll_register_string( 'wpmft-title', $s['title'], 'DigitalPulse Family Archive' );
+		pll_register_string( 'wpmft-subtitle', $s['subtitle'], 'DigitalPulse Family Archive' );
 	}
 }, 20 );
 
@@ -78,7 +78,7 @@ function wpmft_shortcode( $attributes = array(), $content = null, $tag = 'wp_my_
 		'translations' => WPMFT_Languages::dictionaries( 'frontend', wpmft_polylang_languages() ),
 	) );
 	$title = $public_settings['translations'][$language]['title'] ?? $public_settings['title'];
-	return '<div class="wpmft-app" data-view="' . ( $attributes['view'] === 'list' ? 'list' : 'tree' ) . '" data-root="' . esc_attr( $root ) . '"><div class="wpmft-boot"><h1>' . esc_html( $title ) . '</h1><p role="status">' . esc_html__( 'Loading the family tree…', 'my-family-tree' ) . '</p><noscript>' . esc_html__( 'Please enable JavaScript to explore this interactive family tree.', 'my-family-tree' ) . '</noscript></div></div>';
+	return '<div class="wpmft-app" data-view="' . ( $attributes['view'] === 'list' ? 'list' : 'tree' ) . '" data-root="' . esc_attr( $root ) . '"><div class="wpmft-boot"><h1>' . esc_html( $title ) . '</h1><p role="status">' . esc_html__( 'Loading the family tree…', 'digitalpulse-family-archive' ) . '</p><noscript>' . esc_html__( 'Please enable JavaScript to explore this interactive family tree.', 'digitalpulse-family-archive' ) . '</noscript></div></div>';
 }
 
 add_filter( 'template_include', function ( $template ) {
